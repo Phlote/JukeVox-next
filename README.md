@@ -13,7 +13,7 @@ This is a default [Next.js](https://nextjs.org/) project bootstrapped with [`cre
 
 **Note**: After adding in your new contract ABIs (in JSON format) to the `/contracts` folder, run `yarn compile-contract-types` to generate the types.
 
-You can import these types when declaring a new Contract hook. The types generated show the function params and return types of your functions, among other helpful types. 
+You can import these types when declaring a new Contract hook. The types generated show the function params and return types of your functions, among other helpful types.
 
 ```ts
 import MY_CONTRACT_ABI from "../contracts/MY_CONTRACT.json";
@@ -57,3 +57,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/import?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## Tailwind
+
+https://tailwindcss.com/docs/guides/nextjs
