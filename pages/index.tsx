@@ -7,6 +7,15 @@ import TokenBalance from "../components/TokenBalance";
 import useEagerConnect from "../hooks/useEagerConnect";
 
 const DAI_TOKEN_ADDRESS = "0x6b175474e89094c44da98b954eedeac495271d0f";
+export interface CurationMetadata {
+  artistName: string;
+  trackTitle: string;
+  tags?: string[];
+  curatorName?: string;
+  curatorWallet: string;
+  submissionTimestamp: string;
+  uuid: string;
+}
 
 function Home() {
   const { account, library } = useWeb3React();
