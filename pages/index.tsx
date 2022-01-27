@@ -18,7 +18,7 @@ function Home() {
   return (
     <div>
       <Head>
-        <title>next-web3-boilerplate</title>
+        <title>Phlote TCR</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -34,19 +34,25 @@ function Home() {
 
       <main>
         <h1>
-          Welcome to{" "}
-          <a href="https://github.com/mirshko/next-web3-boilerplate">
-            next-web3-boilerplate
-          </a>
+          Welcome to <a href="https://twitter.com/teamphlote">Phlote TCR!</a>
         </h1>
 
         {isConnected && (
           <section>
             <ETHBalance />
-
             <TokenBalance tokenAddress={DAI_TOKEN_ADDRESS} symbol="DAI" />
           </section>
         )}
+        <div className="m-2 flex flex-row justify-center">
+          <input placeholder="Submit NFT"></input>
+          <div className="w-2"></div>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => console.log("interact with contract")}
+          >
+            Button
+          </button>
+        </div>
       </main>
 
       <style jsx>{`
