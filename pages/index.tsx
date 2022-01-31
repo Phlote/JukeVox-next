@@ -1,26 +1,25 @@
 import { useWeb3React } from "@web3-react/core";
 import Head from "next/head";
 import Link from "next/link";
+import React from "react";
 import Account from "../components/Account";
+import {
+  CurationMetadata,
+  CuratorSubmissionModal,
+} from "../components/CuratorSubmissionModal";
 import ETHBalance from "../components/ETHBalance";
 import TokenBalance from "../components/TokenBalance";
 import useEagerConnect from "../hooks/useEagerConnect";
 
 const DAI_TOKEN_ADDRESS = "0x6b175474e89094c44da98b954eedeac495271d0f";
-export interface CurationMetadata {
-  artistName: string;
-  trackTitle: string;
-  tags?: string[];
-  curatorName?: string;
-  curatorWallet: string;
-  submissionTimestamp: string;
-  uuid: string;
-}
 
 function Home() {
   const { account, library } = useWeb3React();
 
   const triedToEagerConnect = useEagerConnect();
+
+  const [submissionModalOpen, setsubmissionModalOpen] =
+    React.useState<boolean>(false);
 
   const isConnected = typeof account === "string" && !!library;
 
@@ -41,7 +40,7 @@ function Home() {
         </nav>
       </header>
 
-      <main>
+      <div className="container mx-auto flex justify-center items-center flex-col">
         <h1>
           Welcome to <a href="https://twitter.com/teamphlote">Phlote TCR!</a>
         </h1>
@@ -50,19 +49,24 @@ function Home() {
           <section>
             <ETHBalance />
             <TokenBalance tokenAddress={DAI_TOKEN_ADDRESS} symbol="DAI" />
+
+            <div className="m-2 flex flex-row justify-center">
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                onClick={() => setsubmissionModalOpen(true)}
+              >
+                Submit Curation
+              </button>
+            </div>
+            <CuratorSubmissionModal
+              open={submissionModalOpen}
+              setOpen={setsubmissionModalOpen}
+            />
           </section>
         )}
-        <div className="m-2 flex flex-row justify-center">
-          <input placeholder="Submit NFT"></input>
-          <div className="w-2"></div>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => console.log("interact with contract")}
-          >
-            Button
-          </button>
-        </div>
-      </main>
+
+        <div className="h-4"></div>
+      </div>
 
       <style jsx>{`
         nav {
