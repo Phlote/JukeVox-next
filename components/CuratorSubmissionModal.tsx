@@ -1,4 +1,5 @@
 import React from "react";
+import { Modal } from "./Modal";
 
 export interface CurationMetadata {
   artistName: string;
@@ -10,11 +11,15 @@ export interface CurationMetadata {
   uuid: string;
 }
 
-export const CuratorSubmissionModal: React.FC<{ open: boolean }> = (props) => {
+export const CuratorSubmissionModal: React.FC<{
+  open: boolean;
+  setOpen: (b: boolean) => void;
+}> = (props) => {
+  const { open, setOpen } = props;
   const curationFormData = React.useState<CurationMetadata>();
 
   return (
-    <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-lg">
+    <Modal open={open} onClose={() => setOpen(false)}>
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-bold mb-2">
           What kind of media are you submitting?
@@ -81,6 +86,6 @@ export const CuratorSubmissionModal: React.FC<{ open: boolean }> = (props) => {
           Mint
         </button>
       </div>
-    </div>
+    </Modal>
   );
 };

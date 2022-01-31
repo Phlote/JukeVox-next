@@ -57,12 +57,16 @@ function Home() {
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 onClick={() => setsubmissionModalOpen(true)}
               >
-                Submit NFT
+                Submit Curation
               </button>
             </div>
-            <CuratorSubmissionModal open={submissionModalOpen} />
+            <CuratorSubmissionModal
+              open={submissionModalOpen}
+              setOpen={setsubmissionModalOpen}
+            />
           </section>
         )}
+
         <div className="h-4"></div>
       </div>
 
