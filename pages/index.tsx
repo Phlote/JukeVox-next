@@ -23,8 +23,6 @@ function Home() {
 
   const isConnected = typeof account === "string" && !!library;
 
-  console.log(isConnected);
-
   return (
     <div>
       <Head>

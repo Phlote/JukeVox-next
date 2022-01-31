@@ -4,11 +4,13 @@ import { Modal } from "./Modal";
 export interface CurationMetadata {
   artistName: string;
   trackTitle: string;
+  nftURL: string;
+  nftContractAddress: string;
   tags?: string[];
   curatorName?: string;
   curatorWallet: string;
-  submissionTimestamp: string;
-  uuid: string;
+  submissionTimestamp?: string;
+  uuid?: string;
 }
 
 export const CuratorSubmissionModal: React.FC<{
@@ -16,7 +18,14 @@ export const CuratorSubmissionModal: React.FC<{
   setOpen: (b: boolean) => void;
 }> = (props) => {
   const { open, setOpen } = props;
-  const curationFormData = React.useState<CurationMetadata>();
+  const [curationFormData, setCurationFormData] =
+    React.useState<CurationMetadata>();
+
+  const updateSubmission = (update: Partial<CurationMetadata>) => {
+    setCurationFormData((curr) => {
+      return { ...curr, ...update };
+    });
+  };
 
   return (
     <Modal open={open} onClose={() => setOpen(false)}>
@@ -36,6 +45,11 @@ export const CuratorSubmissionModal: React.FC<{
         <input
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           type="text"
+          onChange={(e) =>
+            updateSubmission({
+              artistName: e.target.value,
+            })
+          }
         />
       </div>
       <div className="mb-4">
@@ -45,6 +59,11 @@ export const CuratorSubmissionModal: React.FC<{
         <input
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           type="text"
+          onChange={(e) =>
+            updateSubmission({
+              trackTitle: e.target.value,
+            })
+          }
         />
       </div>
       <div className="mb-4">
@@ -54,6 +73,11 @@ export const CuratorSubmissionModal: React.FC<{
         <input
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           type="text"
+          onChange={(e) =>
+            updateSubmission({
+              nftURL: e.target.value,
+            })
+          }
         />
       </div>
       <div className="mb-4">
@@ -63,6 +87,11 @@ export const CuratorSubmissionModal: React.FC<{
         <input
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           type="text"
+          onChange={(e) =>
+            updateSubmission({
+              nftContractAddress: e.target.value,
+            })
+          }
         />
       </div>
       <div className="mb-4">
@@ -80,7 +109,13 @@ export const CuratorSubmissionModal: React.FC<{
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           type="button"
           onClick={() =>
-            alert("TODO: prompt user to approve and sign transaction")
+            alert(
+              ` TODO: prompt user to approve and sign transaction\n ${JSON.stringify(
+                curationFormData,
+                null,
+                4
+              )}`
+            )
           }
         >
           Mint
