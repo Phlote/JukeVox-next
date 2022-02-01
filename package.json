@@ -29,6 +29,7 @@
     "@metamask/types": "^1.0.0",
     "@typechain/ethers-v5": "^8.0.5",
     "@types/react": "^17.0.38",
+    "@web3-react/types": "^6.0.7",
     "autoprefixer": "^10.4.2",
     "eslint": "7.32.0",
     "eslint-config-next": "12.0.8",

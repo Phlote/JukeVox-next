@@ -10,22 +10,24 @@ import {
 import ETHBalance from "../components/ETHBalance";
 import TokenBalance from "../components/TokenBalance";
 import useEagerConnect from "../hooks/useEagerConnect";
+import { useIsCurator } from "../hooks/useIsCurator";
 import { changeNetwork } from "../util";
 
 const DAI_TOKEN_ADDRESS = "0x6b175474e89094c44da98b954eedeac495271d0f";
 
 function Home() {
-  const { account, library } = useWeb3React();
-
+  const { account, library, chainId } = useWeb3React();
   const triedToEagerConnect = useEagerConnect();
-
-  const [submissionModalOpen, setsubmissionModalOpen] =
-    useState<boolean>(false);
 
   const [error, setError] = useState<string>();
 
   const isConnected = typeof account === "string" && !!library;
 
+  const isCurator = useIsCurator();
+
+  console.log("isCurator", isCurator);
+
+  // network switch
   const onNetworkSwitch = async (networkName) => {
     await changeNetwork({ networkName, setError });
   };
@@ -41,6 +43,9 @@ function Home() {
       window.ethereum.removeListener("chainChanged", networkChanged);
     };
   }, []);
+
+  const [submissionModalOpen, setsubmissionModalOpen] =
+    useState<boolean>(false);
 
   return (
     <div>
@@ -79,14 +84,16 @@ function Home() {
               </button>
             </div>
 
-            <div className="m-2 flex flex-row justify-center">
-              <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                onClick={() => setsubmissionModalOpen(true)}
-              >
-                Submit Curation
-              </button>
-            </div>
+            {isCurator && (
+              <div className="m-2 flex flex-row justify-center">
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={() => setsubmissionModalOpen(true)}
+                >
+                  Submit Curation
+                </button>
+              </div>
+            )}
             <CuratorSubmissionModal
               open={submissionModalOpen}
               setOpen={setsubmissionModalOpen}
