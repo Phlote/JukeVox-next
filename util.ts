@@ -1,19 +1,6 @@
 import type { BigNumberish } from "@ethersproject/bignumber";
 import { formatUnits } from "@ethersproject/units";
-
-export const networks = {
-  polygon: {
-    chainId: `0x${Number(137).toString(16)}`,
-    chainName: "Polygon Mainnet",
-    nativeCurrency: {
-      name: "MATIC",
-      symbol: "MATIC",
-      decimals: 18,
-    },
-    rpcUrls: ["https://polygon-rpc.com/"],
-    blockExplorerUrls: ["https://polygonscan.com/"],
-  },
-};
+import { NETWORKS } from "./constants";
 
 export function shortenHex(hex: string, length = 4) {
   return `${hex.substring(0, length + 2)}…${hex.substring(
@@ -58,7 +45,7 @@ export const changeNetwork = async ({ networkName, setError }) => {
       method: "wallet_addEthereumChain",
       params: [
         {
-          ...networks[networkName],
+          ...NETWORKS[networkName],
         },
       ],
     });

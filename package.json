@@ -26,6 +26,7 @@
     "swr": "^1.2.0"
   },
   "devDependencies": {
+    "@metamask/types": "^1.0.0",
     "@typechain/ethers-v5": "^8.0.5",
     "@types/react": "^17.0.38",
     "autoprefixer": "^10.4.2",

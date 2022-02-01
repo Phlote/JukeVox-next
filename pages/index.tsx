@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import Head from "next/head";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import Account from "../components/Account";
 import {
   CurationMetadata,
@@ -10,6 +10,7 @@ import {
 import ETHBalance from "../components/ETHBalance";
 import TokenBalance from "../components/TokenBalance";
 import useEagerConnect from "../hooks/useEagerConnect";
+import { changeNetwork } from "../util";
 
 const DAI_TOKEN_ADDRESS = "0x6b175474e89094c44da98b954eedeac495271d0f";
 
@@ -19,13 +20,27 @@ function Home() {
   const triedToEagerConnect = useEagerConnect();
 
   const [submissionModalOpen, setsubmissionModalOpen] =
-    React.useState<boolean>(false);
+    useState<boolean>(false);
+
+  const [error, setError] = useState<string>();
 
   const isConnected = typeof account === "string" && !!library;
 
-  const onNetworkSwitch = async (network) => {
-    await changeNetwork({ se });
+  const onNetworkSwitch = async (networkName) => {
+    await changeNetwork({ networkName, setError });
   };
+
+  const networkChanged = (chainId) => {
+    console.log({ chainId });
+  };
+
+  React.useEffect(() => {
+    window.ethereum.on("chainChanged", networkChanged);
+
+    return () => {
+      window.ethereum.removeListener("chainChanged", networkChanged);
+    };
+  }, []);
 
   return (
     <div>
@@ -53,6 +68,16 @@ function Home() {
           <section>
             <ETHBalance />
             <TokenBalance tokenAddress={DAI_TOKEN_ADDRESS} symbol="DAI" />
+            <p className="text-red">{error}</p>
+
+            <div className="m-2 flex flex-row justify-center">
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                onClick={() => onNetworkSwitch("polygon")}
+              >
+                Switch to Polygon
+              </button>
+            </div>
 
             <div className="m-2 flex flex-row justify-center">
               <button
