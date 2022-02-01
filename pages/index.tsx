@@ -23,6 +23,10 @@ function Home() {
 
   const isConnected = typeof account === "string" && !!library;
 
+  const onNetworkSwitch = async (network) => {
+    await changeNetwork({ se });
+  };
+
   return (
     <div>
       <Head>
