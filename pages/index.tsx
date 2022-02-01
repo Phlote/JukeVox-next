@@ -16,7 +16,7 @@ import { changeNetwork } from "../util";
 const DAI_TOKEN_ADDRESS = "0x6b175474e89094c44da98b954eedeac495271d0f";
 
 function Home() {
-  const { account, library, chainId } = useWeb3React();
+  const { account, library, chainId, activate } = useWeb3React();
   const triedToEagerConnect = useEagerConnect();
 
   const [error, setError] = useState<string>();
@@ -25,24 +25,10 @@ function Home() {
 
   const isCurator = useIsCurator();
 
-  console.log("isCurator", isCurator);
-
   // network switch
   const onNetworkSwitch = async (networkName) => {
     await changeNetwork({ networkName, setError });
   };
-
-  const networkChanged = (chainId) => {
-    console.log({ chainId });
-  };
-
-  React.useEffect(() => {
-    window.ethereum.on("chainChanged", networkChanged);
-
-    return () => {
-      window.ethereum.removeListener("chainChanged", networkChanged);
-    };
-  }, []);
 
   const [submissionModalOpen, setsubmissionModalOpen] =
     useState<boolean>(false);

@@ -14,3 +14,5 @@ export const NETWORKS = {
     blockExplorerUrls: ["https://polygonscan.com/"],
   },
 };
+
+export const POLYGON_CHAIN_ID = 137;
