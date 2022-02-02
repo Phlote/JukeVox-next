@@ -44,7 +44,8 @@ export const balanceToString = (
 export const changeNetwork = async ({ networkName, setError }) => {
   try {
     if (!window.ethereum) throw new Error("No crypto wallet found");
-    await window.ethereum.request({
+    // TODO: get a proper type here
+    await (window.ethereum as any).request({
       method: "wallet_addEthereumChain",
       params: [
         {
