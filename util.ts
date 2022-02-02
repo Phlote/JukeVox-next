@@ -1,5 +1,6 @@
 import type { BigNumberish } from "@ethersproject/bignumber";
 import { formatUnits } from "@ethersproject/units";
+import { NETWORKS } from "./constants";
 
 export function shortenHex(hex: string, length = 4) {
   return `${hex.substring(0, length + 2)}…${hex.substring(
@@ -31,8 +32,28 @@ export function formatEtherscanLink(
   }
 }
 
-export const parseBalance = (
+export const parseBalance = (value: BigNumberish, decimals = 18) =>
+  parseFloat(formatUnits(value, decimals));
+
+export const balanceToString = (
   value: BigNumberish,
   decimals = 18,
   decimalsToDisplay = 3
-) => parseFloat(formatUnits(value, decimals)).toFixed(decimalsToDisplay);
+) => parseBalance(value, decimals).toFixed(decimalsToDisplay);
+
+export const changeNetwork = async ({ networkName, setError }) => {
+  try {
+    if (!window.ethereum) throw new Error("No crypto wallet found");
+    // TODO: get a proper type here
+    await (window.ethereum as any).request({
+      method: "wallet_addEthereumChain",
+      params: [
+        {
+          ...NETWORKS[networkName],
+        },
+      ],
+    });
+  } catch (err) {
+    setError(err.message);
+  }
+};
