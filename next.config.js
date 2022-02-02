@@ -6,5 +6,5 @@
 module.exports = {
   reactStrictMode: true,
   // TODO: investigate why this broke
-  swcMinify: false,
+  // swcMinify: true,
 };
