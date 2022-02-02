@@ -27,7 +27,7 @@ function Home() {
 
   // network switch
   const onNetworkSwitch = async (networkName) => {
-    await changeNetwork({ networkName, setError });
+    await changeNetwork(networkName, setError);
   };
 
   const [submissionModalOpen, setsubmissionModalOpen] =
