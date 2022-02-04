@@ -45,6 +45,10 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
       <div>
         {isWeb3Available ? (
           <button
+            className="p-4 rounded-xl w-64 h-16 justify-center items-center"
+            style={{
+              backgroundColor: "#404040",
+            }}
             disabled={connecting}
             onClick={() => {
               setConnecting(true);
@@ -59,25 +63,26 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
               });
             }}
           >
-            {isMetaMaskInstalled ? "Connect to MetaMask" : "Connect to Wallet"}
+            <p className="text-white m-0 font-extrabold text-xl leading-7 ">
+              Connect to curate
+            </p>
           </button>
         ) : (
-          <button onClick={startOnboarding}>Install Metamask</button>
+          <button onClick={startOnboarding}>Install a Wallet</button>
         )}
       </div>
     );
   }
 
   return (
-    <a
-      {...{
-        href: formatEtherscanLink("Account", [chainId, account]),
-        target: "_blank",
-        rel: "noopener noreferrer",
+    <div
+      className="p-4 rounded-xl w-64 h-16 flex justify-center items-center"
+      style={{
+        backgroundColor: "#404040",
       }}
     >
-      {ENSName || `${shortenHex(account, 4)}`}
-    </a>
+      {ENSName || `${shortenHex(account, 10)}`}
+    </div>
   );
 };
 
