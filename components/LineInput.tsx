@@ -24,7 +24,7 @@ export const LineInput = styled.input`
 
   outline: none;
   border: none;
-  border-bottom: 1px solid #312437;
+  border-bottom: 1px solid white;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -34,7 +34,7 @@ export const LineInput = styled.input`
 
   &:focus {
     outline: none;
-    /* border-bottom: 1px solid ${(props) => props.secondary}; */
+    border-bottom: 1px solid ${(props) => props.secondary ?? "white"};
   }
 
   &::placeholder {

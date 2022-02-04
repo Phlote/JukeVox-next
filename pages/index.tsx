@@ -51,7 +51,7 @@ function Home() {
           Welcome to <a href="https://twitter.com/teamphlote">Phlote TCR!</a>
         </h1>
 
-        {isConnected && (
+        {/* {isConnected && (
           <section>
             <ETHBalance />
             <TokenBalance tokenAddress={DAI_TOKEN_ADDRESS} symbol="DAI" />
@@ -81,7 +81,7 @@ function Home() {
               setOpen={setsubmissionModalOpen}
             />
           </section>
-        )}
+        )} */}
       </div>
       <div
         className="flex justify-start flex-col px-12"
@@ -97,9 +97,10 @@ function Home() {
           that exists to elevate the art of curation.
         </h2>
         <div className="h-6" />
-        <LineInputContainer>
-          <Image height={20} width={10} src="/search.svg" alt="search" />
+        <LineInputContainer secondary="white">
+          <Image height={30} width={30} src="/search.svg" alt="search" />
           <LineInput
+            secondary="white"
             className="ml-4 flex-grow"
             type="text"
             placeholder="Search"
