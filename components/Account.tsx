@@ -47,7 +47,7 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
           <button
             className="p-4 rounded-xl w-64 h-16 justify-center items-center"
             style={{
-              backgroundColor: "#E4E4E4",
+              backgroundColor: "#404040",
             }}
             disabled={connecting}
             onClick={() => {
@@ -63,7 +63,6 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
               });
             }}
           >
-            {/* text-white text-xl leading-6 */}
             <p className="text-white m-0 font-extrabold text-xl leading-7 ">
               Connect to curate
             </p>
@@ -79,7 +78,7 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
     <div
       className="p-4 rounded-xl w-64 h-16 flex justify-center items-center"
       style={{
-        backgroundColor: "#E4E4E4",
+        backgroundColor: "#404040",
       }}
     >
       {ENSName || `${shortenHex(account, 10)}`}
