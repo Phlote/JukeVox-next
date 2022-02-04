@@ -47,7 +47,8 @@ function Home() {
         <NavBar />
       </header>
 
-      <div className="container mx-auto flex justify-center items-center flex-col">
+      <div className="container flex justify-center items-center flex-col">
+        <div className="h-20"></div>
         {isConnected && (
           <section>
             {/* <ETHBalance />
@@ -65,7 +66,7 @@ function Home() {
               </div>
             )}
 
-            {isCurator && (
+            {/* {isCurator && (
               <div className="m-2 flex flex-row justify-center">
                 <button
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -78,12 +79,12 @@ function Home() {
             <CuratorSubmissionModal
               open={submissionModalOpen}
               setOpen={setsubmissionModalOpen}
-            />
+            /> */}
           </section>
         )}
       </div>
       <div
-        className="flex justify-start flex-col px-12"
+        className="flex justify-start flex-col mx-12"
         style={{ lineHeight: "2rem" }}
       >
         <h1 className="font-extrabold text-4xl">

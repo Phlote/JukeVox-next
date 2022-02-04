@@ -7,7 +7,7 @@ export const NavBar = () => {
   const triedToEagerConnect = useEagerConnect();
 
   return (
-    <nav className="flex justify-evenly	py-4">
+    <nav className="flex justify-between mx-12 py-4">
       <Image width={160} height={20} src="/logo.png" alt="logo"></Image>
 
       <Account triedToEagerConnect={triedToEagerConnect} />
