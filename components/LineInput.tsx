@@ -4,6 +4,7 @@ export const LineInputContainer = styled.div`
   color: ${(props) => props.primary ?? "white"};
 
   display: flex;
+  flex-direction:row
   position: relative;
   margin-bottom: 1rem;
   width: 100%;

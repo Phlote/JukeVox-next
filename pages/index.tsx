@@ -15,6 +15,7 @@ import { useIsCurator } from "../hooks/useIsCurator";
 import { changeNetwork } from "../util";
 import Image from "next/image";
 import { LineInput, LineInputContainer } from "../components/LineInput";
+import { POLYGON_CHAIN_ID } from "../constants";
 
 const DAI_TOKEN_ADDRESS = "0x6b175474e89094c44da98b954eedeac495271d0f";
 
@@ -47,24 +48,22 @@ function Home() {
       </header>
 
       <div className="container mx-auto flex justify-center items-center flex-col">
-        <h1>
-          Welcome to <a href="https://twitter.com/teamphlote">Phlote TCR!</a>
-        </h1>
-
-        {/* {isConnected && (
+        {isConnected && (
           <section>
-            <ETHBalance />
-            <TokenBalance tokenAddress={DAI_TOKEN_ADDRESS} symbol="DAI" />
+            {/* <ETHBalance />
+            <TokenBalance tokenAddress={DAI_TOKEN_ADDRESS} symbol="DAI" /> */}
             <p className="text-red">{error}</p>
 
-            <div className="m-2 flex flex-row justify-center">
-              <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                onClick={() => onNetworkSwitch("polygon")}
-              >
-                Switch to Polygon
-              </button>
-            </div>
+            {chainId !== POLYGON_CHAIN_ID && (
+              <div className="m-2 flex flex-row justify-center">
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={() => onNetworkSwitch("polygon")}
+                >
+                  Switch to Polygon
+                </button>
+              </div>
+            )}
 
             {isCurator && (
               <div className="m-2 flex flex-row justify-center">
@@ -81,7 +80,7 @@ function Home() {
               setOpen={setsubmissionModalOpen}
             />
           </section>
-        )} */}
+        )}
       </div>
       <div
         className="flex justify-start flex-col px-12"
@@ -97,16 +96,17 @@ function Home() {
           that exists to elevate the art of curation.
         </h2>
         <div className="h-6" />
-        <LineInputContainer secondary="white">
-          <Image height={30} width={30} src="/search.svg" alt="search" />
-          <LineInput
-            secondary="white"
-            className="ml-4 flex-grow"
-            type="text"
-            placeholder="Search"
-            style={{ backgroundColor: "transparent" }}
-          />
-        </LineInputContainer>
+        <div className="w-3/4">
+          <LineInputContainer secondary="white">
+            <Image height={30} width={30} src="/search.svg" alt="search" />
+            <LineInput
+              secondary="white"
+              className="ml-4 flex-grow"
+              type="text"
+              placeholder="Search"
+            />
+          </LineInputContainer>
+        </div>
       </div>
 
       <style jsx>{`
