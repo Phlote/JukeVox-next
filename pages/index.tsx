@@ -66,7 +66,7 @@ function Home() {
               </div>
             )}
 
-            {/* {isCurator && (
+            {isCurator && (
               <div className="m-2 flex flex-row justify-center">
                 <button
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -79,7 +79,7 @@ function Home() {
             <CuratorSubmissionModal
               open={submissionModalOpen}
               setOpen={setsubmissionModalOpen}
-            /> */}
+            />
           </section>
         )}
       </div>
