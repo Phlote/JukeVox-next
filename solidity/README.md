@@ -13,3 +13,8 @@ npx hardhat node
 node scripts/sample-script.js
 npx hardhat help
 ```
+
+# Deployment
+
+We are using the Rinkleby network. When you deploy a contract, they are given a new address. Please communicate
+any address changes to the team when it is done. Eventually I hope to automate this process (2/2/2022).
