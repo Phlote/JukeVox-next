@@ -97,7 +97,7 @@ function Home() {
           that exists to elevate the art of curation.
         </h2>
         <div className="h-6" />
-        <div className="w-3/4">
+        <div className="w-3/4 ml-8">
           <LineInputContainer secondary="white">
             <Image height={30} width={30} src="/search.svg" alt="search" />
             <LineInput

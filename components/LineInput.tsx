@@ -31,7 +31,7 @@ export const LineInput = styled.input`
   align-items: center;
   height: 3rem;
   width: 5rem;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
 
   &:focus {
     outline: none;
