@@ -14,6 +14,7 @@ import useEagerConnect from "../hooks/useEagerConnect";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { changeNetwork } from "../util";
 import Image from "next/image";
+import { LineInput, LineInputContainer } from "../components/LineInput";
 
 const DAI_TOKEN_ADDRESS = "0x6b175474e89094c44da98b954eedeac495271d0f";
 
@@ -95,19 +96,16 @@ function Home() {
           {" "}
           that exists to elevate the art of curation.
         </h2>
-        <div className="h-6"></div>
-        <div
-          className="w-1/2 h-12 flex p-4 rounded-md relative"
-          style={{ backgroundColor: "gray" }}
-        >
+        <div className="h-6" />
+        <LineInputContainer>
           <Image height={20} width={10} src="/search.svg" alt="search" />
-          <input
+          <LineInput
             className="ml-4 flex-grow"
             type="text"
             placeholder="Search"
             style={{ backgroundColor: "transparent" }}
-          ></input>
-        </div>
+          />
+        </LineInputContainer>
       </div>
 
       <style jsx>{`
