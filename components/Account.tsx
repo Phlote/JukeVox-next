@@ -66,6 +66,7 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
           </HollowInputContainer>
         ) : (
           <HollowInputContainer
+            style={{ backgroundColor: "rgba(228, 228, 228, 0.37)" }}
             className="cursor-pointer h-16"
             onClick={startOnboarding}
           >
@@ -77,7 +78,10 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
   }
 
   return (
-    <HollowInputContainer className="h-16">
+    <HollowInputContainer
+      className="h-16"
+      style={{ backgroundColor: "rgba(228, 228, 228, 0.37)" }}
+    >
       <div className="">{ENSName || `${shortenHex(account, 10)}`}</div>
     </HollowInputContainer>
   );

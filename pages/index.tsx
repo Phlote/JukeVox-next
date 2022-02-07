@@ -17,26 +17,14 @@ import Image from "next/image";
 import { LineInput, LineInputContainer } from "../components/LineInput";
 import { POLYGON_CHAIN_ID } from "../constants";
 import { HollowInput, HollowInputContainer } from "../components/HollowInput";
+import { atom, useAtom } from "jotai";
 
-const DAI_TOKEN_ADDRESS = "0x6b175474e89094c44da98b954eedeac495271d0f";
+const curationSubmissionOpenAtom = atom<boolean>(false);
+export const useCurationSubmissionOpen = () =>
+  useAtom(curationSubmissionOpenAtom);
 
 function Home() {
-  const { account, library, chainId, activate } = useWeb3React();
-
-  const [error, setError] = useState<string>();
-
-  const isConnected = typeof account === "string" && !!library;
-
-  const isCurator = useIsCurator();
-
-  // network switch
-  const onNetworkSwitch = async (networkName) => {
-    await changeNetwork(networkName, setError);
-  };
-
-  const [submissionModalOpen, setsubmissionModalOpen] =
-    useState<boolean>(false);
-
+  const [open, setOpen] = useCurationSubmissionOpen();
   return (
     <div className="h-screen flex flex-col w-full">
       <Head>
@@ -45,42 +33,9 @@ function Home() {
       </Head>
 
       <NavBar />
+      <CuratorSubmissionModal open={open} setOpen={setOpen} />
 
       <div className="container flex justify-center items-center flex-grow mx-auto">
-        {isConnected && (
-          <section>
-            {/* <ETHBalance />
-            <TokenBalance tokenAddress={DAI_TOKEN_ADDRESS} symbol="DAI" /> */}
-            <p className="text-red">{error}</p>
-
-            {chainId !== POLYGON_CHAIN_ID && (
-              <div className="m-2 flex flex-row justify-center">
-                <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                  onClick={() => onNetworkSwitch("polygon")}
-                >
-                  Switch to Polygon
-                </button>
-              </div>
-            )}
-
-            {isCurator && (
-              <div className="m-2 flex flex-row justify-center">
-                <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                  onClick={() => setsubmissionModalOpen(true)}
-                >
-                  Submit Curation
-                </button>
-              </div>
-            )}
-            <CuratorSubmissionModal
-              open={submissionModalOpen}
-              setOpen={setsubmissionModalOpen}
-            />
-          </section>
-        )}
-
         <div className="w-3/4 h-16" style={{ lineHeight: "0.5rem" }}>
           <HollowInputContainer
             onClick={() => {
