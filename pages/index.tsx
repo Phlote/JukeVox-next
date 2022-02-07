@@ -16,11 +16,7 @@ import { changeNetwork } from "../util";
 import Image from "next/image";
 import { LineInput, LineInputContainer } from "../components/LineInput";
 import { POLYGON_CHAIN_ID } from "../constants";
-import {
-  HollowInput,
-  HollowInputContainer,
-  HollowInputOverlay,
-} from "../components/HollowInput";
+import { HollowInput, HollowInputContainer } from "../components/HollowInput";
 
 const DAI_TOKEN_ADDRESS = "0x6b175474e89094c44da98b954eedeac495271d0f";
 
