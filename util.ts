@@ -41,7 +41,10 @@ export const balanceToString = (
   decimalsToDisplay = 3
 ) => parseBalance(value, decimals).toFixed(decimalsToDisplay);
 
-export const changeNetwork = async ({ networkName, setError }) => {
+export const changeNetwork = async (
+  networkName: string,
+  setError: (e: string) => void
+) => {
   try {
     if (!window.ethereum) throw new Error("No crypto wallet found");
     // TODO: get a proper type here
