@@ -16,6 +16,11 @@ import { changeNetwork } from "../util";
 import Image from "next/image";
 import { LineInput, LineInputContainer } from "../components/LineInput";
 import { POLYGON_CHAIN_ID } from "../constants";
+import {
+  HollowInput,
+  HollowInputContainer,
+  HollowInputOverlay,
+} from "../components/HollowInput";
 
 const DAI_TOKEN_ADDRESS = "0x6b175474e89094c44da98b954eedeac495271d0f";
 
@@ -37,18 +42,15 @@ function Home() {
     useState<boolean>(false);
 
   return (
-    <div>
+    <div className="h-screen flex flex-col w-full">
       <Head>
         <title>Phlote TCR</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <header>
-        <NavBar />
-      </header>
+      <NavBar />
 
-      <div className="container flex justify-center items-center flex-col">
-        <div className="h-20"></div>
+      <div className="container flex justify-center items-center flex-grow mx-auto">
         {isConnected && (
           <section>
             {/* <ETHBalance />
@@ -82,44 +84,23 @@ function Home() {
             />
           </section>
         )}
-      </div>
-      <div
-        className="flex justify-start flex-col mx-12"
-        style={{ lineHeight: "2rem" }}
-      >
-        <h1 className="font-extrabold text-4xl">
-          {" "}
-          Web3 Search Engine powered by a community
-        </h1>
-        <br />
-        <h2 className="text-3xl	font-normal">
-          {" "}
-          that exists to elevate the art of curation.
-        </h2>
-        <div className="h-6" />
-        <div className="w-3/4 ml-8">
-          <LineInputContainer secondary="white">
+
+        <div className="w-3/4 h-16" style={{ lineHeight: "0.5rem" }}>
+          <HollowInputContainer
+            onClick={() => {
+              document.getElementById("search-home").focus();
+            }}
+          >
             <Image height={30} width={30} src="/search.svg" alt="search" />
-            <LineInput
-              secondary="white"
+            <HollowInput
+              id="search-home"
               className="ml-4 flex-grow"
               type="text"
-              placeholder="Search"
+              placeholder="Artist Name"
             />
-          </LineInputContainer>
+          </HollowInputContainer>
         </div>
       </div>
-
-      <style jsx>{`
-        nav {
-          display: flex;
-          justify-content: space-between;
-        }
-
-        main {
-          text-align: center;
-        }
-      `}</style>
     </div>
   );
 }

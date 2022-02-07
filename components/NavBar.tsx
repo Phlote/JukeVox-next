@@ -7,10 +7,13 @@ export const NavBar = () => {
   const triedToEagerConnect = useEagerConnect();
 
   return (
-    <nav className="flex justify-between mx-12 py-4">
-      <Image width={160} height={20} src="/logo.png" alt="logo"></Image>
+    <div className="py-4 absolute w-full px-12">
+      <div className="relative flex flex-row">
+        <h1 className="text-6xl">Phlote</h1>
+        <div className="flex-grow" />
 
-      <Account triedToEagerConnect={triedToEagerConnect} />
-    </nav>
+        <Account triedToEagerConnect={triedToEagerConnect} />
+      </div>
+    </div>
   );
 };
