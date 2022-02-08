@@ -5,6 +5,7 @@ import { injected } from "../connectors";
 import useENSName from "../hooks/useENSName";
 import useMetaMaskOnboarding from "../hooks/useMetaMaskOnboarding";
 import { formatEtherscanLink, shortenHex } from "../util";
+import { HollowInputContainer } from "./HollowInput";
 
 type AccountProps = {
   triedToEagerConnect: boolean;
@@ -44,11 +45,9 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
     return (
       <div>
         {isWeb3Available ? (
-          <button
-            className="p-4 rounded-xl w-64 h-16 justify-center items-center"
-            style={{
-              backgroundColor: "#404040",
-            }}
+          <HollowInputContainer
+            style={{ backgroundColor: "rgba(228, 228, 228, 0.37)" }}
+            className="cursor-pointer h-16"
             disabled={connecting}
             onClick={() => {
               setConnecting(true);
@@ -63,26 +62,28 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
               });
             }}
           >
-            <p className="text-white m-0 font-extrabold text-xl leading-7 ">
-              Connect to curate
-            </p>
-          </button>
+            <p className="text-white text-xl">Connect to curate</p>
+          </HollowInputContainer>
         ) : (
-          <button onClick={startOnboarding}>Install a Wallet</button>
+          <HollowInputContainer
+            style={{ backgroundColor: "rgba(228, 228, 228, 0.37)" }}
+            className="cursor-pointer h-16"
+            onClick={startOnboarding}
+          >
+            Install a Wallet
+          </HollowInputContainer>
         )}
       </div>
     );
   }
 
   return (
-    <div
-      className="p-4 rounded-xl w-64 h-16 flex justify-center items-center"
-      style={{
-        backgroundColor: "#404040",
-      }}
+    <HollowInputContainer
+      className="h-16"
+      style={{ backgroundColor: "rgba(228, 228, 228, 0.37)" }}
     >
-      {ENSName || `${shortenHex(account, 10)}`}
-    </div>
+      <div className="">{ENSName || `${shortenHex(account, 10)}`}</div>
+    </HollowInputContainer>
   );
 };
 
