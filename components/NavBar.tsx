@@ -8,12 +8,12 @@ import { useIsCurator } from "../hooks/useIsCurator";
 import { POLYGON_CHAIN_ID } from "../constants";
 import { changeNetwork } from "../util";
 import { HollowInputContainer } from "./HollowInput";
-import { CuratorSubmissionModal } from "./CuratorSubmissionModal";
 import { useCurationSubmissionOpen } from "../pages";
+import { useSubmitSidenavOpen } from "./SideNav";
 
 export const NavBar = () => {
   const triedToEagerConnect = useEagerConnect();
-  const [, setModalOpen] = useCurationSubmissionOpen();
+  const [, setSidenavOpen] = useSubmitSidenavOpen();
 
   const { account, library, chainId, activate, deactivate } = useWeb3React();
 
@@ -78,7 +78,7 @@ export const NavBar = () => {
         {isConnected && isCurator && (
           <HollowInputContainer
             className="cursor-pointer flex justify-center items-center h-16"
-            onClick={() => setModalOpen(true)}
+            onClick={() => setSidenavOpen(true)}
           >
             Submit Curation
           </HollowInputContainer>

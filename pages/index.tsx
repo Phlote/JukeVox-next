@@ -3,10 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import React, { useState } from "react";
 import Account from "../components/Account";
-import {
-  CurationMetadata,
-  CuratorSubmissionModal,
-} from "../components/CuratorSubmissionModal";
+
 import ETHBalance from "../components/ETHBalance";
 import { NavBar } from "../components/NavBar";
 import TokenBalance from "../components/TokenBalance";
@@ -18,6 +15,7 @@ import { LineInput, LineInputContainer } from "../components/LineInput";
 import { POLYGON_CHAIN_ID } from "../constants";
 import { HollowInput, HollowInputContainer } from "../components/HollowInput";
 import { atom, useAtom } from "jotai";
+import { DefaultLayout } from "../components/DefaultLayout";
 
 const curationSubmissionOpenAtom = atom<boolean>(false);
 export const useCurationSubmissionOpen = () =>
@@ -26,14 +24,13 @@ export const useCurationSubmissionOpen = () =>
 function Home() {
   const [open, setOpen] = useCurationSubmissionOpen();
   return (
-    <div className="h-screen flex flex-col w-full">
+    <DefaultLayout>
       <Head>
         <title>Phlote TCR</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <NavBar />
-      <CuratorSubmissionModal open={open} setOpen={setOpen} />
 
       <div className="container flex justify-center items-center flex-grow mx-auto">
         <div className="w-3/4 h-16" style={{ lineHeight: "0.5rem" }}>
@@ -52,7 +49,7 @@ function Home() {
           </HollowInputContainer>
         </div>
       </div>
-    </div>
+    </DefaultLayout>
   );
 }
 
