@@ -1,9 +1,11 @@
 import styled from "styled-components";
 
 export const HollowInputContainer = styled.div`
-  background: rgba(242, 244, 248, 0.17);
+  background: ${(props) =>
+    props.backgroundColor ?? "rgba(242, 244, 248, 0.17)"};
+
   color: white;
-  padding: 1.5rem;
+  padding: 1rem;
   border-radius: 9999px;
 
   display: flex;
