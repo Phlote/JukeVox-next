@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { HollowInput } from "./HollowInput";
+import { HollowInput } from "./Hollow";
 import Image from "next/image";
 
 interface TagsInput {

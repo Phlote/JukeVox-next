@@ -1,5 +1,5 @@
 import { useIsCurator } from "../hooks/useIsCurator";
-import { HollowInputContainer, HollowInput } from "./HollowInput";
+import { HollowInputContainer, HollowInput } from "./Hollow";
 import { HollowTagsInput } from "./HollowTagsInput";
 import React, { useState } from "react";
 import { usePhlote } from "../hooks/usePhlote";
@@ -18,8 +18,8 @@ export const CurationSubmissionForm = (props) => {
 
   const phloteContract = usePhlote();
 
-  const mint = async () => {
-    await phloteContract.setSong(songTitle, artistName, nftURL, 0);
+  const submitNFT = async () => {
+    const res = await phloteContract.setSong(songTitle, artistName, nftURL, 0);
   };
 
   if (!isCurator) return null;
@@ -88,7 +88,7 @@ export const CurationSubmissionForm = (props) => {
           <HollowTagsInput tags={tags} setTags={setTags} />
         </HollowInputContainer>
       </div>
-      <button onClick={mint}>Mint</button>
+      <button onClick={submitNFT}>Submit</button>
     </div>
   );
 };

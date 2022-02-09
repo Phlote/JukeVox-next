@@ -1,5 +1,24 @@
 import styled from "styled-components";
 
+export const HollowButtonContainer = styled.div`
+  background: ${(props) =>
+    props.backgroundColor ?? "rgba(242, 244, 248, 0.17)"};
+
+  color: white;
+  padding: 1rem;
+  border-radius: 9999px;
+
+  display: flex;
+  flex-grow: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  &:focus {
+    outline: none;
+  }
+`;
+
 export const HollowInputContainer = styled.div`
   background: ${(props) =>
     props.backgroundColor ?? "rgba(242, 244, 248, 0.17)"};

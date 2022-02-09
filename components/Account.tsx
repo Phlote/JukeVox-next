@@ -5,7 +5,7 @@ import { injected } from "../connectors";
 import useENSName from "../hooks/useENSName";
 import useMetaMaskOnboarding from "../hooks/useMetaMaskOnboarding";
 import { formatEtherscanLink, shortenHex } from "../util";
-import { HollowInputContainer } from "./HollowInput";
+import { HollowInputContainer } from "./Hollow";
 
 type AccountProps = {
   triedToEagerConnect: boolean;

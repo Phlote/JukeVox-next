@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { POLYGON_CHAIN_ID } from "../constants";
 import { changeNetwork } from "../util";
-import { HollowInputContainer } from "./HollowInput";
+import { HollowButtonContainer, HollowInputContainer } from "./Hollow";
 import Link from "next/link";
 
 export const NavBar = () => {
@@ -51,30 +51,30 @@ export const NavBar = () => {
         <div className="w-4" />
 
         {isConnected && (
-          <HollowInputContainer
+          <HollowButtonContainer
             className="max-w-xs	 cursor-pointer flex justify-center items-center h-16"
             onClick={() => deactivate()}
           >
             Disconnect Wallet
-          </HollowInputContainer>
+          </HollowButtonContainer>
         )}
 
         <div className="w-4" />
 
         {isConnected && chainId !== POLYGON_CHAIN_ID && (
-          <HollowInputContainer
+          <HollowButtonContainer
             className="max-w-xs	l cursor-pointer flex justify-center items-center h-16"
             onClick={() => onNetworkSwitch("polygon")}
           >
             Switch to Polygon
-          </HollowInputContainer>
+          </HollowButtonContainer>
         )}
 
         {isConnected && isCurator && (
           <Link href="/curate" passHref>
-            <HollowInputContainer className="max-w-xs	 cursor-pointer flex justify-center items-center h-16">
+            <HollowButtonContainer className="max-w-xs	 cursor-pointer flex justify-center items-center h-16">
               Submit Curation
-            </HollowInputContainer>
+            </HollowButtonContainer>
           </Link>
         )}
       </div>
