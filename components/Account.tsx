@@ -5,7 +5,7 @@ import { injected } from "../connectors";
 import useENSName from "../hooks/useENSName";
 import useMetaMaskOnboarding from "../hooks/useMetaMaskOnboarding";
 import { formatEtherscanLink, shortenHex } from "../util";
-import { HollowInputContainer } from "./Hollow";
+import { HollowButtonContainer, HollowInputContainer } from "./Hollow";
 
 type AccountProps = {
   triedToEagerConnect: boolean;
@@ -45,7 +45,7 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
     return (
       <div>
         {isWeb3Available ? (
-          <HollowInputContainer
+          <HollowButtonContainer
             style={{ backgroundColor: "rgba(228, 228, 228, 0.37)" }}
             className="cursor-pointer h-16"
             disabled={connecting}
@@ -63,27 +63,27 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
             }}
           >
             <p className="text-white text-xl">Connect to curate</p>
-          </HollowInputContainer>
+          </HollowButtonContainer>
         ) : (
-          <HollowInputContainer
+          <HollowButtonContainer
             style={{ backgroundColor: "rgba(228, 228, 228, 0.37)" }}
             className="cursor-pointer h-16"
             onClick={startOnboarding}
           >
             Install a Wallet
-          </HollowInputContainer>
+          </HollowButtonContainer>
         )}
       </div>
     );
   }
 
   return (
-    <HollowInputContainer
+    <HollowButtonContainer
       className="h-16 max-w-xs"
       style={{ backgroundColor: "rgba(228, 228, 228, 0.37)" }}
     >
       {ENSName || `${shortenHex(account, 10)}`}
-    </HollowInputContainer>
+    </HollowButtonContainer>
   );
 };
 

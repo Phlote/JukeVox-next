@@ -10,7 +10,5 @@ export const useIsCurator = () => {
 
   if (chainId !== 137) return false;
 
-  console.log(data);
-
   return parseBalance(data ?? 0) > 0;
 };

@@ -61,16 +61,26 @@ export const NavBar = () => {
 
         <div className="w-4" />
 
-        {isConnected && chainId !== POLYGON_CHAIN_ID && (
+        {/* TODO use polygon in prod, rinkeby in local */}
+
+        {/* {isConnected && chainId !== POLYGON_CHAIN_ID && (
           <HollowButtonContainer
             className="max-w-xs	l cursor-pointer flex justify-center items-center h-16"
             onClick={() => onNetworkSwitch("polygon")}
           >
             Switch to Polygon
           </HollowButtonContainer>
-        )}
+        )} */}
 
-        {isConnected && isCurator && (
+        {/* {isConnected && isCurator && (
+          <Link href="/curate" passHref>
+            <HollowButtonContainer className="max-w-xs	 cursor-pointer flex justify-center items-center h-16">
+              Submit Curation
+            </HollowButtonContainer>
+          </Link>
+        )} */}
+
+        {isConnected && (
           <Link href="/curate" passHref>
             <HollowButtonContainer className="max-w-xs	 cursor-pointer flex justify-center items-center h-16">
               Submit Curation
