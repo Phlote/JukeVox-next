@@ -18,11 +18,11 @@ import { LineInput, LineInputContainer } from "../components/LineInput";
 import { POLYGON_CHAIN_ID } from "../constants";
 import { HollowInput, HollowInputContainer } from "../components/HollowInput";
 import { atom, useAtom } from "jotai";
-import { DefaultLayout } from "../components/DefaultLayout";
+import { HomeLayout } from "../components/Layouts";
 
 function Home() {
   return (
-    <DefaultLayout>
+    <HomeLayout>
       <div className="w-3/4 h-16" style={{ lineHeight: "0.5rem" }}>
         <HollowInputContainer
           onClick={() => {
@@ -38,7 +38,7 @@ function Home() {
           />
         </HollowInputContainer>
       </div>
-    </DefaultLayout>
+    </HomeLayout>
   );
 }
 

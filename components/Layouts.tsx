@@ -2,7 +2,7 @@ import Head from "next/head";
 import React from "react";
 import { NavBar } from "./NavBar";
 
-export const DefaultLayout = ({ children }) => {
+export const HomeLayout = ({ children }) => {
   return (
     <div className="h-screen flex flex-col w-full">
       <Head>

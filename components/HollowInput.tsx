@@ -12,7 +12,7 @@ export const HollowInputContainer = styled.div`
   flex-grow: 1;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
 
   &:focus {
     outline: none;

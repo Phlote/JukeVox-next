@@ -1,11 +1,11 @@
 import { CurationSubmissionForm } from "../components/CurationSubmissionForm";
-import { DefaultLayout } from "../components/DefaultLayout";
+import { HomeLayout } from "../components/Layouts";
 
 export const CuratePage = (props) => {
   return (
-    <DefaultLayout>
+    <HomeLayout>
       <CurationSubmissionForm />
-    </DefaultLayout>
+    </HomeLayout>
   );
 };
 
