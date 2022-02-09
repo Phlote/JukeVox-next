@@ -19,9 +19,7 @@ export const CurationSubmissionForm = (props) => {
   const phloteContract = usePhlote();
 
   const mint = async () => {
-    const res = await phloteContract.setSong(songTitle, artistName, nftURL, 0);
-    console.log(res);
-    // await phloteContract.mintsongNFT();
+    await phloteContract.setSong(songTitle, artistName, nftURL, 0);
   };
 
   if (!isCurator) return null;
