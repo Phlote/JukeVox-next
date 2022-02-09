@@ -2,14 +2,12 @@ import { useIsCurator } from "../hooks/useIsCurator";
 import { HollowInputContainer, HollowInput } from "./HollowInput";
 import { HollowTagsInput } from "./HollowTagsInput";
 import React, { useState } from "react";
-import useContract from "../hooks/useContract";
-import { NFT_MINT_CONTRACT_RINKLEBY } from "../contracts/addresses";
-import NFTMintABI from "../contracts/NFTMint.json";
-import { useNFTMint } from "../hooks/useNFTMint";
+import { usePhlote } from "../hooks/usePhlote";
 
 export const CurationSubmissionForm = (props) => {
   const isCurator = useIsCurator();
 
+  //TODO: seems ugly
   const [mediaType, setMediaType] = useState<string>();
   const [artistName, setArtistName] = useState<string>();
   const [artistWallet, setArtistWallet] = useState<string>();
@@ -18,7 +16,13 @@ export const CurationSubmissionForm = (props) => {
   const [marketplace, setMarketplace] = useState<string>();
   const [tags, setTags] = useState<string[]>([]);
 
-  const mint = useNFTMint();
+  const phloteContract = usePhlote();
+
+  const mint = async () => {
+    const res = await phloteContract.setSong(songTitle, artistName, nftURL, 0);
+    console.log(res);
+    // await phloteContract.mintsongNFT();
+  };
 
   if (!isCurator) return null;
 
@@ -86,7 +90,7 @@ export const CurationSubmissionForm = (props) => {
           <HollowTagsInput tags={tags} setTags={setTags} />
         </HollowInputContainer>
       </div>
-      <button onClick={() => console.log("mint?")}>Mint</button>
+      <button onClick={mint}>Mint</button>
     </div>
   );
 };
