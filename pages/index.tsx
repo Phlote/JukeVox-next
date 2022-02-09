@@ -20,12 +20,7 @@ import { HollowInput, HollowInputContainer } from "../components/HollowInput";
 import { atom, useAtom } from "jotai";
 import { DefaultLayout } from "../components/DefaultLayout";
 
-const curationSubmissionOpenAtom = atom<boolean>(false);
-export const useCurationSubmissionOpen = () =>
-  useAtom(curationSubmissionOpenAtom);
-
 function Home() {
-  const [open, setOpen] = useCurationSubmissionOpen();
   return (
     <DefaultLayout>
       <div className="w-3/4 h-16" style={{ lineHeight: "0.5rem" }}>

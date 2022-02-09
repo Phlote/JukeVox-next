@@ -79,10 +79,10 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
 
   return (
     <HollowInputContainer
-      className="h-16"
+      className="h-16 max-w-xs"
       style={{ backgroundColor: "rgba(228, 228, 228, 0.37)" }}
     >
-      <div className="">{ENSName || `${shortenHex(account, 10)}`}</div>
+      {ENSName || `${shortenHex(account, 10)}`}
     </HollowInputContainer>
   );
 };

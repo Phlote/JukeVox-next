@@ -11,6 +11,7 @@ export const DefaultLayout = ({ children }) => {
       </Head>
 
       <NavBar />
+      <div className="h-16" />
       <div className="container flex justify-center items-center flex-grow mx-auto">
         {children}
       </div>

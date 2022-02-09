@@ -1,4 +1,3 @@
-import Link from "next/link";
 import useEagerConnect from "../hooks/useEagerConnect";
 import Account from "./Account";
 import Image from "next/image";
@@ -8,12 +7,10 @@ import { useIsCurator } from "../hooks/useIsCurator";
 import { POLYGON_CHAIN_ID } from "../constants";
 import { changeNetwork } from "../util";
 import { HollowInputContainer } from "./HollowInput";
-import { CuratorSubmissionModal } from "./CuratorSubmissionModal";
-import { useCurationSubmissionOpen } from "../pages";
+import Link from "next/link";
 
 export const NavBar = () => {
   const triedToEagerConnect = useEagerConnect();
-  const [, setModalOpen] = useCurationSubmissionOpen();
 
   const { account, library, chainId, activate, deactivate } = useWeb3React();
 
@@ -28,13 +25,11 @@ export const NavBar = () => {
   };
 
   return (
-    <div className="py-4 absolute w-full px-12">
+    <div className="py-4 absolute w-screen px-12">
       <div className="relative flex flex-row" style={{ height: 70 }}>
         <h1 className="text-6xl">Phlote</h1>
         <div className="flex-grow" />
-
         <div className="w-4" />
-
         <div
           className="rounded-full  cursor-pointer flex justify-center items-center h-16 w-16"
           style={{
@@ -57,7 +52,7 @@ export const NavBar = () => {
 
         {isConnected && (
           <HollowInputContainer
-            className=" cursor-pointer flex justify-center items-center h-16"
+            className="max-w-xs	 cursor-pointer flex justify-center items-center h-16"
             onClick={() => deactivate()}
           >
             Disconnect Wallet
@@ -68,7 +63,7 @@ export const NavBar = () => {
 
         {isConnected && chainId !== POLYGON_CHAIN_ID && (
           <HollowInputContainer
-            className="cursor-pointer flex justify-center items-center h-16"
+            className="max-w-xs	l cursor-pointer flex justify-center items-center h-16"
             onClick={() => onNetworkSwitch("polygon")}
           >
             Switch to Polygon
@@ -76,12 +71,11 @@ export const NavBar = () => {
         )}
 
         {isConnected && isCurator && (
-          <HollowInputContainer
-            className="cursor-pointer flex justify-center items-center h-16"
-            onClick={() => setModalOpen(true)}
-          >
-            Submit Curation
-          </HollowInputContainer>
+          <Link href="/curate" passHref>
+            <HollowInputContainer className="max-w-xs	 cursor-pointer flex justify-center items-center h-16">
+              Submit Curation
+            </HollowInputContainer>
+          </Link>
         )}
       </div>
     </div>

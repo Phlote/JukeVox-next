@@ -1,9 +1,14 @@
+import { useIsCurator } from "../hooks/useIsCurator";
 import { HollowInputContainer, HollowInput } from "./HollowInput";
 
 export const CurationSubmissionForm = (props) => {
+  const canUseForm = useIsCurator();
+
+  if (!canUseForm) return null;
+
   return (
     <div className="flex flex-col text-center w-96">
-      <h1 className="my-8 text-4xl underline-offset-8	underline">Submit</h1>
+      <h1 className="mb-1 text-4xl underline-offset-8	underline">Submit</h1>
       <div className="h-4"></div>
       {/* todo dropdown */}
       <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
