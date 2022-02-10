@@ -8,12 +8,12 @@ export const CurationSubmissionForm = (props) => {
   const isCurator = useIsCurator();
 
   //TODO: seems ugly
-  const [mediaType, setMediaType] = useState<string>();
-  const [artistName, setArtistName] = useState<string>();
-  const [artistWallet, setArtistWallet] = useState<string>();
-  const [songTitle, setSongTitle] = useState<string>();
-  const [nftURL, setNFTURL] = useState<string>();
-  const [marketplace, setMarketplace] = useState<string>();
+  const [mediaType, setMediaType] = useState<string>("");
+  const [artistName, setArtistName] = useState<string>("");
+  const [artistWallet, setArtistWallet] = useState<string>("");
+  const [songTitle, setSongTitle] = useState<string>("");
+  const [nftURL, setNFTURL] = useState<string>("");
+  const [marketplace, setMarketplace] = useState<string>("");
   const [tags, setTags] = useState<string[]>([]);
 
   const phloteContract = usePhlote();
