@@ -96,11 +96,11 @@ contract Phlote is ERC721 {
                 string(
                     abi.encodePacked(
                         '{"name": "',
-                        sAttributes.editionName,
+                        sAttributes.mediaTitle,
                         " -- NFT #: ",
                         Strings.toString(_tokenId),
                         '", "description": "A starter song used to play in the PHLOTE Jukebox!", "media": "',
-                        sAttributes.songURI,
+                        sAttributes.mediaURI,
                         '", "attributes": [ { "trait_type": "Artist Name", "value": "',
                         sAttributes.artistName,
                         "} ]}"
