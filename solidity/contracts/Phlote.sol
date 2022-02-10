@@ -62,7 +62,8 @@ contract Phlote is ERC721 {
         string memory _artistName,
         string[] memory _mediatype,
         string memory _mediaTitle
-    ) public {
+
+    ) public  {
         /*
         This is a post of a curator's submissions. 
         This function should 
@@ -79,6 +80,7 @@ contract Phlote is ERC721 {
         });
         //add it to their archive of submissions. mapping of address -> submissions[]
         emit EditionCreated(msg.sender, nextPostId);
+        mintEdition(nestPostId);
         nextPostId++;
     }
 {/* TODO: make tokenURI function cleaner. pull from Mirror editions code???*/}
