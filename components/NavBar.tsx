@@ -1,4 +1,3 @@
-import Link from "next/link";
 import useEagerConnect from "../hooks/useEagerConnect";
 import Account from "./Account";
 import Image from "next/image";
@@ -7,13 +6,11 @@ import { useState } from "react";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { POLYGON_CHAIN_ID } from "../constants";
 import { changeNetwork } from "../util";
-import { HollowInputContainer } from "./HollowInput";
-import { useCurationSubmissionOpen } from "../pages";
-import { useSubmitSidenavOpen } from "./SideNav";
+import { HollowButtonContainer, HollowInputContainer } from "./Hollow";
+import Link from "next/link";
 
 export const NavBar = () => {
   const triedToEagerConnect = useEagerConnect();
-  const [, setSidenavOpen] = useSubmitSidenavOpen();
 
   const { account, library, chainId, activate, deactivate } = useWeb3React();
 
@@ -28,13 +25,11 @@ export const NavBar = () => {
   };
 
   return (
-    <div className="py-4 absolute w-full px-12">
+    <div className="py-4 absolute w-screen px-12">
       <div className="relative flex flex-row" style={{ height: 70 }}>
         <h1 className="text-6xl">Phlote</h1>
         <div className="flex-grow" />
-
         <div className="w-4" />
-
         <div
           className="rounded-full  cursor-pointer flex justify-center items-center h-16 w-16"
           style={{
@@ -56,32 +51,41 @@ export const NavBar = () => {
         <div className="w-4" />
 
         {isConnected && (
-          <HollowInputContainer
-            className=" cursor-pointer flex justify-center items-center h-16"
+          <HollowButtonContainer
+            className="max-w-xs	 cursor-pointer flex justify-center items-center h-16"
             onClick={() => deactivate()}
           >
             Disconnect Wallet
-          </HollowInputContainer>
+          </HollowButtonContainer>
         )}
 
         <div className="w-4" />
 
-        {isConnected && chainId !== POLYGON_CHAIN_ID && (
-          <HollowInputContainer
-            className="cursor-pointer flex justify-center items-center h-16"
+        {/* TODO use polygon in prod, rinkeby in local */}
+
+        {/* {isConnected && chainId !== POLYGON_CHAIN_ID && (
+          <HollowButtonContainer
+            className="max-w-xs	l cursor-pointer flex justify-center items-center h-16"
             onClick={() => onNetworkSwitch("polygon")}
           >
             Switch to Polygon
-          </HollowInputContainer>
-        )}
+          </HollowButtonContainer>
+        )} */}
 
-        {isConnected && isCurator && (
-          <HollowInputContainer
-            className="cursor-pointer flex justify-center items-center h-16"
-            onClick={() => setSidenavOpen(true)}
-          >
-            Submit Curation
-          </HollowInputContainer>
+        {/* {isConnected && isCurator && (
+          <Link href="/curate" passHref>
+            <HollowButtonContainer className="max-w-xs	 cursor-pointer flex justify-center items-center h-16">
+              Submit Curation
+            </HollowButtonContainer>
+          </Link>
+        )} */}
+
+        {isConnected && (
+          <Link href="/curate" passHref>
+            <HollowButtonContainer className="max-w-xs	 cursor-pointer flex justify-center items-center h-16">
+              Submit Curation
+            </HollowButtonContainer>
+          </Link>
         )}
       </div>
     </div>
