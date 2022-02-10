@@ -37,8 +37,8 @@
       ]
     },
     "/Users/michaelanderjaska/jukevox-next/solidity/contracts/Phlote.sol": {
-      "lastModificationDate": 1643834039846,
-      "contentHash": "f74a3ef2a085d2fe47aeccf4ac75d341",
+      "lastModificationDate": 1644529441405,
+      "contentHash": "66baf9b3717c44c271f87539defe6aa4",
       "sourceName": "contracts/Phlote.sol",
       "solcConfig": {
         "version": "0.8.4",
