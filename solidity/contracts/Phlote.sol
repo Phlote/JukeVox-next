@@ -17,9 +17,9 @@ contract Phlote is ERC721 {
         address artistAddress;
         string mediaURI;
         string marketplace;
-        string[] tag;
+        string[] tags;
         string artistName;
-        string[] mediaType;
+        string mediaType;
         string mediaTitle;
         uint256 numSold;
     }
@@ -59,9 +59,9 @@ contract Phlote is ERC721 {
         address _artist,
         string memory _mediaURI,
         string memory _marketplace,
-        string[] memory _tag,
+        string[] memory _tags,
         string memory _artistName,
-        string[] memory _mediaType,
+        string memory _mediaType,
         string memory _mediaTitle
 
     ) public  returns (uint256){
@@ -74,7 +74,7 @@ contract Phlote is ERC721 {
             artistAddress: _artist,
             mediaURI: _mediaURI,
             marketplace: _marketplace,
-            tag: _tag,
+            tags: _tags,
             artistName: _artistName,
             mediaType: _mediaType,
             mediaTitle: _mediaTitle,
