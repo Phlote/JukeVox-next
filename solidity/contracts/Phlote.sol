@@ -17,10 +17,11 @@ contract Phlote is ERC721 {
         address artistAddress;
         string mediaURI;
         string marketplace;
-        string[] tag;
+        string[] tags;
         string artistName;
-        string[] mediatype;
+        string mediaType;
         string mediaTitle;
+        uint256 numSold;
     }
 
     using Counters for Counters.Counter;
@@ -58,12 +59,12 @@ contract Phlote is ERC721 {
         address _artist,
         string memory _mediaURI,
         string memory _marketplace,
-        string[] memory _tag,
+        string[] memory _tags,
         string memory _artistName,
-        string[] memory _mediatype,
+        string memory _mediaType,
         string memory _mediaTitle
 
-    ) public  {
+    ) public  returns (uint256){
         /*
         This is a post of a curator's submissions. 
         This function should 
@@ -73,17 +74,18 @@ contract Phlote is ERC721 {
             artistAddress: _artist,
             mediaURI: _mediaURI,
             marketplace: _marketplace,
-            tag: _tag,
+            tags: _tags,
             artistName: _artistName,
-            mediaType: _mediatype,
-            mediaTitle: _mediaTitle
+            mediaType: _mediaType,
+            mediaTitle: _mediaTitle,
+            numSold: 0
         });
         //add it to their archive of submissions. mapping of address -> submissions[]
         emit EditionCreated(msg.sender, nextPostId);
-        mintEdition(nestPostId);
         nextPostId++;
+        return nextPostId-1;
     }
-{/* TODO: make tokenURI function cleaner. pull from Mirror editions code???*/}
+
     function tokenURI(uint256 _tokenId)
         public
         view
@@ -118,15 +120,15 @@ contract Phlote is ERC721 {
 
     function mintEdition(uint256 editionId) external payable {
         // require(_tokenIds.current()-1 < editionSize,"Song is sold out!");
-        require(
-            msg.value == editions[editionId].songPrice,
-            "please send enough to purchase edition"
-        );
+        // require(
+        //     msg.value == editions[editionId].songPrice,
+        //     "please send enough to purchase edition"
+        // );
         uint256 newItemId = _tokenIds.current();
         _safeMint(msg.sender, newItemId);
         console.log(
             "******Minted %s NFT w/ tokenId %s ******",
-            editions[editionId].editionName,
+            editions[editionId].mediaTitle,
             newItemId
         );
         // Keep an easy way to see who owns what NFT.
@@ -144,18 +146,18 @@ contract Phlote is ERC721 {
     }
 
     //-----IMPORTEDFUNCTIONS-----
-    function withdrawFunds(uint256 editionId, address payable person) external {
-        // Compute the amount available for withdrawing from this edition.
-        uint256 remainingForEdition = (editions[editionId].songPrice * // Compute total amount of revenue that has been generated for the edition so far.
-            editions[editionId].numSold) -
-            // Subtract the amount that has already been withdrawn.
-            withdrawnForEdition[editionId];
+    // function withdrawFunds(uint256 editionId, address payable person) external {
+    //     // Compute the amount available for withdrawing from this edition.
+    //     uint256 remainingForEdition = (editions[editionId].songPrice * // Compute total amount of revenue that has been generated for the edition so far.
+    //         editions[editionId].numSold) -
+    //         // Subtract the amount that has already been withdrawn.
+    //         withdrawnForEdition[editionId];
 
-        // Update that amount that has already been withdrawn for the edition.
-        withdrawnForEdition[editionId] += remainingForEdition;
-        // Send the amount that was remaining for the edition, to the funding recipient.
-        _sendFunds(person, remainingForEdition);
-    }
+    //     // Update that amount that has already been withdrawn for the edition.
+    //     withdrawnForEdition[editionId] += remainingForEdition;
+    //     // Send the amount that was remaining for the edition, to the funding recipient.
+    //     _sendFunds(person, remainingForEdition);
+    // }
 
     function _sendFunds(address payable recipient, uint256 amount) private {
         require(
@@ -168,31 +170,5 @@ contract Phlote is ERC721 {
     }
 
     /* ---New Functions---*/
-    function submitMetadata(
-        address _artist,
-        string memory _mediaURI,
-        string memory _marketplace,
-        string[] memory _tag,
-        string memory _artistName,
-        string[] memory _mediatype,
-        string memory _mediaTitle
-    ) public {
-        /*
-        This is a post of a curator's submissions. 
-        This function should 
-        - set the curator's submission as an edition
-        - add it to their archive of submissions. mapping of address -> submissions[]
-        */
-        editions[nextPostId] = Edition({
-            artistAddress: _artist,
-            mediaURI: _mediaURI,
-            marketplace: _marketplace,
-            tag: _tag,
-            artistName: _artistName,
-            mediaType: _mediatype,
-            mediaTitle: _mediaTitle
-        });
-        emit EditionCreated(msg.sender, nextPostId);
-        nextPostId++;
-    }
+    
 }

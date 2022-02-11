@@ -37,8 +37,8 @@
       ]
     },
     "/Users/michaelanderjaska/jukevox-next/solidity/contracts/Phlote.sol": {
-      "lastModificationDate": 1643834039846,
-      "contentHash": "f74a3ef2a085d2fe47aeccf4ac75d341",
+      "lastModificationDate": 1644530510522,
+      "contentHash": "00df8b897e40c39bc2e72d021300a4ee",
       "sourceName": "contracts/Phlote.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -191,7 +191,7 @@
       ]
     },
     "/Users/michaelanderjaska/jukevox-next/solidity/node_modules/hardhat/console.sol": {
-      "lastModificationDate": 1644269990103,
+      "lastModificationDate": 1644529719959,
       "contentHash": "cc4777addd464ea56fa35b1c45df0591",
       "sourceName": "hardhat/console.sol",
       "solcConfig": {
