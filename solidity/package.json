@@ -9,7 +9,10 @@
     "hardhat": "^2.8.3"
   },
   "scripts": {
-    "deploy:rinkeby":
-     "npx hardhat run --network rinkeby scripts/deploy.ts"
+    "compile": "rm -rf artifacts && npx hardhat compile",
+    "deploy:rinkeby": "npx hardhat run scripts/deploy.js --network rinkeby"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0"
   }
 }
