@@ -32,6 +32,7 @@ export const HollowInputContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: left;
+  max-height: 3.75rem;
 
   &:focus {
     outline: none;
