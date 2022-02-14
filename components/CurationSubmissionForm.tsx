@@ -4,19 +4,43 @@ import React, { useState } from "react";
 import { usePhlote } from "../hooks/usePhlote";
 import { HollowTagsInput } from "./Hollow/HollowTagsInput";
 import { useWeb3React } from "@web3-react/core";
+import { atom, useAtom } from "jotai";
+
+type MediaType = "music" | "text" | "audio" | "video";
+export interface CurationSubmission {
+  mediaType: MediaType;
+  artistName: string;
+  artistWallet?: string;
+  mediaTitle: string;
+  nftURL: string;
+  marketplace: string;
+  tags: string[];
+}
+
+const submissionAtom = atom<CurationSubmission>({} as CurationSubmission);
+const useSubmissionData = () => useAtom(submissionAtom);
 
 export const CurationSubmissionForm = (props) => {
   const isCurator = useIsCurator();
   const { account } = useWeb3React();
 
-  //TODO: seems ugly
-  const [mediaType, setMediaType] = useState<string>("");
-  const [artistName, setArtistName] = useState<string>("");
-  const [artistWallet, setArtistWallet] = useState<string>("0x0");
-  const [songTitle, setSongTitle] = useState<string>("");
-  const [nftURL, setNFTURL] = useState<string>("");
-  const [marketplace, setMarketplace] = useState<string>("");
-  const [tags, setTags] = useState<string[]>([]);
+  const [submissionData, setSubmissionData] = useSubmissionData();
+
+  const {
+    mediaType,
+    artistName,
+    artistWallet,
+    mediaTitle,
+    nftURL,
+    marketplace,
+    tags,
+  } = submissionData;
+
+  const setFormField = (update: Partial<CurationSubmission>) => {
+    setSubmissionData((current) => {
+      return { ...current, ...update };
+    });
+  };
 
   const phloteContract = usePhlote();
 
@@ -45,6 +69,8 @@ export const CurationSubmissionForm = (props) => {
   // });
 
   const submitNFT = async () => {
+    // submit to IPFS,
+
     const res = await phloteContract.submitPost(
       account,
       nftURL,
@@ -52,7 +78,7 @@ export const CurationSubmissionForm = (props) => {
       tags,
       artistName,
       mediaType,
-      songTitle
+      mediaTitle
     );
     console.log(res);
   };
@@ -70,7 +96,9 @@ export const CurationSubmissionForm = (props) => {
             type="text"
             placeholder="Media Type"
             value={mediaType}
-            onChange={({ target: { value } }) => setMediaType(value)}
+            onChange={({ target: { value } }) =>
+              setFormField({ mediaType: value })
+            }
           />
         </HollowInputContainer>
 
@@ -79,7 +107,9 @@ export const CurationSubmissionForm = (props) => {
             type="text"
             placeholder="Artist Name"
             value={artistName}
-            onChange={({ target: { value } }) => setArtistName(value)}
+            onChange={({ target: { value } }) =>
+              setFormField({ artistName: value })
+            }
           />
         </HollowInputContainer>
 
@@ -88,7 +118,9 @@ export const CurationSubmissionForm = (props) => {
             type="text"
             placeholder="Artist Wallet Address"
             value={artistWallet}
-            onChange={({ target: { value } }) => setArtistWallet(value)}
+            onChange={({ target: { value } }) =>
+              setFormField({ artistWallet: value })
+            }
           />
         </HollowInputContainer>
 
@@ -96,8 +128,10 @@ export const CurationSubmissionForm = (props) => {
           <HollowInput
             type="text"
             placeholder="Song Title"
-            value={songTitle}
-            onChange={({ target: { value } }) => setSongTitle(value)}
+            value={mediaTitle}
+            onChange={({ target: { value } }) =>
+              setFormField({ mediaTitle: value })
+            }
           />
         </HollowInputContainer>
 
@@ -106,7 +140,9 @@ export const CurationSubmissionForm = (props) => {
             type="text"
             placeholder="URL of NFT"
             value={nftURL}
-            onChange={({ target: { value } }) => setNFTURL(value)}
+            onChange={({ target: { value } }) =>
+              setFormField({ nftURL: value })
+            }
           />
         </HollowInputContainer>
 
@@ -115,12 +151,17 @@ export const CurationSubmissionForm = (props) => {
             type="text"
             placeholder="Marketplace (i.e. OpenSea, Zora)"
             value={marketplace}
-            onChange={({ target: { value } }) => setMarketplace(value)}
+            onChange={({ target: { value } }) =>
+              setFormField({ marketplace: value })
+            }
           />
         </HollowInputContainer>
 
         <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
-          <HollowTagsInput tags={tags} setTags={setTags} />
+          <HollowTagsInput
+            tags={tags}
+            setTags={(tags) => setFormField({ tags })}
+          />
         </HollowInputContainer>
       </div>
       <button onClick={submitNFT}>Submit</button>
