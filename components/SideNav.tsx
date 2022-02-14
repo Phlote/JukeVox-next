@@ -25,7 +25,7 @@ export const SidenavContainer = ({ children }) => {
 
   return (
     <div
-      className="w-96 flex flex-column h-full absolute z-10 right-0"
+      className="w-96 flex flex-column overflow-y-scroll absolute z-10 right-0"
       style={{ backgroundColor: "#1E1E1E" }}
     >
       <div

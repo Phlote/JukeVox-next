@@ -11,6 +11,8 @@ import { HollowTagsInput } from "./Hollow/HollowTagsInput";
 import { atom, useAtom } from "jotai";
 import { useWeb3React } from "@web3-react/core";
 import { nextApiRequest } from "../util";
+import { DropdownList } from "./DropdownList";
+import Image from "next/image";
 
 type MediaType = "music" | "text" | "audio" | "video";
 export interface CurationSubmission {
@@ -43,6 +45,7 @@ export const CurationSubmissionForm = (props) => {
 
   const [submissionData, setSubmissionData] = useSubmissionData();
   const [page, setPage] = useSubmissionPage();
+  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
 
   const {
     mediaType,
@@ -119,16 +122,36 @@ export const CurationSubmissionForm = (props) => {
           />
         </HollowInputContainer>
         <div className="h-3" />
-        <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
-          <HollowInput
-            type="text"
-            placeholder="Media Type"
-            value={mediaType}
-            onChange={({ target: { value } }) =>
-              setFormField({ mediaType: value })
-            }
-          />
+        <HollowInputContainer
+          backgroundColor="rgba(101, 101, 101, 0.17)"
+          onClick={() => setDropdownOpen(!dropdownOpen)}
+        >
+          <div className="flex flex-row w-full">
+            <HollowInput
+              className="flex-grow"
+              type="text"
+              placeholder="Media Type"
+            />
+            <Image
+              className={dropdownOpen ? "-rotate-90" : "rotate-90"}
+              src={"/chevron.svg"}
+              alt="dropdown"
+              height={16}
+              width={16}
+            />
+          </div>
         </HollowInputContainer>
+        {dropdownOpen && (
+          <>
+            <div className="h-3" />{" "}
+            <HollowInputContainer
+              backgroundColor="rgba(101, 101, 101, 0.17)"
+              style={{ borderRadius: "60px" }}
+            >
+              <DropdownList fields={["Music", "Text", "Audio", "Video"]} />
+            </HollowInputContainer>
+          </>
+        )}
         <div className="h-3" />
         <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
           <HollowInput
