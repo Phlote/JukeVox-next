@@ -75,7 +75,6 @@ export const CurationSubmissionForm = (props) => {
     // submit to IPFS,
 
     const { tokenURI } = await nextApiRequest("store-nft-metadata");
-    console.log(tokenURI);
 
     const res = await phloteContract.submitPost(
       account,
@@ -85,7 +84,7 @@ export const CurationSubmissionForm = (props) => {
       artistName,
       mediaType,
       mediaTitle,
-      tokenUri
+      tokenURI
     );
     console.log(res);
   };

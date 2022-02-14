@@ -22,6 +22,7 @@ contract Phlote is ERC721 {
         string mediaType;
         string mediaTitle;
         uint256 numSold;
+        string tokenURI; // uses IPFS
     }
 
     using Counters for Counters.Counter;
@@ -85,8 +86,8 @@ contract Phlote is ERC721 {
         string[] memory _tags,
         string memory _artistName,
         string memory _mediaType,
-        string memory _mediaTitle
-
+        string memory _mediaTitle,
+        string memory _tokenURI
     ) public {
         /*
         This is a post of a curator's submissions. 
@@ -101,7 +102,8 @@ contract Phlote is ERC721 {
             artistName: _artistName,
             mediaType: _mediaType,
             mediaTitle: _mediaTitle,
-            numSold: 0
+            numSold: 0,
+            tokenURI: _tokenURI
         });
         //add it to their archive of submissions. mapping of address -> submissions[]
         emit EditionCreated(msg.sender, nextPostId);
@@ -116,29 +118,7 @@ contract Phlote is ERC721 {
         returns (string memory)
     {
         Edition memory sAttributes = editions[tokenToSong[_tokenId]];
-        string memory json = Base64.encode(
-            bytes(
-                string(
-                    abi.encodePacked(
-                        '{"name": "',
-                        sAttributes.mediaTitle,
-                        " -- NFT #: ",
-                        Strings.toString(_tokenId),
-                        '", "description": "A starter song used to play in the PHLOTE Jukebox!", "media": "',
-                        sAttributes.mediaURI,
-                        '", "attributes": [ { "trait_type": "Artist Name", "value": "',
-                        sAttributes.artistName,
-                        "} ]}"
-                    )
-                )
-            )
-        );
-
-        string memory output = string(
-            abi.encodePacked("data:application/json;base64,", json)
-        );
-
-        return output;
+        return sAttributes.tokenURI;
     }
 
     

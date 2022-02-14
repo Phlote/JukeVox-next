@@ -217,6 +217,11 @@
         "internalType": "uint256",
         "name": "numSold",
         "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "tokenURI",
+        "type": "string"
       }
     ],
     "stateMutability": "view",
@@ -267,6 +272,11 @@
             "internalType": "uint256",
             "name": "numSold",
             "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "tokenURI",
+            "type": "string"
           }
         ],
         "internalType": "struct Phlote.Edition[]",
@@ -488,6 +498,11 @@
       {
         "internalType": "string",
         "name": "_mediaTitle",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_tokenURI",
         "type": "string"
       }
     ],
