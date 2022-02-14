@@ -3,14 +3,16 @@ import { HollowInputContainer, HollowInput } from "./Hollow";
 import React, { useState } from "react";
 import { usePhlote } from "../hooks/usePhlote";
 import { HollowTagsInput } from "./Hollow/HollowTagsInput";
+import { useWeb3React } from "@web3-react/core";
 
 export const CurationSubmissionForm = (props) => {
   const isCurator = useIsCurator();
+  const { account } = useWeb3React();
 
   //TODO: seems ugly
   const [mediaType, setMediaType] = useState<string>("");
   const [artistName, setArtistName] = useState<string>("");
-  const [artistWallet, setArtistWallet] = useState<string>("");
+  const [artistWallet, setArtistWallet] = useState<string>("0x0");
   const [songTitle, setSongTitle] = useState<string>("");
   const [nftURL, setNFTURL] = useState<string>("");
   const [marketplace, setMarketplace] = useState<string>("");
@@ -18,9 +20,41 @@ export const CurationSubmissionForm = (props) => {
 
   const phloteContract = usePhlote();
 
+  React.useEffect(() => {
+    if (phloteContract) {
+      phloteContract.on("*", (res) => {
+        console.log(res);
+        if (res.event === "EditionCreated") {
+          console.log(res);
+        }
+
+        if (res.event === "EditionMinted") {
+          console.log(res);
+          alert("It has been minted!");
+        }
+      });
+    }
+
+    return () => {
+      phloteContract?.removeAllListeners();
+    };
+  }, [phloteContract]);
+
+  // phloteContract.on("*", (args) => {
+  //   console.log(args);
+  // });
+
   const submitNFT = async () => {
-    const res = await phloteContract.setSong(songTitle, artistName, nftURL, 10);
-    console.log(res.hash);
+    const res = await phloteContract.submitPost(
+      account,
+      nftURL,
+      marketplace,
+      tags,
+      artistName,
+      mediaType,
+      songTitle
+    );
+    console.log(res);
   };
 
   // if (!isCurator) return null;

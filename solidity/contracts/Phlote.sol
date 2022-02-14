@@ -54,6 +54,29 @@ contract Phlote is ERC721 {
         _tokenIds.increment();
     }
 
+    function mintEdition(uint256 editionId) public payable {
+        // require(_tokenIds.current()-1 < editionSize,"Song is sold out!");
+        // require(
+        //     msg.value == editions[editionId].songPrice,
+        //     "please send enough to purchase edition"
+        // );
+        uint256 newItemId = _tokenIds.current();
+        _safeMint(msg.sender, newItemId);
+        console.log(
+            "******Minted %s NFT w/ tokenId %s ******",
+            editions[editionId].mediaTitle,
+            newItemId
+        );
+        // Keep an easy way to see who owns what NFT.
+        nftHolders[msg.sender] = newItemId;
+
+        // Increment the tokenId and numSold for the next person that uses it.
+        _tokenIds.increment();
+        editions[editionId].numSold++;
+        tokenToSong[newItemId] = editionId;
+        emit EditionMinted(msg.sender, newItemId, editions[editionId].numSold);
+    }
+
     //creates the edition/Post
       function submitPost(
         address _artist,
@@ -64,7 +87,7 @@ contract Phlote is ERC721 {
         string memory _mediaType,
         string memory _mediaTitle
 
-    ) public  returns (uint256){
+    ) public {
         /*
         This is a post of a curator's submissions. 
         This function should 
@@ -82,8 +105,8 @@ contract Phlote is ERC721 {
         });
         //add it to their archive of submissions. mapping of address -> submissions[]
         emit EditionCreated(msg.sender, nextPostId);
-        nextPostId++;
-        return nextPostId-1;
+        mintEdition(nextPostId);
+        nextPostId++; 
     }
 
     function tokenURI(uint256 _tokenId)
@@ -118,29 +141,7 @@ contract Phlote is ERC721 {
         return output;
     }
 
-    function mintEdition(uint256 editionId) external payable {
-        // require(_tokenIds.current()-1 < editionSize,"Song is sold out!");
-        // require(
-        //     msg.value == editions[editionId].songPrice,
-        //     "please send enough to purchase edition"
-        // );
-        uint256 newItemId = _tokenIds.current();
-        _safeMint(msg.sender, newItemId);
-        console.log(
-            "******Minted %s NFT w/ tokenId %s ******",
-            editions[editionId].mediaTitle,
-            newItemId
-        );
-        // Keep an easy way to see who owns what NFT.
-        nftHolders[msg.sender] = newItemId;
-
-        // Increment the tokenId and numSold for the next person that uses it.
-        _tokenIds.increment();
-        editions[editionId].numSold++;
-        tokenToSong[newItemId] = editionId;
-        emit EditionMinted(msg.sender, newItemId, editions[editionId].numSold);
-    }
-
+    
     function getAllcontent() public view returns (Edition[] memory) {
         return content;
     }
