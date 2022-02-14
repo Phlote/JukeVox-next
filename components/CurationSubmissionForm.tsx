@@ -5,6 +5,7 @@ import { usePhlote } from "../hooks/usePhlote";
 import { HollowTagsInput } from "./Hollow/HollowTagsInput";
 import { useWeb3React } from "@web3-react/core";
 import { atom, useAtom } from "jotai";
+import { nextApiRequest } from "../util";
 
 type MediaType = "music" | "text" | "audio" | "video";
 export interface CurationSubmission {
@@ -17,7 +18,9 @@ export interface CurationSubmission {
   tags: string[];
 }
 
-const submissionAtom = atom<CurationSubmission>({} as CurationSubmission);
+const submissionAtom = atom<CurationSubmission>({
+  tags: [],
+} as CurationSubmission);
 const useSubmissionData = () => useAtom(submissionAtom);
 
 export const CurationSubmissionForm = (props) => {
@@ -71,6 +74,9 @@ export const CurationSubmissionForm = (props) => {
   const submitNFT = async () => {
     // submit to IPFS,
 
+    const { tokenURI } = await nextApiRequest("store-nft-metadata");
+    console.log(tokenURI);
+
     const res = await phloteContract.submitPost(
       account,
       nftURL,
@@ -78,7 +84,8 @@ export const CurationSubmissionForm = (props) => {
       tags,
       artistName,
       mediaType,
-      mediaTitle
+      mediaTitle,
+      tokenUri
     );
     console.log(res);
   };

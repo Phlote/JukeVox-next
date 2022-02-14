@@ -8,7 +8,10 @@ interface TagsInput {
 }
 
 // TODO: make this more general where you can pass an styled input
-export const HollowTagsInput: React.FC<TagsInput> = ({ tags, setTags }) => {
+export const HollowTagsInput: React.FC<TagsInput> = ({
+  tags = [],
+  setTags,
+}) => {
   const [input, setInput] = useState("");
 
   const [isKeyReleased, setIsKeyReleased] = useState(false);
