@@ -3,29 +3,12 @@ import styled from "styled-components";
 import React from "react";
 import { HollowInputContainer, HollowInput } from "./Hollow";
 import { CurationSubmissionForm } from "./CurationSubmissionForm";
-
-// export interface CurationMetadata {
-//   artistName: string;
-//   trackTitle: string;
-//   nftURL: string;
-//   nftContractAddress: string;
-//   tags?: string[];
-//   curatorName?: string;
-//   curatorWallet: string;
-//   submissionTimestamp?: string;
-//   uuid?: string;
-// }
+import Image from "next/image";
 
 const submitSidenavOpen = atom<boolean>(true);
 export const useSubmitSidenavOpen = () => useAtom(submitSidenavOpen);
 
 export const SubmitSidenav = (props) => {
-  const updateSubmission = (update: Partial<CurationMetadata>) => {
-    setCurationFormData((curr) => {
-      return { ...curr, ...update };
-    });
-  };
-
   const [open] = useSubmitSidenavOpen();
 
   if (!open) return null;
@@ -49,8 +32,10 @@ export const SidenavContainer = ({ children }) => {
         onClick={() => {
           setOpen(false);
         }}
-        className="absolute top-1 left-2"
-      >{`<-`}</div>
+        className="absolute top-3 left-3 cursor-pointer"
+      >
+        <Image src={"/chevron.svg"} alt="close" height={16} width={16} />
+      </div>
       {children}
     </div>
   );

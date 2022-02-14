@@ -8,9 +8,11 @@ import { POLYGON_CHAIN_ID } from "../constants";
 import { changeNetwork } from "../util";
 import { HollowButtonContainer, HollowInputContainer } from "./Hollow";
 import Link from "next/link";
+import { useSubmitSidenavOpen } from "./SideNav";
 
 export const NavBar = () => {
   const triedToEagerConnect = useEagerConnect();
+  const [open, setOpen] = useSubmitSidenavOpen();
 
   const { account, library, chainId, activate, deactivate } = useWeb3React();
 
@@ -63,29 +65,13 @@ export const NavBar = () => {
 
         {/* TODO use polygon in prod, rinkeby in local */}
 
-        {/* {isConnected && chainId !== POLYGON_CHAIN_ID && (
-          <HollowButtonContainer
-            className="max-w-xs	l cursor-pointer flex justify-center items-center h-16"
-            onClick={() => onNetworkSwitch("polygon")}
-          >
-            Switch to Polygon
-          </HollowButtonContainer>
-        )} */}
-
-        {/* {isConnected && isCurator && (
-          <Link href="/curate" passHref>
-            <HollowButtonContainer className="max-w-xs	 cursor-pointer flex justify-center items-center h-16">
-              Submit Curation
-            </HollowButtonContainer>
-          </Link>
-        )} */}
-
         {isConnected && (
-          <Link href="/curate" passHref>
-            <HollowButtonContainer className="max-w-xs	 cursor-pointer flex justify-center items-center h-16">
-              Submit Curation
-            </HollowButtonContainer>
-          </Link>
+          <HollowButtonContainer
+            className="max-w-xs cursor-pointer flex justify-center items-center h-16"
+            onClick={() => setOpen(true)}
+          >
+            Submit Curation
+          </HollowButtonContainer>
         )}
       </div>
     </div>
