@@ -3,14 +3,14 @@
 pragma solidity ^0.8.0;
 // NFT contract to inherit from.
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-//@buildspace Helper we wrote to encode in Base64 -
-import "./libraries/Base64.sol";
 // Helper functions OpenZeppelin provides.
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
 
-contract Phlote is ERC721 {
+
+contract Phlote is ERC721, Ownable {
     //uint256 public editionSize;
     uint256 public contractPrice;
     struct Edition {
