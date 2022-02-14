@@ -4,11 +4,14 @@ import Image from "next/image";
 
 interface TagsInput {
   tags: string[];
-  setTags: React.Dispatch<React.SetStateAction<string[]>>;
+  setTags: (tags: string[]) => void;
 }
 
 // TODO: make this more general where you can pass an styled input
-export const HollowTagsInput: React.FC<TagsInput> = ({ tags, setTags }) => {
+export const HollowTagsInput: React.FC<TagsInput> = ({
+  tags = [],
+  setTags,
+}) => {
   const [input, setInput] = useState("");
 
   const [isKeyReleased, setIsKeyReleased] = useState(false);
@@ -26,7 +29,8 @@ export const HollowTagsInput: React.FC<TagsInput> = ({ tags, setTags }) => {
 
     if (activeKey && trimmedInput.length && !tags.includes(trimmedInput)) {
       e.preventDefault();
-      setTags((prevState) => [...prevState, trimmedInput]);
+      // setTags((prevState) => [...prevState, trimmedInput]);
+      setTags([...tags, trimmedInput]);
       setInput("");
     }
 
@@ -47,7 +51,7 @@ export const HollowTagsInput: React.FC<TagsInput> = ({ tags, setTags }) => {
   };
 
   const deleteTag = (index) => {
-    setTags((prevState) => prevState.filter((tag, i) => i !== index));
+    setTags(tags.filter((tag, i) => i !== index));
   };
 
   return (

@@ -4,9 +4,11 @@ import React, { useState } from "react";
 import { usePhlote } from "../hooks/usePhlote";
 import { HollowTagsInput } from "./Hollow/HollowTagsInput";
 import { atom, useAtom } from "jotai";
+import { useWeb3React } from "@web3-react/core";
+import { nextApiRequest } from "../util";
 
 type MediaType = "music" | "text" | "audio" | "video";
-interface CurationSubmission {
+export interface CurationSubmission {
   mediaType: MediaType;
   artistName: string;
   artistWallet?: string;
@@ -16,7 +18,15 @@ interface CurationSubmission {
   tags: string[];
 }
 
-const submissionAtom = atom<CurationSubmission>({} as CurationSubmission);
+const submissionAtom = atom<CurationSubmission>({
+  mediaType: "" as MediaType,
+  artistName: "",
+  artistWallet: "",
+  mediaTitle: "",
+  nftURL: "",
+  marketplace: "",
+  tags: [],
+});
 const useSubmissionData = () => useAtom(submissionAtom);
 
 const submissionPageAtom = atom<number>(0);
@@ -24,6 +34,7 @@ const useSubmissionPage = () => useAtom(submissionPageAtom);
 
 export const CurationSubmissionForm = (props) => {
   const isCurator = useIsCurator();
+  const { account } = useWeb3React();
 
   const [submissionData, setSubmissionData] = useSubmissionData();
   const [page, setPage] = useSubmissionPage();
@@ -46,14 +57,47 @@ export const CurationSubmissionForm = (props) => {
 
   const phloteContract = usePhlote();
 
+  React.useEffect(() => {
+    if (phloteContract) {
+      phloteContract.on("*", (res) => {
+        console.log(res);
+        if (res.event === "EditionCreated") {
+          console.log(res);
+        }
+
+        if (res.event === "EditionMinted") {
+          console.log(res);
+          alert("It has been minted!");
+        }
+      });
+    }
+
+    return () => {
+      phloteContract?.removeAllListeners();
+    };
+  }, [phloteContract]);
+
+  // phloteContract.on("*", (args) => {
+  //   console.log(args);
+  // });
+
   const submitNFT = async () => {
-    const res = await phloteContract.setSong(
-      mediaTitle,
-      artistName,
+    // submit to IPFS,
+
+    const { tokenURI } = await nextApiRequest("store-nft-metadata");
+    console.log(tokenURI);
+
+    const res = await phloteContract.submitPost(
+      account,
       nftURL,
-      10
+      marketplace,
+      tags,
+      artistName,
+      mediaType,
+      mediaTitle,
+      tokenURI
     );
-    console.log(res.hash);
+    console.log(res);
   };
 
   // if (!isCurator) return null;
@@ -105,8 +149,8 @@ export const CurationSubmissionForm = (props) => {
         <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
           <HollowInput
             type="text"
-            placeholder="Title"
-            value={nftURL}
+            placeholder="Song Title"
+            value={mediaTitle}
             onChange={({ target: { value } }) =>
               setFormField({ mediaTitle: value })
             }
@@ -118,91 +162,29 @@ export const CurationSubmissionForm = (props) => {
             placeholder="Marketplace Name"
             value={nftURL}
             onChange={({ target: { value } }) =>
-              setFormField({ marketplace: value })
+              setFormField({ nftURL: value })
             }
           />
         </HollowInputContainer>
         <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
           <HollowInput
             type="text"
-            placeholder="Artist Wallet Address (optional)"
-            value={nftURL}
+            placeholder="Marketplace (i.e. OpenSea, Zora)"
+            value={marketplace}
             onChange={({ target: { value } }) =>
-              setFormField({ artistWallet: value })
+              setFormField({ marketplace: value })
             }
           />
         </HollowInputContainer>
 
-        <button onClick={() => setPage((page) => page + 1)}>Next</button>
+        {/* <button onClick={() => setPage((page) => page + 1)}>Next</button>
+        <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
+          <HollowTagsInput
+            tags={tags}
+            setTags={(tags) => setFormField({ tags })}
+          />
+        </HollowInputContainer> */}
       </div>
     );
   }
-
-  // return (
-  //   <div className="flex flex-col text-center w-10/12">
-  //     <h1 className="mb-1 text-4xl underline-offset-8	underline">Submit</h1>
-  //     <div className="h-16"></div>
-  //     <div className="grid grid-cols-2 gap-4">
-  //       {/* todo dropdown */}
-  //       <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
-  //         <HollowInput
-  //           type="text"
-  //           placeholder="Media Type"
-  //           value={mediaType}
-  //           onChange={({ target: { value } }) => setMediaType(value)}
-  //         />
-  //       </HollowInputContainer>
-
-  //       <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
-  //         <HollowInput
-  //           type="text"
-  //           placeholder="Artist Name"
-  //           value={artistName}
-  //           onChange={({ target: { value } }) => setArtistName(value)}
-  //         />
-  //       </HollowInputContainer>
-
-  //       <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
-  //         <HollowInput
-  //           type="text"
-  //           placeholder="Artist Wallet Address"
-  //           value={artistWallet}
-  //           onChange={({ target: { value } }) => setArtistWallet(value)}
-  //         />
-  //       </HollowInputContainer>
-
-  //       <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
-  //         <HollowInput
-  //           type="text"
-  //           placeholder="Song Title"
-  //           value={songTitle}
-  //           onChange={({ target: { value } }) => setSongTitle(value)}
-  //         />
-  //       </HollowInputContainer>
-
-  //       <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
-  //         <HollowInput
-  //           type="text"
-  //           placeholder="URL of NFT"
-  //           value={nftURL}
-  //           onChange={({ target: { value } }) => setNFTURL(value)}
-  //         />
-  //       </HollowInputContainer>
-
-  //       <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
-  //         <HollowInput
-  //           type="text"
-  //           placeholder="Marketplace (i.e. OpenSea, Zora)"
-  //           value={marketplace}
-  //           onChange={({ target: { value } }) => setMarketplace(value)}
-  //         />
-  //       </HollowInputContainer>
-
-  //       <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
-  //         <HollowTagsInput tags={tags} setTags={setTags} />
-  //       </HollowInputContainer>
-  //     </div>
-  //     <button onClick={submitNFT}>Submit</button>
-  //   </div>
-  // );
 };

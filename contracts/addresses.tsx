@@ -1,4 +1,4 @@
-// TODO: env vars
+// When we are ready to productionize, these should be env vars. Host these env vars on vercel and have them pulled
 
 export const NFT_MINT_CONTRACT_RINKEBY =
-  "0xdbf5aa0f54158e9452d73af0131d1EaAf6FB1f74";
+  "0x3B31B9D8eBF22534CBeC3ba58dCBE6F93476D79B";
