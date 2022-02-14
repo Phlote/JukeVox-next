@@ -19,8 +19,14 @@ export interface CurationSubmission {
 }
 
 const submissionAtom = atom<CurationSubmission>({
+  mediaType: "" as MediaType,
+  artistName: "",
+  artistWallet: "",
+  mediaTitle: "",
+  nftURL: "",
+  marketplace: "",
   tags: [],
-} as CurationSubmission);
+});
 const useSubmissionData = () => useAtom(submissionAtom);
 
 export const CurationSubmissionForm = (props) => {
@@ -75,6 +81,7 @@ export const CurationSubmissionForm = (props) => {
     // submit to IPFS,
 
     const { tokenURI } = await nextApiRequest("store-nft-metadata");
+    console.log(tokenURI);
 
     const res = await phloteContract.submitPost(
       account,
