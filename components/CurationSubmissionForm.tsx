@@ -1,5 +1,10 @@
 import { useIsCurator } from "../hooks/useIsCurator";
-import { HollowInputContainer, HollowInput } from "./Hollow";
+import {
+  HollowInputContainer,
+  HollowInput,
+  HollowButtonContainer,
+  HollowButton,
+} from "./Hollow";
 import React, { useState } from "react";
 import { usePhlote } from "../hooks/usePhlote";
 import { HollowTagsInput } from "./Hollow/HollowTagsInput";
@@ -96,77 +101,93 @@ export const CurationSubmissionForm = (props) => {
 
   if (page === 0) {
     return (
-      <div className="text-center mx-auto">
-        <h1>Curate</h1>
-        <div className="grid grid-cols-1 gap-y-0.5 w-full">
-          <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
-            <HollowInput
-              type="text"
-              placeholder="NFT URL"
-              value={nftURL}
-              onChange={({ target: { value } }) =>
-                setFormField({ nftURL: value })
-              }
-            />
-          </HollowInputContainer>
-          <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
-            <HollowInput
-              type="text"
-              placeholder="Media Type"
-              value={mediaType}
-              onChange={({ target: { value } }) =>
-                setFormField({ mediaType: value })
-              }
-            />
-          </HollowInputContainer>
-          <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
-            <HollowInput
-              type="text"
-              placeholder="Artist Name"
-              value={artistName}
-              onChange={({ target: { value } }) =>
-                setFormField({ artistName: value })
-              }
-            />
-          </HollowInputContainer>
-          <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
-            <HollowInput
-              type="text"
-              placeholder="Title"
-              value={mediaTitle}
-              onChange={({ target: { value } }) =>
-                setFormField({ mediaTitle: value })
-              }
-            />
-          </HollowInputContainer>
-          <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
-            <HollowInput
-              type="text"
-              placeholder="Marketplace"
-              value={marketplace}
-              onChange={({ target: { value } }) =>
-                setFormField({ nftURL: value })
-              }
-            />
-          </HollowInputContainer>
-          <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
-            <HollowInput
-              type="text"
-              placeholder="Artist Wallet Address"
-              value={artistWallet}
-              onChange={({ target: { value } }) =>
-                setFormField({ marketplace: value })
-              }
-            />
-          </HollowInputContainer>
-          <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
-            <HollowTagsInput
-              tags={tags}
-              setTags={(tags) => setFormField({ tags })}
-            />
-          </HollowInputContainer>
+      <div className="flex flex-col justify-center w-full mx-8">
+        <div className="h-8" />
+        <h1 className="font-extrabold	text-4xl underline underline-offset-8 text-center">
+          Submit
+        </h1>
+        <div className="h-12" />
 
-          <button onClick={submitNFT}>Submit</button>
+        <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
+          <HollowInput
+            type="text"
+            placeholder="NFT URL"
+            value={nftURL}
+            onChange={({ target: { value } }) =>
+              setFormField({ nftURL: value })
+            }
+          />
+        </HollowInputContainer>
+        <div className="h-3" />
+        <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
+          <HollowInput
+            type="text"
+            placeholder="Media Type"
+            value={mediaType}
+            onChange={({ target: { value } }) =>
+              setFormField({ mediaType: value })
+            }
+          />
+        </HollowInputContainer>
+        <div className="h-3" />
+        <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
+          <HollowInput
+            type="text"
+            placeholder="Artist Name"
+            value={artistName}
+            onChange={({ target: { value } }) =>
+              setFormField({ artistName: value })
+            }
+          />
+        </HollowInputContainer>
+        <div className="h-3" />
+        <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
+          <HollowInput
+            type="text"
+            placeholder="Title"
+            value={mediaTitle}
+            onChange={({ target: { value } }) =>
+              setFormField({ mediaTitle: value })
+            }
+          />
+        </HollowInputContainer>
+        <div className="h-3" />
+        <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
+          <HollowInput
+            type="text"
+            placeholder="Marketplace"
+            value={marketplace}
+            onChange={({ target: { value } }) =>
+              setFormField({ nftURL: value })
+            }
+          />
+        </HollowInputContainer>
+        <div className="h-3" />
+        <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
+          <HollowInput
+            type="text"
+            placeholder="Artist Wallet Address"
+            value={artistWallet}
+            onChange={({ target: { value } }) =>
+              setFormField({ marketplace: value })
+            }
+          />
+        </HollowInputContainer>
+        <div className="h-3" />
+        <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
+          <HollowTagsInput
+            tags={tags}
+            setTags={(tags) => setFormField({ tags })}
+          />
+        </HollowInputContainer>
+        <div className="h-3" />
+
+        <div className="flex">
+          <div className="flex-grow" />
+
+          <HollowButtonContainer className="w-16">
+            <HollowButton onClick={submitNFT}>Next</HollowButton>
+          </HollowButtonContainer>
         </div>
       </div>
     );
