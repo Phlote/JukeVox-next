@@ -14,7 +14,7 @@ import { nextApiRequest } from "../util";
 import { DropdownList } from "./DropdownList";
 import Image from "next/image";
 
-type MediaType = "music" | "text" | "audio" | "video";
+type MediaType = "Music" | "Text" | "Audio" | "Video";
 export interface CurationSubmission {
   mediaType: MediaType;
   artistName: string;
@@ -148,7 +148,13 @@ export const CurationSubmissionForm = (props) => {
               backgroundColor="rgba(101, 101, 101, 0.17)"
               style={{ borderRadius: "60px" }}
             >
-              <DropdownList fields={["Music", "Text", "Audio", "Video"]} />
+              <DropdownList
+                fields={["Music", "Text", "Audio", "Video"]}
+                selectedField={mediaType}
+                onSelect={(field) =>
+                  setFormField({ mediaType: field as MediaType })
+                }
+              />
             </HollowInputContainer>
           </>
         )}
