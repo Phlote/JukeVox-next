@@ -13,6 +13,7 @@ export const HollowButtonContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  max-height: 3.75rem;
 
   &:focus {
     outline: none;
@@ -32,6 +33,7 @@ export const HollowInputContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: left;
+  max-height: ${(props) => props.type === "form" && "3.5rem"};
 
   &:focus {
     outline: none;
@@ -47,6 +49,25 @@ export const HollowInput = styled.input`
   border: none;
 
   padding-left: 1rem;
+
+  &:focus {
+    outline: none;
+  }
+
+  &::placeholder {
+    color: white;
+  }
+`;
+
+export const HollowButton = styled.button`
+  background-color: transparent;
+  opacity: 100%;
+  color: white;
+  flex-grow: 1;
+  max-width: 100%;
+  outline: none;
+  border: none;
+  text-align: center;
 
   &:focus {
     outline: none;
