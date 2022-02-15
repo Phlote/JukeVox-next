@@ -5,7 +5,7 @@ import { HollowInputContainer, HollowInput } from "./Hollow";
 import Image from "next/image";
 import { CurationSubmissionFlow } from "./CurationSubmissionFlow";
 
-const submitSidenavOpen = atom<boolean>(true);
+const submitSidenavOpen = atom<boolean>(false);
 export const useSubmitSidenavOpen = () => useAtom(submitSidenavOpen);
 
 export const SubmitSidenav = (props) => {
