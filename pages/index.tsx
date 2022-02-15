@@ -17,7 +17,7 @@ function Home() {
             id="search-home"
             className="ml-4 flex-grow"
             type="text"
-            placeholder="Artist Name"
+            placeholder="Search coming soon!"
           />
         </HollowInputContainer>
       </div>

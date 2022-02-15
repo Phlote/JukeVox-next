@@ -2,8 +2,8 @@ import { atom, useAtom } from "jotai";
 import styled from "styled-components";
 import React from "react";
 import { HollowInputContainer, HollowInput } from "./Hollow";
-import { CurationSubmissionForm } from "./CurationSubmissionForm";
 import Image from "next/image";
+import { CurationSubmissionFlow } from "./CurationSubmissionFlow";
 
 const submitSidenavOpen = atom<boolean>(true);
 export const useSubmitSidenavOpen = () => useAtom(submitSidenavOpen);
@@ -15,7 +15,7 @@ export const SubmitSidenav = (props) => {
 
   return (
     <SidenavContainer>
-      <CurationSubmissionForm />
+      <CurationSubmissionFlow />
     </SidenavContainer>
   );
 };
@@ -24,9 +24,9 @@ export const SidenavContainer = ({ children }) => {
   const [open, setOpen] = useSubmitSidenavOpen();
 
   return (
-    <div className="max-h-screen absolute z-10 right-0 overflow-y-scroll">
+    <div className="h-screen absolute z-10 right-0 overflow-y-scroll">
       <div
-        className="w-96 flex flex-column "
+        className="w-96 flex flex-column min-h-screen"
         style={{ backgroundColor: "#1E1E1E" }}
       >
         <div
