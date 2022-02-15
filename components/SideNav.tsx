@@ -14,21 +14,18 @@ export const SubmitSidenav = (props) => {
   if (!open) return null;
 
   return (
-    <SidenavContainer>
+    <Sidenav>
       <CurationSubmissionFlow />
-    </SidenavContainer>
+    </Sidenav>
   );
 };
 
-export const SidenavContainer = ({ children }) => {
+export const Sidenav = ({ children }) => {
   const [open, setOpen] = useSubmitSidenavOpen();
 
   return (
-    <div className="h-screen absolute z-10 right-0 overflow-y-scroll">
-      <div
-        className="flex flex-column min-h-screen"
-        style={{ backgroundColor: "#1E1E1E", width: "27rem" }}
-      >
+    <SideNavContainer>
+      <div className="flex flex-column min-h-screen">
         <div
           onClick={() => {
             setOpen(false);
@@ -39,6 +36,17 @@ export const SidenavContainer = ({ children }) => {
         </div>
         {children}
       </div>
-    </div>
+    </SideNavContainer>
   );
 };
+
+const SideNavContainer = styled.div`
+  height: 100vh;
+  position: absolute;
+  z-index: 10;
+  right: 0;
+  overflow-y: scroll;
+  width: 27rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(60px);
+`;

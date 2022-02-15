@@ -45,8 +45,7 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
     return (
       <div>
         {isWeb3Available ? (
-          <HollowButtonContainer
-            style={{ backgroundColor: "rgba(228, 228, 228, 0.37)" }}
+          <HollowInputContainer
             className="cursor-pointer h-16"
             disabled={connecting}
             onClick={() => {
@@ -63,27 +62,26 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
             }}
           >
             <p className="text-white text-xl">Connect to curate</p>
-          </HollowButtonContainer>
+          </HollowInputContainer>
         ) : (
-          <HollowButtonContainer
-            style={{ backgroundColor: "rgba(228, 228, 228, 0.37)" }}
+          <HollowInputContainer
             className="cursor-pointer h-16"
             onClick={startOnboarding}
           >
             Install a Wallet
-          </HollowButtonContainer>
+          </HollowInputContainer>
         )}
       </div>
     );
   }
 
   return (
-    <HollowButtonContainer
+    <HollowInputContainer
       className="h-16 max-w-xs"
-      style={{ backgroundColor: "rgba(228, 228, 228, 0.37)" }}
+      style={{ justifyContent: "center" }}
     >
       {ENSName || `${shortenHex(account, 10)}`}
-    </HollowButtonContainer>
+    </HollowInputContainer>
   );
 };
 
