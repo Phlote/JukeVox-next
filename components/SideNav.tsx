@@ -24,19 +24,21 @@ export const SidenavContainer = ({ children }) => {
   const [open, setOpen] = useSubmitSidenavOpen();
 
   return (
-    <div
-      className="w-96 flex flex-column overflow-y-scroll absolute z-10 right-0"
-      style={{ backgroundColor: "#1E1E1E" }}
-    >
+    <div className="max-h-screen absolute z-10 right-0 overflow-y-scroll">
       <div
-        onClick={() => {
-          setOpen(false);
-        }}
-        className="absolute top-3 left-3 cursor-pointer"
+        className="w-96 flex flex-column "
+        style={{ backgroundColor: "#1E1E1E" }}
       >
-        <Image src={"/chevron.svg"} alt="close" height={16} width={16} />
+        <div
+          onClick={() => {
+            setOpen(false);
+          }}
+          className="absolute top-3 left-3 cursor-pointer"
+        >
+          <Image src={"/chevron.svg"} alt="close" height={16} width={16} />
+        </div>
+        {children}
       </div>
-      {children}
     </div>
   );
 };

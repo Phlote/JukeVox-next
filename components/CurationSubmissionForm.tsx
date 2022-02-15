@@ -109,7 +109,7 @@ export const CurationSubmissionForm = (props) => {
         <h1 className="font-extrabold	text-4xl underline underline-offset-8 text-center">
           Submit
         </h1>
-        <div className="h-12" />
+        <div className="h-8" />
 
         <HollowInputContainer backgroundColor="rgba(101, 101, 101, 0.17)">
           <HollowInput
@@ -209,9 +209,10 @@ export const CurationSubmissionForm = (props) => {
           <div className="flex-grow" />
 
           <HollowButtonContainer className="w-16">
-            <HollowButton onClick={submitNFT}>Next</HollowButton>
+            <HollowButton onClick={submitNFT}>Submit</HollowButton>
           </HollowButtonContainer>
         </div>
+        <div className="h-3" />
       </div>
     );
   }
