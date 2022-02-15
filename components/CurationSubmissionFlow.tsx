@@ -233,7 +233,9 @@ const MetadataForm = ({ data, setData, metamaskLoading, onSubmit }) => {
           type="text"
           placeholder="Marketplace"
           value={marketplace}
-          onChange={({ target: { value } }) => setFormField({ nftURL: value })}
+          onChange={({ target: { value } }) =>
+            setFormField({ marketplace: value })
+          }
         />
       </HollowInputContainer>
       <div className="h-3" />
@@ -243,7 +245,7 @@ const MetadataForm = ({ data, setData, metamaskLoading, onSubmit }) => {
           placeholder="Artist Wallet Address"
           value={artistWallet}
           onChange={({ target: { value } }) =>
-            setFormField({ marketplace: value })
+            setFormField({ artistWallet: value })
           }
         />
       </HollowInputContainer>
