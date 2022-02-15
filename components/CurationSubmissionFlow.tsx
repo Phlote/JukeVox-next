@@ -42,7 +42,7 @@ export const CurationSubmissionFlow = (props) => {
 
   const [submissionData, setSubmissionData] = useSubmissionData();
 
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(0);
   const [txnHash, setTxnHash] = useState<string>("0x0");
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -267,15 +267,8 @@ const MetadataForm = ({ data, setData, metamaskLoading, onSubmit }) => {
         />
       </HollowInputContainer>
       <div className="h-3" />
-      <HollowInputContainer
-        backgroundColor="rgba(101, 101, 101, 0.17)"
-        type="form"
-      >
-        <HollowTagsInput
-          tags={tags}
-          setTags={(tags) => setFormField({ tags })}
-        />
-      </HollowInputContainer>
+
+      <HollowTagsInput tags={tags} setTags={(tags) => setFormField({ tags })} />
       <div className="h-3" />
 
       <div className="flex">

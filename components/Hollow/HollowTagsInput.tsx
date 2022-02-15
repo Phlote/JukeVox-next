@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { HollowInput } from ".";
+import { HollowInput, HollowInputContainer } from ".";
 import Image from "next/image";
+import styled from "styled-components";
 
 interface TagsInput {
   tags: string[];
@@ -55,22 +56,11 @@ export const HollowTagsInput: React.FC<TagsInput> = ({
   };
 
   return (
-    <div className="flex flex-wrap">
-      <ul
-        className="inline-flex flex-wrap m-0 p-0 w-full gap-1"
-        style={{ paddingLeft: `${tags.length === 0 ? 0 : "1rem"}` }}
+    <div>
+      <HollowInputContainer
+        backgroundColor="rgba(101, 101, 101, 0.17)"
+        type="form"
       >
-        {tags.map((tag, index) => (
-          <div
-            className="p-1 flex justify-center "
-            style={{ backgroundColor: "#1E1E1E" }}
-            key={`${tag}${index}`}
-          >
-            {tag}
-            <div className="w-1"></div>
-            <button onClick={() => deleteTag(index)}>X</button>
-          </div>
-        ))}
         <HollowInput
           value={input}
           placeholder={tags.length === 0 ? "Tags" : ""}
@@ -78,7 +68,37 @@ export const HollowTagsInput: React.FC<TagsInput> = ({
           onKeyUp={onKeyUp}
           onChange={onChange}
         ></HollowInput>
-      </ul>
+      </HollowInputContainer>
+      <div className="h-3" />
+      <div className="flex pl-1 flex-wrap w-full gap-1">
+        {tags.map((tag, index) => (
+          <Tag key={`${tag}${index}`}>
+            {tag}
+            <div className="w-1" />
+            <Image
+              className="cursor-pointer"
+              onClick={() => deleteTag(index)}
+              src="/cross.svg"
+              alt="delete"
+              height={12}
+              width={12}
+            />
+          </Tag>
+        ))}
+      </div>
     </div>
   );
 };
+
+const Tag = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid #e8eaee;
+  box-sizing: border-box;
+  border-radius: 4px;
+  color: black;
+  height: 2rem;
+`;
