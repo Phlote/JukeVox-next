@@ -44,6 +44,7 @@ export const CurationSubmissionFlow = (props) => {
 
   const [page, setPage] = useState<number>(1);
   const [txnHash, setTxnHash] = useState<string>("0x0");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const {
     mediaType,
@@ -78,22 +79,27 @@ export const CurationSubmissionFlow = (props) => {
     };
   }, [phloteContract]);
 
-  const submitNFT = async () => {
+  const submitCuration = async () => {
+    setLoading(true);
     const { tokenURI } = await nextApiRequest("store-nft-metadata");
 
-    const res = await phloteContract.submitPost(
-      account,
-      nftURL,
-      marketplace,
-      tags,
-      artistName,
-      mediaType,
-      mediaTitle,
-      tokenURI
-    );
-    console.log(res);
-    setTxnHash(res.hash);
-    setPage(1);
+    try {
+      const res = await phloteContract.submitPost(
+        account,
+        nftURL,
+        marketplace,
+        tags,
+        artistName,
+        mediaType,
+        mediaTitle,
+        tokenURI
+      );
+      setTxnHash(res.hash);
+      setPage(1);
+    } catch {
+      console.error("user cancelled transaction");
+    }
+    setLoading(false);
   };
 
   return (
@@ -107,7 +113,8 @@ export const CurationSubmissionFlow = (props) => {
         <MetadataForm
           data={submissionData}
           setData={setSubmissionData}
-          onSubmit={submitNFT}
+          metamaskLoading={loading}
+          onSubmit={submitCuration}
         />
       )}
       {page === 1 && (
@@ -125,10 +132,8 @@ export const CurationSubmissionFlow = (props) => {
             <Image src="/arrow.svg" alt={"link"} height={12} width={12} />
           </a>
           <div className="h-8" />
-          <HollowButtonContainer className="w-1/2">
-            <HollowButton onClick={() => setPage(0)}>
-              Submit Another
-            </HollowButton>
+          <HollowButtonContainer className="w-1/2" onClick={() => setPage(0)}>
+            <HollowButton>Submit Another</HollowButton>
           </HollowButtonContainer>
         </div>
       )}
@@ -136,7 +141,7 @@ export const CurationSubmissionFlow = (props) => {
   );
 };
 
-const MetadataForm = ({ data, setData, onSubmit }) => {
+const MetadataForm = ({ data, setData, metamaskLoading, onSubmit }) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
 
   const {
@@ -276,8 +281,11 @@ const MetadataForm = ({ data, setData, onSubmit }) => {
       <div className="flex">
         <div className="flex-grow" />
 
-        <HollowButtonContainer className="w-16">
-          <HollowButton onClick={onSubmit}>Submit</HollowButton>
+        <HollowButtonContainer className="w-32">
+          <HollowButton disabled={metamaskLoading} onClick={onSubmit}>
+            {" "}
+            {metamaskLoading ? "Waiting for Wallet..." : "Submit"}
+          </HollowButton>
         </HollowButtonContainer>
       </div>
       <div className="h-3" />
