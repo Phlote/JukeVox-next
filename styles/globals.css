@@ -6,8 +6,8 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, Jeko, sans-serif;
+  /* font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, Jeko, sans-serif; */
 
   background-color: #000000;
   color: white;
@@ -30,4 +30,9 @@ img {
 
 * {
   box-sizing: border-box;
+}
+
+@font-face {
+  font-family: "Jeko";
+  src: url("/Jeko/Jeko Regular.ttf");
 }

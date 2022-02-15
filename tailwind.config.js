@@ -7,7 +7,9 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ["Jeko", "sans-serif"],
-        // serif: ["Merriweather", "serif"],
+      },
+      textUnderlineOffset: {
+        16: "16px",
       },
     },
   },

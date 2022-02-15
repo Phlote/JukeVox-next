@@ -35,7 +35,7 @@ export const NavBar = () => {
         <div
           className="rounded-full cursor-pointer flex justify-center items-center h-16 w-16"
           style={{
-            backgroundColor: "rgba(242, 244, 248, 0.17);",
+            backgroundColor: "rgba(242, 244, 248, 0.17)",
           }}
         >
           <Image
@@ -49,28 +49,30 @@ export const NavBar = () => {
         <div className="w-4" />
 
         {isConnected && (
-          <HollowButtonContainer
-            className="w-32	 cursor-pointer flex justify-center items-center h-16"
-            onClick={() => deactivate()}
-          >
-            Disconnect Wallet
-          </HollowButtonContainer>
+          <>
+            <HollowButtonContainer
+              className="w-32	 cursor-pointer flex justify-center items-center h-16"
+              onClick={() => deactivate()}
+            >
+              Disconnect Wallet
+            </HollowButtonContainer>
+            <div className="w-4" />
+          </>
         )}
-
-        <div className="w-4" />
 
         {/* TODO use polygon in prod, rinkeby in local */}
 
         {isConnected && (
-          <HollowButtonContainer
-            className="w-32 cursor-pointer flex justify-center items-center h-16"
-            onClick={() => setOpen(true)}
-          >
-            Submit
-          </HollowButtonContainer>
+          <>
+            <HollowButtonContainer
+              className="w-32 cursor-pointer flex justify-center items-center h-16"
+              onClick={() => setOpen(true)}
+            >
+              Submit
+            </HollowButtonContainer>
+            <div className="w-4" />
+          </>
         )}
-
-        <div className="w-4" />
 
         <Account triedToEagerConnect={triedToEagerConnect} />
       </div>
