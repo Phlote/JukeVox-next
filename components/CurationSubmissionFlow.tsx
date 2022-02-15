@@ -36,15 +36,14 @@ const submissionAtom = atom<CurationSubmission>({
 });
 const useSubmissionData = () => useAtom(submissionAtom);
 
-const submissionPageAtom = atom<number>(0);
-const useSubmissionPage = () => useAtom(submissionPageAtom);
-
 export const CurationSubmissionFlow = (props) => {
   const isCurator = useIsCurator();
   const { account } = useWeb3React();
 
   const [submissionData, setSubmissionData] = useSubmissionData();
-  const [page, setPage] = useSubmissionPage();
+
+  const [page, setPage] = useState<number>(1);
+  const [txnHash, setTxnHash] = useState<string>("0x0");
 
   const {
     mediaType,
@@ -63,12 +62,13 @@ export const CurationSubmissionFlow = (props) => {
       phloteContract.on("*", (res) => {
         console.log(res);
         if (res.event === "EditionCreated") {
+          console.log("created");
           console.log(res);
         }
 
         if (res.event === "EditionMinted") {
+          console.log("minted");
           console.log(res);
-          alert("It has been minted!");
         }
       });
     }
@@ -80,7 +80,6 @@ export const CurationSubmissionFlow = (props) => {
 
   const submitNFT = async () => {
     const { tokenURI } = await nextApiRequest("store-nft-metadata");
-    console.log(tokenURI);
 
     const res = await phloteContract.submitPost(
       account,
@@ -93,24 +92,48 @@ export const CurationSubmissionFlow = (props) => {
       tokenURI
     );
     console.log(res);
+    setTxnHash(res.hash);
+    setPage(1);
   };
 
-  if (page === 0) {
-    return (
-      <div className="flex flex-col  w-full mx-8">
-        <div className="h-8" />
-        <h1 className="font-extrabold	text-4xl underline underline-offset-8 text-center">
-          Submit
-        </h1>
-        <div className="h-8" />
+  return (
+    <div className="flex flex-col w-full mx-8">
+      <div className="h-8" />
+      <h1 className="font-extrabold	text-4xl underline underline-offset-8 text-center">
+        Submit
+      </h1>
+      <div className="h-8" />
+      {page === 0 && (
         <MetadataForm
           data={submissionData}
           setData={setSubmissionData}
-          onSubmit={() => setPage(page + 1)}
+          onSubmit={submitNFT}
         />
-      </div>
-    );
-  }
+      )}
+      {page === 1 && (
+        <div className="flex flex-col items-center">
+          <p>Congratulations! Your submission has been added</p>
+          <div className="h-8" />
+          <a
+            className="underline flex"
+            rel="noreferrer"
+            target="_blank"
+            href={`https://rinkeby.etherscan.io/tx/${txnHash}`}
+          >
+            View Transaction
+            <div className="w-1" />
+            <Image src="/arrow.svg" alt={"link"} height={12} width={12} />
+          </a>
+          <div className="h-8" />
+          <HollowButtonContainer className="w-1/2">
+            <HollowButton onClick={() => setPage(0)}>
+              Submit Another
+            </HollowButton>
+          </HollowButtonContainer>
+        </div>
+      )}
+    </div>
+  );
 };
 
 const MetadataForm = ({ data, setData, onSubmit }) => {

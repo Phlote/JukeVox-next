@@ -26,14 +26,14 @@ export const SidenavContainer = ({ children }) => {
   return (
     <div className="h-screen absolute z-10 right-0 overflow-y-scroll">
       <div
-        className="w-96 flex flex-column min-h-screen"
-        style={{ backgroundColor: "#1E1E1E" }}
+        className="flex flex-column min-h-screen"
+        style={{ backgroundColor: "#1E1E1E", width: "27rem" }}
       >
         <div
           onClick={() => {
             setOpen(false);
           }}
-          className="absolute top-3 left-3 cursor-pointer"
+          className="absolute top-16 left-4 cursor-pointer"
         >
           <Image src={"/chevron.svg"} alt="close" height={16} width={16} />
         </div>
