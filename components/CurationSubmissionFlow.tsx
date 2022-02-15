@@ -162,10 +162,7 @@ const MetadataForm = ({ data, setData, metamaskLoading, onSubmit }) => {
 
   return (
     <>
-      <HollowInputContainer
-        backgroundColor="rgba(101, 101, 101, 0.17)"
-        type="form"
-      >
+      <HollowInputContainer type="form">
         <HollowInput
           type="text"
           placeholder="NFT URL"
@@ -175,7 +172,6 @@ const MetadataForm = ({ data, setData, metamaskLoading, onSubmit }) => {
       </HollowInputContainer>
       <div className="h-3" />
       <HollowInputContainer
-        backgroundColor="rgba(101, 101, 101, 0.17)"
         onClick={() => setDropdownOpen(!dropdownOpen)}
         type="form"
       >
@@ -197,10 +193,7 @@ const MetadataForm = ({ data, setData, metamaskLoading, onSubmit }) => {
       {dropdownOpen && (
         <>
           <div className="h-4" />{" "}
-          <HollowInputContainer
-            backgroundColor="rgba(101, 101, 101, 0.17)"
-            style={{ borderRadius: "60px" }}
-          >
+          <HollowInputContainer style={{ borderRadius: "60px" }}>
             <DropdownList
               fields={["Music", "Text", "Audio", "Video"]}
               selectedField={mediaType}
@@ -213,10 +206,7 @@ const MetadataForm = ({ data, setData, metamaskLoading, onSubmit }) => {
         </>
       )}
       <div className="h-3" />
-      <HollowInputContainer
-        backgroundColor="rgba(101, 101, 101, 0.17)"
-        type="form"
-      >
+      <HollowInputContainer type="form">
         <HollowInput
           type="text"
           placeholder="Artist Name"
@@ -227,10 +217,7 @@ const MetadataForm = ({ data, setData, metamaskLoading, onSubmit }) => {
         />
       </HollowInputContainer>
       <div className="h-3" />
-      <HollowInputContainer
-        backgroundColor="rgba(101, 101, 101, 0.17)"
-        type="form"
-      >
+      <HollowInputContainer type="form">
         <HollowInput
           type="text"
           placeholder="Title"
@@ -241,10 +228,7 @@ const MetadataForm = ({ data, setData, metamaskLoading, onSubmit }) => {
         />
       </HollowInputContainer>
       <div className="h-3" />
-      <HollowInputContainer
-        backgroundColor="rgba(101, 101, 101, 0.17)"
-        type="form"
-      >
+      <HollowInputContainer type="form">
         <HollowInput
           type="text"
           placeholder="Marketplace"
@@ -253,10 +237,7 @@ const MetadataForm = ({ data, setData, metamaskLoading, onSubmit }) => {
         />
       </HollowInputContainer>
       <div className="h-3" />
-      <HollowInputContainer
-        backgroundColor="rgba(101, 101, 101, 0.17)"
-        type="form"
-      >
+      <HollowInputContainer type="form">
         <HollowInput
           type="text"
           placeholder="Artist Wallet Address"
