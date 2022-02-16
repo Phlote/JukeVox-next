@@ -118,7 +118,7 @@ export const CurationSubmissionFlow = (props) => {
         />
       )}
       {page === 1 && (
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center text-sm">
           <p>Congratulations! Your submission has been added</p>
           <div className="h-8" />
           <a
@@ -259,7 +259,6 @@ const MetadataForm = ({ data, setData, metamaskLoading, onSubmit }) => {
 
         <HollowButtonContainer className="w-32">
           <HollowButton disabled={metamaskLoading} onClick={onSubmit}>
-            {" "}
             {metamaskLoading ? "Waiting for Wallet..." : "Submit"}
           </HollowButton>
         </HollowButtonContainer>
