@@ -11,5 +11,12 @@ export const validateCurationSubmission = (values: CurationSubmission) => {
   if (!values.artistName) {
     errors.artistName = "Required";
   }
+  if (!values.mediaTitle) {
+    errors.mediaTitle = "Required";
+  }
+  if (!values.marketplace) {
+    errors.marketplace = "Required";
+  }
+  //TODO: if there is a value for artistWallet, check if it's on chain
   return errors;
 };

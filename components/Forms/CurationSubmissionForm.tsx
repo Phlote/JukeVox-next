@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { DropdownList } from "../DropdownList";
 import {
   HollowInputContainer,
@@ -20,51 +20,23 @@ export interface CurationSubmission {
   mediaTitle: string;
   nftURL: string;
   marketplace: string;
-  tags: string[];
+  tags?: string[];
 }
 
-// const submissionAtom = atom<CurationSubmission>({
-//   mediaType: "" as MediaType,
-//   artistName: "",
-//   artistWallet: "",
-//   mediaTitle: "",
-//   nftURL: "",
-//   marketplace: "",
-//   tags: [],
-// });
-// export const useSubmissionData = () => useAtom(submissionAtom);
-
-export const CurationSubmissionForm = ({
-  //   data,
-  //   setData,
-  metamaskLoading,
-  onSubmit,
-}) => {
+export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const { form, handleSubmit, values, pristine, submitting } = useForm({
     onSubmit,
     validate: validateCurationSubmission,
   });
 
-  //   const {
-  //     mediaType,
-  //     artistName,
-  //     artistWallet,
-  //     mediaTitle,
-  //     nftURL,
-  //     marketplace,
-  //     tags,
-  //   } = data;
-
   const nftURL = useField("nftURL", form);
   const mediaType = useField("mediaType", form);
   const artistName = useField("artistName", form);
-
-  //   const setFormField = (update: Partial<CurationSubmission>) => {
-  //     setData((current) => {
-  //       return { ...current, ...update };
-  //     });
-  //   };
+  const mediaTitle = useField("mediaTitle", form);
+  const marketplace = useField("marketplace", form);
+  const artistWallet = useField("artistWallet", form);
+  const tags = useField("tags", form);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -129,44 +101,35 @@ export const CurationSubmissionForm = ({
         )}
       </HollowInputContainer>
       <div className="h-3" />
-      {/*
+
       <HollowInputContainer type="form">
-        <HollowInput
-          type="text"
-          placeholder="Title"
-          value={mediaTitle}
-          onChange={({ target: { value } }) =>
-            setFormField({ mediaTitle: value })
-          }
-        />
+        <HollowInput {...mediaTitle.input} type="text" placeholder="Title" />
+        {mediaTitle.meta.touched && mediaTitle.meta.error && (
+          <span className="text-red-600">{mediaTitle.meta.error}</span>
+        )}
       </HollowInputContainer>
       <div className="h-3" />
+
       <HollowInputContainer type="form">
-        <HollowInput
-          type="text"
-          placeholder="Marketplace"
-          value={marketplace}
-          onChange={({ target: { value } }) =>
-            setFormField({ marketplace: value })
-          }
-        />
+        <HollowInput type="text" placeholder="Marketplace" />
+        {marketplace.meta.touched && marketplace.meta.error && (
+          <span className="text-red-600">{marketplace.meta.error}</span>
+        )}
       </HollowInputContainer>
       <div className="h-3" />
+
       <HollowInputContainer type="form">
         <HollowInput
+          {...artistWallet.input}
           type="text"
-          placeholder="Artist Wallet Address"
-          value={artistWallet}
-          onChange={({ target: { value } }) =>
-            setFormField({ artistWallet: value })
-          }
+          placeholder="Artist Wallet Address (Optional)"
         />
       </HollowInputContainer>
       <div className="h-3" />
 
-      <HollowTagsInput tags={tags} setTags={(tags) => setFormField({ tags })} />
+      <HollowTagsInput {...tags.input} />
       <div className="h-3" />
-*/}
+
       <div className="flex">
         <div className="flex-grow" />
 
