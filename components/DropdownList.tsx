@@ -4,13 +4,20 @@ interface DropdownList {
   fields: string[];
   value: string;
   onChange: (field: string) => void;
+  onFocus: () => void;
 }
 
 export const DropdownList: React.FC<DropdownList> = ({
   fields,
   value,
   onChange,
+  onFocus,
 }) => {
+  React.useEffect(() => {
+    return () => onFocus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="grid grid-cols-1 divide-y w-full">
       {fields.map((field) => (

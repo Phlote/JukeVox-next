@@ -93,8 +93,6 @@ export const CurationSubmissionFlow = (props) => {
       <div className="h-8" />
       {page === 0 && (
         <CurationSubmissionForm
-          // data={submissionData}
-          // setData={setSubmissionData}
           metamaskLoading={loading}
           onSubmit={submitCuration}
         />

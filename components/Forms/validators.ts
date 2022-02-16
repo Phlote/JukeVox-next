@@ -8,8 +8,8 @@ export const validateCurationSubmission = (values: CurationSubmission) => {
   if (!values.mediaType) {
     errors.mediaType = "Required";
   }
-  //   if (!values.artistName) {
-  //     errors.artistName = "Required";
-  //   }
+  if (!values.artistName) {
+    errors.artistName = "Required";
+  }
   return errors;
 };

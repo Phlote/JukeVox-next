@@ -58,6 +58,7 @@ export const CurationSubmissionForm = ({
 
   const nftURL = useField("nftURL", form);
   const mediaType = useField("mediaType", form);
+  const artistName = useField("artistName", form);
 
   //   const setFormField = (update: Partial<CurationSubmission>) => {
   //     setData((current) => {
@@ -89,6 +90,10 @@ export const CurationSubmissionForm = ({
             type="text"
             placeholder="Media Type"
           />
+          {mediaType.meta.visited && mediaType.meta.error && (
+            <span className="text-red-600">{mediaType.meta.error}</span>
+          )}
+          <div className="w-2" />
           <Image
             className={dropdownOpen ? "-rotate-90" : "rotate-90"}
             src={"/chevron.svg"}
@@ -111,20 +116,20 @@ export const CurationSubmissionForm = ({
           <div className="h-3" />{" "}
         </>
       )}
-      {/*
-      
+
       <div className="h-3" />
       <HollowInputContainer type="form">
         <HollowInput
+          {...artistName.input}
           type="text"
           placeholder="Artist Name"
-          value={artistName}
-          onChange={({ target: { value } }) =>
-            setFormField({ artistName: value })
-          }
         />
+        {artistName.meta.touched && artistName.meta.error && (
+          <span className="text-red-600">{artistName.meta.error}</span>
+        )}
       </HollowInputContainer>
       <div className="h-3" />
+      {/*
       <HollowInputContainer type="form">
         <HollowInput
           type="text"
