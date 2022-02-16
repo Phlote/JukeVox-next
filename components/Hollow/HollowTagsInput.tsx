@@ -4,20 +4,20 @@ import Image from "next/image";
 import styled from "styled-components";
 
 interface TagsInput {
-  tags: string[];
-  setTags: (tags: string[]) => void;
+  value: string[];
+  onChange: (tags: string[]) => void;
 }
 
 // TODO: make this more general where you can pass an styled input
 export const HollowTagsInput: React.FC<TagsInput> = ({
-  tags = [],
-  setTags,
+  value = [],
+  onChange,
 }) => {
   const [input, setInput] = useState("");
 
   const [isKeyReleased, setIsKeyReleased] = useState(false);
 
-  const onChange = (e) => {
+  const localOnChange = (e) => {
     const { value } = e.target;
     setInput(value);
   };
@@ -28,19 +28,19 @@ export const HollowTagsInput: React.FC<TagsInput> = ({
 
     const activeKey = key === "," || key === "Enter";
 
-    if (activeKey && trimmedInput.length && !tags.includes(trimmedInput)) {
+    if (activeKey && trimmedInput.length && !value.includes(trimmedInput)) {
       e.preventDefault();
       // setTags((prevState) => [...prevState, trimmedInput]);
-      setTags([...tags, trimmedInput]);
+      onChange([...value, trimmedInput]);
       setInput("");
     }
 
-    if (key === "Backspace" && !input.length && tags.length && isKeyReleased) {
+    if (key === "Backspace" && !input.length && value.length && isKeyReleased) {
       e.preventDefault();
-      const tagsCopy = [...tags];
+      const tagsCopy = [...value];
       const poppedTag = tagsCopy.pop();
 
-      setTags(tagsCopy);
+      onChange(tagsCopy);
       setInput(poppedTag);
     }
 
@@ -52,7 +52,7 @@ export const HollowTagsInput: React.FC<TagsInput> = ({
   };
 
   const deleteTag = (index) => {
-    setTags(tags.filter((tag, i) => i !== index));
+    onChange(value.filter((tag, i) => i !== index));
   };
 
   return (
@@ -60,28 +60,29 @@ export const HollowTagsInput: React.FC<TagsInput> = ({
       <HollowInputContainer type="form">
         <HollowInput
           value={input}
-          placeholder={tags.length === 0 ? "Tags" : ""}
+          placeholder={value.length === 0 ? "Tags" : ""}
           onKeyDown={onKeyDown}
           onKeyUp={onKeyUp}
-          onChange={onChange}
+          onChange={localOnChange}
         ></HollowInput>
       </HollowInputContainer>
       <div className="h-3" />
       <div className="flex pl-1 flex-wrap w-full gap-1">
-        {tags.map((tag, index) => (
-          <Tag key={`${tag}${index}`}>
-            {tag}
-            <div className="w-1" />
-            <Image
-              className="cursor-pointer"
-              onClick={() => deleteTag(index)}
-              src="/cross.svg"
-              alt="delete"
-              height={12}
-              width={12}
-            />
-          </Tag>
-        ))}
+        {value &&
+          value.map((tag, index) => (
+            <Tag key={`${tag}${index}`}>
+              {tag}
+              <div className="w-1" />
+              <Image
+                className="cursor-pointer"
+                onClick={() => deleteTag(index)}
+                src="/cross.svg"
+                alt="delete"
+                height={12}
+                width={12}
+              />
+            </Tag>
+          ))}
       </div>
     </div>
   );
