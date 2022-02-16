@@ -62,9 +62,10 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
             type="text"
             placeholder="Media Type"
           />
-          {mediaType.meta.visited && mediaType.meta.error && (
-            <span className="text-red-600">{mediaType.meta.error}</span>
-          )}
+          {(mediaType.meta.touched || mediaType.meta.visited) &&
+            mediaType.meta.error && (
+              <span className="text-red-600">{mediaType.meta.error}</span>
+            )}
           <div className="w-2" />
           <Image
             className={dropdownOpen ? "-rotate-90" : "rotate-90"}
@@ -111,7 +112,11 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
       <div className="h-3" />
 
       <HollowInputContainer type="form">
-        <HollowInput type="text" placeholder="Marketplace" />
+        <HollowInput
+          {...marketplace.input}
+          type="text"
+          placeholder="Marketplace"
+        />
         {marketplace.meta.touched && marketplace.meta.error && (
           <span className="text-red-600">{marketplace.meta.error}</span>
         )}

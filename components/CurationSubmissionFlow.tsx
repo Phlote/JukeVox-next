@@ -13,13 +13,9 @@ import { useWeb3React } from "@web3-react/core";
 import { nextApiRequest } from "../util";
 import { DropdownList } from "./DropdownList";
 import Image from "next/image";
-import {
-  CurationSubmissionForm,
-  useSubmissionData,
-} from "./Forms/CurationSubmissionForm";
+import { CurationSubmissionForm } from "./Forms/CurationSubmissionForm";
 
 export const CurationSubmissionFlow = (props) => {
-  const isCurator = useIsCurator();
   const { account } = useWeb3React();
 
   const [page, setPage] = useState<number>(0);
@@ -70,7 +66,7 @@ export const CurationSubmissionFlow = (props) => {
         account,
         nftURL,
         marketplace,
-        tags,
+        tags ?? [],
         artistName,
         mediaType,
         mediaTitle,
@@ -78,8 +74,8 @@ export const CurationSubmissionFlow = (props) => {
       );
       setTxnHash(res.hash);
       setPage(1);
-    } catch {
-      console.error("user cancelled transaction");
+    } catch (e) {
+      console.error(e);
     }
     setLoading(false);
   };
