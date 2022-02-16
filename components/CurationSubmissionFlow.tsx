@@ -105,7 +105,7 @@ export const CurationSubmissionFlow = (props) => {
   return (
     <div className="flex flex-col w-full mx-8">
       <div className="h-8" />
-      <h1 className="font-extrabold	text-4xl underline underline-offset-8 text-center">
+      <h1 className="font-extrabold	text-4xl underline underline-offset-16 text-center">
         Submit
       </h1>
       <div className="h-8" />
@@ -118,7 +118,7 @@ export const CurationSubmissionFlow = (props) => {
         />
       )}
       {page === 1 && (
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center text-sm">
           <p>Congratulations! Your submission has been added</p>
           <div className="h-8" />
           <a
@@ -162,10 +162,7 @@ const MetadataForm = ({ data, setData, metamaskLoading, onSubmit }) => {
 
   return (
     <>
-      <HollowInputContainer
-        backgroundColor="rgba(101, 101, 101, 0.17)"
-        type="form"
-      >
+      <HollowInputContainer type="form">
         <HollowInput
           type="text"
           placeholder="NFT URL"
@@ -175,7 +172,6 @@ const MetadataForm = ({ data, setData, metamaskLoading, onSubmit }) => {
       </HollowInputContainer>
       <div className="h-3" />
       <HollowInputContainer
-        backgroundColor="rgba(101, 101, 101, 0.17)"
         onClick={() => setDropdownOpen(!dropdownOpen)}
         type="form"
       >
@@ -197,10 +193,7 @@ const MetadataForm = ({ data, setData, metamaskLoading, onSubmit }) => {
       {dropdownOpen && (
         <>
           <div className="h-4" />{" "}
-          <HollowInputContainer
-            backgroundColor="rgba(101, 101, 101, 0.17)"
-            style={{ borderRadius: "60px" }}
-          >
+          <HollowInputContainer style={{ borderRadius: "60px" }}>
             <DropdownList
               fields={["Music", "Text", "Audio", "Video"]}
               selectedField={mediaType}
@@ -213,10 +206,7 @@ const MetadataForm = ({ data, setData, metamaskLoading, onSubmit }) => {
         </>
       )}
       <div className="h-3" />
-      <HollowInputContainer
-        backgroundColor="rgba(101, 101, 101, 0.17)"
-        type="form"
-      >
+      <HollowInputContainer type="form">
         <HollowInput
           type="text"
           placeholder="Artist Name"
@@ -227,10 +217,7 @@ const MetadataForm = ({ data, setData, metamaskLoading, onSubmit }) => {
         />
       </HollowInputContainer>
       <div className="h-3" />
-      <HollowInputContainer
-        backgroundColor="rgba(101, 101, 101, 0.17)"
-        type="form"
-      >
+      <HollowInputContainer type="form">
         <HollowInput
           type="text"
           placeholder="Title"
@@ -241,28 +228,24 @@ const MetadataForm = ({ data, setData, metamaskLoading, onSubmit }) => {
         />
       </HollowInputContainer>
       <div className="h-3" />
-      <HollowInputContainer
-        backgroundColor="rgba(101, 101, 101, 0.17)"
-        type="form"
-      >
+      <HollowInputContainer type="form">
         <HollowInput
           type="text"
           placeholder="Marketplace"
           value={marketplace}
-          onChange={({ target: { value } }) => setFormField({ nftURL: value })}
+          onChange={({ target: { value } }) =>
+            setFormField({ marketplace: value })
+          }
         />
       </HollowInputContainer>
       <div className="h-3" />
-      <HollowInputContainer
-        backgroundColor="rgba(101, 101, 101, 0.17)"
-        type="form"
-      >
+      <HollowInputContainer type="form">
         <HollowInput
           type="text"
           placeholder="Artist Wallet Address"
           value={artistWallet}
           onChange={({ target: { value } }) =>
-            setFormField({ marketplace: value })
+            setFormField({ artistWallet: value })
           }
         />
       </HollowInputContainer>
@@ -276,7 +259,6 @@ const MetadataForm = ({ data, setData, metamaskLoading, onSubmit }) => {
 
         <HollowButtonContainer className="w-32">
           <HollowButton disabled={metamaskLoading} onClick={onSubmit}>
-            {" "}
             {metamaskLoading ? "Waiting for Wallet..." : "Submit"}
           </HollowButton>
         </HollowButtonContainer>

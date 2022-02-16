@@ -9,36 +9,40 @@ const submitSidenavOpen = atom<boolean>(false);
 export const useSubmitSidenavOpen = () => useAtom(submitSidenavOpen);
 
 export const SubmitSidenav = (props) => {
-  const [open] = useSubmitSidenavOpen();
+  const [open, setOpen] = useSubmitSidenavOpen();
 
   if (!open) return null;
 
   return (
-    <SidenavContainer>
+    <SideNav onClose={() => setOpen(false)}>
       <CurationSubmissionFlow />
-    </SidenavContainer>
+    </SideNav>
   );
 };
 
-export const SidenavContainer = ({ children }) => {
-  const [open, setOpen] = useSubmitSidenavOpen();
-
+export const SideNav = ({ children, onClose }) => {
   return (
-    <div className="h-screen absolute z-10 right-0 overflow-y-scroll">
-      <div
-        className="flex flex-column min-h-screen"
-        style={{ backgroundColor: "#1E1E1E", width: "27rem" }}
-      >
+    <SideNavContainer>
+      <div className="flex flex-column min-h-screen">
         <div
-          onClick={() => {
-            setOpen(false);
-          }}
+          onClick={onClose}
           className="absolute top-16 left-4 cursor-pointer"
         >
           <Image src={"/chevron.svg"} alt="close" height={16} width={16} />
         </div>
         {children}
       </div>
-    </div>
+    </SideNavContainer>
   );
 };
+
+const SideNavContainer = styled.div`
+  height: 100vh;
+  position: absolute;
+  z-index: 10;
+  right: 0;
+  overflow-y: scroll;
+  width: 27rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(60px);
+`;

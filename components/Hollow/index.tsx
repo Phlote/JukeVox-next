@@ -1,8 +1,7 @@
 import styled from "styled-components";
 
 export const HollowButtonContainer = styled.div`
-  background: ${(props) =>
-    props.backgroundColor ?? "rgba(242, 244, 248, 0.17)"};
+  background: ${(props) => props.backgroundColor ?? "rgba(0, 0, 0, 0.47)"};
 
   color: white;
   padding: 1rem;
@@ -14,6 +13,7 @@ export const HollowButtonContainer = styled.div`
   align-items: center;
   justify-content: center;
   max-height: 3.75rem;
+  border: 1px white solid;
 
   &:focus {
     outline: none;
@@ -34,6 +34,7 @@ export const HollowInputContainer = styled.div`
   align-items: center;
   justify-content: left;
   max-height: ${(props) => props.type === "form" && "3.5rem"};
+  border: ${(props) => props.type === "form" && "1px white solid"};
 
   &:focus {
     outline: none;
@@ -47,7 +48,6 @@ export const HollowInput = styled.input`
   max-width: 100%;
   outline: none;
   border: none;
-
   padding-left: 1rem;
 
   &:focus {

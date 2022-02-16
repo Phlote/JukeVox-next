@@ -57,10 +57,7 @@ export const HollowTagsInput: React.FC<TagsInput> = ({
 
   return (
     <div>
-      <HollowInputContainer
-        backgroundColor="rgba(101, 101, 101, 0.17)"
-        type="form"
-      >
+      <HollowInputContainer type="form">
         <HollowInput
           value={input}
           placeholder={tags.length === 0 ? "Tags" : ""}

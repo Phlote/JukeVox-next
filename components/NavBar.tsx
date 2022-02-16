@@ -33,9 +33,9 @@ export const NavBar = () => {
         <div className="flex-grow" />
         <div className="w-4" />
         <div
-          className="rounded-full  cursor-pointer flex justify-center items-center h-16 w-16"
+          className="rounded-full cursor-pointer flex justify-center items-center h-16 w-16"
           style={{
-            backgroundColor: "rgba(228, 228, 228, 0.37)",
+            backgroundColor: "rgba(242, 244, 248, 0.17)",
           }}
         >
           <Image
@@ -48,31 +48,33 @@ export const NavBar = () => {
 
         <div className="w-4" />
 
-        <Account triedToEagerConnect={triedToEagerConnect} />
-
-        <div className="w-4" />
-
         {isConnected && (
-          <HollowButtonContainer
-            className="max-w-xs	 cursor-pointer flex justify-center items-center h-16"
-            onClick={() => deactivate()}
-          >
-            Disconnect Wallet
-          </HollowButtonContainer>
+          <>
+            <HollowButtonContainer
+              className="w-32	 cursor-pointer flex justify-center items-center h-16"
+              onClick={() => deactivate()}
+            >
+              Disconnect Wallet
+            </HollowButtonContainer>
+            <div className="w-4" />
+          </>
         )}
-
-        <div className="w-4" />
 
         {/* TODO use polygon in prod, rinkeby in local */}
 
         {isConnected && (
-          <HollowButtonContainer
-            className="max-w-xs cursor-pointer flex justify-center items-center h-16"
-            onClick={() => setOpen(true)}
-          >
-            Submit Curation
-          </HollowButtonContainer>
+          <>
+            <HollowButtonContainer
+              className="w-32 cursor-pointer flex justify-center items-center h-16"
+              onClick={() => setOpen(true)}
+            >
+              Submit
+            </HollowButtonContainer>
+            <div className="w-4" />
+          </>
         )}
+
+        <Account triedToEagerConnect={triedToEagerConnect} />
       </div>
     </div>
   );
