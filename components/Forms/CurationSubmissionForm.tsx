@@ -58,6 +58,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
       >
         <div className="flex flex-row w-full">
           <HollowInput
+            value={mediaType.input.value}
             className="flex-grow"
             type="text"
             placeholder="Media Type"
@@ -83,6 +84,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
           <HollowInputContainer style={{ borderRadius: "60px" }}>
             <DropdownList
               {...mediaType.input}
+              close={() => setDropdownOpen(false)}
               fields={["Music", "Text", "Audio", "Video"]}
             />
           </HollowInputContainer>

@@ -13,13 +13,18 @@ import { useWeb3React } from "@web3-react/core";
 import { nextApiRequest } from "../util";
 import { DropdownList } from "./DropdownList";
 import Image from "next/image";
-import { CurationSubmissionForm } from "./Forms/CurationSubmissionForm";
+import {
+  CurationSubmission,
+  CurationSubmissionForm,
+} from "./Forms/CurationSubmissionForm";
+import { NFT_MINT_CONTRACT_RINKEBY } from "../contracts/addresses";
 
 export const CurationSubmissionFlow = (props) => {
   const { account } = useWeb3React();
 
   const [page, setPage] = useState<number>(0);
   const [txnHash, setTxnHash] = useState<string>("0x0");
+  const [nftMintId, setNFTMintId] = useState<number | "Loading">("Loading");
   const [loading, setLoading] = useState<boolean>(false);
 
   const phloteContract = usePhlote();
@@ -36,6 +41,8 @@ export const CurationSubmissionFlow = (props) => {
         if (res.event === "EditionMinted") {
           console.log("minted");
           console.log(res);
+          console.log(res.args["tokenId"].toNumber());
+          setNFTMintId(res.args["tokenId"].toNumber());
         }
       });
     }
@@ -45,7 +52,7 @@ export const CurationSubmissionFlow = (props) => {
     };
   }, [phloteContract]);
 
-  const submitCuration = async (curationData) => {
+  const submitCuration = async (curationData: CurationSubmission) => {
     const {
       mediaType,
       artistName,
@@ -59,9 +66,13 @@ export const CurationSubmissionFlow = (props) => {
     console.log("submit: ", curationData);
 
     setLoading(true);
-    const { tokenURI } = await nextApiRequest("store-nft-metadata");
-
     try {
+      const { tokenURI } = await nextApiRequest(
+        "store-nft",
+        "POST",
+        curationData
+      );
+
       const res = await phloteContract.submitPost(
         account,
         nftURL,
@@ -72,7 +83,9 @@ export const CurationSubmissionFlow = (props) => {
         mediaTitle,
         tokenURI
       );
+      console.log(res);
       setTxnHash(res.hash);
+      // setNFTMintId(res.)
       setPage(1);
     } catch (e) {
       console.error(e);
@@ -107,6 +120,24 @@ export const CurationSubmissionFlow = (props) => {
             <div className="w-1" />
             <Image src="/arrow.svg" alt={"link"} height={12} width={12} />
           </a>
+          <div className="h-4" />
+          <a
+            className="underline flex"
+            rel="noreferrer"
+            target="_blank"
+            style={
+              nftMintId === "Loading"
+                ? { pointerEvents: "none", opacity: 0.5 }
+                : undefined
+            }
+            href={`https://testnets.opensea.io/assets/${NFT_MINT_CONTRACT_RINKEBY}/${nftMintId.toString()}`}
+          >
+            View NFT on Opensea
+            {nftMintId === "Loading" && " (Waiting on transaction...)"}
+            <div className="w-1" />
+            <Image src="/arrow.svg" alt={"link"} height={12} width={12} />
+          </a>
+
           <div className="h-8" />
           <HollowButtonContainer className="w-1/2" onClick={() => setPage(0)}>
             <HollowButton>Submit Another</HollowButton>
