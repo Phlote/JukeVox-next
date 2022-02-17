@@ -9,10 +9,11 @@ async function main() {
 
   const PhloteContractFactory = await ethers.getContractFactory("Phlote");
   const contract = await PhloteContractFactory.deploy();
+  console.log("Token address:", contract.address);
 
   await contract.deployed();
 
-  console.log("Token address:", contract.address);
+  console.log("Successfully deployed");
 }
 
 main()

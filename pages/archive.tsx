@@ -15,15 +15,14 @@ function Archive() {
   const { account } = useWeb3React();
   const phlote = usePhlote();
 
-  const [curations, setCurations] = React.useState<Curation>();
+  const [curations, setCurations] = React.useState<Curation[]>();
 
   const getCurations = async () => {
-    const curations = await phlote?.curatorSubmissions(account);
-    console.log("curations: ", curations);
+    const submissions = await phlote.getCuratorSubmissions(account);
+    setCurations(submissions as unknown as Curation[]);
   };
 
   React.useEffect(() => {
-    console.log(account);
     if (phlote && account) getCurations();
   }, [phlote, account]);
 

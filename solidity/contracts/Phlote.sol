@@ -97,7 +97,8 @@ contract Phlote is ERC721, Ownable {
         This function should 
         - set the curator's submission as an edition
         */
-        editions[nextPostId] = Edition({
+
+        Edition memory curation = Edition({
             curatorAddress: _curatorWallet,
             mediaURI: _mediaURI,
             marketplace: _marketplace,
@@ -109,11 +110,17 @@ contract Phlote is ERC721, Ownable {
             numSold: 0,
             tokenURI: _tokenURI
         });
-        curatorSubmissions[_curatorWallet].push(editions[nextPostId]);
+        editions[nextPostId] = curation;
+        curatorSubmissions[_curatorWallet].push(curation);
         //add it to their archive of submissions. mapping of address -> submissions[]
         emit EditionCreated(msg.sender, nextPostId);
         mintEdition(nextPostId);
         nextPostId++; 
+    }
+
+     function getCuratorSubmissions(address _curatorWallet) public view returns (Edition[] memory)
+    {
+         return curatorSubmissions[_curatorWallet];
     }
 
     function tokenURI(uint256 _tokenId)
