@@ -23,8 +23,24 @@ function Archive() {
   };
 
   React.useEffect(() => {
-    if (phlote && account) getCurations();
+    if (phlote && account) {
+      getCurations();
+      phlote.on("*", (res) => {
+        console.log(res);
+        if (res.event === "EditionCreated") {
+          getCurations();
+        }
+      });
+    }
+
+    return () => {
+      phlote?.removeAllListeners();
+    };
   }, [phlote, account]);
+
+  //   React.useEffect(() => {
+  //     if (phlote && account)
+  //   }, [phlote, account]);
 
   return (
     <HomeLayout>
@@ -37,22 +53,17 @@ function Archive() {
             <th>Artist</th>
             <th>Media Type</th>
             <th>Marketplace</th>
-            <th>Curator</th>
           </tr>
         </thead>
         {/* TODO big white line */}
         <tbody>
           {curations?.map((curation) => {
-            const { artistName, mediaType, marketplace, curatorWallet } =
-              curation;
+            const { artistName, mediaType, marketplace } = curation;
             return (
-              <ArchiveTableRow
-                key={`${artistName}${mediaType}${marketplace}${curatorWallet}`}
-              >
+              <ArchiveTableRow key={`${artistName}${mediaType}${marketplace}`}>
                 <ArchiveTableDataCell>{artistName}</ArchiveTableDataCell>
                 <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
                 <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
-                <ArchiveTableDataCell>{curatorWallet}</ArchiveTableDataCell>
               </ArchiveTableRow>
             );
           })}

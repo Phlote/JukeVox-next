@@ -130,7 +130,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
         <HollowInput
           {...artistWallet.input}
           type="text"
-          placeholder="Artist Wallet Address (Optional)"
+          placeholder="Artist Wallet Address"
         />
       </HollowInputContainer>
       <div className="h-3" />
