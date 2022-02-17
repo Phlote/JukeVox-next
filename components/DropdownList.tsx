@@ -2,6 +2,7 @@ import React from "react";
 
 interface DropdownList {
   fields: string[];
+  close: () => void;
   value: string;
   onChange: (field: string) => void;
   onFocus: () => void;
@@ -9,6 +10,7 @@ interface DropdownList {
 
 export const DropdownList: React.FC<DropdownList> = ({
   fields,
+  close,
   value,
   onChange,
   onFocus,
@@ -24,7 +26,10 @@ export const DropdownList: React.FC<DropdownList> = ({
         <div
           className="w-full h-14 flex justify-left items-center"
           key={field}
-          onClick={() => onChange(field)}
+          onClick={() => {
+            onChange(field);
+            close();
+          }}
         >
           <div className="w-4" />
           <input
