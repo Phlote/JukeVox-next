@@ -20,6 +20,35 @@ export const HollowButtonContainer = styled.div`
   }
 `;
 
+export const HollowTableRow = styled.tr`
+  background: ${(props) =>
+    props.backgroundColor ?? "rgba(242, 244, 248, 0.17)"};
+
+  color: white;
+  /* padding: 1rem; */
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  height: 3.5rem;
+  align-items: center;
+
+  &:first-child {
+    border-radius: 999px 0 0 999px;
+  }
+
+  &:last-child {
+    border-radius: 999px 0 0 999px;
+  }
+  /* &:first-child td:last-child {
+    border-top-right-radius: 999px;
+  }
+  &:last-child td:first-child {
+    border-bottom-left-radius: 999px;
+  }
+  &:last-child td:last-child {
+    border-bottom-right-radius: 999px;
+  } */
+`;
+
 export const HollowInputContainer = styled.div`
   background: ${(props) =>
     props.backgroundColor ?? "rgba(242, 244, 248, 0.17)"};
