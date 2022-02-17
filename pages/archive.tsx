@@ -42,24 +42,20 @@ function Archive() {
         </thead>
         {/* TODO big white line */}
         <tbody>
-          <ArchiveTableRow>
-            <ArchiveTableDataCell>Jansport J</ArchiveTableDataCell>
-            <ArchiveTableDataCell>Song</ArchiveTableDataCell>
-            <ArchiveTableDataCell>Marketplace</ArchiveTableDataCell>
-            <ArchiveTableDataCell>Me</ArchiveTableDataCell>
-          </ArchiveTableRow>
-          <ArchiveTableRow>
-            <ArchiveTableDataCell>Jansport J</ArchiveTableDataCell>
-            <ArchiveTableDataCell>Song</ArchiveTableDataCell>
-            <ArchiveTableDataCell>Marketplace</ArchiveTableDataCell>
-            <ArchiveTableDataCell>Me</ArchiveTableDataCell>
-          </ArchiveTableRow>
-          <ArchiveTableRow>
-            <ArchiveTableDataCell>Jansport J</ArchiveTableDataCell>
-            <ArchiveTableDataCell>Song</ArchiveTableDataCell>
-            <ArchiveTableDataCell>Marketplace</ArchiveTableDataCell>
-            <ArchiveTableDataCell>Me</ArchiveTableDataCell>
-          </ArchiveTableRow>
+          {curations?.map((curation) => {
+            const { artistName, mediaType, marketplace, curatorWallet } =
+              curation;
+            return (
+              <ArchiveTableRow
+                key={`${artistName}${mediaType}${marketplace}${curatorWallet}`}
+              >
+                <ArchiveTableDataCell>{artistName}</ArchiveTableDataCell>
+                <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
+                <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
+                <ArchiveTableDataCell>{curatorWallet}</ArchiveTableDataCell>
+              </ArchiveTableRow>
+            );
+          })}
         </tbody>
       </table>
     </HomeLayout>

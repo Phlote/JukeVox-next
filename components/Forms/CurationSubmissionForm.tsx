@@ -17,6 +17,7 @@ export interface Curation {
   mediaType: MediaType;
   artistName: string;
   artistWallet?: string;
+  curatorWallet: string;
   mediaTitle: string;
   nftURL: string;
   marketplace: string;
