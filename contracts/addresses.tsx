@@ -1,4 +1,6 @@
 // When we are ready to productionize, these should be env vars. Host these env vars on vercel and have them pulled
 
 export const NFT_MINT_CONTRACT_RINKEBY =
-  "0x247C66b25c75df6B4d392C2c8736359cEe7B3D27";
+  "0xAA334B098834d8889e152F8E6fD906CCdeCCf1D3";
+
+export const NULL_WALLET = "0x0000000000000000000000000000000000000000";

@@ -9,20 +9,23 @@ import { HomeLayout } from "../components/Layouts";
 import styled from "styled-components";
 import { usePhlote } from "../hooks/usePhlote";
 import { Curation } from "../components/Forms/CurationSubmissionForm";
+import { useWeb3React } from "@web3-react/core";
 
 function Archive() {
+  const { account } = useWeb3React();
   const phlote = usePhlote();
 
   const [curations, setCurations] = React.useState<Curation>();
 
   const getCurations = async () => {
-    const curations = await phlote.curatorSubmissions("");
-    console.log(curations);
+    const curations = await phlote?.curatorSubmissions(account);
+    console.log("curations: ", curations);
   };
 
   React.useEffect(() => {
-    getCurations();
-  }, []);
+    console.log(account);
+    if (phlote && account) getCurations();
+  }, [phlote, account]);
 
   return (
     <HomeLayout>

@@ -17,7 +17,7 @@ import {
   Curation,
   CurationSubmissionForm,
 } from "./Forms/CurationSubmissionForm";
-import { NFT_MINT_CONTRACT_RINKEBY } from "../contracts/addresses";
+import { NFT_MINT_CONTRACT_RINKEBY, NULL_WALLET } from "../contracts/addresses";
 
 export const CurationSubmissionFlow = (props) => {
   const { account } = useWeb3React();
@@ -63,6 +63,10 @@ export const CurationSubmissionFlow = (props) => {
       tags,
     } = curationData;
 
+    let artistWalletToSubmit = NULL_WALLET;
+    if (artistWallet && artistWallet !== "")
+      artistWalletToSubmit = artistWallet;
+
     console.log("submit: ", curationData);
 
     setLoading(true);
@@ -73,12 +77,15 @@ export const CurationSubmissionFlow = (props) => {
         curationData
       );
 
+      console.log(artistWalletToSubmit);
+
       const res = await phloteContract.submitPost(
         account,
         nftURL,
         marketplace,
         tags ?? [],
         artistName,
+        artistWalletToSubmit,
         mediaType,
         mediaTitle,
         tokenURI

@@ -38,7 +38,7 @@ contract Phlote is ERC721, Ownable {
     mapping(address => uint256) public nftHolders;
     //creates a mapping of the curator to their Submissions
     // TODO is mapping of editions more expensive?
-    mapping(address => Edition) public curatorSubmissions;
+    mapping(address => Edition[]) public curatorSubmissions;
 
     //IMPORTED MAPS
     // The amount of funds that have already been withdrawn for a given edition.
@@ -109,7 +109,7 @@ contract Phlote is ERC721, Ownable {
             numSold: 0,
             tokenURI: _tokenURI
         });
-        curatorSubmissions[_curatorWallet] = editions[nextPostId];
+        curatorSubmissions[_curatorWallet].push(editions[nextPostId]);
         //add it to their archive of submissions. mapping of address -> submissions[]
         emit EditionCreated(msg.sender, nextPostId);
         mintEdition(nextPostId);
