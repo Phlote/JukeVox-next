@@ -1,21 +1,26 @@
 import React from "react";
 import Image from "next/image";
 import {
-  HollowContainer,
   HollowInput,
   HollowInputContainer,
   HollowTableRow,
 } from "../components/Hollow";
 import { HomeLayout } from "../components/Layouts";
 import styled from "styled-components";
+import { usePhlote } from "../hooks/usePhlote";
+import { Curation } from "../components/Forms/CurationSubmissionForm";
 
 function Archive() {
-  // <th>Artist</th>
-  //         <th>Title</th>
-  //         <th>Media Type</th>
-  //         <th>Marketplace</th>
-  //         <th>Curator</th>
-  //         <th>Rating (Coming soon!)</th>
+  const phlote = usePhlote();
+
+  const [curations, setCurations] = React.useState<Curation>();
+
+  const getCurations = async () => {
+	  phlote.nftHolders.
+  };
+
+  React.useEffect(() => {}, []);
+
   return (
     <HomeLayout>
       <table

@@ -13,7 +13,7 @@ import { useForm, useField } from "react-final-form-hooks";
 import { validateCurationSubmission } from "./validators";
 
 type MediaType = "Music" | "Text" | "Audio" | "Video";
-export interface CurationSubmission {
+export interface Curation {
   mediaType: MediaType;
   artistName: string;
   artistWallet?: string;

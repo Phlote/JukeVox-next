@@ -14,7 +14,7 @@ import { nextApiRequest } from "../util";
 import { DropdownList } from "./DropdownList";
 import Image from "next/image";
 import {
-  CurationSubmission,
+  Curation,
   CurationSubmissionForm,
 } from "./Forms/CurationSubmissionForm";
 import { NFT_MINT_CONTRACT_RINKEBY } from "../contracts/addresses";
@@ -52,7 +52,7 @@ export const CurationSubmissionFlow = (props) => {
     };
   }, [phloteContract]);
 
-  const submitCuration = async (curationData: CurationSubmission) => {
+  const submitCuration = async (curationData: Curation) => {
     const {
       mediaType,
       artistName,
