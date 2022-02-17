@@ -1,11 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { NFTStorage, File } from "nft.storage";
 import { PHLOTE_CURATION_NFT_IMAGE } from "./common";
-import { CurationSubmission } from "../../components/Forms/CurationSubmissionForm";
+import { Curation } from "../../components/Forms/CurationSubmissionForm";
 import nftStorage from "./lib/nftStorage";
 
 const getOptionalFields = (
-  body: CurationSubmission
+  body: Curation
 ): { trait_type: string; value: any }[] => {
   let fields = [];
   const { tags, artistWallet } = body;
