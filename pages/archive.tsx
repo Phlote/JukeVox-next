@@ -16,10 +16,13 @@ function Archive() {
   const [curations, setCurations] = React.useState<Curation>();
 
   const getCurations = async () => {
-	  phlote.nftHolders.
+    const curations = await phlote.curatorSubmissions("");
+    console.log(curations);
   };
 
-  React.useEffect(() => {}, []);
+  React.useEffect(() => {
+    getCurations();
+  }, []);
 
   return (
     <HomeLayout>

@@ -104,6 +104,25 @@
       {
         "indexed": true,
         "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
         "name": "from",
         "type": "address"
       },
@@ -176,6 +195,65 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "curatorSubmissions",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "curatorAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "artistAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "mediaURI",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "marketplace",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "artistName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "mediaType",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "mediaTitle",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "numSold",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "tokenURI",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
@@ -183,6 +261,11 @@
     ],
     "name": "editions",
     "outputs": [
+      {
+        "internalType": "address",
+        "name": "curatorAddress",
+        "type": "address"
+      },
       {
         "internalType": "address",
         "name": "artistAddress",
@@ -233,6 +316,11 @@
     "outputs": [
       {
         "components": [
+          {
+            "internalType": "address",
+            "name": "curatorAddress",
+            "type": "address"
+          },
           {
             "internalType": "address",
             "name": "artistAddress",
@@ -376,6 +464,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -392,6 +493,13 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -467,7 +575,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_artist",
+        "name": "_curatorWallet",
         "type": "address"
       },
       {
@@ -489,6 +597,11 @@
         "internalType": "string",
         "name": "_artistName",
         "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "_artistWallet",
+        "type": "address"
       },
       {
         "internalType": "string",
@@ -600,6 +713,19 @@
       }
     ],
     "name": "transferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
