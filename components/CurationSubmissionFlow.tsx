@@ -18,7 +18,7 @@ import {
   CurationSubmissionForm,
 } from "./Forms/CurationSubmissionForm";
 import { NFT_MINT_CONTRACT_RINKEBY, NULL_WALLET } from "../contracts/addresses";
-import { useUserCurations } from "../pages/archive";
+import { useUserCurations } from "../pages/myarchive";
 
 export const CurationSubmissionFlow = (props) => {
   const { account } = useWeb3React();

@@ -1,9 +1,12 @@
 import Head from "next/head";
 import React from "react";
+import { useOnWalletDisconnect } from "./Account";
 import { NavBar } from "./NavBar";
 import { SubmitSidenav } from "./SideNav";
 
 export const HomeLayout = ({ children }) => {
+  useOnWalletDisconnect();
+
   return (
     <div className="min-h-screen flex flex-col w-full overflow-y-auto	">
       <svg>
