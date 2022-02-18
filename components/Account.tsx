@@ -68,7 +68,7 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
             className="cursor-pointer h-16"
             onClick={startOnboarding}
           >
-            Install a Wallet
+            <a href="https://metamask.io/download/"></a>Install Metamask
           </HollowInputContainer>
         )}
       </div>
