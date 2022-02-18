@@ -101,6 +101,7 @@ export const CurationSubmissionFlow = (props) => {
       ]);
     } catch (e) {
       console.error(e);
+      alert(e);
     }
     setLoading(false);
   };

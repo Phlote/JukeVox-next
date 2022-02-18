@@ -12,7 +12,7 @@ import { atom, useAtom } from "jotai";
 import { useForm, useField } from "react-final-form-hooks";
 import { validateCurationSubmission } from "./validators";
 
-type MediaType = "Music" | "Text" | "Audio" | "Video";
+type MediaType = "Audio" | "Text" | "Video" | "Visual Art";
 export interface Curation {
   mediaType: MediaType;
   artistName: string;
@@ -86,7 +86,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
             <DropdownList
               {...mediaType.input}
               close={() => setDropdownOpen(false)}
-              fields={["Music", "Text", "Audio", "Video"]}
+              fields={["Audio", "Text", "Audio", "Visual Art"]}
             />
           </HollowInputContainer>
           <div className="h-3" />{" "}
