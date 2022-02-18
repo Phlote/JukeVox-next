@@ -1,10 +1,5 @@
 import React from "react";
-import Image from "next/image";
-import {
-  HollowInput,
-  HollowInputContainer,
-  HollowTableRow,
-} from "../components/Hollow";
+
 import { HomeLayout } from "../components/Layouts";
 import styled from "styled-components";
 import { usePhlote } from "../hooks/usePhlote";
