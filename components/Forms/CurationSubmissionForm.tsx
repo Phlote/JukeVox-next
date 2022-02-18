@@ -40,7 +40,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
   const tags = useField("tags", form);
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div>
       <HollowInputContainer type="form">
         <HollowInput
           {...nftURL.input}
@@ -141,13 +141,16 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
       <div className="flex">
         <div className="flex-grow" />
 
-        <HollowButtonContainer className="w-32">
+        <HollowButtonContainer
+          className="w-32 cursor-pointer"
+          onClick={handleSubmit}
+        >
           <HollowButton disabled={metamaskLoading}>
             {metamaskLoading ? "Waiting for Wallet..." : "Submit"}
           </HollowButton>
         </HollowButtonContainer>
       </div>
       <div className="h-3" />
-    </form>
+    </div>
   );
 };

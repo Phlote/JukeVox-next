@@ -10,16 +10,22 @@ import styled from "styled-components";
 import { usePhlote } from "../hooks/usePhlote";
 import { Curation } from "../components/Forms/CurationSubmissionForm";
 import { useWeb3React } from "@web3-react/core";
+import { atom, useAtom } from "jotai";
+
+type ArchiveCuration = Curation & { transactionPending?: boolean };
+
+const userCurationsAtom = atom<ArchiveCuration[]>([]);
+export const useUserCurations = () => useAtom(userCurationsAtom);
 
 function Archive() {
   const { account } = useWeb3React();
   const phlote = usePhlote();
 
-  const [curations, setCurations] = React.useState<Curation[]>();
+  const [curations, setCurations] = useUserCurations();
 
   const getCurations = async () => {
     const submissions = await phlote.getCuratorSubmissions(account);
-    setCurations(submissions as unknown as Curation[]);
+    setCurations(submissions as unknown as ArchiveCuration[]);
   };
 
   React.useEffect(() => {
@@ -58,9 +64,13 @@ function Archive() {
         {/* TODO big white line */}
         <tbody>
           {curations?.map((curation) => {
-            const { artistName, mediaType, marketplace } = curation;
+            const { artistName, mediaType, marketplace, transactionPending } =
+              curation;
             return (
-              <ArchiveTableRow key={`${artistName}${mediaType}${marketplace}`}>
+              <ArchiveTableRow
+                style={transactionPending ? { opacity: 0.5 } : undefined}
+                key={`${artistName}${mediaType}${marketplace}`}
+              >
                 <ArchiveTableDataCell>{artistName}</ArchiveTableDataCell>
                 <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
                 <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>

@@ -18,6 +18,7 @@ import {
   CurationSubmissionForm,
 } from "./Forms/CurationSubmissionForm";
 import { NFT_MINT_CONTRACT_RINKEBY, NULL_WALLET } from "../contracts/addresses";
+import { useUserCurations } from "../pages/archive";
 
 export const CurationSubmissionFlow = (props) => {
   const { account } = useWeb3React();
@@ -26,6 +27,7 @@ export const CurationSubmissionFlow = (props) => {
   const [txnHash, setTxnHash] = useState<string>("0x0");
   const [nftMintId, setNFTMintId] = useState<number | "Loading">("Loading");
   const [loading, setLoading] = useState<boolean>(false);
+  const [, setCurations] = useUserCurations();
 
   const phloteContract = usePhlote();
 
@@ -92,8 +94,11 @@ export const CurationSubmissionFlow = (props) => {
       );
       console.log(res);
       setTxnHash(res.hash);
-      // setNFTMintId(res.)
       setPage(1);
+      setCurations((curations) => [
+        ...curations,
+        { ...curationData, transactionPending: true },
+      ]);
     } catch (e) {
       console.error(e);
     }
