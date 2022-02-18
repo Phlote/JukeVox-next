@@ -1,6 +1,6 @@
-import { CurationSubmission } from "./CurationSubmissionForm";
+import { Curation } from "./CurationSubmissionForm";
 
-export const validateCurationSubmission = (values: CurationSubmission) => {
+export const validateCurationSubmission = (values: Curation) => {
   const errors: Record<string, string> = {};
   if (!values.nftURL) {
     errors.nftURL = "Required";

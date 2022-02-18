@@ -12,11 +12,12 @@ import { atom, useAtom } from "jotai";
 import { useForm, useField } from "react-final-form-hooks";
 import { validateCurationSubmission } from "./validators";
 
-type MediaType = "Music" | "Text" | "Audio" | "Video";
-export interface CurationSubmission {
+type MediaType = "Audio" | "Text" | "Video" | "Visual Art";
+export interface Curation {
   mediaType: MediaType;
   artistName: string;
   artistWallet?: string;
+  curatorWallet: string;
   mediaTitle: string;
   nftURL: string;
   marketplace: string;
@@ -39,7 +40,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
   const tags = useField("tags", form);
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div>
       <HollowInputContainer type="form">
         <HollowInput
           {...nftURL.input}
@@ -85,7 +86,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
             <DropdownList
               {...mediaType.input}
               close={() => setDropdownOpen(false)}
-              fields={["Music", "Text", "Audio", "Video"]}
+              fields={["Audio", "Text", "Audio", "Visual Art"]}
             />
           </HollowInputContainer>
           <div className="h-3" />{" "}
@@ -129,7 +130,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
         <HollowInput
           {...artistWallet.input}
           type="text"
-          placeholder="Artist Wallet Address (Optional)"
+          placeholder="Artist Wallet Address"
         />
       </HollowInputContainer>
       <div className="h-3" />
@@ -140,13 +141,16 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
       <div className="flex">
         <div className="flex-grow" />
 
-        <HollowButtonContainer className="w-32">
+        <HollowButtonContainer
+          className="w-32 cursor-pointer"
+          onClick={handleSubmit}
+        >
           <HollowButton disabled={metamaskLoading}>
             {metamaskLoading ? "Waiting for Wallet..." : "Submit"}
           </HollowButton>
         </HollowButtonContainer>
       </div>
       <div className="h-3" />
-    </form>
+    </div>
   );
 };

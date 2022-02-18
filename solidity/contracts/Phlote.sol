@@ -14,6 +14,7 @@ contract Phlote is ERC721, Ownable {
     //uint256 public editionSize;
     uint256 public contractPrice;
     struct Edition {
+        address curatorAddress;
         address artistAddress;
         string mediaURI;
         string marketplace;
@@ -36,7 +37,8 @@ contract Phlote is ERC721, Ownable {
     //creates a mapping from ownerId to tokenId
     mapping(address => uint256) public nftHolders;
     //creates a mapping of the curator to their Submissions
-    mapping(address => uint256) private curatorSubmission;
+    // TODO is mapping of editions more expensive?
+    mapping(address => Edition[]) public curatorSubmissions;
 
     //IMPORTED MAPS
     // The amount of funds that have already been withdrawn for a given edition.
@@ -80,11 +82,12 @@ contract Phlote is ERC721, Ownable {
 
     //creates the edition/Post
       function submitPost(
-        address _artist,
+        address _curatorWallet,
         string memory _mediaURI,
         string memory _marketplace,
         string[] memory _tags,
         string memory _artistName,
+        address _artistWallet,
         string memory _mediaType,
         string memory _mediaTitle,
         string memory _tokenURI
@@ -94,21 +97,30 @@ contract Phlote is ERC721, Ownable {
         This function should 
         - set the curator's submission as an edition
         */
-        editions[nextPostId] = Edition({
-            artistAddress: _artist,
+
+        Edition memory curation = Edition({
+            curatorAddress: _curatorWallet,
             mediaURI: _mediaURI,
             marketplace: _marketplace,
             tags: _tags,
             artistName: _artistName,
+            artistAddress: _artistWallet,
             mediaType: _mediaType,
             mediaTitle: _mediaTitle,
             numSold: 0,
             tokenURI: _tokenURI
         });
+        editions[nextPostId] = curation;
+        curatorSubmissions[_curatorWallet].push(curation);
         //add it to their archive of submissions. mapping of address -> submissions[]
         emit EditionCreated(msg.sender, nextPostId);
         mintEdition(nextPostId);
         nextPostId++; 
+    }
+
+     function getCuratorSubmissions(address _curatorWallet) public view returns (Edition[] memory)
+    {
+         return curatorSubmissions[_curatorWallet];
     }
 
     function tokenURI(uint256 _tokenId)

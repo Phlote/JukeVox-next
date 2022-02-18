@@ -14,10 +14,11 @@ import { nextApiRequest } from "../util";
 import { DropdownList } from "./DropdownList";
 import Image from "next/image";
 import {
-  CurationSubmission,
+  Curation,
   CurationSubmissionForm,
 } from "./Forms/CurationSubmissionForm";
-import { NFT_MINT_CONTRACT_RINKEBY } from "../contracts/addresses";
+import { NFT_MINT_CONTRACT_RINKEBY, NULL_WALLET } from "../contracts/addresses";
+import { useUserCurations } from "../pages/archive";
 
 export const CurationSubmissionFlow = (props) => {
   const { account } = useWeb3React();
@@ -26,6 +27,7 @@ export const CurationSubmissionFlow = (props) => {
   const [txnHash, setTxnHash] = useState<string>("0x0");
   const [nftMintId, setNFTMintId] = useState<number | "Loading">("Loading");
   const [loading, setLoading] = useState<boolean>(false);
+  const [, setCurations] = useUserCurations();
 
   const phloteContract = usePhlote();
 
@@ -52,7 +54,7 @@ export const CurationSubmissionFlow = (props) => {
     };
   }, [phloteContract]);
 
-  const submitCuration = async (curationData: CurationSubmission) => {
+  const submitCuration = async (curationData: Curation) => {
     const {
       mediaType,
       artistName,
@@ -62,6 +64,10 @@ export const CurationSubmissionFlow = (props) => {
       marketplace,
       tags,
     } = curationData;
+
+    let artistWalletToSubmit = NULL_WALLET;
+    if (artistWallet && artistWallet !== "")
+      artistWalletToSubmit = artistWallet;
 
     console.log("submit: ", curationData);
 
@@ -73,22 +79,29 @@ export const CurationSubmissionFlow = (props) => {
         curationData
       );
 
+      console.log(artistWalletToSubmit);
+
       const res = await phloteContract.submitPost(
         account,
         nftURL,
         marketplace,
         tags ?? [],
         artistName,
+        artistWalletToSubmit,
         mediaType,
         mediaTitle,
         tokenURI
       );
       console.log(res);
       setTxnHash(res.hash);
-      // setNFTMintId(res.)
       setPage(1);
+      setCurations((curations) => [
+        ...curations,
+        { ...curationData, transactionPending: true },
+      ]);
     } catch (e) {
       console.error(e);
+      alert(e);
     }
     setLoading(false);
   };
