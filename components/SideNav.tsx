@@ -11,18 +11,16 @@ export const useSubmitSidenavOpen = () => useAtom(submitSidenavOpen);
 export const SubmitSidenav = (props) => {
   const [open, setOpen] = useSubmitSidenavOpen();
 
-  if (!open) return null;
-
   return (
-    <SideNav onClose={() => setOpen(false)}>
+    <SideNav onClose={() => setOpen(false)} open={open}>
       <CurationSubmissionFlow />
     </SideNav>
   );
 };
 
-export const SideNav = ({ children, onClose }) => {
+export const SideNav = ({ children, onClose, open }) => {
   return (
-    <SideNavContainer>
+    <SideNavContainer style={!open ? { display: "none" } : undefined}>
       <div className="flex flex-column min-h-screen">
         <div
           onClick={onClose}

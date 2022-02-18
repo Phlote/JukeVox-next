@@ -32,7 +32,7 @@ export const NavBar = () => {
         <h1 className="text-6xl">Phlote</h1>
         <div className="flex-grow" />
         <div className="w-4" />
-        <div
+        {/* <div
           className="rounded-full cursor-pointer flex justify-center items-center h-16 w-16"
           style={{
             backgroundColor: "rgba(242, 244, 248, 0.17)",
@@ -44,14 +44,14 @@ export const NavBar = () => {
             height={32}
             width={32}
           ></Image>
-        </div>
+        </div> */}
 
         <div className="w-4" />
 
         {isConnected && (
           <>
             <HollowButtonContainer
-              className="w-32	 cursor-pointer flex justify-center items-center h-16"
+              className="max-w-xs cursor-pointer flex justify-center items-center h-16"
               onClick={() => deactivate()}
             >
               Disconnect Wallet
@@ -65,7 +65,7 @@ export const NavBar = () => {
         {isConnected && (
           <>
             <HollowButtonContainer
-              className="w-32 cursor-pointer flex justify-center items-center h-16"
+              className=" max-w-xs cursor-pointer flex justify-center items-center h-16"
               onClick={() => setOpen(true)}
             >
               Submit

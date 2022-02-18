@@ -65,9 +65,8 @@ export const CurationSubmissionFlow = (props) => {
       tags,
     } = curationData;
 
-    let artistWalletToSubmit = NULL_WALLET;
-    if (artistWallet && artistWallet !== "")
-      artistWalletToSubmit = artistWallet;
+    let artistWalletToSubmit =
+      artistWallet && artistWallet !== "" ? artistWallet : NULL_WALLET;
 
     console.log("submit: ", curationData);
 
@@ -101,7 +100,6 @@ export const CurationSubmissionFlow = (props) => {
       ]);
     } catch (e) {
       console.error(e);
-      alert(e);
     }
     setLoading(false);
   };

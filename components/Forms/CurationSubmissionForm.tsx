@@ -42,11 +42,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
   return (
     <div>
       <HollowInputContainer type="form">
-        <HollowInput
-          {...nftURL.input}
-          type="text"
-          placeholder="NFT URL"
-        ></HollowInput>
+        <HollowInput {...nftURL.input} type="text" placeholder="NFT URL" />
         {nftURL.meta.touched && nftURL.meta.error && (
           <span className="text-red-600">{nftURL.meta.error}</span>
         )}
@@ -63,6 +59,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
             className="flex-grow"
             type="text"
             placeholder="Media Type"
+            readOnly
           />
           {(mediaType.meta.touched || mediaType.meta.visited) &&
             mediaType.meta.error && (
@@ -86,7 +83,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
             <DropdownList
               {...mediaType.input}
               close={() => setDropdownOpen(false)}
-              fields={["Audio", "Text", "Audio", "Visual Art"]}
+              fields={["Audio", "Text", "Video", "Visual Art"]}
             />
           </HollowInputContainer>
           <div className="h-3" />{" "}
@@ -143,7 +140,9 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
 
         <HollowButtonContainer
           className="w-32 cursor-pointer"
-          onClick={handleSubmit}
+          onClick={() => {
+            handleSubmit();
+          }}
         >
           <HollowButton disabled={metamaskLoading}>
             {metamaskLoading ? "Waiting for Wallet..." : "Submit"}
