@@ -44,41 +44,40 @@ function Archive() {
     };
   }, [phlote, account]);
 
-  //   React.useEffect(() => {
-  //     if (phlote && account)
-  //   }, [phlote, account]);
-
   return (
     <HomeLayout>
-      <table
-        style={{ borderSpacing: "0 1rem", borderCollapse: "separate" }}
-        className="table-fixed w-full text-center"
-      >
-        <thead>
-          <tr>
-            <th>Artist</th>
-            <th>Media Type</th>
-            <th>Marketplace</th>
-          </tr>
-        </thead>
-        {/* TODO big white line */}
-        <tbody>
-          {curations?.map((curation) => {
-            const { artistName, mediaType, marketplace, transactionPending } =
-              curation;
-            return (
-              <ArchiveTableRow
-                style={transactionPending ? { opacity: 0.5 } : undefined}
-                key={`${artistName}${mediaType}${marketplace}`}
-              >
-                <ArchiveTableDataCell>{artistName}</ArchiveTableDataCell>
-                <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
-                <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
-              </ArchiveTableRow>
-            );
-          })}
-        </tbody>
-      </table>
+      <div className="flex flex-col">
+        <div className="h-32" />
+        <table
+          style={{ borderSpacing: "0 1rem", borderCollapse: "separate" }}
+          className="table-fixed w-full text-center flex-grow"
+        >
+          <thead>
+            <tr>
+              <th>Artist</th>
+              <th>Media Type</th>
+              <th>Marketplace</th>
+            </tr>
+          </thead>
+          {/* TODO big white line */}
+          <tbody>
+            {curations?.map((curation) => {
+              const { artistName, mediaType, marketplace, transactionPending } =
+                curation;
+              return (
+                <ArchiveTableRow
+                  style={transactionPending ? { opacity: 0.5 } : undefined}
+                  key={`${artistName}${mediaType}${marketplace}`}
+                >
+                  <ArchiveTableDataCell>{artistName}</ArchiveTableDataCell>
+                  <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
+                  <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
+                </ArchiveTableRow>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </HomeLayout>
   );
 }
