@@ -32,7 +32,7 @@ export const SideNav = ({ children, onClose, open }) => {
       )}
 
       <SideNavContainer>
-        <div className="flex flex-row flex-column h-full">
+        <div className="flex flex-row flex-column h-full w-full">
           <div
             onClick={onClose}
             className="absolute top-16 left-4 cursor-pointer"
@@ -47,11 +47,13 @@ export const SideNav = ({ children, onClose, open }) => {
 };
 
 const SideNavContainer = styled.div`
-  height: 100vh;
+  height: 100%;
   z-index: 10;
   overflow-y: scroll;
   width: 27rem;
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(60px);
   flex: none;
+  position: fixed;
+  right: 0;
 `;
