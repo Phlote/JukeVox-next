@@ -138,11 +138,9 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
       <HollowTagsInput {...tags.input} />
       <div className="h-3" />
 
-      <div className="flex">
-        <div className="flex-grow" />
-
+      <div className="flex justify-center">
         <HollowButtonContainer
-          className="w-32 cursor-pointer"
+          className="w-48 cursor-pointer"
           onClick={() => {
             handleSubmit();
           }}
