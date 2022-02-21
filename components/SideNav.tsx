@@ -21,7 +21,7 @@ export const SubmitSidenav = (props) => {
 export const SideNav = ({ children, onClose, open }) => {
   return (
     <div
-      className="flex w-screen h-screen absolute z-20"
+      className="flex w-screen h-screen fixed z-20"
       style={!open ? { display: "none" } : undefined}
     >
       {open && (
@@ -47,13 +47,11 @@ export const SideNav = ({ children, onClose, open }) => {
 };
 
 const SideNavContainer = styled.div`
-  height: 100%;
+  height: 100vh;
   z-index: 10;
   overflow-y: scroll;
   width: 27rem;
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(60px);
   flex: none;
-  position: fixed;
-  right: 0;
 `;
