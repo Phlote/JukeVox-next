@@ -129,6 +129,9 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
           type="text"
           placeholder="Artist Wallet Address"
         />
+        {artistWallet.meta.touched && artistWallet.meta.error && (
+          <span className="text-red-600">{artistWallet.meta.error}</span>
+        )}
       </HollowInputContainer>
       <div className="h-3" />
 
