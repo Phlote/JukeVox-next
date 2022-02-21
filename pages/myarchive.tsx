@@ -47,7 +47,7 @@ function Archive() {
 
   return (
     <HomeLayout>
-      <div className="flex flex-col">
+      <div className="flex flex-col mt-8">
         {curations.length === 0 && (
           <div className="flex flex-col justify-center align-items">
             <div

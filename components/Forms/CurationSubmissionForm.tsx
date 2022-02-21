@@ -40,7 +40,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
   const tags = useField("tags", form);
 
   return (
-    <div>
+    <div className="mt-8">
       <HollowInputContainer type="form">
         <HollowInput {...nftURL.input} type="text" placeholder="NFT URL" />
         {nftURL.meta.touched && nftURL.meta.error && (

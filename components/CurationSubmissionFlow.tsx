@@ -105,7 +105,7 @@ export const CurationSubmissionFlow = (props) => {
   };
 
   return (
-    <div className="flex flex-col w-full mx-8">
+    <div className="flex flex-col w-full mx-8 ">
       <div className="h-8" />
       <h1 className="font-extrabold	text-4xl underline underline-offset-16 text-center">
         Submit
@@ -118,7 +118,7 @@ export const CurationSubmissionFlow = (props) => {
         />
       )}
       {page === 1 && (
-        <div className="flex flex-col items-center text-sm">
+        <div className="flex flex-col items-center text-sm mt-8">
           <p>Congratulations! Your submission has been added</p>
           <div className="h-8" />
           <a
