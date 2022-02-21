@@ -6,7 +6,7 @@ import { HomeLayout } from "../components/Layouts";
 function Home() {
   return (
     <HomeLayout>
-      <div className="w-3/4 h-16" style={{ lineHeight: "0.5rem" }}>
+      <div className="w-1/4 h-16" style={{ lineHeight: "0.5rem" }}>
         <HollowInputContainer
           onClick={() => {
             document.getElementById("search-home").focus();

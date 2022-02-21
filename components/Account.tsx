@@ -47,7 +47,7 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
       <div>
         {isWeb3Available ? (
           <HollowInputContainer
-            className="cursor-pointer h-16"
+            className="cursor-pointer h-full"
             disabled={connecting}
             onClick={() => {
               setConnecting(true);
@@ -66,7 +66,7 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
           </HollowInputContainer>
         ) : (
           <HollowInputContainer
-            className="cursor-pointer h-16"
+            className="cursor-pointer h-full"
             onClick={startOnboarding}
           >
             <a href="https://metamask.io/download/"></a>Install Metamask
@@ -78,10 +78,10 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
 
   return (
     <HollowInputContainer
-      className="h-16 max-w-xs"
+      className="justify-center h-full"
       style={{ justifyContent: "center" }}
     >
-      {ENSName || `${shortenHex(account, 10)}`}
+      {ENSName || `${shortenHex(account, 5)}`}
     </HollowInputContainer>
   );
 };

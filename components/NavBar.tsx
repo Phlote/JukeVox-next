@@ -1,21 +1,20 @@
 import useEagerConnect from "../hooks/useEagerConnect";
 import Account from "./Account";
 import { useWeb3React } from "@web3-react/core";
-import { useState } from "react";
-import { useIsCurator } from "../hooks/useIsCurator";
-import { changeNetwork } from "../util";
 import { HollowButtonContainer } from "./Hollow";
 import Link from "next/link";
 import { useSubmitSidenavOpen } from "./SideNav";
-import { useRouter } from "next/router";
 import { useUserCurations } from "../pages/myarchive";
+import styled from "styled-components";
 
 export const NavBar = () => {
   const triedToEagerConnect = useEagerConnect();
   const [, setOpen] = useSubmitSidenavOpen();
   const [, setCurations] = useUserCurations();
 
-  const { account, library, deactivate, active } = useWeb3React();
+  const { active, deactivate } = useWeb3React();
+
+  const { NODE_ENV } = process.env;
 
   return (
     <div className="py-4 absolute w-screen px-12">
@@ -42,45 +41,56 @@ export const NavBar = () => {
 
         {active && (
           <>
-            <Link href="/myarchive" passHref>
-              <HollowButtonContainer className=" max-w-xs cursor-pointer flex justify-center items-center h-16">
-                My Archive
+            <NavBarElementContainer>
+              <Link href="/myarchive" passHref>
+                <HollowButtonContainer className="cursor-pointer flex justify-center items-center ">
+                  My Archive
+                </HollowButtonContainer>
+              </Link>
+            </NavBarElementContainer>
+
+            <div className="w-4" />
+          </>
+        )}
+        {active && NODE_ENV !== "production" && (
+          <>
+            <NavBarElementContainer>
+              <HollowButtonContainer
+                className="max-w-xs cursor-pointer flex justify-center items-center"
+                onClick={async () => {
+                  deactivate();
+                  setCurations([]);
+                }}
+              >
+                Disconnect Wallet
               </HollowButtonContainer>
-            </Link>
-
+            </NavBarElementContainer>
             <div className="w-4" />
           </>
         )}
 
         {active && (
           <>
-            <HollowButtonContainer
-              className="max-w-xs cursor-pointer flex justify-center items-center h-16"
-              onClick={async () => {
-                deactivate();
-                setCurations([]);
-              }}
-            >
-              Disconnect Wallet
-            </HollowButtonContainer>
+            <NavBarElementContainer>
+              <HollowButtonContainer
+                className="cursor-pointer flex justify-center items-center "
+                onClick={() => setOpen(true)}
+              >
+                Submit
+              </HollowButtonContainer>
+            </NavBarElementContainer>
             <div className="w-4" />
           </>
         )}
-
-        {active && (
-          <>
-            <HollowButtonContainer
-              className=" max-w-xs cursor-pointer flex justify-center items-center h-16"
-              onClick={() => setOpen(true)}
-            >
-              Submit
-            </HollowButtonContainer>
-            <div className="w-4" />
-          </>
-        )}
-
-        <Account triedToEagerConnect={triedToEagerConnect} />
+        <NavBarElementContainer>
+          <Account triedToEagerConnect={triedToEagerConnect} />
+        </NavBarElementContainer>
       </div>
     </div>
   );
 };
+
+const NavBarElementContainer = styled.div`
+  width: 10rem;
+  height: 4rem;
+`;
