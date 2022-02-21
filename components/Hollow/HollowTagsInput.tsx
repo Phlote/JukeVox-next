@@ -60,7 +60,9 @@ export const HollowTagsInput: React.FC<TagsInput> = ({
       <HollowInputContainer type="form">
         <HollowInput
           value={input}
-          placeholder={value.length === 0 ? "Tags" : ""}
+          placeholder={
+            value.length === 0 ? "Tags (Seperate tags with commas)" : ""
+          }
           onKeyDown={onKeyDown}
           onKeyUp={onKeyUp}
           onChange={localOnChange}
