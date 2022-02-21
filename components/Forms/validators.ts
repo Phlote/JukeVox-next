@@ -12,6 +12,10 @@ export const validateCurationSubmission = (values: Curation) => {
     } catch (_) {
       errors.mediaURI = "Invalid URL";
     }
+
+    if (!!url && url?.protocol !== "http:" && url?.protocol !== "https:") {
+      errors.mediaURI = "Only http or https";
+    }
   }
   if (!values.mediaType) {
     errors.mediaType = "Required";
