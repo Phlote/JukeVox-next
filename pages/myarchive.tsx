@@ -26,7 +26,10 @@ function Archive() {
 
   const getCurations = React.useCallback(async () => {
     const submissions = await phlote.getCuratorSubmissions(account);
-    setCurations(submissions as unknown as ArchiveCuration[]);
+    const reversed = (
+      [...submissions] as unknown as ArchiveCuration[]
+    ).reverse();
+    setCurations(reversed);
   }, [phlote, account, setCurations]);
 
   React.useEffect(() => {

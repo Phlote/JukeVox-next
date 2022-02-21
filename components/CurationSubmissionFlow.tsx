@@ -95,8 +95,8 @@ export const CurationSubmissionFlow = (props) => {
       setTxnHash(res.hash);
       setPage(1);
       setCurations((curations) => [
-        ...curations,
         { ...curationData, transactionPending: true },
+        ...curations,
       ]);
     } catch (e) {
       console.error(e);
