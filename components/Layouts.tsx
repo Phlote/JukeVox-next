@@ -9,16 +9,11 @@ export const HomeLayout = ({ children }) => {
 
   return (
     <div className="min-h-screen flex flex-col w-full overflow-y-auto	">
-      <svg>
-        <filter id="blur">
-          <feGaussianBlur stdDeviation="60" />
-        </filter>
-      </svg>
       <Head>
         <title>Phlote TCR</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <SubmitSidenav className="absolute bg-red" />
+      <SubmitSidenav />
 
       <NavBar />
       <div className="container flex justify-center items-center flex-grow mx-auto max-h-max">
