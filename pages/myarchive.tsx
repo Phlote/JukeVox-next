@@ -16,7 +16,7 @@ const userCurationsAtom = atom<ArchiveCuration[]>([]);
 export const useUserCurations = () => useAtom(userCurationsAtom);
 
 function Archive() {
-  const { account, library, activate, active } = useWeb3React();
+  const { account, active } = useWeb3React();
 
   const phlote = usePhlote();
 
@@ -24,10 +24,10 @@ function Archive() {
 
   const [, setOpen] = useSubmitSidenavOpen();
 
-  const getCurations = async () => {
+  const getCurations = React.useCallback(async () => {
     const submissions = await phlote.getCuratorSubmissions(account);
     setCurations(submissions as unknown as ArchiveCuration[]);
-  };
+  }, [phlote, account, setCurations]);
 
   React.useEffect(() => {
     if (phlote && account) {
@@ -43,7 +43,7 @@ function Archive() {
     return () => {
       phlote?.removeAllListeners();
     };
-  }, [phlote, account]);
+  }, [phlote, account, getCurations]);
 
   return (
     <HomeLayout>
