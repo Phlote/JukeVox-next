@@ -44,10 +44,11 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
 
   if (typeof account !== "string") {
     return (
-      <div>
+      <>
         {isWeb3Available ? (
           <HollowInputContainer
-            className="cursor-pointer h-full"
+            className="cursor-pointer h-full text-white"
+            style={{ justifyContent: "center" }}
             disabled={connecting}
             onClick={() => {
               setConnecting(true);
@@ -62,23 +63,23 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
               });
             }}
           >
-            <p className="text-white text-xl">Connect to curate</p>
+            Connect to Curate
           </HollowInputContainer>
         ) : (
           <HollowInputContainer
-            className="cursor-pointer h-full"
+            className="cursor-pointer h-full justify-center"
             onClick={startOnboarding}
           >
             <a href="https://metamask.io/download/"></a>Install Metamask
           </HollowInputContainer>
         )}
-      </div>
+      </>
     );
   }
 
   return (
     <HollowInputContainer
-      className="justify-center h-full"
+      className="h-full"
       style={{ justifyContent: "center" }}
     >
       {ENSName || `${shortenHex(account, 5)}`}

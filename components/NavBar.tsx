@@ -82,7 +82,7 @@ export const NavBar = () => {
             <div className="w-4" />
           </>
         )}
-        <NavBarElementContainer>
+        <NavBarElementContainer style={{ width: "13rem" }}>
           <Account triedToEagerConnect={triedToEagerConnect} />
         </NavBarElementContainer>
       </div>
