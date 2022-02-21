@@ -74,8 +74,8 @@ export const RinkebyPromptModal = () => {
         </p>
         <br></br>
         <p>
-          You will need test ETH, go to the link below and submit your wallet
-          address. You will get 0.1 test ETH for free! (You don't need any LINK)
+          {`You will need test ETH, go to the link below and submit your wallet
+          address. You will get 0.1 test ETH for free! (You don't need any LINK)`}
         </p>
         <div className="h-8" />
 
