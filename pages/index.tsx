@@ -1,12 +1,12 @@
 import React from "react";
 import Image from "next/image";
 import { HollowInput, HollowInputContainer } from "../components/Hollow";
-import { HomeLayout } from "../components/Layouts";
+import { DefaultLayout } from "../components/Layouts";
 
 function Home() {
   return (
-    <HomeLayout>
-      <div className="w-3/4 h-16" style={{ lineHeight: "0.5rem" }}>
+    <DefaultLayout center>
+      <div className="w-1/4 h-16" style={{ lineHeight: "0.5rem" }}>
         <HollowInputContainer
           onClick={() => {
             document.getElementById("search-home").focus();
@@ -21,7 +21,7 @@ function Home() {
           />
         </HollowInputContainer>
       </div>
-    </HomeLayout>
+    </DefaultLayout>
   );
 }
 

@@ -60,7 +60,7 @@ export const CurationSubmissionFlow = (props) => {
       artistName,
       artistWallet,
       mediaTitle,
-      nftURL,
+      mediaURI,
       marketplace,
       tags,
     } = curationData;
@@ -82,7 +82,7 @@ export const CurationSubmissionFlow = (props) => {
 
       const res = await phloteContract.submitPost(
         account,
-        nftURL,
+        mediaURI,
         marketplace,
         tags ?? [],
         artistName,

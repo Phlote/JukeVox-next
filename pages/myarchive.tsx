@@ -1,6 +1,6 @@
 import React from "react";
 
-import { HomeLayout } from "../components/Layouts";
+import { DefaultLayout } from "../components/Layouts";
 import styled from "styled-components";
 import { usePhlote } from "../hooks/usePhlote";
 import { Curation } from "../components/Forms/CurationSubmissionForm";
@@ -8,7 +8,6 @@ import { useWeb3React } from "@web3-react/core";
 import { atom, useAtom } from "jotai";
 import { HollowButtonContainer, HollowButton } from "../components/Hollow";
 import { useSubmitSidenavOpen } from "../components/SideNav";
-import Account from "../components/Account";
 
 type ArchiveCuration = Curation & { transactionPending?: boolean };
 
@@ -49,8 +48,8 @@ function Archive() {
   }, [phlote, account, getCurations]);
 
   return (
-    <HomeLayout>
-      <div className="flex flex-col mt-8">
+    <DefaultLayout center={curations.length === 0}>
+      <div className="flex flex-col mt-24 min-h-full">
         {curations.length === 0 && (
           <div className="flex flex-col justify-center align-items">
             <div
@@ -73,15 +72,16 @@ function Archive() {
           </div>
         )}
         {curations.length > 0 && (
-          <>
+          <div className="flex min-h-full">
             <div className="h-16" />
             <table
               style={{ borderSpacing: "0 1rem", borderCollapse: "separate" }}
               className="table-fixed w-full text-center flex-grow"
             >
               <thead>
-                <tr>
+                <tr style={{ borderBottom: "1px solid white" }}>
                   <th>Artist</th>
+                  <th>Title</th>
                   <th>Media Type</th>
                   <th>Marketplace</th>
                 </tr>
@@ -91,16 +91,29 @@ function Archive() {
                 {curations?.map((curation) => {
                   const {
                     artistName,
+                    mediaTitle,
                     mediaType,
+                    mediaURI,
                     marketplace,
                     transactionPending,
                   } = curation;
+
                   return (
                     <ArchiveTableRow
                       style={transactionPending ? { opacity: 0.5 } : undefined}
                       key={`${artistName}${mediaType}${marketplace}`}
                     >
                       <ArchiveTableDataCell>{artistName}</ArchiveTableDataCell>
+                      <ArchiveTableDataCell>
+                        <a
+                          rel="noreferrer"
+                          target="_blank"
+                          href={mediaURI}
+                          className="underline"
+                        >
+                          {mediaTitle}
+                        </a>
+                      </ArchiveTableDataCell>
                       <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
                     </ArchiveTableRow>
@@ -108,10 +121,11 @@ function Archive() {
                 })}
               </tbody>
             </table>
-          </>
+            <div className="flex-grow" />
+          </div>
         )}
       </div>
-    </HomeLayout>
+    </DefaultLayout>
   );
 }
 

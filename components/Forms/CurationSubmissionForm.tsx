@@ -19,7 +19,7 @@ export interface Curation {
   artistWallet?: string;
   curatorWallet: string;
   mediaTitle: string;
-  nftURL: string;
+  mediaURI: string;
   marketplace: string;
   tags?: string[];
 }
@@ -28,10 +28,13 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const { form, handleSubmit, values, pristine, submitting } = useForm({
     onSubmit,
+    initialValues: {
+      mediaURI: "http://",
+    },
     validate: validateCurationSubmission,
   });
 
-  const nftURL = useField("nftURL", form);
+  const mediaURI = useField("mediaURI", form);
   const mediaType = useField("mediaType", form);
   const artistName = useField("artistName", form);
   const mediaTitle = useField("mediaTitle", form);
@@ -42,9 +45,9 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
   return (
     <div className="mt-8">
       <HollowInputContainer type="form">
-        <HollowInput {...nftURL.input} type="text" placeholder="NFT URL" />
-        {nftURL.meta.touched && nftURL.meta.error && (
-          <span className="text-red-600">{nftURL.meta.error}</span>
+        <HollowInput {...mediaURI.input} type="text" placeholder="URL to NFT" />
+        {mediaURI.meta.touched && mediaURI.meta.error && (
+          <span className="text-red-600">{mediaURI.meta.error}</span>
         )}
       </HollowInputContainer>
       <div className="h-3" />
@@ -138,11 +141,9 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
       <HollowTagsInput {...tags.input} />
       <div className="h-3" />
 
-      <div className="flex">
-        <div className="flex-grow" />
-
+      <div className="flex justify-center">
         <HollowButtonContainer
-          className="w-32 cursor-pointer"
+          className="w-48 cursor-pointer"
           onClick={() => {
             handleSubmit();
           }}

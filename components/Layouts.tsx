@@ -5,7 +5,14 @@ import { RinkebyPromptModal } from "./Modal";
 import { NavBar } from "./NavBar";
 import { SubmitSidenav } from "./SideNav";
 
-export const HomeLayout = ({ children }) => {
+interface DefaultLayoutProps {
+  center?: boolean;
+}
+
+export const DefaultLayout: React.FC<DefaultLayoutProps> = ({
+  children,
+  center,
+}) => {
   useOnWalletDisconnect();
 
   return (
@@ -18,7 +25,10 @@ export const HomeLayout = ({ children }) => {
       <RinkebyPromptModal />
 
       <NavBar />
-      <div className="container flex justify-center items-center flex-grow mx-auto max-h-max">
+      <div
+        className="container flex justify-center mx-auto max-h-max"
+        style={center ? { alignItems: "center", flexGrow: 1 } : undefined}
+      >
         {children}
       </div>
     </div>

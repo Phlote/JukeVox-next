@@ -21,18 +21,18 @@ export const SubmitSidenav = (props) => {
 export const SideNav = ({ children, onClose, open }) => {
   return (
     <div
-      className="flex w-screen h-screen absolute z-20"
+      className="flex w-screen h-screen fixed z-20"
       style={!open ? { display: "none" } : undefined}
     >
       {open && (
         <div
-          className="opacity-0 flex-grow min-h-full z-20"
+          className="opacity-0  flex-grow min-h-full z-20"
           onClick={onClose}
         ></div>
       )}
 
       <SideNavContainer>
-        <div className="flex flex-row flex-column h-full">
+        <div className="flex flex-row flex-column h-full w-full">
           <div
             onClick={onClose}
             className="absolute top-16 left-4 cursor-pointer"

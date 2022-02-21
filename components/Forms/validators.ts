@@ -1,10 +1,21 @@
-import { ethers } from "ethers";
+import { ethers, utils } from "ethers";
 import { Curation } from "./CurationSubmissionForm";
 
 export const validateCurationSubmission = (values: Curation) => {
   const errors: Record<string, string> = {};
-  if (!values.nftURL) {
-    errors.nftURL = "Required";
+  if (!values.mediaURI) {
+    errors.mediaURI = "Required";
+  } else if (values.mediaURI) {
+    let url;
+    try {
+      url = new URL(values.mediaURI);
+    } catch (_) {
+      errors.mediaURI = "Invalid URL";
+    }
+
+    if (url?.protocol !== "http:" || url?.protocol !== "https:") {
+      errors.mediaURI = "Links must begin with http or https";
+    }
   }
   if (!values.mediaType) {
     errors.mediaType = "Required";

@@ -8,7 +8,6 @@ export const HollowButtonContainer = styled.div`
   border-radius: 9999px;
 
   display: flex;
-  flex-grow: 1;
   flex-direction: row;
   align-items: center;
   justify-content: center;
