@@ -30,8 +30,8 @@ export const Modal: React.FC<ModalProps> = ({ children, open, onClose }) => {
 
 const ModalContainer = styled.div`
   position: absolute;
-  width: 50vw;
-  height: 80vh;
+  width: 60rem;
+  height: 35rem;
 
   color: white;
   padding: 1rem;
@@ -65,20 +65,17 @@ export const RinkebyPromptModal = () => {
   return (
     <Modal open={open}>
       <div className="w-full p-8 flex flex-col justify-center items-center text-center">
-        <h1>Welcome to the Phlote Beta!</h1>
+        <h1>Welcome to the Phlote Search Beta!</h1>
         <div className="h-8" />
         <p>
-          {" "}
-          We use the Rinkeby Testnet for the time being. This means that
-          transactions are completely free.
+          {`We're testing on Rinkeby Testnet for the time being to keep
+          transactions completely free as we test.`}
         </p>
         <br></br>
         <p>
-          {`You will need test ETH, go to the link below and submit your wallet
-          address. You will get 0.1 test ETH for free! (You don't need any LINK)`}
+          {`You will need test ETH, which is retrievable from the link below. Submit your wallet address to get 0.1 test ETH for free! `}
         </p>
         <div className="h-8" />
-
         <a
           rel="noreferrer"
           target="_blank"
@@ -88,9 +85,8 @@ export const RinkebyPromptModal = () => {
           https://faucets.chain.link/rinkeby
         </a>
         <div className="h-8" />
-        <p>Afterwards, click the button below to switch networks.</p>
+        <p>Automatically switch to the test network using the button below.</p>
         <div className="h-8" />
-
         <HollowButtonContainer
           className="w-1/2 cursor-pointer"
           onClick={() => {
@@ -103,17 +99,18 @@ export const RinkebyPromptModal = () => {
         </HollowButtonContainer>
         <div className="h-8" />
         <p>
-          Once all of that is done, you should be good to go! Ping the team on{" "}
+          {`Once done, you're set to submit! Pls ping the team on the #feedback channel on `}
           <a
             rel="noreferrer"
             target="_blank"
-            href="https://discord.gg/AMcqNcTm"
+            href="https://discord.com/invite/Pdq24r4P5J"
             className="underline"
           >
             Discord
-          </a>{" "}
-          with any feedback you may have.
+          </a>
+          {` with any ideas on how we can improve the submission/search process.`}
         </p>
+
         <div className="h-8" />
       </div>
     </Modal>
