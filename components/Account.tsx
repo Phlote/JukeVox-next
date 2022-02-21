@@ -86,14 +86,4 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
   );
 };
 
-export const useOnWalletDisconnect = () => {
-  const { active } = useWeb3React();
-  const router = useRouter();
-  useEffect(() => {
-    if (!active && router.pathname !== "/") {
-      router.replace("/");
-    }
-  }, [active]);
-};
-
 export default Account;

@@ -1,6 +1,7 @@
 import Head from "next/head";
 import React from "react";
-import { useOnWalletDisconnect } from "./Account";
+import useOnWalletDisconnect from "../hooks/useOnWalletDisconnect";
+import { RinkebyPromptModal } from "./Modal";
 import { NavBar } from "./NavBar";
 import { SubmitSidenav } from "./SideNav";
 
@@ -14,6 +15,7 @@ export const HomeLayout = ({ children }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <SubmitSidenav />
+      <RinkebyPromptModal />
 
       <NavBar />
       <div className="container flex justify-center items-center flex-grow mx-auto max-h-max">
