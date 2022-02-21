@@ -17,7 +17,9 @@ export interface Curation {
   mediaType: MediaType;
   artistName: string;
   artistWallet?: string;
-  curatorWallet: string;
+  //TODO resolve this in smart contract
+  curatorWallet?: string;
+  curatorAddress?: string;
   mediaTitle: string;
   mediaURI: string;
   marketplace: string;
@@ -28,9 +30,9 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const { form, handleSubmit, values, pristine, submitting } = useForm({
     onSubmit,
-    initialValues: {
-      mediaURI: "http://",
-    },
+    // initialValues: {
+    //   mediaURI: "http://",
+    // },
     validate: validateCurationSubmission,
   });
 
@@ -45,7 +47,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
   return (
     <div className="mt-8">
       <HollowInputContainer type="form">
-        <HollowInput {...mediaURI.input} type="text" placeholder="URL to NFT" />
+        <HollowInput {...mediaURI.input} type="text" placeholder="NFT Link" />
         {mediaURI.meta.touched && mediaURI.meta.error && (
           <span className="text-red-600">{mediaURI.meta.error}</span>
         )}

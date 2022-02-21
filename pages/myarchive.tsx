@@ -8,6 +8,7 @@ import { useWeb3React } from "@web3-react/core";
 import { atom, useAtom } from "jotai";
 import { HollowButtonContainer, HollowButton } from "../components/Hollow";
 import { useSubmitSidenavOpen } from "../components/SideNav";
+import { useShortenedWallet } from "../components/Account";
 
 type ArchiveCuration = Curation & { transactionPending?: boolean };
 
@@ -84,12 +85,14 @@ function Archive() {
                   <th>Title</th>
                   <th>Media Type</th>
                   <th>Marketplace</th>
+                  <th>Curator Wallet</th>
                 </tr>
               </thead>
 
               <tbody>
                 {curations?.map((curation) => {
                   const {
+                    curatorAddress,
                     artistName,
                     mediaTitle,
                     mediaType,
@@ -116,6 +119,9 @@ function Archive() {
                       </ArchiveTableDataCell>
                       <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
+                      <ArchiveTableDataCell>
+                        <CuratorWallet wallet={curatorAddress} />
+                      </ArchiveTableDataCell>
                     </ArchiveTableRow>
                   );
                 })}
@@ -128,6 +134,12 @@ function Archive() {
     </DefaultLayout>
   );
 }
+
+const CuratorWallet: React.FC<{ wallet: string }> = ({ wallet }) => {
+  console.log(wallet);
+  const short = useShortenedWallet(wallet);
+  return <>{short}</>;
+};
 
 const ArchiveTableRow = styled.tr`
   background: ${(props) =>
