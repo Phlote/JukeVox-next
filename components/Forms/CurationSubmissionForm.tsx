@@ -49,7 +49,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
       <HollowInputContainer type="form">
         <HollowInput {...mediaURI.input} type="text" placeholder="NFT Link" />
         {mediaURI.meta.touched && mediaURI.meta.error && (
-          <span className="text-red-600">{mediaURI.meta.error}</span>
+          <span className="text-red-600 ml-2">{mediaURI.meta.error}</span>
         )}
       </HollowInputContainer>
       <div className="h-3" />
@@ -68,7 +68,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
           />
           {(mediaType.meta.touched || mediaType.meta.visited) &&
             mediaType.meta.error && (
-              <span className="text-red-600">{mediaType.meta.error}</span>
+              <span className="text-red-600 ml-2">{mediaType.meta.error}</span>
             )}
           <div className="w-2" />
           <Image
@@ -103,7 +103,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
           placeholder="Artist Name"
         />
         {artistName.meta.touched && artistName.meta.error && (
-          <span className="text-red-600">{artistName.meta.error}</span>
+          <span className="text-red-600 ml-2">{artistName.meta.error}</span>
         )}
       </HollowInputContainer>
       <div className="h-3" />
@@ -111,7 +111,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
       <HollowInputContainer type="form">
         <HollowInput {...mediaTitle.input} type="text" placeholder="Title" />
         {mediaTitle.meta.touched && mediaTitle.meta.error && (
-          <span className="text-red-600">{mediaTitle.meta.error}</span>
+          <span className="text-red-600 ml-2">{mediaTitle.meta.error}</span>
         )}
       </HollowInputContainer>
       <div className="h-3" />
@@ -123,7 +123,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
           placeholder="Marketplace"
         />
         {marketplace.meta.touched && marketplace.meta.error && (
-          <span className="text-red-600">{marketplace.meta.error}</span>
+          <span className="text-red-600 ml-2">{marketplace.meta.error}</span>
         )}
       </HollowInputContainer>
       <div className="h-3" />
@@ -135,7 +135,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
           placeholder="Artist Wallet Address"
         />
         {artistWallet.meta.touched && artistWallet.meta.error && (
-          <span className="text-red-600">{artistWallet.meta.error}</span>
+          <span className="text-red-600 ml-2">{artistWallet.meta.error}</span>
         )}
       </HollowInputContainer>
       <div className="h-3" />
