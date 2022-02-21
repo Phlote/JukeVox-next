@@ -67,7 +67,7 @@ export const HollowTagsInput: React.FC<TagsInput> = ({
         ></HollowInput>
       </HollowInputContainer>
       <div className="h-3" />
-      <div className="flex pl-1 flex-wrap w-full gap-1">
+      <div className="flex pl-1 flex-wrap w-full gap-4">
         {value &&
           value.map((tag, index) => (
             <Tag key={`${tag}${index}`}>

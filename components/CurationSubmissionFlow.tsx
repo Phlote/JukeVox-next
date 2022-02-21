@@ -18,7 +18,7 @@ import {
   CurationSubmissionForm,
 } from "./Forms/CurationSubmissionForm";
 import { NFT_MINT_CONTRACT_RINKEBY, NULL_WALLET } from "../contracts/addresses";
-import { useUserCurations } from "../pages/archive";
+import { useUserCurations } from "../pages/myarchive";
 
 export const CurationSubmissionFlow = (props) => {
   const { account } = useWeb3React();
@@ -65,9 +65,8 @@ export const CurationSubmissionFlow = (props) => {
       tags,
     } = curationData;
 
-    let artistWalletToSubmit = NULL_WALLET;
-    if (artistWallet && artistWallet !== "")
-      artistWalletToSubmit = artistWallet;
+    let artistWalletToSubmit =
+      artistWallet && artistWallet !== "" ? artistWallet : NULL_WALLET;
 
     console.log("submit: ", curationData);
 
@@ -101,13 +100,12 @@ export const CurationSubmissionFlow = (props) => {
       ]);
     } catch (e) {
       console.error(e);
-      alert(e);
     }
     setLoading(false);
   };
 
   return (
-    <div className="flex flex-col w-full mx-8">
+    <div className="flex flex-col w-full mx-8 ">
       <div className="h-8" />
       <h1 className="font-extrabold	text-4xl underline underline-offset-16 text-center">
         Submit
@@ -120,7 +118,7 @@ export const CurationSubmissionFlow = (props) => {
         />
       )}
       {page === 1 && (
-        <div className="flex flex-col items-center text-sm">
+        <div className="flex flex-col items-center text-sm mt-8">
           <p>Congratulations! Your submission has been added</p>
           <div className="h-8" />
           <a

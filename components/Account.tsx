@@ -1,5 +1,6 @@
 import { useWeb3React } from "@web3-react/core";
 import { UserRejectedRequestError } from "@web3-react/injected-connector";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { injected } from "../connectors";
 import useENSName from "../hooks/useENSName";
@@ -68,7 +69,7 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
             className="cursor-pointer h-16"
             onClick={startOnboarding}
           >
-            Install a Wallet
+            <a href="https://metamask.io/download/"></a>Install Metamask
           </HollowInputContainer>
         )}
       </div>
@@ -83,6 +84,16 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
       {ENSName || `${shortenHex(account, 10)}`}
     </HollowInputContainer>
   );
+};
+
+export const useOnWalletDisconnect = () => {
+  const { active } = useWeb3React();
+  const router = useRouter();
+  useEffect(() => {
+    if (!active && router.pathname !== "/") {
+      router.replace("/");
+    }
+  }, [active]);
 };
 
 export default Account;
