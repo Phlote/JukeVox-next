@@ -18,8 +18,11 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({
   return (
     <div className="min-h-screen flex flex-col w-full overflow-y-auto	">
       <Head>
-        <title>Phlote TCR</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>Phlote Search</title>
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        {/* TODO edit this png to be a square */}
+        <link rel="icon" type="image/png" href="/favicon.png" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
       </Head>
       <SubmitSidenav />
       <RinkebyPromptModal />
