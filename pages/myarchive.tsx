@@ -29,7 +29,6 @@ function Archive() {
 
   const getCurations = React.useCallback(async () => {
     const submissions = await phlote.getCuratorSubmissions(account);
-    console.log(submissions);
     const reversed = (
       [...submissions] as unknown as ArchiveCuration[]
     ).reverse();
