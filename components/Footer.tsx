@@ -6,13 +6,11 @@ export const Footer: React.FC = (props) => {
   return (
     <FooterContainer className="grid grid-cols-3 gap-4">
       <div className="my-auto ml-4">Time</div>
-      {/* <div className="flex-grow" /> */}
       <div className="flex items-center justify-center">
         <Image src="/favicon.svg" height={16} width={16} alt={"Gem"} />
         <div className="w-2" />
         Finding Internet Gems since 2022
       </div>
-      {/* <div className="flex-grow" /> */}
 
       <div className="flex justify-end mr-4">
         <div className="my-auto space-x-4">
