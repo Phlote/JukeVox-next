@@ -19,6 +19,7 @@ import {
 } from "./Forms/CurationSubmissionForm";
 import { NFT_MINT_CONTRACT_RINKEBY, NULL_WALLET } from "../contracts/addresses";
 import { useUserCurations } from "../pages/myarchive";
+import { BigNumber } from "ethers";
 
 export const CurationSubmissionFlow = (props) => {
   const { account } = useWeb3React();
@@ -92,7 +93,7 @@ export const CurationSubmissionFlow = (props) => {
           curatorWallet: account,
           ...curationData,
           transactionPending: true,
-          submissionTime: Date.now(),
+          submissionTime: BigNumber.from(Date.now()),
         },
         ...curations,
       ]);
