@@ -75,21 +75,24 @@ function Archive() {
         {curations.length > 0 && (
           <div className="flex min-h-full">
             <div className="h-16" />
-            <table
-              style={{ borderSpacing: "0 1rem", borderCollapse: "separate" }}
-              className="table-fixed w-full text-center flex-grow"
-            >
+            <table className="table-fixed w-full text-center flex-grow">
               <thead>
-                <tr style={{ borderBottom: "1px solid white" }}>
-                  <th>Artist</th>
-                  <th>Title</th>
-                  <th>Media Type</th>
-                  <th>Marketplace</th>
-                  <th>Curator Wallet</th>
+                <tr
+                  style={{
+                    borderBottom: "1px solid white",
+                    paddingBottom: "1rem",
+                  }}
+                >
+                  <th className="pb-4">Artist</th>
+                  <th className="pb-4">Title</th>
+                  <th className="pb-4">Media Type</th>
+                  <th className="pb-4">Marketplace</th>
+                  <th className="pb-4">Curator Wallet</th>
                 </tr>
               </thead>
 
               <tbody>
+                <tr className="h-4"></tr>
                 {curations?.map((curation) => {
                   const {
                     curatorAddress,
@@ -102,27 +105,36 @@ function Archive() {
                   } = curation;
 
                   return (
-                    <ArchiveTableRow
-                      style={transactionPending ? { opacity: 0.5 } : undefined}
-                      key={`${artistName}${mediaType}${marketplace}`}
-                    >
-                      <ArchiveTableDataCell>{artistName}</ArchiveTableDataCell>
-                      <ArchiveTableDataCell>
-                        <a
-                          rel="noreferrer"
-                          target="_blank"
-                          href={mediaURI}
-                          className="underline"
-                        >
-                          {mediaTitle}
-                        </a>
-                      </ArchiveTableDataCell>
-                      <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
-                      <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
-                      <ArchiveTableDataCell>
-                        <CuratorWallet wallet={curatorAddress} />
-                      </ArchiveTableDataCell>
-                    </ArchiveTableRow>
+                    <>
+                      <ArchiveTableRow
+                        style={
+                          transactionPending ? { opacity: 0.5 } : undefined
+                        }
+                        key={`${artistName}${mediaType}${marketplace}`}
+                      >
+                        <ArchiveTableDataCell>
+                          {artistName}
+                        </ArchiveTableDataCell>
+                        <ArchiveTableDataCell>
+                          <a
+                            rel="noreferrer"
+                            target="_blank"
+                            href={mediaURI}
+                            className="underline"
+                          >
+                            {mediaTitle}
+                          </a>
+                        </ArchiveTableDataCell>
+                        <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
+                        <ArchiveTableDataCell>
+                          {marketplace}
+                        </ArchiveTableDataCell>
+                        <ArchiveTableDataCell>
+                          <CuratorWallet wallet={curatorAddress} />
+                        </ArchiveTableDataCell>
+                      </ArchiveTableRow>
+                      <tr className="h-4"></tr>
+                    </>
                   );
                 })}
               </tbody>
@@ -148,6 +160,8 @@ const ArchiveTableRow = styled.tr`
   color: white;
   height: 3.5rem;
   align-items: center;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 
   &:first-child {
     border-radius: 999px 0 0 999px;

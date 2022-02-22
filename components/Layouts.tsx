@@ -13,8 +13,6 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({
   children,
   center,
 }) => {
-  useOnWalletDisconnect();
-
   return (
     <div className="min-h-screen flex flex-col w-full overflow-y-auto	">
       <Head>
