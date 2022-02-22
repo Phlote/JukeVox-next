@@ -141,9 +141,9 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
       <HollowTagsInput {...tags.input} />
       <div className="h-3" />
 
-      <div className="flex justify-center">
+      <div className="flex justify-center items-center">
         <HollowButtonContainer
-          className="w-48 cursor-pointer"
+          className="w-24 cursor-pointer"
           onClick={() => {
             handleSubmit();
           }}
@@ -151,6 +151,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
           <HollowButton disabled={metamaskLoading}>
             {metamaskLoading ? "Waiting for Wallet..." : "Mint"}
           </HollowButton>
+          <Image src="/favicon.svg" height={16} width={16} alt={"Gem"} />
         </HollowButtonContainer>
       </div>
       <div className="h-3" />

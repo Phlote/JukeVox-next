@@ -8,7 +8,7 @@ function Clock() {
     setDate(new Date());
   }
   useEffect(() => {
-    const timerId = setInterval(refreshClock, 1000);
+    const timerId = setInterval(refreshClock, 1000 * 60);
     return function cleanup() {
       clearInterval(timerId);
     };

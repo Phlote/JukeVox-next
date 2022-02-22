@@ -86,12 +86,12 @@ function Archive() {
                     paddingBottom: "1rem",
                   }}
                 >
+                  <th className="pb-4">Date</th>
                   <th className="pb-4">Artist</th>
                   <th className="pb-4">Title</th>
                   <th className="pb-4">Media Type</th>
                   <th className="pb-4">Marketplace</th>
                   <th className="pb-4">Curator Wallet</th>
-                  <th className="pb-4">Curation Date</th>
                 </tr>
               </thead>
 
@@ -118,6 +118,11 @@ function Archive() {
                         key={`${artistName}${mediaType}${marketplace}`}
                       >
                         <ArchiveTableDataCell>
+                          {new Date(
+                            submissionTime.toNumber() * 1000
+                          ).toLocaleDateString()}
+                        </ArchiveTableDataCell>
+                        <ArchiveTableDataCell>
                           {artistName}
                         </ArchiveTableDataCell>
                         <ArchiveTableDataCell>
@@ -136,11 +141,6 @@ function Archive() {
                         </ArchiveTableDataCell>
                         <ArchiveTableDataCell>
                           <CuratorWallet wallet={curatorWallet} />
-                        </ArchiveTableDataCell>
-                        <ArchiveTableDataCell>
-                          {new Date(
-                            submissionTime.toNumber() * 1000
-                          ).toLocaleDateString()}
                         </ArchiveTableDataCell>
                       </ArchiveTableRow>
                       <tr className="h-4" />
