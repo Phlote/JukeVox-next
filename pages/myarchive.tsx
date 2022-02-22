@@ -1,6 +1,4 @@
 import React from "react";
-
-import { DefaultLayout } from "../components/Layouts";
 import styled from "styled-components";
 import { usePhlote } from "../hooks/usePhlote";
 import { Curation } from "../components/Forms/CurationSubmissionForm";
@@ -9,6 +7,7 @@ import { atom, useAtom } from "jotai";
 import { HollowButtonContainer, HollowButton } from "../components/Hollow";
 import { useSubmitSidenavOpen } from "../components/SideNav";
 import { useShortenedWallet } from "../components/Account";
+import { ArchiveLayout } from "../components/Layouts";
 
 type ArchiveCuration = Curation & { transactionPending?: boolean };
 
@@ -49,17 +48,17 @@ function Archive() {
   }, [phlote, account, getCurations]);
 
   return (
-    <DefaultLayout center={curations.length === 0}>
+    <ArchiveLayout center={curations.length === 0}>
       <div className="flex flex-col mt-24 min-h-full">
         {curations.length === 0 && (
           <div className="flex flex-col justify-center align-items">
             <div
-              className="text-lgfont-extrabold	"
+              className="text-lg italic"
               style={{ color: "rgba(105, 105, 105, 1)" }}
             >
               {active ? "No Curated Works" : "No Wallet Connected"}
             </div>
-            <div className="h-16"></div>
+            <div className="h-8"></div>
             {active && (
               <HollowButtonContainer
                 className="w-32 cursor-pointer mx-auto"
@@ -143,7 +142,7 @@ function Archive() {
           </div>
         )}
       </div>
-    </DefaultLayout>
+    </ArchiveLayout>
   );
 }
 

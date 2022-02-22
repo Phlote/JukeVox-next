@@ -1,11 +1,11 @@
 import React from "react";
 import Image from "next/image";
 import { HollowInput, HollowInputContainer } from "../components/Hollow";
-import { DefaultLayout } from "../components/Layouts";
+import { HomeLayout } from "../components/Layouts";
 
 function Home() {
   return (
-    <DefaultLayout center>
+    <HomeLayout>
       <div className="w-1/4 h-16" style={{ lineHeight: "0.5rem" }}>
         <HollowInputContainer
           onClick={() => {
@@ -21,7 +21,7 @@ function Home() {
           />
         </HollowInputContainer>
       </div>
-    </DefaultLayout>
+    </HomeLayout>
   );
 }
 

@@ -52,5 +52,5 @@ const FooterContainer = styled.div`
   width: 100vw;
   background: rgba(242, 244, 248, 0.17);
   bottom: 0;
-  height: 4rem;
+  height: 3.5rem;
 `;
