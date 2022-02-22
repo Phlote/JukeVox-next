@@ -1,18 +1,21 @@
 import styled from "styled-components";
 import React from "react";
 import Image from "next/image";
+import Clock from "./Clock";
 
 export const Footer: React.FC = (props) => {
   return (
     <FooterContainer className="grid grid-cols-3 gap-4">
-      <div className="my-auto ml-4">Time</div>
+      <div className="my-auto ml-8">
+        <Clock />
+      </div>
       <div className="flex items-center justify-center">
         <Image src="/favicon.svg" height={16} width={16} alt={"Gem"} />
         <div className="w-2" />
         Finding Internet Gems since 2022
       </div>
 
-      <div className="flex justify-end mr-4">
+      <div className="flex justify-end mr-8">
         <div className="my-auto space-x-4">
           {/* TODO: make phlote <a></a> */}
           <a
