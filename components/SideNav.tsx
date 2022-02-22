@@ -51,7 +51,12 @@ const SideNavContainer = styled.div`
   z-index: 10;
   overflow-y: scroll;
   width: 27rem;
-  background-color: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(60px);
+
+  background: #1d1d1d;
+  @supports (backdrop-filter: none) {
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(60px);
+  }
+
   flex: none;
 `;
