@@ -92,7 +92,7 @@ function Archive() {
               </thead>
 
               <tbody>
-                <tr className="h-4"></tr>
+                <tr className="h-4" />
                 {curations?.map((curation) => {
                   const {
                     curatorAddress,
@@ -133,7 +133,7 @@ function Archive() {
                           <CuratorWallet wallet={curatorAddress} />
                         </ArchiveTableDataCell>
                       </ArchiveTableRow>
-                      <tr className="h-4"></tr>
+                      <tr className="h-4" />
                     </>
                   );
                 })}

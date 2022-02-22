@@ -1,6 +1,7 @@
 import Head from "next/head";
 import React from "react";
 import useOnWalletDisconnect from "../hooks/useOnWalletDisconnect";
+import { Footer } from "./Footer";
 import { RinkebyPromptModal } from "./Modal";
 import { NavBar } from "./NavBar";
 import { SubmitSidenav } from "./SideNav";
@@ -32,6 +33,7 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({
       >
         {children}
       </div>
+      <Footer />
     </div>
   );
 };
