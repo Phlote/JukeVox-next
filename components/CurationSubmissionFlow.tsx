@@ -19,6 +19,7 @@ import {
 } from "./Forms/CurationSubmissionForm";
 import { NFT_MINT_CONTRACT_RINKEBY, NULL_WALLET } from "../contracts/addresses";
 import { useUserCurations } from "../pages/myarchive";
+import { BigNumber } from "ethers";
 
 export const CurationSubmissionFlow = (props) => {
   const { account } = useWeb3React();
@@ -65,11 +66,6 @@ export const CurationSubmissionFlow = (props) => {
       tags,
     } = curationData;
 
-    let artistWalletToSubmit =
-      artistWallet && artistWallet !== "" ? artistWallet : NULL_WALLET;
-
-    console.log("submit: ", curationData);
-
     setLoading(true);
     try {
       const { tokenURI } = await nextApiRequest(
@@ -78,15 +74,13 @@ export const CurationSubmissionFlow = (props) => {
         curationData
       );
 
-      console.log(artistWalletToSubmit);
-
       const res = await phloteContract.submitPost(
         account,
         mediaURI,
         marketplace,
         tags ?? [],
         artistName,
-        artistWalletToSubmit,
+        artistWallet,
         mediaType,
         mediaTitle,
         tokenURI
@@ -95,7 +89,12 @@ export const CurationSubmissionFlow = (props) => {
       setTxnHash(res.hash);
       setPage(1);
       setCurations((curations) => [
-        { ...curationData, transactionPending: true },
+        {
+          curatorWallet: account,
+          ...curationData,
+          transactionPending: true,
+          submissionTime: BigNumber.from(Date.now()),
+        },
         ...curations,
       ]);
     } catch (e) {

@@ -8,8 +8,12 @@ import { HollowButtonContainer, HollowButton } from "../components/Hollow";
 import { useSubmitSidenavOpen } from "../components/SideNav";
 import { useShortenedWallet } from "../components/Account";
 import { ArchiveLayout } from "../components/Layouts";
+import { BigNumber } from "ethers";
 
-type ArchiveCuration = Curation & { transactionPending?: boolean };
+type ArchiveCuration = Curation & {
+  transactionPending?: boolean;
+  submissionTime: BigNumber;
+};
 
 const userCurationsAtom = atom<ArchiveCuration[]>([]);
 export const useUserCurations = () => useAtom(userCurationsAtom);
@@ -87,6 +91,7 @@ function Archive() {
                   <th className="pb-4">Media Type</th>
                   <th className="pb-4">Marketplace</th>
                   <th className="pb-4">Curator Wallet</th>
+                  <th className="pb-4">Curation Date</th>
                 </tr>
               </thead>
 
@@ -94,13 +99,14 @@ function Archive() {
                 <tr className="h-4" />
                 {curations?.map((curation) => {
                   const {
-                    curatorAddress,
+                    curatorWallet,
                     artistName,
                     mediaTitle,
                     mediaType,
                     mediaURI,
                     marketplace,
                     transactionPending,
+                    submissionTime,
                   } = curation;
 
                   return (
@@ -129,7 +135,12 @@ function Archive() {
                           {marketplace}
                         </ArchiveTableDataCell>
                         <ArchiveTableDataCell>
-                          <CuratorWallet wallet={curatorAddress} />
+                          <CuratorWallet wallet={curatorWallet} />
+                        </ArchiveTableDataCell>
+                        <ArchiveTableDataCell>
+                          {new Date(
+                            submissionTime.toNumber() * 1000
+                          ).toLocaleDateString()}
                         </ArchiveTableDataCell>
                       </ArchiveTableRow>
                       <tr className="h-4" />
@@ -147,9 +158,8 @@ function Archive() {
 }
 
 const CuratorWallet: React.FC<{ wallet: string }> = ({ wallet }) => {
-  console.log(wallet);
   const short = useShortenedWallet(wallet);
-  return <>{short}</>;
+  return <span>{short}</span>;
 };
 
 const ArchiveTableRow = styled.tr`
