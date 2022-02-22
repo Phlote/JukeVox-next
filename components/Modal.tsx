@@ -35,18 +35,19 @@ const ModalContainer = styled.div`
 
   color: white;
   padding: 1rem;
-  background: linear-gradient(
-      85.96deg,
-      rgba(255, 255, 255, 0) -20.51%,
-      rgba(255, 255, 255, 0.05) 26.82%,
-      rgba(255, 255, 255, 0) 65.65%
-    ),
-    rgba(255, 255, 255, 0.05);
-  box-shadow: inset 0px -2.50245px 1.25122px rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(37.5367px);
-  /* Note: backdrop-filter has minimal browser support */
-
   border-radius: 100px;
+  background: #292929;
+  @supports (backdrop-filter: none) {
+    background: linear-gradient(
+        85.96deg,
+        rgba(255, 255, 255, 0) -20.51%,
+        rgba(255, 255, 255, 0.05) 26.82%,
+        rgba(255, 255, 255, 0) 65.65%
+      ),
+      rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(37.5367px);
+    box-shadow: inset 0px -2.50245px 1.25122px rgba(255, 255, 255, 0.1);
+  }
 `;
 
 export const RinkebyPromptModal = () => {

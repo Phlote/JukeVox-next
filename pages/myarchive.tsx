@@ -1,6 +1,4 @@
 import React from "react";
-
-import { DefaultLayout } from "../components/Layouts";
 import styled from "styled-components";
 import { usePhlote } from "../hooks/usePhlote";
 import { Curation } from "../components/Forms/CurationSubmissionForm";
@@ -9,6 +7,7 @@ import { atom, useAtom } from "jotai";
 import { HollowButtonContainer, HollowButton } from "../components/Hollow";
 import { useSubmitSidenavOpen } from "../components/SideNav";
 import { useShortenedWallet } from "../components/Account";
+import { ArchiveLayout } from "../components/Layouts";
 
 type ArchiveCuration = Curation & { transactionPending?: boolean };
 
@@ -49,17 +48,17 @@ function Archive() {
   }, [phlote, account, getCurations]);
 
   return (
-    <DefaultLayout center={curations.length === 0}>
+    <ArchiveLayout center={curations.length === 0}>
       <div className="flex flex-col mt-24 min-h-full">
         {curations.length === 0 && (
           <div className="flex flex-col justify-center align-items">
             <div
-              className="text-lgfont-extrabold	"
+              className="text-lg italic"
               style={{ color: "rgba(105, 105, 105, 1)" }}
             >
               {active ? "No Curated Works" : "No Wallet Connected"}
             </div>
-            <div className="h-16"></div>
+            <div className="h-8"></div>
             {active && (
               <HollowButtonContainer
                 className="w-32 cursor-pointer mx-auto"
@@ -75,21 +74,24 @@ function Archive() {
         {curations.length > 0 && (
           <div className="flex min-h-full">
             <div className="h-16" />
-            <table
-              style={{ borderSpacing: "0 1rem", borderCollapse: "separate" }}
-              className="table-fixed w-full text-center flex-grow"
-            >
+            <table className="table-fixed w-full text-center flex-grow">
               <thead>
-                <tr style={{ borderBottom: "1px solid white" }}>
-                  <th>Artist</th>
-                  <th>Title</th>
-                  <th>Media Type</th>
-                  <th>Marketplace</th>
-                  <th>Curator Wallet</th>
+                <tr
+                  style={{
+                    borderBottom: "1px solid white",
+                    paddingBottom: "1rem",
+                  }}
+                >
+                  <th className="pb-4">Artist</th>
+                  <th className="pb-4">Title</th>
+                  <th className="pb-4">Media Type</th>
+                  <th className="pb-4">Marketplace</th>
+                  <th className="pb-4">Curator Wallet</th>
                 </tr>
               </thead>
 
               <tbody>
+                <tr className="h-4" />
                 {curations?.map((curation) => {
                   const {
                     curatorAddress,
@@ -102,27 +104,36 @@ function Archive() {
                   } = curation;
 
                   return (
-                    <ArchiveTableRow
-                      style={transactionPending ? { opacity: 0.5 } : undefined}
-                      key={`${artistName}${mediaType}${marketplace}`}
-                    >
-                      <ArchiveTableDataCell>{artistName}</ArchiveTableDataCell>
-                      <ArchiveTableDataCell>
-                        <a
-                          rel="noreferrer"
-                          target="_blank"
-                          href={mediaURI}
-                          className="underline"
-                        >
-                          {mediaTitle}
-                        </a>
-                      </ArchiveTableDataCell>
-                      <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
-                      <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
-                      <ArchiveTableDataCell>
-                        <CuratorWallet wallet={curatorAddress} />
-                      </ArchiveTableDataCell>
-                    </ArchiveTableRow>
+                    <>
+                      <ArchiveTableRow
+                        style={
+                          transactionPending ? { opacity: 0.5 } : undefined
+                        }
+                        key={`${artistName}${mediaType}${marketplace}`}
+                      >
+                        <ArchiveTableDataCell>
+                          {artistName}
+                        </ArchiveTableDataCell>
+                        <ArchiveTableDataCell>
+                          <a
+                            rel="noreferrer"
+                            target="_blank"
+                            href={mediaURI}
+                            className="underline"
+                          >
+                            {mediaTitle}
+                          </a>
+                        </ArchiveTableDataCell>
+                        <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
+                        <ArchiveTableDataCell>
+                          {marketplace}
+                        </ArchiveTableDataCell>
+                        <ArchiveTableDataCell>
+                          <CuratorWallet wallet={curatorAddress} />
+                        </ArchiveTableDataCell>
+                      </ArchiveTableRow>
+                      <tr className="h-4" />
+                    </>
                   );
                 })}
               </tbody>
@@ -131,7 +142,7 @@ function Archive() {
           </div>
         )}
       </div>
-    </DefaultLayout>
+    </ArchiveLayout>
   );
 }
 
@@ -148,6 +159,8 @@ const ArchiveTableRow = styled.tr`
   color: white;
   height: 3.5rem;
   align-items: center;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 
   &:first-child {
     border-radius: 999px 0 0 999px;
