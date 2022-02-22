@@ -158,9 +158,8 @@ function Archive() {
 }
 
 const CuratorWallet: React.FC<{ wallet: string }> = ({ wallet }) => {
-  console.log(wallet);
   const short = useShortenedWallet(wallet);
-  return <>{short}</>;
+  return <span>{short}</span>;
 };
 
 const ArchiveTableRow = styled.tr`
