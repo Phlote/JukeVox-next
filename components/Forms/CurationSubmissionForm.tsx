@@ -149,7 +149,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
           }}
         >
           <HollowButton disabled={metamaskLoading}>
-            {metamaskLoading ? "Waiting for Wallet..." : "Submit"}
+            {metamaskLoading ? "Waiting for Wallet..." : "Mint"}
           </HollowButton>
         </HollowButtonContainer>
       </div>
