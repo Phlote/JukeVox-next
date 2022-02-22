@@ -14,8 +14,8 @@ contract Phlote is ERC721, Ownable {
     //uint256 public editionSize;
     uint256 public contractPrice;
     struct Edition {
-        address curatorAddress;
-        address artistAddress;
+        address curatorWallet;
+        address artistWallet;
         string mediaURI;
         string marketplace;
         string[] tags;
@@ -24,6 +24,7 @@ contract Phlote is ERC721, Ownable {
         string mediaTitle;
         uint256 numSold;
         string tokenURI; // uses IPFS
+        uint submissionTime;
     }
 
     using Counters for Counters.Counter;
@@ -99,16 +100,17 @@ contract Phlote is ERC721, Ownable {
         */
 
         Edition memory curation = Edition({
-            curatorAddress: _curatorWallet,
+            curatorWallet: _curatorWallet,
             mediaURI: _mediaURI,
             marketplace: _marketplace,
             tags: _tags,
             artistName: _artistName,
-            artistAddress: _artistWallet,
+            artistWallet: _artistWallet,
             mediaType: _mediaType,
             mediaTitle: _mediaTitle,
             numSold: 0,
-            tokenURI: _tokenURI
+            tokenURI: _tokenURI,
+            submissionTime: block.timestamp
         });
         editions[nextPostId] = curation;
         curatorSubmissions[_curatorWallet].push(curation);

@@ -16,10 +16,8 @@ type MediaType = "Audio" | "Text" | "Video" | "Visual Art";
 export interface Curation {
   mediaType: MediaType;
   artistName: string;
-  artistWallet?: string;
-  //TODO resolve this in smart contract
-  curatorWallet?: string;
-  curatorAddress?: string;
+  artistWallet: string;
+  curatorWallet: string;
   mediaTitle: string;
   mediaURI: string;
   marketplace: string;

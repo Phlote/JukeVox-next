@@ -209,12 +209,12 @@
     "outputs": [
       {
         "internalType": "address",
-        "name": "curatorAddress",
+        "name": "curatorWallet",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "artistAddress",
+        "name": "artistWallet",
         "type": "address"
       },
       {
@@ -251,6 +251,11 @@
         "internalType": "string",
         "name": "tokenURI",
         "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "submissionTime",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -268,12 +273,12 @@
     "outputs": [
       {
         "internalType": "address",
-        "name": "curatorAddress",
+        "name": "curatorWallet",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "artistAddress",
+        "name": "artistWallet",
         "type": "address"
       },
       {
@@ -310,6 +315,11 @@
         "internalType": "string",
         "name": "tokenURI",
         "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "submissionTime",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -323,12 +333,12 @@
         "components": [
           {
             "internalType": "address",
-            "name": "curatorAddress",
+            "name": "curatorWallet",
             "type": "address"
           },
           {
             "internalType": "address",
-            "name": "artistAddress",
+            "name": "artistWallet",
             "type": "address"
           },
           {
@@ -370,6 +380,11 @@
             "internalType": "string",
             "name": "tokenURI",
             "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "submissionTime",
+            "type": "uint256"
           }
         ],
         "internalType": "struct Phlote.Edition[]",
@@ -413,12 +428,12 @@
         "components": [
           {
             "internalType": "address",
-            "name": "curatorAddress",
+            "name": "curatorWallet",
             "type": "address"
           },
           {
             "internalType": "address",
-            "name": "artistAddress",
+            "name": "artistWallet",
             "type": "address"
           },
           {
@@ -460,6 +475,11 @@
             "internalType": "string",
             "name": "tokenURI",
             "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "submissionTime",
+            "type": "uint256"
           }
         ],
         "internalType": "struct Phlote.Edition[]",
