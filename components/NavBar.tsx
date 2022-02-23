@@ -6,15 +6,19 @@ import Link from "next/link";
 import { useSubmitSidenavOpen } from "./SideNav";
 import { useUserCurations } from "../pages/myarchive";
 import styled from "styled-components";
+import { useIsCurator } from "../hooks/useIsCurator";
 
 export const NavBar = () => {
   const triedToEagerConnect = useEagerConnect();
   const [, setOpen] = useSubmitSidenavOpen();
   const [, setCurations] = useUserCurations();
+  const isCurator = useIsCurator();
 
   const { active, deactivate } = useWeb3React();
 
   const { NODE_ENV } = process.env;
+
+  const allowCurate = active && isCurator;
 
   return (
     <div className="py-4 absolute w-screen px-12">
@@ -39,7 +43,7 @@ export const NavBar = () => {
           ></Image>
         </div> */}
 
-        {active && (
+        {allowCurate && (
           <>
             <NavBarElementContainer>
               <Link href="/myarchive" passHref>
@@ -52,7 +56,7 @@ export const NavBar = () => {
             <div className="w-4" />
           </>
         )}
-        {active && NODE_ENV !== "production" && (
+        {allowCurate && NODE_ENV !== "production" && (
           <>
             <NavBarElementContainer>
               <HollowButtonContainer
@@ -69,7 +73,7 @@ export const NavBar = () => {
           </>
         )}
 
-        {active && (
+        {allowCurate && (
           <>
             <NavBarElementContainer>
               <HollowButtonContainer
