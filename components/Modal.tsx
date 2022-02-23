@@ -31,7 +31,7 @@ export const Modal: React.FC<ModalProps> = ({ children, open, onClose }) => {
 const ModalContainer = styled.div`
   position: absolute;
   width: 60rem;
-  height: 35rem;
+  height: 32rem;
 
   color: white;
   padding: 1rem;
@@ -55,9 +55,7 @@ export const RinkebyPromptModal = () => {
   const { active, chainId, library } = useWeb3React();
   useEffect(() => {
     if (active) {
-      console.log("active");
       if (chainId !== RINKEBY_CHAIN_ID) {
-        console.log("not on rinkeby");
         setOpen(true);
       } else setOpen(false);
     }

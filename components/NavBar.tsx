@@ -18,7 +18,7 @@ export const NavBar = () => {
 
   const { NODE_ENV } = process.env;
 
-  const allowCurate = active && isCurator;
+  const allowCurate = active && isCurator.data && isCurator.data.isCurator;
 
   return (
     <div className="py-4 absolute w-screen px-12">

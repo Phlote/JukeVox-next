@@ -19,8 +19,5 @@ export const useIsCurator = () => {
     nextApiRequest(`is-curator`, "POST", { wallet: account }) as Promise<{
       isCurator: boolean;
     }>;
-  const res = useQuery(cacheKey, query);
-
-  if (res.data && !res.isLoading && !res.isError) return res.data.isCurator;
-  else return false;
+  return useQuery(cacheKey, query);
 };

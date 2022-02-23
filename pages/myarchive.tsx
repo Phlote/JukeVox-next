@@ -25,8 +25,8 @@ function Archive() {
   const isCurator = useIsCurator();
   const router = useRouter();
   React.useEffect(() => {
-    if (!isCurator) router.replace("/");
-  }, [isCurator]);
+    if (isCurator.data && !isCurator.data.isCurator) router.replace("/");
+  }, [isCurator.data]);
 
   const phlote = usePhlote();
 
