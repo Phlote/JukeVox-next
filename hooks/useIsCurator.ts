@@ -8,7 +8,6 @@ import useTokenBalance from "./useTokenBalance";
 
 export const useIsCurator = () => {
   const { account } = useWeb3React();
-  // TODO not sure if neccesary, will test
   const queryClient = useQueryClient();
 
   React.useEffect(() => {
