@@ -9,6 +9,8 @@ import { useSubmitSidenavOpen } from "../components/SideNav";
 import { useShortenedWallet } from "../components/Account";
 import { ArchiveLayout } from "../components/Layouts";
 import { BigNumber } from "ethers";
+import { useIsCurator } from "../hooks/useIsCurator";
+import { useRouter } from "next/router";
 
 type ArchiveCuration = Curation & {
   transactionPending?: boolean;
@@ -20,6 +22,11 @@ export const useUserCurations = () => useAtom(userCurationsAtom);
 
 function Archive() {
   const { account, active } = useWeb3React();
+  const isCurator = useIsCurator();
+  const router = useRouter();
+  React.useEffect(() => {
+    if (!isCurator) router.replace("/");
+  }, [isCurator]);
 
   const phlote = usePhlote();
 
