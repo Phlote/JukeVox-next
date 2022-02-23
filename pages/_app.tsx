@@ -16,6 +16,4 @@ const NextWeb3App = ({ Component, pageProps }: AppProps) => {
   );
 };
 
-// NextWeb3App.getInitialProps = async (appContext) => {};
-
 export default NextWeb3App;

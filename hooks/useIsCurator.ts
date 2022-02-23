@@ -9,11 +9,11 @@ import useTokenBalance from "./useTokenBalance";
 export const useIsCurator = () => {
   const { account } = useWeb3React();
   // TODO not sure if neccesary, will test
-  // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
-  // React.useEffect(() => {
-  //   if (queryClient && account) queryClient.invalidateQueries("is-curator");
-  // }, [account]);
+  React.useEffect(() => {
+    if (queryClient && account) queryClient.invalidateQueries("is-curator");
+  }, [account]);
 
   const cacheKey = ["is-curator"];
   const query = () =>
@@ -21,7 +21,6 @@ export const useIsCurator = () => {
       isCurator: boolean;
     }>;
   const res = useQuery(cacheKey, query);
-  console.log(res);
 
   if (res.data && !res.isLoading && !res.isError) return res.data.isCurator;
   else return false;
