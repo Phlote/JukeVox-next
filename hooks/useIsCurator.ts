@@ -8,16 +8,19 @@ import useTokenBalance from "./useTokenBalance";
 
 export const useIsCurator = () => {
   const { account } = useWeb3React();
-  const queryClient = useQueryClient();
 
-  React.useEffect(() => {
-    if (queryClient && account) queryClient.invalidateQueries("is-curator");
-  }, [account]);
-
-  const cacheKey = ["is-curator"];
-  const query = () =>
-    nextApiRequest(`is-curator`, "POST", { wallet: account }) as Promise<{
-      isCurator: boolean;
-    }>;
-  return useQuery(cacheKey, query);
+  const cacheKey = ["is-curator", account];
+  return useQuery(
+    cacheKey,
+    async () => {
+      if (account)
+        return nextApiRequest(`is-curator`, "POST", {
+          wallet: account,
+        }) as Promise<{
+          isCurator: boolean;
+        }>;
+      else return false;
+    },
+    { refetchOnWindowFocus: false }
+  );
 };

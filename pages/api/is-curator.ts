@@ -21,7 +21,6 @@ export default async function handler(
   );
 
   const { result } = (await resp.json()) as PolygonScanTokenBalanceResponse;
-
   const isCurator = parseInt(result) > 0;
 
   response.status(200).json({
