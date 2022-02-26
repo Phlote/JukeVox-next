@@ -2,8 +2,11 @@ import React from "react";
 import Image from "next/image";
 import { HollowInput, HollowInputContainer } from "../components/Hollow";
 import { HomeLayout } from "../components/Layouts";
+import { useNFTSearch } from "../hooks/useNFTSearch";
 
 function Home() {
+  const results = useNFTSearch();
+
   return (
     <HomeLayout>
       <div className="w-1/4 h-16" style={{ lineHeight: "0.5rem" }}>
