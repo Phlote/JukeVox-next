@@ -2,7 +2,7 @@ import { BigNumber } from "ethers";
 
 export type ArchiveCuration = Curation & {
   transactionPending?: boolean;
-  submissionTime: BigNumber;
+  submissionTime: BigNumber | number;
 };
 
 type MediaType = "Audio" | "Text" | "Video" | "Visual Art";

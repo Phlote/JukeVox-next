@@ -7,6 +7,7 @@ import { useSubmitSidenavOpen } from "./SideNav";
 import { useUserCurations } from "../pages/myarchive";
 import styled from "styled-components";
 import { useIsCurator } from "../hooks/useIsCurator";
+import { SearchBar } from "./SearchBar";
 
 export const NavBar = () => {
   const triedToEagerConnect = useEagerConnect();
@@ -46,6 +47,20 @@ export const NavBar = () => {
         {allowCurate && (
           <>
             <NavBarElementContainer>
+              <Link href="/archive" passHref>
+                <HollowButtonContainer className="cursor-pointer flex justify-center items-center ">
+                  Archive
+                </HollowButtonContainer>
+              </Link>
+            </NavBarElementContainer>
+
+            <div className="w-4" />
+          </>
+        )}
+        <SearchBar />
+        {/* {allowCurate && (
+          <>
+            <NavBarElementContainer>
               <Link href="/myarchive" passHref>
                 <HollowButtonContainer className="cursor-pointer flex justify-center items-center ">
                   My Archive
@@ -55,7 +70,7 @@ export const NavBar = () => {
 
             <div className="w-4" />
           </>
-        )}
+        )} */}
         {allowCurate && NODE_ENV !== "production" && (
           <>
             <NavBarElementContainer>

@@ -38,7 +38,6 @@ contract Phlote is ERC721, Ownable {
     //creates a mapping from ownerId to tokenId
     mapping(address => uint256) public nftHolders;
     //creates a mapping of the curator to their Submissions
-    // TODO is mapping of editions more expensive?
     mapping(address => Edition[]) public curatorSubmissions;
 
     //IMPORTED MAPS

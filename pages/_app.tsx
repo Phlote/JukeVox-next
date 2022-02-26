@@ -11,12 +11,7 @@ const NextWeb3App = ({ Component, pageProps }: AppProps) => {
   return (
     <QueryClientProvider client={queryClient}>
       <Web3ReactProvider getLibrary={getLibrary}>
-        <MoralisProvider
-          appId={process.env.NEXT_PUBLIC_MORALIS_APP_ID}
-          serverUrl={process.env.NEXT_PUBLIC_MORALIS_SERVER_URL}
-        >
-          <Component {...pageProps} />
-        </MoralisProvider>
+        <Component {...pageProps} />
       </Web3ReactProvider>
     </QueryClientProvider>
   );
