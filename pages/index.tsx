@@ -5,7 +5,7 @@ import { HomeLayout } from "../components/Layouts";
 import { useNFTSearch } from "../hooks/useNFTSearch";
 
 function Home() {
-  const results = useNFTSearch();
+  const results = useNFTSearch("McClenney");
 
   return (
     <HomeLayout>

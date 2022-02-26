@@ -11,11 +11,7 @@ import { ArchiveLayout } from "../components/Layouts";
 import { BigNumber } from "ethers";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { useRouter } from "next/router";
-
-type ArchiveCuration = Curation & {
-  transactionPending?: boolean;
-  submissionTime: BigNumber;
-};
+import { ArchiveCuration } from "../types/curations";
 
 const userCurationsAtom = atom<ArchiveCuration[]>([]);
 export const useUserCurations = () => useAtom(userCurationsAtom);

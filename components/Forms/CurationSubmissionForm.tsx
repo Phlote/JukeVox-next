@@ -12,18 +12,6 @@ import { atom, useAtom } from "jotai";
 import { useForm, useField } from "react-final-form-hooks";
 import { validateCurationSubmission } from "./validators";
 
-type MediaType = "Audio" | "Text" | "Video" | "Visual Art";
-export interface Curation {
-  mediaType: MediaType;
-  artistName: string;
-  artistWallet: string;
-  curatorWallet: string;
-  mediaTitle: string;
-  mediaURI: string;
-  marketplace: string;
-  tags?: string[];
-}
-
 export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const { form, handleSubmit, values, pristine, submitting } = useForm({

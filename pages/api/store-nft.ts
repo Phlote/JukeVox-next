@@ -47,7 +47,7 @@ export default async function handler(
       { trait_type: "Title", value: mediaTitle },
       { trait_type: "Link to OG NFT", value: nftURL },
       { trait_type: "Marketplace", value: marketplace },
-      { trait_type: "Artist Waillet", value: artistWallet },
+      { trait_type: "Artist Wallet", value: artistWallet },
       {
         display_type: "date",
         trait_type: "Submission Date",
