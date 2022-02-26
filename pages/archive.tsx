@@ -120,7 +120,7 @@ function Archive() {
                         style={
                           transactionPending ? { opacity: 0.5 } : undefined
                         }
-                        key={`${artistName}${mediaType}${marketplace}`}
+                        key={`${submissionTime}`}
                       >
                         <ArchiveTableDataCell>
                           {submissionTimeToDate(submissionTime)}

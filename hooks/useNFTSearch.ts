@@ -11,7 +11,7 @@ export const useGetAllNFTs = () => {
 
   React.useEffect(() => {
     const getContent = () => {
-      phlote.getAllcontent().then((content) => {
+      phlote.getAllCurations().then((content) => {
         console.log("content:", content);
         setNFTs(content as ArchiveCuration[]);
       });
@@ -38,5 +38,5 @@ export const useGetAllNFTs = () => {
 export const useNFTSearch = (searchTerm = "") => {
   const nfts = useGetAllNFTs();
   const searcher = new FuzzySearch(nfts);
-  return searcher.search(searchTerm);
+  return searcher.search(searchTerm + " ");
 };

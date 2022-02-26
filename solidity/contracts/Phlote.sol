@@ -30,7 +30,7 @@ contract Phlote is ERC721, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
     uint256 private nextPostId = 1;
-    Edition[] content;
+    Edition[] allCurations;
 
     /***MAPS***/
     //creates a mapping from editionId to description of the Edition struct
@@ -111,6 +111,7 @@ contract Phlote is ERC721, Ownable {
             tokenURI: _tokenURI,
             submissionTime: block.timestamp
         });
+        allCurations.push(curation);
         editions[nextPostId] = curation;
         curatorSubmissions[_curatorWallet].push(curation);
         //add it to their archive of submissions. mapping of address -> submissions[]
@@ -135,8 +136,8 @@ contract Phlote is ERC721, Ownable {
     }
 
     
-    function getAllcontent() public view returns (Edition[] memory) {
-        return content;
+    function getAllCurations() public view returns (Edition[] memory) {
+        return allCurations;
     }
 
     //-----IMPORTEDFUNCTIONS-----
