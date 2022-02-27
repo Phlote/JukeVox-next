@@ -43,16 +43,18 @@ export const NavBar = () => {
             width={32}
           ></Image>
         </div> */}
-
-        <NavBarElementContainer>
-          <Link href="/archive" passHref>
-            <HollowButtonContainer className="cursor-pointer flex justify-center items-center ">
-              Archive
-            </HollowButtonContainer>
-          </Link>
-        </NavBarElementContainer>
-
-        <div className="w-4" />
+        {active && (
+          <>
+            <NavBarElementContainer>
+              <Link href="/archive" passHref>
+                <HollowButtonContainer className="cursor-pointer flex justify-center items-center ">
+                  Archive
+                </HollowButtonContainer>
+              </Link>
+            </NavBarElementContainer>
+            <div className="w-4" />
+          </>
+        )}
 
         {router.pathname !== "/" && (
           <>
