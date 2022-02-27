@@ -44,19 +44,16 @@ export const NavBar = () => {
           ></Image>
         </div> */}
 
-        {allowCurate && (
-          <>
-            <NavBarElementContainer>
-              <Link href="/archive" passHref>
-                <HollowButtonContainer className="cursor-pointer flex justify-center items-center ">
-                  Archive
-                </HollowButtonContainer>
-              </Link>
-            </NavBarElementContainer>
+        <NavBarElementContainer>
+          <Link href="/archive" passHref>
+            <HollowButtonContainer className="cursor-pointer flex justify-center items-center ">
+              Archive
+            </HollowButtonContainer>
+          </Link>
+        </NavBarElementContainer>
 
-            <div className="w-4" />
-          </>
-        )}
+        <div className="w-4" />
+
         {router.pathname !== "/" && (
           <>
             <SearchBar />

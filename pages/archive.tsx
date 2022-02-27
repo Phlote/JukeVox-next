@@ -1,22 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
-import { useWeb3React } from "@web3-react/core";
-import { atom, useAtom } from "jotai";
-import { HollowButtonContainer, HollowButton } from "../components/Hollow";
-import { useSubmitSidenavOpen } from "../components/SideNav";
 import { useShortenedWallet } from "../components/Account";
 import { ArchiveLayout } from "../components/Layouts";
 import { BigNumber } from "ethers";
-import { useIsCurator } from "../hooks/useIsCurator";
-import { useRouter } from "next/router";
 import { useSearchTerm } from "../components/SearchBar";
 import { useNFTSearch } from "../hooks/useNFTSearch";
 
 function Archive() {
-  const { active } = useWeb3React();
-
-  const [, setOpen] = useSubmitSidenavOpen();
-
   const [searchTerm] = useSearchTerm();
   const curations = useNFTSearch(searchTerm);
 
@@ -29,19 +19,8 @@ function Archive() {
               className="text-lg italic"
               style={{ color: "rgba(105, 105, 105, 1)" }}
             >
-              {active ? "No Curated Works" : "No Wallet Connected"}
+              {"No Search Results"}
             </div>
-            <div className="h-8"></div>
-            {active && (
-              <HollowButtonContainer
-                className="w-32 cursor-pointer mx-auto"
-                onClick={() => {
-                  setOpen(true);
-                }}
-              >
-                <HollowButton>{"Submit"}</HollowButton>
-              </HollowButtonContainer>
-            )}
           </div>
         )}
         {curations.length > 0 && (
