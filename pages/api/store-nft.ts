@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { NFTStorage, File } from "nft.storage";
+import { Curation } from "../../types/curations";
 import { PHLOTE_CURATION_NFT_IMAGE } from "./common";
-import { Curation } from "../../components/Forms/CurationSubmissionForm";
 import nftStorage from "./lib/nftStorage";
 
 const getOptionalFields = (

@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { usePhlote } from "../hooks/usePhlote";
-import { Curation } from "../components/Forms/CurationSubmissionForm";
 import { useWeb3React } from "@web3-react/core";
 import { atom, useAtom } from "jotai";
 import { HollowButtonContainer, HollowButton } from "../components/Hollow";
@@ -11,14 +9,11 @@ import { ArchiveLayout } from "../components/Layouts";
 import { BigNumber } from "ethers";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { useRouter } from "next/router";
-import { ArchiveCuration } from "../types/curations";
 import { useSearchTerm } from "../components/SearchBar";
 import { useNFTSearch } from "../hooks/useNFTSearch";
 
 function Archive() {
   const { active } = useWeb3React();
-  const isCurator = useIsCurator();
-  const router = useRouter();
 
   const [, setOpen] = useSubmitSidenavOpen();
 

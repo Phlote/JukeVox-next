@@ -4,7 +4,6 @@ import { useWeb3React } from "@web3-react/core";
 import { HollowButtonContainer } from "./Hollow";
 import Link from "next/link";
 import { useSubmitSidenavOpen } from "./SideNav";
-import { useUserCurations } from "../pages/myarchive";
 import styled from "styled-components";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { SearchBar } from "./SearchBar";
@@ -13,7 +12,7 @@ import { useRouter } from "next/router";
 export const NavBar = () => {
   const triedToEagerConnect = useEagerConnect();
   const [, setOpen] = useSubmitSidenavOpen();
-  const [, setCurations] = useUserCurations();
+  // const [, setCurations] = useUserCurations();
   const isCurator = useIsCurator();
   const router = useRouter();
   const { active, deactivate } = useWeb3React();
@@ -64,19 +63,7 @@ export const NavBar = () => {
             <div className="w-4" />
           </>
         )}
-        {/* {allowCurate && (
-          <>
-            <NavBarElementContainer>
-              <Link href="/myarchive" passHref>
-                <HollowButtonContainer className="cursor-pointer flex justify-center items-center ">
-                  My Archive
-                </HollowButtonContainer>
-              </Link>
-            </NavBarElementContainer>
 
-            <div className="w-4" />
-          </>
-        )} */}
         {allowCurate && NODE_ENV !== "production" && (
           <>
             <NavBarElementContainer>
@@ -84,7 +71,6 @@ export const NavBar = () => {
                 className="max-w-xs cursor-pointer flex justify-center items-center"
                 onClick={async () => {
                   deactivate();
-                  setCurations([]);
                 }}
               >
                 Disconnect Wallet
