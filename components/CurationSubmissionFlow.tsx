@@ -1,25 +1,14 @@
-import { useIsCurator } from "../hooks/useIsCurator";
-import {
-  HollowInputContainer,
-  HollowInput,
-  HollowButtonContainer,
-  HollowButton,
-} from "./Hollow";
+import { HollowButtonContainer, HollowButton } from "./Hollow";
 import React, { useState } from "react";
 import { usePhlote } from "../hooks/usePhlote";
-import { HollowTagsInput } from "./Hollow/HollowTagsInput";
-import { atom, useAtom } from "jotai";
 import { useWeb3React } from "@web3-react/core";
 import { nextApiRequest } from "../util";
-import { DropdownList } from "./DropdownList";
 import Image from "next/image";
-import {
-  Curation,
-  CurationSubmissionForm,
-} from "./Forms/CurationSubmissionForm";
-import { NFT_MINT_CONTRACT_RINKEBY, NULL_WALLET } from "../contracts/addresses";
-import { useUserCurations } from "../pages/myarchive";
+import { CurationSubmissionForm } from "./Forms/CurationSubmissionForm";
+import { NFT_MINT_CONTRACT_RINKEBY } from "../contracts/addresses";
 import { BigNumber } from "ethers";
+import { Curation } from "../types/curations";
+import { useSearchNFTs } from "../hooks/useNFTSearch";
 
 export const CurationSubmissionFlow = (props) => {
   const { account } = useWeb3React();
@@ -28,7 +17,7 @@ export const CurationSubmissionFlow = (props) => {
   const [txnHash, setTxnHash] = useState<string>("0x0");
   const [nftMintId, setNFTMintId] = useState<number | "Loading">("Loading");
   const [loading, setLoading] = useState<boolean>(false);
-  const [, setCurations] = useUserCurations();
+  const [, setNFTs] = useSearchNFTs();
 
   const phloteContract = usePhlote();
 
@@ -88,7 +77,7 @@ export const CurationSubmissionFlow = (props) => {
       console.log(res);
       setTxnHash(res.hash);
       setPage(1);
-      setCurations((curations) => [
+      setNFTs((curations) => [
         {
           curatorWallet: account,
           ...curationData,

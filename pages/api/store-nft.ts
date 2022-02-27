@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { NFTStorage, File } from "nft.storage";
+import { Curation } from "../../types/curations";
 import { PHLOTE_CURATION_NFT_IMAGE } from "./common";
-import { Curation } from "../../components/Forms/CurationSubmissionForm";
 import nftStorage from "./lib/nftStorage";
 
 const getOptionalFields = (
@@ -47,7 +47,7 @@ export default async function handler(
       { trait_type: "Title", value: mediaTitle },
       { trait_type: "Link to OG NFT", value: nftURL },
       { trait_type: "Marketplace", value: marketplace },
-      { trait_type: "Artist Waillet", value: artistWallet },
+      { trait_type: "Artist Wallet", value: artistWallet },
       {
         display_type: "date",
         trait_type: "Submission Date",

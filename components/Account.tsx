@@ -63,7 +63,7 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
               });
             }}
           >
-            Connect to Curate
+            Connect to Wallet
           </HollowInputContainer>
         ) : (
           <HollowInputContainer

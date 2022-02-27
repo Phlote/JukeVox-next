@@ -327,7 +327,7 @@
   },
   {
     "inputs": [],
-    "name": "getAllcontent",
+    "name": "getAllCurations",
     "outputs": [
       {
         "components": [

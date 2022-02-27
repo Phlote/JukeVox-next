@@ -1,5 +1,5 @@
-import { ethers, utils } from "ethers";
-import { Curation } from "./CurationSubmissionForm";
+import { ethers } from "ethers";
+import { Curation } from "../../types/curations";
 
 export const validateCurationSubmission = (values: Curation) => {
   const errors: Record<string, string> = {};
