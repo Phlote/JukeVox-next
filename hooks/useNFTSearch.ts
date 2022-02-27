@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { usePhlote } from "./usePhlote";
-import FuzzySearch from "fuzzy-search"; // Or: var FuzzySearch = require('fuzzy-search');
+import FuzzySearch from "fuzzy-search";
 import { ArchiveCuration } from "../types/curations";
 import { atom, useAtom } from "jotai";
 

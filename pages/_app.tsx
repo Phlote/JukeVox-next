@@ -3,7 +3,6 @@ import type { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "react-query";
 import getLibrary from "../getLibrary";
 import "../styles/globals.css";
-import { MoralisProvider } from "react-moralis";
 
 const queryClient = new QueryClient();
 

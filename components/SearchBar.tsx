@@ -5,7 +5,11 @@ import Image from "next/image";
 const searchTermAtom = atom<string>("");
 export const useSearchTerm = () => useAtom(searchTermAtom);
 
-export const SearchBar = ({ placeholder }) => {
+interface SearchBar {
+  placeholder?: string;
+}
+
+export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
   const [searchTerm, setSearchTerm] = useSearchTerm();
 
   return (

@@ -15,46 +15,15 @@ import { ArchiveCuration } from "../types/curations";
 import { useSearchTerm } from "../components/SearchBar";
 import { useNFTSearch } from "../hooks/useNFTSearch";
 
-// const userCurationsAtom = atom<ArchiveCuration[]>([]);
-// export const useUserCurations = () => useAtom(userCurationsAtom);
-
 function Archive() {
   const { active } = useWeb3React();
   const isCurator = useIsCurator();
   const router = useRouter();
 
-  React.useEffect(() => {
-    if (isCurator.data && !isCurator.data.isCurator) router.replace("/");
-  }, [isCurator.data]);
-
   const [, setOpen] = useSubmitSidenavOpen();
 
   const [searchTerm] = useSearchTerm();
   const curations = useNFTSearch(searchTerm);
-
-  //   const getCurations = React.useCallback(async () => {
-  //     const submissions = await phlote.getCuratorSubmissions(account);
-  //     const reversed = (
-  //       [...submissions] as unknown as ArchiveCuration[]
-  //     ).reverse();
-  //     setCurations(reversed);
-  //   }, [phlote, account, setCurations]);
-
-  //   React.useEffect(() => {
-  //     if (phlote && account) {
-  //       getCurations();
-  //       phlote.on("*", (res) => {
-  //         console.log(res);
-  //         if (res.event === "EditionCreated") {
-  //           getCurations();
-  //         }
-  //       });
-  //     }
-
-  //     return () => {
-  //       phlote?.removeAllListeners();
-  //     };
-  //   }, [phlote, account, getCurations]);
 
   return (
     <ArchiveLayout center={curations.length === 0}>
