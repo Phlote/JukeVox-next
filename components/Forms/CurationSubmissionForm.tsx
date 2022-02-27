@@ -16,9 +16,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const { form, handleSubmit, values, pristine, submitting } = useForm({
     onSubmit,
-    // initialValues: {
-    //   mediaURI: "http://",
-    // },
+
     validate: validateCurationSubmission,
   });
 

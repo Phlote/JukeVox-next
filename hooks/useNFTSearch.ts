@@ -2,25 +2,27 @@ import React, { useEffect } from "react";
 import { usePhlote } from "./usePhlote";
 import FuzzySearch from "fuzzy-search"; // Or: var FuzzySearch = require('fuzzy-search');
 import { ArchiveCuration } from "../types/curations";
+import { atom, useAtom } from "jotai";
+
+const searchNFTsAtom = atom<ArchiveCuration[]>([]);
+export const useSearchNFTs = () => useAtom(searchNFTsAtom);
 
 export const useGetAllNFTs = () => {
-  const [nfts, setNFTs] = React.useState<ArchiveCuration[]>([]);
+  const [nfts, setNFTs] = useSearchNFTs();
 
   const phlote = usePhlote();
-  console.log(nfts);
 
   React.useEffect(() => {
     const getContent = () => {
       phlote.getAllCurations().then((content) => {
-        console.log("content:", content);
-        setNFTs(content as ArchiveCuration[]);
+        const reversed = ([...content] as ArchiveCuration[]).reverse();
+        setNFTs(reversed);
       });
     };
 
     if (phlote) {
       getContent();
       phlote.on("*", (res) => {
-        console.log(res);
         if (res.event === "EditionCreated") {
           getContent();
         }
@@ -30,7 +32,7 @@ export const useGetAllNFTs = () => {
     return () => {
       phlote?.removeAllListeners();
     };
-  }, [phlote]);
+  }, [phlote, setNFTs]);
 
   return nfts;
 };
@@ -38,5 +40,5 @@ export const useGetAllNFTs = () => {
 export const useNFTSearch = (searchTerm = "") => {
   const nfts = useGetAllNFTs();
   const searcher = new FuzzySearch(nfts);
-  return searcher.search(searchTerm + " ");
+  return searcher.search(searchTerm + " ") as ArchiveCuration[];
 };

@@ -58,6 +58,7 @@ export const NavBar = () => {
           </>
         )}
         <SearchBar />
+        <div className="w-4" />
         {/* {allowCurate && (
           <>
             <NavBarElementContainer>

@@ -1,14 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 import { usePhlote } from "../hooks/usePhlote";
-import { Curation } from "../components/Forms/CurationSubmissionForm";
 import { useWeb3React } from "@web3-react/core";
 import { atom, useAtom } from "jotai";
 import { HollowButtonContainer, HollowButton } from "../components/Hollow";
 import { useSubmitSidenavOpen } from "../components/SideNav";
 import { useShortenedWallet } from "../components/Account";
 import { ArchiveLayout } from "../components/Layouts";
-import { BigNumber } from "ethers";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { useRouter } from "next/router";
 import { ArchiveCuration } from "../types/curations";
