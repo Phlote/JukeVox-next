@@ -5,7 +5,7 @@ import Image from "next/image";
 const searchTermAtom = atom<string>("");
 export const useSearchTerm = () => useAtom(searchTermAtom);
 
-export const SearchBar = () => {
+export const SearchBar = ({ placeholder }) => {
   const [searchTerm, setSearchTerm] = useSearchTerm();
 
   return (
@@ -25,6 +25,8 @@ export const SearchBar = () => {
             const { value } = e.target;
             setSearchTerm(value);
           }}
+          value={searchTerm}
+          placeholder={placeholder}
         />
       </HollowInputContainer>
     </div>

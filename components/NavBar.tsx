@@ -8,13 +8,14 @@ import { useUserCurations } from "../pages/myarchive";
 import styled from "styled-components";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { SearchBar } from "./SearchBar";
+import { useRouter } from "next/router";
 
 export const NavBar = () => {
   const triedToEagerConnect = useEagerConnect();
   const [, setOpen] = useSubmitSidenavOpen();
   const [, setCurations] = useUserCurations();
   const isCurator = useIsCurator();
-
+  const router = useRouter();
   const { active, deactivate } = useWeb3React();
 
   const { NODE_ENV } = process.env;
@@ -57,8 +58,12 @@ export const NavBar = () => {
             <div className="w-4" />
           </>
         )}
-        <SearchBar />
-        <div className="w-4" />
+        {router.pathname !== "/" && (
+          <>
+            <SearchBar />
+            <div className="w-4" />
+          </>
+        )}
         {/* {allowCurate && (
           <>
             <NavBarElementContainer>
