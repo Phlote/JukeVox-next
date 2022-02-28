@@ -35,7 +35,15 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
   const ENSName = useENSName(account);
 
   if (error) {
-    return null;
+    console.log(error);
+    return (
+      <HollowInputContainer
+        className="h-full"
+        style={{ justifyContent: "center" }}
+      >
+        {"Check Metamask"}
+      </HollowInputContainer>
+    );
   }
 
   if (!triedToEagerConnect) {
