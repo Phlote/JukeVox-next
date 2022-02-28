@@ -127,7 +127,6 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
       <div className="h-3" />
 
       <div className="flex justify-center items-center">
-        {/*  */}
         <HollowButtonContainer>
           <HollowButton
             className="w-24"
@@ -141,8 +140,6 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
           </HollowButton>
           <Image src="/favicon.svg" height={16} width={16} alt={"Gem"} />
         </HollowButtonContainer>
-
-        {/* </HollowButtonContainer> */}
       </div>
       <div className="h-3" />
     </div>
