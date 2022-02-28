@@ -53,6 +53,11 @@ export const HollowInput = styled.input`
     outline: none;
   }
 
+  &:-webkit-autofill,
+  &:-webkit-autofill:focus {
+    transition: background-color 600000s 0s, color 600000s 0s;
+  }
+
   &::placeholder {
     color: white;
   }
@@ -72,7 +77,7 @@ export const HollowButton = styled.button`
     outline: none;
   }
 
-  &::placeholder {
-    color: white;
+  &:disabled {
+    opacity: 50%;
   }
 `;

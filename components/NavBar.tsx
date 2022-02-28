@@ -48,7 +48,7 @@ export const NavBar = () => {
             <NavBarElementContainer>
               <Link href="/archive" passHref>
                 <HollowButtonContainer className="cursor-pointer flex justify-center items-center ">
-                  Archive
+                  Index
                 </HollowButtonContainer>
               </Link>
             </NavBarElementContainer>
