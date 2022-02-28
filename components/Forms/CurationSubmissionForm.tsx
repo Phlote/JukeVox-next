@@ -14,9 +14,8 @@ import { validateCurationSubmission } from "./validators";
 
 export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-  const { form, handleSubmit, values, pristine, submitting } = useForm({
+  const { form, handleSubmit, valid } = useForm({
     onSubmit,
-
     validate: validateCurationSubmission,
   });
 
@@ -128,18 +127,22 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
       <div className="h-3" />
 
       <div className="flex justify-center items-center">
-        <HollowButtonContainer
-          className="w-24 cursor-pointer"
-          style={metamaskLoading ? { width: "16rem" } : undefined}
-          onClick={() => {
-            handleSubmit();
-          }}
-        >
-          <HollowButton disabled={metamaskLoading}>
+        {/*  */}
+        <HollowButtonContainer>
+          <HollowButton
+            className="w-24"
+            disabled={metamaskLoading || !valid}
+            style={metamaskLoading ? { width: "16rem" } : undefined}
+            onClick={() => {
+              handleSubmit();
+            }}
+          >
             {metamaskLoading ? "Waiting for Wallet..." : "Mint"}
           </HollowButton>
           <Image src="/favicon.svg" height={16} width={16} alt={"Gem"} />
         </HollowButtonContainer>
+
+        {/* </HollowButtonContainer> */}
       </div>
       <div className="h-3" />
     </div>

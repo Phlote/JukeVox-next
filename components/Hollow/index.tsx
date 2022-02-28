@@ -72,7 +72,7 @@ export const HollowButton = styled.button`
     outline: none;
   }
 
-  &::placeholder {
-    color: white;
+  &:disabled {
+    opacity: 50%;
   }
 `;
