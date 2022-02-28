@@ -86,7 +86,7 @@ export const NavBar = () => {
                 className="cursor-pointer flex justify-center items-center "
                 onClick={() => setOpen(true)}
               >
-                Curate
+                Submit
               </HollowButtonContainer>
             </NavBarElementContainer>
             <div className="w-4" />
