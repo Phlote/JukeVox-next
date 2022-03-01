@@ -5,6 +5,7 @@ import { ArchiveLayout } from "../components/Layouts";
 import { BigNumber } from "ethers";
 import { useSearchTerm } from "../components/SearchBar";
 import { useNFTSearch } from "../hooks/useNFTSearch";
+import Image from "next/image";
 
 function Archive() {
   const [searchTerm] = useSearchTerm();
@@ -34,12 +35,12 @@ function Archive() {
                     paddingBottom: "1rem",
                   }}
                 >
-                  <th className="pb-4">Date</th>
-                  <th className="pb-4">Artist</th>
-                  <th className="pb-4">Title</th>
-                  <th className="pb-4">Media Type</th>
-                  <th className="pb-4">Marketplace</th>
-                  <th className="pb-4">Curator Wallet</th>
+                  <ArchiveTableHeader label="Date" />
+                  <ArchiveTableHeader label="Artist" />
+                  <ArchiveTableHeader label="Title" />
+                  <ArchiveTableHeader label="Media Type" />
+                  <ArchiveTableHeader label="Marketplace" />
+                  <ArchiveTableHeader label="Curator Wallet" />
                 </tr>
               </thead>
 
@@ -116,6 +117,30 @@ const submissionTimeToDate = (submissionTime: BigNumber | number) => {
 const CuratorWallet: React.FC<{ wallet: string }> = ({ wallet }) => {
   const short = useShortenedWallet(wallet);
   return <span>{short}</span>;
+};
+
+const ArchiveTableHeader = (props) => {
+  const [dropdownOpen, setDropdownOpen] = React.useState<boolean>(false);
+  const { label } = props;
+  return (
+    <th>
+      <div className="flex items-center justify-center pb-4">
+        {label}
+        <div className="w-2" />
+
+        <Image
+          onClick={() => {
+            setDropdownOpen(!dropdownOpen);
+          }}
+          className={dropdownOpen ? "-rotate-90" : "rotate-90"}
+          src="/chevron.svg"
+          width={16}
+          height={16}
+          alt={`Filter by ${label}`}
+        />
+      </div>
+    </th>
+  );
 };
 
 const ArchiveTableRow = styled.tr`
