@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { usePhlote } from "./usePhlote";
 import FuzzySearch from "fuzzy-search";
-import { ArchiveCuration } from "../types/curations";
 import { atom, useAtom } from "jotai";
+import { ArchiveCuration } from "../../types/curations";
 
 const searchNFTsAtom = atom<ArchiveCuration[]>([]);
 export const useSearchNFTs = () => useAtom(searchNFTsAtom);

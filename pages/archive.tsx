@@ -8,7 +8,7 @@ import {
   useGetAllNFTs,
   useNFTSearch,
   useNFTSearchFilters,
-} from "../hooks/useNFTSearch";
+} from "../hooks/web3/useNFTSearch";
 import Image from "next/image";
 import { useAtom, atom } from "jotai";
 import { ArchiveCuration } from "../types/curations";
