@@ -78,7 +78,7 @@ export const HollowTagsInput: React.FC<TagsInput> = ({
               <Image
                 className="cursor-pointer"
                 onClick={() => deleteTag(index)}
-                src="/cross.svg"
+                src="/close.svg"
                 alt="delete"
                 height={12}
                 width={12}

@@ -137,25 +137,45 @@ const ArchiveTableHeader = (props) => {
   const { label, filterKey } = props;
   const ref = React.useRef();
   useOnClickOut(ref, () => setDropdownOpen(false));
+  const [filters, setFilters] = useNFTSearchFilters();
+
+  const isActiveFilter = !!filters[filterKey];
 
   return (
     <th>
       <div ref={ref} className="flex items-center justify-center pb-4 relative">
-        {label}
+        {isActiveFilter ? filters[filterKey] : label}
         {filterKey && (
           <>
             <div className="w-2" />
 
-            <Image
-              onClick={() => {
-                setDropdownOpen((current) => !current);
-              }}
-              className={dropdownOpen ? "-rotate-90" : "rotate-90"}
-              src="/chevron.svg"
-              width={16}
-              height={16}
-              alt={`Filter by ${label}`}
-            />
+            {isActiveFilter ? (
+              <Image
+                className="text-white"
+                onClick={() => {
+                  setFilters((current) => {
+                    const updated = { ...current };
+                    delete updated[filterKey];
+                    return updated;
+                  });
+                }}
+                src="/close.svg"
+                width={16}
+                height={16}
+                alt={`Cancel filter by ${label}`}
+              />
+            ) : (
+              <Image
+                onClick={() => {
+                  setDropdownOpen((current) => !current);
+                }}
+                className={dropdownOpen ? "-rotate-90" : "rotate-90"}
+                src="/chevron.svg"
+                width={16}
+                height={16}
+                alt={`Filter by ${label}`}
+              />
+            )}
             {dropdownOpen && (
               <ArchiveDropdown
                 label={label}
@@ -176,7 +196,7 @@ const ArchiveDropdown: React.FC<{
   close: () => void;
 }> = (props) => {
   //TODO: grey out fields that are usually present but not in current results (this is a maybe)
-  const { label, filterKey, close } = props;
+  const { filterKey, close } = props;
   const curations = useGetAllNFTs();
   const [filters, setFilters] = useNFTSearchFilters();
 
