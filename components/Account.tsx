@@ -72,7 +72,7 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
               });
             }}
           >
-            Connect to Wallet
+            Connect Wallet
           </HollowInputContainer>
         ) : (
           <HollowInputContainer
