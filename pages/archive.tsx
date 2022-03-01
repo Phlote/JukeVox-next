@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { ShortenedWallet } from "../components/Account";
 import { ArchiveLayout } from "../components/Layouts";
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { useSearchTerm } from "../components/SearchBar";
 import {
   useGetAllNFTs,
@@ -10,11 +10,10 @@ import {
   useNFTSearchFilters,
 } from "../hooks/web3/useNFTSearch";
 import Image from "next/image";
-import { useAtom, atom } from "jotai";
-import { ArchiveCuration } from "../types/curations";
 import { DropdownList } from "../components/DropdownList";
-import { HollowInputContainer } from "../components/Hollow";
 import { useOnClickOut } from "../hooks/useOnClickOut";
+import Close from "../public/close.svg";
+import classNames from "classnames";
 
 function Archive() {
   const [searchTerm] = useSearchTerm();
@@ -143,28 +142,27 @@ const ArchiveTableHeader = (props) => {
 
   return (
     <th>
-      <div ref={ref} className="flex items-center justify-center pb-4 relative">
-        {isActiveFilter ? filters[filterKey] : label}
-        {filterKey && (
-          <>
-            <div className="w-2" />
+      <div className="w-full flex justify-center">
+        <div
+          ref={ref}
+          className={classNames(
+            "flex items-center justify-center mb-4 relative px-1",
+            {
+              "rounded-full": isActiveFilter,
+              "border-2": isActiveFilter,
+              "border-white": isActiveFilter,
+            }
+          )}
+        >
+          {isActiveFilter ? (
+            <ArchiveFilterLabel filter={filters[filterKey]} />
+          ) : (
+            label
+          )}
+          {filterKey && (
+            <>
+              <div className="w-2" />
 
-            {isActiveFilter ? (
-              <Image
-                className="text-white"
-                onClick={() => {
-                  setFilters((current) => {
-                    const updated = { ...current };
-                    delete updated[filterKey];
-                    return updated;
-                  });
-                }}
-                src="/close.svg"
-                width={16}
-                height={16}
-                alt={`Cancel filter by ${label}`}
-              />
-            ) : (
               <Image
                 onClick={() => {
                   setDropdownOpen((current) => !current);
@@ -175,19 +173,26 @@ const ArchiveTableHeader = (props) => {
                 height={16}
                 alt={`Filter by ${label}`}
               />
-            )}
-            {dropdownOpen && (
-              <ArchiveDropdown
-                label={label}
-                filterKey={filterKey}
-                close={() => setDropdownOpen(false)}
-              />
-            )}
-          </>
-        )}
+
+              {dropdownOpen && (
+                <ArchiveDropdown
+                  label={label}
+                  filterKey={filterKey}
+                  close={() => setDropdownOpen(false)}
+                />
+              )}
+            </>
+          )}
+        </div>
       </div>
     </th>
   );
+};
+
+const ArchiveFilterLabel: React.FC<{ filter: string }> = ({ filter }) => {
+  const isAddress = ethers.utils.isAddress(filter);
+  if (isAddress) return <ShortenedWallet wallet={filter} />;
+  else return <span>{filter}</span>;
 };
 
 const ArchiveDropdown: React.FC<{
