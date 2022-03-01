@@ -135,9 +135,12 @@ const submissionTimeToDate = (submissionTime: BigNumber | number) => {
 const ArchiveTableHeader = (props) => {
   const [dropdownOpen, setDropdownOpen] = React.useState<boolean>(false);
   const { label, filterKey } = props;
+  const ref = React.useRef();
+  useOnClickOut(ref, () => setDropdownOpen(false));
+
   return (
     <th>
-      <div className="flex items-center justify-center pb-4 relative">
+      <div ref={ref} className="flex items-center justify-center pb-4 relative">
         {label}
         {filterKey && (
           <>
@@ -145,7 +148,7 @@ const ArchiveTableHeader = (props) => {
 
             <Image
               onClick={() => {
-                setDropdownOpen(!dropdownOpen);
+                setDropdownOpen((current) => !current);
               }}
               className={dropdownOpen ? "-rotate-90" : "rotate-90"}
               src="/chevron.svg"
@@ -176,8 +179,6 @@ const ArchiveDropdown: React.FC<{
   const { label, filterKey, close } = props;
   const curations = useGetAllNFTs();
   const [filters, setFilters] = useNFTSearchFilters();
-  const ref = React.useRef();
-  useOnClickOut(ref, close);
 
   const updateFilter = (val) => {
     setFilters((current) => {
@@ -197,7 +198,6 @@ const ArchiveDropdown: React.FC<{
     <div
       className="absolute z-10 h-64 w-64 mb-4 top-10"
       style={{ backgroundColor: "#1d1d1d" }}
-      ref={ref}
     >
       <DropdownList
         value={filters[filterKey]}
