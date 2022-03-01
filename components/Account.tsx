@@ -3,8 +3,9 @@ import { UserRejectedRequestError } from "@web3-react/injected-connector";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { injected } from "../connectors";
-import useENSName from "../hooks/useENSName";
-import useMetaMaskOnboarding from "../hooks/useMetaMaskOnboarding";
+import useENSName from "../hooks/web3/useENSName";
+import useMetaMaskOnboarding from "../hooks/web3/useMetaMaskOnboarding";
+
 import { formatEtherscanLink, shortenHex } from "../util";
 import { HollowButtonContainer, HollowInputContainer } from "./Hollow";
 

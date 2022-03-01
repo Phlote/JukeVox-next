@@ -4,7 +4,7 @@ import { useShortenedWallet } from "../components/Account";
 import { ArchiveLayout } from "../components/Layouts";
 import { BigNumber } from "ethers";
 import { useSearchTerm } from "../components/SearchBar";
-import { useNFTSearch } from "../hooks/useNFTSearch";
+import { useNFTSearch } from "../hooks/web3/useNFTSearch";
 
 function Archive() {
   const [searchTerm] = useSearchTerm();

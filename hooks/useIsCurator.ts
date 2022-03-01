@@ -1,10 +1,6 @@
-import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
-import React from "react";
-import { useQuery, useQueryClient } from "react-query";
-import { NETWORKS, TEST_PHOTE_TOKEN_ADDRESS } from "../constants";
-import { nextApiRequest, parseBalance } from "../util";
-import useTokenBalance from "./useTokenBalance";
+import { useQuery } from "react-query";
+import { nextApiRequest } from "../util";
 
 export const useIsCurator = () => {
   const { account } = useWeb3React();

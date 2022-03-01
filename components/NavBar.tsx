@@ -1,4 +1,3 @@
-import useEagerConnect from "../hooks/useEagerConnect";
 import Account from "./Account";
 import { useWeb3React } from "@web3-react/core";
 import { HollowButtonContainer } from "./Hollow";
@@ -8,6 +7,7 @@ import styled from "styled-components";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { SearchBar } from "./SearchBar";
 import { useRouter } from "next/router";
+import useEagerConnect from "../hooks/web3/useEagerConnect";
 
 export const NavBar = () => {
   const triedToEagerConnect = useEagerConnect();

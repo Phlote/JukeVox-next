@@ -1,6 +1,5 @@
 import { HollowButtonContainer, HollowButton } from "./Hollow";
 import React, { useState } from "react";
-import { usePhlote } from "../hooks/usePhlote";
 import { useWeb3React } from "@web3-react/core";
 import { nextApiRequest } from "../util";
 import Image from "next/image";
@@ -8,7 +7,8 @@ import { CurationSubmissionForm } from "./Forms/CurationSubmissionForm";
 import { NFT_MINT_CONTRACT_RINKEBY } from "../contracts/addresses";
 import { BigNumber } from "ethers";
 import { Curation } from "../types/curations";
-import { useSearchNFTs } from "../hooks/useNFTSearch";
+import { useSearchNFTs } from "../hooks/web3/useNFTSearch";
+import { usePhlote } from "../hooks/web3/usePhlote";
 
 export const CurationSubmissionFlow = (props) => {
   const { account } = useWeb3React();
