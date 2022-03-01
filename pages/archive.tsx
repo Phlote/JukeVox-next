@@ -16,17 +16,9 @@ import { DropdownList } from "../components/DropdownList";
 import { HollowInputContainer } from "../components/Hollow";
 import { useOnClickOut } from "../hooks/useOnClickOut";
 
-const curations = atom<ArchiveCuration[]>([]);
-const useArchiveCurations = () => useAtom(curations);
-
 function Archive() {
   const [searchTerm] = useSearchTerm();
-  const searchResults = useNFTSearch(searchTerm);
-  const [curations, setCurations] = useArchiveCurations();
-
-  React.useEffect(() => {
-    setCurations(searchResults);
-  }, [curations]);
+  const curations = useNFTSearch(searchTerm);
 
   return (
     <ArchiveLayout center={curations.length === 0}>
