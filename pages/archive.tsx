@@ -1,15 +1,31 @@
 import React from "react";
 import styled from "styled-components";
-import { useShortenedWallet } from "../components/Account";
+import { ShortenedWallet, useShortenedWallet } from "../components/Account";
 import { ArchiveLayout } from "../components/Layouts";
 import { BigNumber } from "ethers";
 import { useSearchTerm } from "../components/SearchBar";
-import { useNFTSearch } from "../hooks/useNFTSearch";
+import {
+  useGetAllNFTs,
+  useNFTSearch,
+  useNFTSearchFilters,
+} from "../hooks/useNFTSearch";
 import Image from "next/image";
+import { useAtom, atom } from "jotai";
+import { ArchiveCuration } from "../types/curations";
+import { DropdownList } from "../components/DropdownList";
+import { HollowInputContainer } from "../components/Hollow";
+
+const curations = atom<ArchiveCuration[]>([]);
+const useArchiveCurations = () => useAtom(curations);
 
 function Archive() {
   const [searchTerm] = useSearchTerm();
-  const curations = useNFTSearch(searchTerm);
+  const searchResults = useNFTSearch(searchTerm);
+  const [curations, setCurations] = useArchiveCurations();
+
+  React.useEffect(() => {
+    setCurations(searchResults);
+  }, [curations]);
 
   return (
     <ArchiveLayout center={curations.length === 0}>
@@ -39,8 +55,14 @@ function Archive() {
                   <ArchiveTableHeader label="Artist" />
                   <ArchiveTableHeader label="Title" />
                   <ArchiveTableHeader label="Media Type" />
-                  <ArchiveTableHeader label="Marketplace" />
-                  <ArchiveTableHeader label="Curator Wallet" />
+                  <ArchiveTableHeader
+                    label="Marketplace"
+                    filterKey="marketplace"
+                  />
+                  <ArchiveTableHeader
+                    label="Curator Wallet"
+                    filterKey="curatorWallet"
+                  />
                 </tr>
               </thead>
 
@@ -87,7 +109,7 @@ function Archive() {
                           {marketplace}
                         </ArchiveTableDataCell>
                         <ArchiveTableDataCell>
-                          <CuratorWallet wallet={curatorWallet} />
+                          <ShortenedWallet wallet={curatorWallet} />
                         </ArchiveTableDataCell>
                       </ArchiveTableRow>
                       <tr className="h-4" />
@@ -114,32 +136,75 @@ const submissionTimeToDate = (submissionTime: BigNumber | number) => {
   return new Date((time as number) * 1000).toLocaleDateString();
 };
 
-const CuratorWallet: React.FC<{ wallet: string }> = ({ wallet }) => {
-  const short = useShortenedWallet(wallet);
-  return <span>{short}</span>;
-};
-
 const ArchiveTableHeader = (props) => {
   const [dropdownOpen, setDropdownOpen] = React.useState<boolean>(false);
-  const { label } = props;
+  const { label, filterKey } = props;
   return (
     <th>
-      <div className="flex items-center justify-center pb-4">
+      <div className="flex items-center justify-center pb-4 relative">
         {label}
-        <div className="w-2" />
+        {filterKey && (
+          <>
+            <div className="w-2" />
 
-        <Image
-          onClick={() => {
-            setDropdownOpen(!dropdownOpen);
-          }}
-          className={dropdownOpen ? "-rotate-90" : "rotate-90"}
-          src="/chevron.svg"
-          width={16}
-          height={16}
-          alt={`Filter by ${label}`}
-        />
+            <Image
+              onClick={() => {
+                setDropdownOpen(!dropdownOpen);
+              }}
+              className={dropdownOpen ? "-rotate-90" : "rotate-90"}
+              src="/chevron.svg"
+              width={16}
+              height={16}
+              alt={`Filter by ${label}`}
+            />
+            {dropdownOpen && (
+              <ArchiveDropdown
+                label={label}
+                filterKey={filterKey}
+                close={() => setDropdownOpen(false)}
+              />
+            )}
+          </>
+        )}
       </div>
     </th>
+  );
+};
+
+const ArchiveDropdown: React.FC<{
+  label: string;
+  filterKey: string;
+  close: () => void;
+}> = (props) => {
+  //TODO: grey out fields that are usually present but not in current results (this is a maybe)
+  const { label, filterKey, close } = props;
+  const curations = useGetAllNFTs();
+  const [filters, setFilters] = useNFTSearchFilters();
+
+  const updateFilter = (val) => {
+    setFilters((current) => {
+      const updated = { ...current };
+      updated[filterKey] = val;
+      return updated;
+    });
+  };
+
+  const options = Array.from(
+    new Set(curations.map((curation) => curation[filterKey]))
+  ) as string[];
+
+  return (
+    <div
+      className="absolute z-10 h-64 w-64 mb-4 top-10"
+      style={{ backgroundColor: "#1d1d1d" }}
+    >
+      <DropdownList
+        value={filters[filterKey]}
+        onChange={updateFilter}
+        fields={options}
+        close={close}
+      />
+    </div>
   );
 };
 
