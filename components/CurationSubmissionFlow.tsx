@@ -118,7 +118,6 @@ export const CurationSubmissionFlow = (props) => {
             View Transaction
             <div className="w-1" />
             <Image src="/arrow.svg" alt={"link"} height={12} width={12} />
-            <Arrow alt={"link"} height={12} width={12} />
           </a>
           <div className="h-4" />
           <a
