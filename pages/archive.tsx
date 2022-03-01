@@ -14,6 +14,7 @@ import { useAtom, atom } from "jotai";
 import { ArchiveCuration } from "../types/curations";
 import { DropdownList } from "../components/DropdownList";
 import { HollowInputContainer } from "../components/Hollow";
+import { useOnClickOut } from "../hooks/useOnClickOut";
 
 const curations = atom<ArchiveCuration[]>([]);
 const useArchiveCurations = () => useAtom(curations);
@@ -183,6 +184,8 @@ const ArchiveDropdown: React.FC<{
   const { label, filterKey, close } = props;
   const curations = useGetAllNFTs();
   const [filters, setFilters] = useNFTSearchFilters();
+  const ref = React.useRef();
+  useOnClickOut(ref, close);
 
   const updateFilter = (val) => {
     setFilters((current) => {
@@ -202,6 +205,7 @@ const ArchiveDropdown: React.FC<{
     <div
       className="absolute z-10 h-64 w-64 mb-4 top-10"
       style={{ backgroundColor: "#1d1d1d" }}
+      ref={ref}
     >
       <DropdownList
         value={filters[filterKey]}
