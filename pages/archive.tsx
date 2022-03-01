@@ -184,7 +184,9 @@ const ArchiveDropdown: React.FC<{
   const updateFilter = (val) => {
     setFilters((current) => {
       const updated = { ...current };
-      updated[filterKey] = val;
+      if (updated[filterKey] === val) {
+        delete updated[filterKey];
+      } else updated[filterKey] = val;
       return updated;
     });
   };
