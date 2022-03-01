@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { ShortenedWallet, useShortenedWallet } from "../components/Account";
+import { ShortenedWallet } from "../components/Account";
 import { ArchiveLayout } from "../components/Layouts";
 import { BigNumber } from "ethers";
 import { useSearchTerm } from "../components/SearchBar";
