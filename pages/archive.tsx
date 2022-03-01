@@ -54,7 +54,10 @@ function Archive() {
                   <ArchiveTableHeader label="Date" />
                   <ArchiveTableHeader label="Artist" />
                   <ArchiveTableHeader label="Title" />
-                  <ArchiveTableHeader label="Media Type" />
+                  <ArchiveTableHeader
+                    label="Media Type"
+                    filterKey={"mediaType"}
+                  />
                   <ArchiveTableHeader
                     label="Marketplace"
                     filterKey="marketplace"
