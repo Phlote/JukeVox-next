@@ -72,6 +72,8 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
               {...mediaType.input}
               close={() => setDropdownOpen(false)}
               fields={["Audio", "Text", "Video", "Visual Art"]}
+              closeOnSelect
+              borders
             />
           </HollowInputContainer>
           <div className="h-3" />{" "}

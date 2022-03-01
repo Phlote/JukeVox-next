@@ -96,9 +96,9 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
   );
 };
 
-export const useShortenedWallet = (account: string) => {
-  const ENSName = useENSName(account);
-  return ENSName || `${shortenHex(account, 5)}`;
+export const ShortenedWallet: React.FC<{ wallet: string }> = ({ wallet }) => {
+  const ENSName = useENSName(wallet);
+  return <span>{ENSName || `${shortenHex(wallet, 5)}`}</span>;
 };
 
 export default Account;
