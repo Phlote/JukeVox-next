@@ -1,8 +1,9 @@
 import { useWeb3React } from "@web3-react/core";
 import { UserRejectedRequestError } from "@web3-react/injected-connector";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { injected } from "../connectors";
+import { useOnCopy } from "../hooks/useOnCopy";
 import useENSName from "../hooks/web3/useENSName";
 import useMetaMaskOnboarding from "../hooks/web3/useMetaMaskOnboarding";
 
@@ -91,14 +92,16 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
       className="h-full"
       style={{ justifyContent: "center" }}
     >
-      {ENSName || `${shortenHex(account, 5)}`}
+      <ShortenedWallet wallet={account} />
     </HollowInputContainer>
   );
 };
 
 export const ShortenedWallet: React.FC<{ wallet: string }> = ({ wallet }) => {
   const ENSName = useENSName(wallet);
-  return <span>{ENSName || `${shortenHex(wallet, 5)}`}</span>;
+  const ref = useRef();
+  useOnCopy(ref, wallet);
+  return <span ref={ref}>{ENSName || `${shortenHex(wallet, 5)}`}</span>;
 };
 
 export default Account;
