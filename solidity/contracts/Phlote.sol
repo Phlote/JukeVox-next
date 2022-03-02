@@ -2,15 +2,16 @@
 
 pragma solidity ^0.8.0;
 // NFT contract to inherit from.
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+
 // Helper functions OpenZeppelin provides.
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
 
 
-contract Phlote is ERC721, Ownable {
+contract Phlote is ERC721Upgradeable, OwnableUpgradeable {
     //uint256 public editionSize;
     uint256 public contractPrice;
     struct Edition {
@@ -29,7 +30,7 @@ contract Phlote is ERC721, Ownable {
 
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
-    uint256 private nextPostId = 1;
+    uint256 private nextPostId ;
     Edition[] allCurations;
 
     /***MAPS***/
@@ -53,9 +54,14 @@ contract Phlote is ERC721, Ownable {
         uint256 numSold
     );
 
-    constructor() ERC721("content", "SONG") {
+
+    function initialize() initializer public{
         _tokenIds.increment();
+        nextPostId = 1;
+        __ERC721_init("Phlote Curation", "PHLOTE");
     }
+
+    
 
     function mintEdition(uint256 editionId) public payable {
         // require(_tokenIds.current()-1 < editionSize,"Song is sold out!");

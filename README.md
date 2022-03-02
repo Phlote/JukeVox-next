@@ -61,3 +61,15 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ## Tailwind
 
 https://tailwindcss.com/docs/guides/nextjs
+
+## Solidity Development
+
+At the time of writing (March 2 2022) we use rinkeby for our contract. Follow these steps when upgrading the contract:
+
+1. Make your solidity code changes. Note that you must follow the [rules for upgradeable contracts](https://docs.openzeppelin.com/upgrades-plugins/1.x/writing-upgradeable)
+
+2. Under the `/solidity` directory, run `npm run upgrade:rinkeby`. This will update our contract on rinkeby.
+
+3. Copy the the value of `abi` in `/solidity/artifacts/contracts/Phlote.sol/Phlote.json` (should be an array) and replace the contents of `/contracts/Phlote.json` with that array.
+
+4. From `/`, run `npm i`. This will generate new typings for the contract.
