@@ -38,7 +38,7 @@ contract Phlote is ERC721Upgradeable, OwnableUpgradeable {
     mapping(uint256 => Edition) public editions;
     //creates a mapping from ownerId to tokenId
     mapping(address => uint256) public nftHolders;
-    //creates a mapping of the curator to their Submissions
+    //creates a mapping of the submitter to their Submissions
     mapping(address => Edition[]) public curatorSubmissions;
 
     //IMPORTED MAPS
@@ -46,6 +46,8 @@ contract Phlote is ERC721Upgradeable, OwnableUpgradeable {
     mapping(uint256 => uint256) public withdrawnForEdition;
     //creates a mapping from tokenId to the EditionId
     mapping(uint256 => uint256) public tokenToSong;
+    // creates a mapping of editionIds to cosigners
+    mapping(uint256 => address[]) public editionToCosigners;
     /*****EVENTS******/
     event EditionCreated(address sender, uint256 indexed editionId);
     event EditionMinted(
@@ -144,6 +146,10 @@ contract Phlote is ERC721Upgradeable, OwnableUpgradeable {
     
     function getAllCurations() public view returns (Edition[] memory) {
         return allCurations;
+    }
+
+    function cosign(address _curatorWallet, uint256 id) public {
+        editionToCosigners[id].push(_curatorWallet);
     }
 
     //-----IMPORTEDFUNCTIONS-----

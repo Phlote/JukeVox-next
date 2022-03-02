@@ -14,10 +14,13 @@ import { DropdownList } from "../components/DropdownList";
 import { useOnClickOut } from "../hooks/useOnClickOut";
 import Close from "../public/close.svg";
 import classNames from "classnames";
+import { usePhlote } from "../hooks/web3/usePhlote";
 
 function Archive() {
   const [searchTerm] = useSearchTerm();
   const curations = useNFTSearch(searchTerm);
+
+  const phlote = usePhlote();
 
   return (
     <ArchiveLayout center={curations.length === 0}>
@@ -58,6 +61,7 @@ function Archive() {
                     label="Curator Wallet"
                     filterKey="curatorWallet"
                   />
+                  <ArchiveTableHeader label="Rating" />
                 </tr>
               </thead>
 
@@ -105,6 +109,9 @@ function Archive() {
                         </ArchiveTableDataCell>
                         <ArchiveTableDataCell>
                           <ShortenedWallet wallet={curatorWallet} />
+                        </ArchiveTableDataCell>
+                        <ArchiveTableDataCell>
+                          <button onClick={() => {}}>Cosign!</button>
                         </ArchiveTableDataCell>
                       </ArchiveTableRow>
                       <tr className="h-4" />
