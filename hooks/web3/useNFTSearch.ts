@@ -15,7 +15,7 @@ export const useGetAllNFTs = () => {
 
   React.useEffect(() => {
     const getContent = () => {
-      phlote.getAllCurationsButWithPizzaz().then((content) => {
+      phlote.getAllCurationsAgainButWithASmallChange().then((content) => {
         const reversed = ([...content] as ArchiveCuration[]).reverse();
         setNFTs(reversed);
       });

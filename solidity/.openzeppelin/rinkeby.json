@@ -1,0 +1,600 @@
+{
+  "manifestVersion": "3.2",
+  "admin": {
+    "address": "0xB51966964E23861AcB3371189a1be01AC9aa80B3",
+    "txHash": "0x54bf10fc78852b5718d796e80b6b26b71417004eff7b278d4cfb64a3645d680c"
+  },
+  "proxies": [
+    {
+      "address": "0xa5ca696099F6E54c5391205D40A49a688117c997",
+      "txHash": "0xe771bd234cc11b2c55f8d8ccd767133dcf22be1d509d0e698af2849cb8e4e4a6",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "314bfdd4a1c7f1a238d1cdbd756421137bb7a23002976f77e98eb7fb3aed01f7": {
+      "address": "0x1cCaC7420e2A1bA336ebF773b82D48790cFB2De9",
+      "txHash": "0xe8b44194925c0a53721a7326ad7dd09fbd022b54eb63c92a2891ad8e177e5887",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:44"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC165Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol:41"
+          },
+          {
+            "label": "_name",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_string_storage",
+            "contract": "ERC721Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:25"
+          },
+          {
+            "label": "_symbol",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_string_storage",
+            "contract": "ERC721Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:28"
+          },
+          {
+            "label": "_owners",
+            "offset": 0,
+            "slot": "103",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "ERC721Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:31"
+          },
+          {
+            "label": "_balances",
+            "offset": 0,
+            "slot": "104",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "ERC721Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:34"
+          },
+          {
+            "label": "_tokenApprovals",
+            "offset": 0,
+            "slot": "105",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "ERC721Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:37"
+          },
+          {
+            "label": "_operatorApprovals",
+            "offset": 0,
+            "slot": "106",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "ERC721Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:40"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "107",
+            "type": "t_array(t_uint256)44_storage",
+            "contract": "ERC721Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:458"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
+          },
+          {
+            "label": "contractPrice",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_uint256",
+            "contract": "Phlote",
+            "src": "contracts/Phlote.sol:16"
+          },
+          {
+            "label": "_tokenIds",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_struct(Counter)1799_storage",
+            "contract": "Phlote",
+            "src": "contracts/Phlote.sol:32"
+          },
+          {
+            "label": "nextPostId",
+            "offset": 0,
+            "slot": "203",
+            "type": "t_uint256",
+            "contract": "Phlote",
+            "src": "contracts/Phlote.sol:33"
+          },
+          {
+            "label": "allCurations",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_array(t_struct(Edition)2107_storage)dyn_storage",
+            "contract": "Phlote",
+            "src": "contracts/Phlote.sol:34"
+          },
+          {
+            "label": "editions",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_mapping(t_uint256,t_struct(Edition)2107_storage)",
+            "contract": "Phlote",
+            "src": "contracts/Phlote.sol:38"
+          },
+          {
+            "label": "nftHolders",
+            "offset": 0,
+            "slot": "206",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "Phlote",
+            "src": "contracts/Phlote.sol:40"
+          },
+          {
+            "label": "curatorSubmissions",
+            "offset": 0,
+            "slot": "207",
+            "type": "t_mapping(t_address,t_array(t_struct(Edition)2107_storage)dyn_storage)",
+            "contract": "Phlote",
+            "src": "contracts/Phlote.sol:42"
+          },
+          {
+            "label": "withdrawnForEdition",
+            "offset": 0,
+            "slot": "208",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "Phlote",
+            "src": "contracts/Phlote.sol:46"
+          },
+          {
+            "label": "tokenToSong",
+            "offset": 0,
+            "slot": "209",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "Phlote",
+            "src": "contracts/Phlote.sol:48"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_array(t_string_storage)dyn_storage": {
+            "label": "string[]"
+          },
+          "t_array(t_struct(Edition)2107_storage)dyn_storage": {
+            "label": "struct Phlote.Edition[]"
+          },
+          "t_array(t_uint256)44_storage": {
+            "label": "uint256[44]"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_mapping(t_address,t_array(t_struct(Edition)2107_storage)dyn_storage)": {
+            "label": "mapping(address => struct Phlote.Edition[])"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)"
+          },
+          "t_mapping(t_uint256,t_struct(Edition)2107_storage)": {
+            "label": "mapping(uint256 => struct Phlote.Edition)"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)"
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_struct(Counter)1799_storage": {
+            "label": "struct Counters.Counter",
+            "members": [
+              {
+                "label": "_value",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_struct(Edition)2107_storage": {
+            "label": "struct Phlote.Edition",
+            "members": [
+              {
+                "label": "curatorWallet",
+                "type": "t_address"
+              },
+              {
+                "label": "artistWallet",
+                "type": "t_address"
+              },
+              {
+                "label": "mediaURI",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "marketplace",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "tags",
+                "type": "t_array(t_string_storage)dyn_storage"
+              },
+              {
+                "label": "artistName",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "mediaType",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "mediaTitle",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "numSold",
+                "type": "t_uint256"
+              },
+              {
+                "label": "tokenURI",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "submissionTime",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_uint256": {
+            "label": "uint256"
+          }
+        }
+      }
+    },
+    "8f974fd7ae4281df0cf4891c7ef58849f1d595861841132332839a35871d5e46": {
+      "address": "0xc450E315c01830D0D49DC790FbE9ED484aab03eA",
+      "txHash": "0xc76bcfc55185996828bdf8d89e014f6e35048fac1acfe6f239f8c9741605e795",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:44"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC165Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol:41"
+          },
+          {
+            "label": "_name",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_string_storage",
+            "contract": "ERC721Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:25"
+          },
+          {
+            "label": "_symbol",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_string_storage",
+            "contract": "ERC721Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:28"
+          },
+          {
+            "label": "_owners",
+            "offset": 0,
+            "slot": "103",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "ERC721Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:31"
+          },
+          {
+            "label": "_balances",
+            "offset": 0,
+            "slot": "104",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "ERC721Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:34"
+          },
+          {
+            "label": "_tokenApprovals",
+            "offset": 0,
+            "slot": "105",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "ERC721Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:37"
+          },
+          {
+            "label": "_operatorApprovals",
+            "offset": 0,
+            "slot": "106",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "ERC721Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:40"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "107",
+            "type": "t_array(t_uint256)44_storage",
+            "contract": "ERC721Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:458"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
+          },
+          {
+            "label": "contractPrice",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_uint256",
+            "contract": "Phlote",
+            "src": "contracts/Phlote.sol:16"
+          },
+          {
+            "label": "_tokenIds",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_struct(Counter)1799_storage",
+            "contract": "Phlote",
+            "src": "contracts/Phlote.sol:32"
+          },
+          {
+            "label": "nextPostId",
+            "offset": 0,
+            "slot": "203",
+            "type": "t_uint256",
+            "contract": "Phlote",
+            "src": "contracts/Phlote.sol:33"
+          },
+          {
+            "label": "allCurations",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_array(t_struct(Edition)2107_storage)dyn_storage",
+            "contract": "Phlote",
+            "src": "contracts/Phlote.sol:34"
+          },
+          {
+            "label": "editions",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_mapping(t_uint256,t_struct(Edition)2107_storage)",
+            "contract": "Phlote",
+            "src": "contracts/Phlote.sol:38"
+          },
+          {
+            "label": "nftHolders",
+            "offset": 0,
+            "slot": "206",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "Phlote",
+            "src": "contracts/Phlote.sol:40"
+          },
+          {
+            "label": "curatorSubmissions",
+            "offset": 0,
+            "slot": "207",
+            "type": "t_mapping(t_address,t_array(t_struct(Edition)2107_storage)dyn_storage)",
+            "contract": "Phlote",
+            "src": "contracts/Phlote.sol:42"
+          },
+          {
+            "label": "withdrawnForEdition",
+            "offset": 0,
+            "slot": "208",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "Phlote",
+            "src": "contracts/Phlote.sol:46"
+          },
+          {
+            "label": "tokenToSong",
+            "offset": 0,
+            "slot": "209",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "Phlote",
+            "src": "contracts/Phlote.sol:48"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_array(t_string_storage)dyn_storage": {
+            "label": "string[]"
+          },
+          "t_array(t_struct(Edition)2107_storage)dyn_storage": {
+            "label": "struct Phlote.Edition[]"
+          },
+          "t_array(t_uint256)44_storage": {
+            "label": "uint256[44]"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_mapping(t_address,t_array(t_struct(Edition)2107_storage)dyn_storage)": {
+            "label": "mapping(address => struct Phlote.Edition[])"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)"
+          },
+          "t_mapping(t_uint256,t_struct(Edition)2107_storage)": {
+            "label": "mapping(uint256 => struct Phlote.Edition)"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)"
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_struct(Counter)1799_storage": {
+            "label": "struct Counters.Counter",
+            "members": [
+              {
+                "label": "_value",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_struct(Edition)2107_storage": {
+            "label": "struct Phlote.Edition",
+            "members": [
+              {
+                "label": "curatorWallet",
+                "type": "t_address"
+              },
+              {
+                "label": "artistWallet",
+                "type": "t_address"
+              },
+              {
+                "label": "mediaURI",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "marketplace",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "tags",
+                "type": "t_array(t_string_storage)dyn_storage"
+              },
+              {
+                "label": "artistName",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "mediaType",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "mediaTitle",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "numSold",
+                "type": "t_uint256"
+              },
+              {
+                "label": "tokenURI",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "submissionTime",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_uint256": {
+            "label": "uint256"
+          }
+        }
+      }
+    }
+  }
+}

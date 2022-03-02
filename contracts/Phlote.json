@@ -1,10 +1,5 @@
 [
   {
-    "inputs": [],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
     "anonymous": false,
     "inputs": [
       {
@@ -396,6 +391,76 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "getAllCurationsAgainButWithASmallChange",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "curatorWallet",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "artistWallet",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "mediaURI",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "marketplace",
+            "type": "string"
+          },
+          {
+            "internalType": "string[]",
+            "name": "tags",
+            "type": "string[]"
+          },
+          {
+            "internalType": "string",
+            "name": "artistName",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "mediaType",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "mediaTitle",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "numSold",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "tokenURI",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "submissionTime",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct Phlote.Edition[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -488,6 +553,13 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/michaelanderjaska/jukevox-next/solidity/contracts/Phlote.sol": {
-      "lastModificationDate": 1646251596322,
-      "contentHash": "15bc8af0dc12be588904967be97f229e",
+      "lastModificationDate": 1646253031483,
+      "contentHash": "79d032950048986b476ab025b8e551c1",
       "sourceName": "contracts/Phlote.sol",
       "solcConfig": {
         "version": "0.8.4",
