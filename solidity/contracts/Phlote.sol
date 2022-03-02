@@ -146,10 +146,6 @@ contract Phlote is ERC721Upgradeable, OwnableUpgradeable {
         return allCurations;
     }
 
-      function getAllCurationsAgainButWithASmallChange() public view returns (Edition[] memory) {
-        return allCurations;
-    }
-
     //-----IMPORTEDFUNCTIONS-----
     // function withdrawFunds(uint256 editionId, address payable person) external {
     //     // Compute the amount available for withdrawing from this edition.

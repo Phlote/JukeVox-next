@@ -10,7 +10,7 @@
     "hardhat": "^2.8.3"
   },
   "scripts": {
-    "compile": "rm -rf artifacts && npx hardhat compile",
+    "compile": "npx hardhat compile",
     "deploy:rinkeby": "npx hardhat run scripts/deploy-upgradeable.js --network rinkeby",
     "upgrade:rinkeby": "npx hardhat run scripts/upgrade.js --network rinkeby"
   },
