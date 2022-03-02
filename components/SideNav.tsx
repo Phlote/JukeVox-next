@@ -26,7 +26,7 @@ export const SideNav = ({ children, onClose, open }) => {
     >
       {open && (
         <div
-          className="opacity-0  flex-grow min-h-full z-20"
+          className="opacity-0 flex-grow min-h-full z-20"
           onClick={onClose}
         ></div>
       )}
