@@ -1,8 +1,9 @@
 {
   "name": "hardhat-project",
   "devDependencies": {
-    "@nomiclabs/hardhat-ethers": "^2.0.4",
+    "@nomiclabs/hardhat-ethers": "^2.0.5",
     "@nomiclabs/hardhat-waffle": "^2.0.2",
+    "@openzeppelin/hardhat-upgrades": "^1.15.0",
     "chai": "^4.3.6",
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.5.4",
@@ -10,7 +11,8 @@
   },
   "scripts": {
     "compile": "rm -rf artifacts && npx hardhat compile",
-    "deploy:rinkeby": "npx hardhat run scripts/deploy.js --network rinkeby"
+    "deploy:rinkeby": "npx hardhat run scripts/deploy-upgradeable.js --network rinkeby",
+    "upgrade:rinkeby": "npx hardhat run scripts/upgrade.js --network rinkeby"
   },
   "dependencies": {
     "dotenv": "^16.0.0"

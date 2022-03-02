@@ -57,6 +57,8 @@ contract Phlote is ERC721, Ownable {
         _tokenIds.increment();
     }
 
+    
+
     function mintEdition(uint256 editionId) public payable {
         // require(_tokenIds.current()-1 < editionSize,"Song is sold out!");
         // require(
