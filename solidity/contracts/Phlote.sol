@@ -15,6 +15,7 @@ contract Phlote is ERC721Upgradeable, OwnableUpgradeable {
     //uint256 public editionSize;
     uint256 public contractPrice;
     struct Edition {
+        uint256 id;
         address curatorWallet;
         address artistWallet;
         string mediaURI;
@@ -105,6 +106,7 @@ contract Phlote is ERC721Upgradeable, OwnableUpgradeable {
         */
 
         Edition memory curation = Edition({
+            id:nextPostId,
             curatorWallet: _curatorWallet,
             mediaURI: _mediaURI,
             marketplace: _marketplace,
