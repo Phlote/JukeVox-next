@@ -203,6 +203,11 @@
     "name": "curatorSubmissions",
     "outputs": [
       {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
         "internalType": "address",
         "name": "curatorWallet",
         "type": "address"
@@ -267,6 +272,11 @@
     "name": "editions",
     "outputs": [
       {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
         "internalType": "address",
         "name": "curatorWallet",
         "type": "address"
@@ -326,6 +336,11 @@
     "outputs": [
       {
         "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
           {
             "internalType": "address",
             "name": "curatorWallet",
@@ -421,6 +436,11 @@
     "outputs": [
       {
         "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
           {
             "internalType": "address",
             "name": "curatorWallet",
