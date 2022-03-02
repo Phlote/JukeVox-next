@@ -15,6 +15,7 @@
     "upgrade:rinkeby": "npx hardhat run scripts/upgrade.js --network rinkeby"
   },
   "dependencies": {
+    "@openzeppelin/contracts": "^4.5.0",
     "@openzeppelin/contracts-upgradeable": "^4.5.1",
     "dotenv": "^16.0.0"
   }
