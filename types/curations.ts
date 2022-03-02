@@ -5,8 +5,11 @@ export type ArchiveCuration = Curation & {
   submissionTime: BigNumber | number;
 };
 
+// TODO: use our generated types
+
 type MediaType = "Audio" | "Text" | "Video" | "Visual Art";
 export interface Curation {
+  id: BigNumber;
   mediaType: MediaType;
   artistName: string;
   artistWallet: string;

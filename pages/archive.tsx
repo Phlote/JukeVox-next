@@ -14,10 +14,27 @@ import { DropdownList } from "../components/DropdownList";
 import { useOnClickOut } from "../hooks/useOnClickOut";
 import Close from "../public/close.svg";
 import classNames from "classnames";
+import { usePhlote } from "../hooks/web3/usePhlote";
 
 function Archive() {
   const [searchTerm] = useSearchTerm();
   const curations = useNFTSearch(searchTerm);
+  const phlote = usePhlote();
+
+  React.useEffect(() => {
+    if (phlote) {
+      phlote.on("*", (res) => {
+        console.log(res);
+        if (res.event === "EditionCosigned") {
+          console.log(res);
+        }
+      });
+    }
+
+    return () => {
+      phlote?.removeAllListeners();
+    };
+  }, [phlote]);
 
   return (
     <ArchiveLayout center={curations.length === 0}>
@@ -58,6 +75,7 @@ function Archive() {
                     label="Curator Wallet"
                     filterKey="curatorWallet"
                   />
+                  <ArchiveTableHeader label="Rating" />
                 </tr>
               </thead>
 
@@ -65,6 +83,7 @@ function Archive() {
                 <tr className="h-4" />
                 {curations?.map((curation) => {
                   const {
+                    id,
                     curatorWallet,
                     artistName,
                     mediaTitle,
@@ -105,6 +124,15 @@ function Archive() {
                         </ArchiveTableDataCell>
                         <ArchiveTableDataCell>
                           <ShortenedWallet wallet={curatorWallet} />
+                        </ArchiveTableDataCell>
+                        <ArchiveTableDataCell>
+                          <button
+                            onClick={() => {
+                              phlote.cosign(id);
+                            }}
+                          >
+                            Cosign!
+                          </button>
                         </ArchiveTableDataCell>
                       </ArchiveTableRow>
                       <tr className="h-4" />
