@@ -1,5 +1,7 @@
 import React from "react";
 import { usePhlote } from "../hooks/web3/usePhlote";
+import Image from "next/image";
+import { useWeb3React } from "@web3-react/core";
 
 export const RatingsMeter = (props) => {
   const { editionId } = props;
@@ -31,23 +33,44 @@ export const RatingsMeter = (props) => {
     setCosigns(currentCosigns);
   };
 
-  const onCosign = () => {
+  const onCosign = async () => {
     setCosigns([...cosigns, "pending"]);
-    phlote.cosign(editionId);
+    try {
+      await phlote.cosign(editionId);
+    } catch (e) {
+      console.log("here");
+      setCosigns((current) => current.slice(0, current.length - 1));
+    }
   };
 
   return (
-    <div className="flex">
+    <div className="flex gap-1 justify-center">
       {Array(5)
         .fill(null)
         .map((_, idx) => {
           if (idx > cosigns.length - 1) {
-            return <div onClick={onCosign}> Cosign here!</div>;
+            return (
+              <div onClick={onCosign} className="h-6 w-6 relative">
+                <Image
+                  src="/clear_diamond.png"
+                  alt="cosign here"
+                  layout="fill"
+                />
+              </div>
+            );
           } else {
             if (cosigns[idx] === "pending") {
-              return <div> Pending </div>;
+              return (
+                <div className="h-6 w-6 opacity-25 relative">
+                  <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
+                </div>
+              );
             } else {
-              return <div>Cosigned </div>;
+              return (
+                <div className="h-6 w-6 relative">
+                  <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
+                </div>
+              );
             }
           }
         })}
