@@ -15,6 +15,7 @@ import { useOnClickOut } from "../hooks/useOnClickOut";
 import Close from "../public/close.svg";
 import classNames from "classnames";
 import { usePhlote } from "../hooks/web3/usePhlote";
+import { RatingsMeter } from "../components/RatingsMeter";
 
 function Archive() {
   const [searchTerm] = useSearchTerm();
@@ -110,7 +111,9 @@ function Archive() {
                         <ArchiveTableDataCell>
                           <ShortenedWallet wallet={curatorWallet} />
                         </ArchiveTableDataCell>
-                        <ArchiveTableDataCell></ArchiveTableDataCell>
+                        <ArchiveTableDataCell>
+                          <RatingsMeter editionId={id} />
+                        </ArchiveTableDataCell>
                       </ArchiveTableRow>
                       <tr className="h-4" />
                     </>
