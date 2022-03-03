@@ -14,10 +14,8 @@ export const RatingsMeter = (props) => {
       getCosigns();
 
       phlote.on("*", (res) => {
-        console.log(res);
         if (res.event === "EditionCosigned") {
-          console.log(res);
-          setCosigns([...cosigns, res.args[0]]);
+          getCosigns();
         }
       });
     }
