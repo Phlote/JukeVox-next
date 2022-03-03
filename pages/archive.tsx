@@ -21,21 +21,6 @@ function Archive() {
   const curations = useNFTSearch(searchTerm);
   const phlote = usePhlote();
 
-  React.useEffect(() => {
-    if (phlote) {
-      phlote.on("*", (res) => {
-        console.log(res);
-        if (res.event === "EditionCosigned") {
-          console.log(res);
-        }
-      });
-    }
-
-    return () => {
-      phlote?.removeAllListeners();
-    };
-  }, [phlote]);
-
   return (
     <ArchiveLayout center={curations.length === 0}>
       <div className="flex flex-col mt-24 min-h-full">
@@ -125,15 +110,7 @@ function Archive() {
                         <ArchiveTableDataCell>
                           <ShortenedWallet wallet={curatorWallet} />
                         </ArchiveTableDataCell>
-                        <ArchiveTableDataCell>
-                          <button
-                            onClick={() => {
-                              phlote.cosign(id);
-                            }}
-                          >
-                            Cosign!
-                          </button>
-                        </ArchiveTableDataCell>
+                        <ArchiveTableDataCell></ArchiveTableDataCell>
                       </ArchiveTableRow>
                       <tr className="h-4" />
                     </>
