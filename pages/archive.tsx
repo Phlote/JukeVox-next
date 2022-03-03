@@ -112,7 +112,10 @@ function Archive() {
                           <ShortenedWallet wallet={curatorWallet} />
                         </ArchiveTableDataCell>
                         <ArchiveTableDataCell>
-                          <RatingsMeter editionId={id} />
+                          <RatingsMeter
+                            editionId={id}
+                            txnPending={transactionPending}
+                          />
                         </ArchiveTableDataCell>
                       </ArchiveTableRow>
                       <tr className="h-4" />
