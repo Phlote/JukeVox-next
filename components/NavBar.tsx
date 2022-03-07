@@ -22,7 +22,7 @@ export const NavBar = () => {
   const allowCurate = active && isCurator.data && isCurator.data.isCurator;
 
   return (
-    <div className="py-4 absolute w-screen px-12">
+    <div className="py-4 flex-none w-screen px-12">
       <div className="relative flex flex-row" style={{ height: 70 }}>
         <Link href="/" passHref>
           <h1 className="text-6xl cursor-pointer">Phlote</h1>
