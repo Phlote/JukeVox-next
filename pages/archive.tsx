@@ -21,7 +21,7 @@ function Archive() {
 
   return (
     <ArchiveLayout>
-      <div className="flex flex-col min-h-full">
+      <div className="flex flex-col">
         <table className="table-fixed w-full text-center mt-8">
           <thead>
             <tr
