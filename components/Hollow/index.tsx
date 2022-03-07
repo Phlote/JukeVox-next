@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import tw, { styled } from "twin.macro";
 
 export const HollowButtonContainer = styled.div`
   background: ${(props) => props.backgroundColor ?? "rgba(0, 0, 0, 0.47)"};
@@ -19,26 +19,35 @@ export const HollowButtonContainer = styled.div`
   }
 `;
 
-export const HollowInputContainer = styled.div`
-  background: ${(props) =>
-    props.backgroundColor ?? "rgba(242, 244, 248, 0.17)"};
+// export const HollowInputContainer = styled.div`
+//   ${tw`bg-phlote-container text-white p-4 rounded-full flex flex-grow flex-row items-center justify-start`};
 
-  color: white;
-  padding: 1rem;
-  border-radius: 9999px;
+//  background: ${(props) =>
+//     props.backgroundColor ?? "rgba(242, 244, 248, 0.17)"};
+//   color: white;
+//   padding: 1rem;
+//   border-radius: 9999px;
+//   display: flex;
+//   flex-grow: 1;
+//   flex-direction: row;
+//   align-items: center;
+//   justify-content: left;
 
-  display: flex;
-  flex-grow: 1;
-  flex-direction: row;
-  align-items: center;
-  justify-content: left;
-  max-height: ${(props) => props.type === "form" && "3.5rem"};
-  border: ${(props) => props.type === "form" && "1px white solid"};
+//    max-height: ${(props) => props.type === "form" && "3.5rem"};
+//   border: ${(props) => props.type === "form" && "1px white solid"};
+// `;
 
-  &:focus {
-    outline: none;
-  }
+// export const HollowInputContainer = styled.div(({ form }) => [
+//   // form ? max
+//   tw`
+//   bg-phlote-container text-white p-4 rounded-full flex flex-grow flex-row items-center justify-start
+//   `,
+// ]);
+
+export const HollowInputContainer = tw.div`
+bg-phlote-container text-white p-4 rounded-full flex flex-grow flex-row items-center justify-start
 `;
+
 export const HollowInput = styled.input`
   background-color: transparent;
   opacity: 100%;

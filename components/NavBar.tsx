@@ -30,19 +30,7 @@ export const NavBar = () => {
 
         <div className="flex-grow" />
         <div className="w-4" />
-        {/* <div
-          className="rounded-full cursor-pointer flex justify-center items-center h-16 w-16"
-          style={{
-            backgroundColor: "rgba(242, 244, 248, 0.17)",
-          }}
-        >
-          <Image
-            src="/app-drawer.svg"
-            alt="app-drawer"
-            height={32}
-            width={32}
-          ></Image>
-        </div> */}
+
         {active && (
           <>
             <NavBarElementContainer>

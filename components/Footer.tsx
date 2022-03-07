@@ -5,7 +5,7 @@ import Clock from "./Clock";
 
 export const Footer: React.FC = (props) => {
   return (
-    <FooterContainer className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-3 gap-4 absolute h-14 bottom-0 w-screen bg-phlote-container">
       <div className="my-auto ml-8">
         <Clock />
       </div>
@@ -44,14 +44,6 @@ export const Footer: React.FC = (props) => {
           </a>
         </div>
       </div>
-    </FooterContainer>
+    </div>
   );
 };
-
-const FooterContainer = styled.div`
-  position: absolute;
-  width: 100vw;
-  background: rgba(242, 244, 248, 0.17);
-  bottom: 0;
-  height: 3.5rem;
-`;
