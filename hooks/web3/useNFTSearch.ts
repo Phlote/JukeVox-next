@@ -54,7 +54,8 @@ export const useNFTSearch = (searchTerm = "") => {
   const nfts = useGetAllNFTs();
   const [filters] = useNFTSearchFilters();
   const searcher = new FuzzySearch(nfts);
-  const searchResults = searcher.search(searchTerm + " ");
+  const searchResults = searcher.search(searchTerm.trim());
+
   const filtered = searchResults
     .map((result) => {
       if (isPartialMatch(result, filters)) return result;
