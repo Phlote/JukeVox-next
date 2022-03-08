@@ -46,5 +46,5 @@ coverage.json
 /typechain
 
 #Hardhat files
-/cache
-/artifacts
+/solidity/cache
+/solidity/rtifacts
