@@ -47,6 +47,10 @@ contract Phlote is ERC721Upgradeable, OwnableUpgradeable {
     mapping(uint256 => uint256) public withdrawnForEdition;
     //creates a mapping from tokenId to the EditionId
     mapping(uint256 => uint256) public tokenToSong;
+    // creates a mapping of editionIds to cosigners
+    mapping(uint256 => address[]) public editionIdToCosigns;
+    // mapping that helps determine if a curator has cosigned something
+    mapping(address => mapping(uint256 => bool)) public curatorHasCosigned;
     /*****EVENTS******/
     event EditionCreated(address sender, uint256 indexed editionId);
     event EditionMinted(
@@ -54,6 +58,8 @@ contract Phlote is ERC721Upgradeable, OwnableUpgradeable {
         uint256 tokenId,
         uint256 numSold
     );
+    event EditionCosigned(address cosigner, uint256 indexed editionId);
+
 
 
     function initialize() initializer public{
@@ -146,6 +152,19 @@ contract Phlote is ERC721Upgradeable, OwnableUpgradeable {
     
     function getAllCurations() public view returns (Edition[] memory) {
         return allCurations;
+    }
+
+    function cosign(uint256 editionId) public payable {
+        require(editionIdToCosigns[editionId].length < 5,"A submission can only have 5 cosigns!");
+        require(curatorHasCosigned[msg.sender][editionId], "You can only cosign a submission once!");
+        editionIdToCosigns[editionId].push(msg.sender); 
+        curatorHasCosigned[msg.sender][editionId]=true;
+        emit EditionCosigned(msg.sender, editionId);
+
+    }
+
+    function getCosigns(uint256 editionId) public view returns (address[] memory) {
+       return editionIdToCosigns[editionId];
     }
 
     //-----IMPORTEDFUNCTIONS-----
