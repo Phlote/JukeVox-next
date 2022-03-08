@@ -42,6 +42,7 @@ function Archive() {
                 label="Curator Wallet"
                 filterKey="curatorWallet"
               />
+              <ArchiveTableHeader label="Rating" />
             </tr>
           </thead>
 
@@ -50,6 +51,7 @@ function Archive() {
               <tr className="h-4" />
               {curations?.map((curation) => {
                 const {
+                  id,
                   curatorWallet,
                   artistName,
                   mediaTitle,
@@ -84,6 +86,12 @@ function Archive() {
                       <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>
                         <ShortenedWallet wallet={curatorWallet} />
+                      </ArchiveTableDataCell>
+                      <ArchiveTableDataCell>
+                        <RatingsMeter
+                          editionId={id}
+                          txnPending={transactionPending}
+                        />
                       </ArchiveTableDataCell>
                     </ArchiveTableRow>
                     <tr className="h-4" />
