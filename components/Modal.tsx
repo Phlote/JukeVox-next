@@ -2,6 +2,7 @@ import { useWeb3React } from "@web3-react/core";
 import { atom, useAtom } from "jotai";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import tw from "twin.macro";
 import { NETWORKS, RINKEBY_CHAIN_ID } from "../constants";
 import { HollowButtonContainer, HollowButton } from "./Hollow";
 
@@ -29,14 +30,10 @@ export const Modal: React.FC<ModalProps> = ({ children, open, onClose }) => {
 };
 
 const ModalContainer = styled.div`
-  position: absolute;
+  ${tw`absolute text-white p-4 bg-phlote-ff-modal`}
   width: 60rem;
   height: 32rem;
-
-  color: white;
-  padding: 1rem;
   border-radius: 100px;
-  background: #292929;
   @supports (backdrop-filter: none) {
     background: linear-gradient(
         85.96deg,

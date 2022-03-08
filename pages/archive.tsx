@@ -14,6 +14,7 @@ import { DropdownList } from "../components/DropdownList";
 import { useOnClickOut } from "../hooks/useOnClickOut";
 import Close from "../public/close.svg";
 import classNames from "classnames";
+import tw from "twin.macro";
 
 function Archive() {
   const [searchTerm] = useSearchTerm();
@@ -217,14 +218,7 @@ const ArchiveDropdown: React.FC<{
 };
 
 const ArchiveTableRow = styled.tr`
-  background: ${(props) =>
-    props.backgroundColor ?? "rgba(242, 244, 248, 0.17)"};
-
-  color: white;
-  height: 3.5rem;
-  align-items: center;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  ${tw`bg-phlote-container text-white h-14 items-center py-4 `}
 
   &:first-child {
     border-radius: 999px 0 0 999px;
@@ -236,12 +230,7 @@ const ArchiveTableRow = styled.tr`
 `;
 
 const ArchiveTableDataCell = styled.td`
-  background: ${(props) =>
-    props.backgroundColor ?? "rgba(242, 244, 248, 0.17)"};
-
-  color: white;
-  height: 3.5rem;
-  align-items: center;
+  ${tw`bg-phlote-container text-white h-14 items-center`}
 
   &:first-child {
     border-radius: 999px 0 0 999px;

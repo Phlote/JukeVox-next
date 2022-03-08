@@ -8,6 +8,7 @@ import { useIsCurator } from "../hooks/useIsCurator";
 import { SearchBar } from "./SearchBar";
 import { useRouter } from "next/router";
 import useEagerConnect from "../hooks/web3/useEagerConnect";
+import tw from "twin.macro";
 
 export const NavBar = () => {
   const triedToEagerConnect = useEagerConnect();
@@ -88,7 +89,4 @@ export const NavBar = () => {
   );
 };
 
-const NavBarElementContainer = styled.div`
-  width: 10rem;
-  height: 4rem;
-`;
+const NavBarElementContainer = tw.div`w-40 h-16`;
