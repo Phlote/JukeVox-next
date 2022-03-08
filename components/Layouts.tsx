@@ -37,7 +37,7 @@ export const ArchiveLayout: React.FC<ArchiveLayoutProps> = ({
   center,
 }) => {
   return (
-    <div className="min-h-screen flex flex-col w-full overflow-y-auto	">
+    <div className="h-screen flex flex-col w-full overflow-y-auto">
       <Head>
         <title>Phlote Search</title>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -50,7 +50,7 @@ export const ArchiveLayout: React.FC<ArchiveLayoutProps> = ({
 
       <NavBar />
       <div
-        className="container flex justify-center mx-auto max-h-max"
+        className="container flex justify-center mx-auto flex-grow"
         style={center ? { alignItems: "center", flexGrow: 1 } : undefined}
       >
         {children}

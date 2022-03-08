@@ -4,6 +4,8 @@ import Image from "next/image";
 import React from "react";
 import { useWeb3React } from "@web3-react/core";
 import { injected } from "../connectors";
+import Close from "../public/close.svg";
+import { useKeyPress } from "../hooks/useKeyPress";
 
 const searchTermAtom = atom<string>("");
 export const useSearchTerm = () => useAtom(searchTermAtom);
@@ -16,6 +18,10 @@ export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
   const { active, activate } = useWeb3React();
   const [searchTerm, setSearchTerm] = useSearchTerm();
   const inputRef = React.useRef(null);
+
+  useKeyPress("Escape", () => {
+    if (inputRef.current === document.activeElement) setSearchTerm("");
+  });
 
   return (
     <div className="w-80 h-16" style={{ lineHeight: "0.5rem" }}>
@@ -34,8 +40,17 @@ export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
             setSearchTerm(value);
           }}
           value={searchTerm}
+          disabled={!active}
           placeholder={active ? placeholder : "Connect your wallet to search"}
         />
+        {searchTerm && (
+          <div
+            className="w-4 h-4 cursor-pointer  flex items-center justify-center"
+            onClick={() => setSearchTerm("")}
+          >
+            <Close fill="white" />
+          </div>
+        )}
       </HollowInputContainer>
     </div>
   );
