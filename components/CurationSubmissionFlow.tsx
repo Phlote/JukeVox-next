@@ -7,7 +7,7 @@ import { CurationSubmissionForm } from "./Forms/CurationSubmissionForm";
 import { NFT_MINT_CONTRACT_RINKEBY } from "../contracts/addresses";
 import { BigNumber } from "ethers";
 import { Curation } from "../types/curations";
-import { useSearchNFTs } from "../hooks/web3/useNFTSearch";
+import { useAllSubmissions } from "../hooks/web3/useNFTSearch";
 import { usePhlote } from "../hooks/web3/usePhlote";
 
 export const CurationSubmissionFlow = (props) => {
@@ -17,7 +17,7 @@ export const CurationSubmissionFlow = (props) => {
   const [txnHash, setTxnHash] = useState<string>("0x0");
   const [nftMintId, setNFTMintId] = useState<number | "Loading">("Loading");
   const [loading, setLoading] = useState<boolean>(false);
-  const [, setNFTs] = useSearchNFTs();
+  const { setSubmissions } = useAllSubmissions();
 
   const phloteContract = usePhlote();
 
@@ -77,7 +77,7 @@ export const CurationSubmissionFlow = (props) => {
       console.log(res);
       setTxnHash(res.hash);
       setPage(1);
-      setNFTs((curations) => [
+      setSubmissions((curations) => [
         {
           curatorWallet: account,
           ...curationData,
