@@ -156,7 +156,7 @@ contract Phlote is ERC721Upgradeable, OwnableUpgradeable {
 
     function cosign(uint256 editionId) public payable {
         require(editionIdToCosigns[editionId].length < 5,"A submission can only have 5 cosigns!");
-        require(curatorHasCosigned[msg.sender][editionId], "You can only cosign a submission once!");
+        require(curatorHasCosigned[msg.sender][editionId]==false, "You can only cosign a submission once!");
         editionIdToCosigns[editionId].push(msg.sender); 
         curatorHasCosigned[msg.sender][editionId]=true;
         emit EditionCosigned(msg.sender, editionId);
