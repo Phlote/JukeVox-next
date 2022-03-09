@@ -14,10 +14,13 @@ import { DropdownList } from "../components/DropdownList";
 import { useOnClickOut } from "../hooks/useOnClickOut";
 import Close from "../public/close.svg";
 import classNames from "classnames";
+import { usePhlote } from "../hooks/web3/usePhlote";
+import { RatingsMeter } from "../components/RatingsMeter";
 
 function Archive() {
   const [searchTerm] = useSearchTerm();
   const curations = useNFTSearch(searchTerm);
+  const phlote = usePhlote();
 
   return (
     <ArchiveLayout>
@@ -39,6 +42,7 @@ function Archive() {
                 label="Curator Wallet"
                 filterKey="curatorWallet"
               />
+              <ArchiveTableHeader label="Rating" />
             </tr>
           </thead>
 
@@ -47,6 +51,7 @@ function Archive() {
               <tr className="h-4" />
               {curations?.map((curation) => {
                 const {
+                  id,
                   curatorWallet,
                   artistName,
                   mediaTitle,
@@ -81,6 +86,12 @@ function Archive() {
                       <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>
                         <ShortenedWallet wallet={curatorWallet} />
+                      </ArchiveTableDataCell>
+                      <ArchiveTableDataCell>
+                        <RatingsMeter
+                          editionId={id}
+                          txnPending={transactionPending}
+                        />
                       </ArchiveTableDataCell>
                     </ArchiveTableRow>
                     <tr className="h-4" />
