@@ -4,6 +4,7 @@ import React from "react";
 import { HollowInputContainer, HollowInput } from "./Hollow";
 import Image from "next/image";
 import { CurationSubmissionFlow } from "./CurationSubmissionFlow";
+import tw from "twin.macro";
 
 const submitSidenavOpen = atom<boolean>(false);
 export const useSubmitSidenavOpen = () => useAtom(submitSidenavOpen);
@@ -47,16 +48,10 @@ export const SideNav = ({ children, onClose, open }) => {
 };
 
 const SideNavContainer = styled.div`
-  height: 100vh;
-  z-index: 10;
-  overflow-y: scroll;
+  ${tw`h-screen z-10 overflow-y-scroll flex-none bg-phlote-ff-sidenav`}
   width: 27rem;
-
-  background: #1d1d1d;
   @supports (backdrop-filter: none) {
     background-color: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(60px);
   }
-
-  flex: none;
 `;

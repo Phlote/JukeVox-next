@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { HollowInput, HollowInputContainer } from ".";
 import Image from "next/image";
 import styled from "styled-components";
+import tw from "twin.macro";
 
 interface TagsInput {
   value: string[];
@@ -91,14 +92,6 @@ export const HollowTagsInput: React.FC<TagsInput> = ({
 };
 
 const Tag = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: white;
-  padding: 0.5rem 0.75rem;
   border: 2px solid #e8eaee;
-  box-sizing: border-box;
-  border-radius: 4px;
-  color: black;
-  height: 2rem;
+  ${tw`flex justify-center items-center bg-white py-2 px-3 box-border rounded text-black h-8`}
 `;
