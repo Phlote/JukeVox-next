@@ -16,7 +16,7 @@ export const NavBar = () => {
   // const [, setCurations] = useUserCurations();
   const isCurator = useIsCurator();
   const router = useRouter();
-  const { active, deactivate } = useWeb3React();
+  const { active, account, deactivate } = useWeb3React();
 
   const { NODE_ENV } = process.env;
 
@@ -38,6 +38,18 @@ export const NavBar = () => {
               <Link href="/archive" passHref>
                 <HollowButtonContainer className="cursor-pointer flex justify-center items-center ">
                   Index
+                </HollowButtonContainer>
+              </Link>
+            </NavBarElementContainer>
+            <div className="w-4" />
+          </>
+        )}
+        {active && account && (
+          <>
+            <NavBarElementContainer>
+              <Link href={`/myarchive?wallet=${account}`} passHref>
+                <HollowButtonContainer className="cursor-pointer flex justify-center items-center ">
+                  My Archive
                 </HollowButtonContainer>
               </Link>
             </NavBarElementContainer>

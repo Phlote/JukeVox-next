@@ -6,7 +6,7 @@ import { ArchiveCuration } from "../../types/curations";
 
 export const useAllSubmissions = () => {
   // TODO: caching?
-  const [submissions, setSubmissions] = React.useState<ArchiveCuration[]>();
+  const [submissions, setSubmissions] = React.useState<ArchiveCuration[]>([]);
 
   const phlote = usePhlote();
 

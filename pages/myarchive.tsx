@@ -14,13 +14,15 @@ const MyArchive = (props) => {
   const router = useRouter();
   const { wallet } = router.query;
   const { submissions } = useAllSubmissions();
-  const mySubmissions = submissions.filter(
+  // console.log("submissions", submissions);
+  const mySubmissions = submissions?.filter(
     (submission) => submission.curatorWallet === wallet
   );
 
   return (
     <ArchiveLayout>
       <div className="flex flex-col">
+        <h1 className="text-xl italic">My Archive</h1>
         <table className="table-fixed w-full text-center mt-8">
           <thead>
             <tr
@@ -38,10 +40,10 @@ const MyArchive = (props) => {
             </tr>
           </thead>
 
-          {submissions.length > 0 && (
+          {mySubmissions.length > 0 && (
             <tbody>
               <tr className="h-4" />
-              {submissions?.map((curation) => {
+              {mySubmissions?.map((curation) => {
                 const {
                   id,
                   curatorWallet,
@@ -91,7 +93,7 @@ const MyArchive = (props) => {
             </tbody>
           )}
         </table>
-        {submissions.length === 0 && (
+        {mySubmissions.length === 0 && (
           <div
             className="w-full mt-4 flex-grow flex justify-center items-center"
             style={{ color: "rgba(105, 105, 105, 1)" }}
