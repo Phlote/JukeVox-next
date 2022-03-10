@@ -1,16 +1,16 @@
 import classNames from "classnames";
 import { BigNumber, ethers } from "ethers";
+import Image from "next/image";
 import React from "react";
+import styled from "styled-components";
 import tw from "twin.macro";
 import { useOnClickOut } from "../../hooks/useOnClickOut";
 import {
-  useNFTSearchFilters,
   useAllSubmissions,
+  useNFTSearchFilters,
 } from "../../hooks/web3/useNFTSearch";
 import { ShortenedWallet } from "../Account";
 import { DropdownList } from "../DropdownList";
-import Image from "next/image";
-import styled from "styled-components";
 
 export const ArchiveTableHeader = (props) => {
   const [dropdownOpen, setDropdownOpen] = React.useState<boolean>(false);
