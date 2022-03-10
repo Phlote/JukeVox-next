@@ -1,17 +1,6 @@
-import React from "react";
-import styled from "styled-components";
+import { useRouter } from "next/router";
 import { ShortenedWallet } from "../components/Account";
 import { ArchiveLayout } from "../components/Layouts";
-import { BigNumber, ethers } from "ethers";
-import { useSearchTerm } from "../components/SearchBar";
-import { useNFTSearch, useNFTSearchFilters } from "../hooks/web3/useNFTSearch";
-import Image from "next/image";
-import { DropdownList } from "../components/DropdownList";
-import { useOnClickOut } from "../hooks/useOnClickOut";
-import Close from "../public/close.svg";
-import classNames from "classnames";
-import tw from "twin.macro";
-import { usePhlote } from "../hooks/web3/usePhlote";
 import { RatingsMeter } from "../components/RatingsMeter";
 import {
   ArchiveTableHeader,
@@ -19,15 +8,21 @@ import {
   ArchiveTableDataCell,
   SubmissionDate,
 } from "../components/Tables/archive";
+import { useAllSubmissions } from "../hooks/web3/useNFTSearch";
 
-function Archive() {
-  const [searchTerm] = useSearchTerm();
-  const curations = useNFTSearch(searchTerm);
-  const phlote = usePhlote();
+const MyArchive = (props) => {
+  const router = useRouter();
+  const { wallet } = router.query;
+  const { submissions } = useAllSubmissions();
+  // console.log("submissions", submissions);
+  const mySubmissions = submissions?.filter(
+    (submission) => submission.curatorWallet === wallet
+  );
 
   return (
     <ArchiveLayout>
       <div className="flex flex-col">
+        <h1 className="text-xl italic">My Archive</h1>
         <table className="table-fixed w-full text-center mt-8">
           <thead>
             <tr
@@ -41,18 +36,14 @@ function Archive() {
               <ArchiveTableHeader label="Title" />
               <ArchiveTableHeader label="Media Type" filterKey={"mediaType"} />
               <ArchiveTableHeader label="Marketplace" filterKey="marketplace" />
-              <ArchiveTableHeader
-                label="Curator Wallet"
-                filterKey="curatorWallet"
-              />
               <ArchiveTableHeader label="Rating" />
             </tr>
           </thead>
 
-          {curations.length > 0 && (
+          {mySubmissions.length > 0 && (
             <tbody>
               <tr className="h-4" />
-              {curations?.map((curation) => {
+              {mySubmissions?.map((curation) => {
                 const {
                   id,
                   curatorWallet,
@@ -87,9 +78,7 @@ function Archive() {
                       </ArchiveTableDataCell>
                       <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
-                      <ArchiveTableDataCell>
-                        <ShortenedWallet wallet={curatorWallet} />
-                      </ArchiveTableDataCell>
+
                       <ArchiveTableDataCell>
                         <RatingsMeter
                           editionId={id}
@@ -104,7 +93,7 @@ function Archive() {
             </tbody>
           )}
         </table>
-        {curations.length === 0 && (
+        {mySubmissions.length === 0 && (
           <div
             className="w-full mt-4 flex-grow flex justify-center items-center"
             style={{ color: "rgba(105, 105, 105, 1)" }}
@@ -115,6 +104,6 @@ function Archive() {
       </div>
     </ArchiveLayout>
   );
-}
+};
 
-export default Archive;
+export default MyArchive;

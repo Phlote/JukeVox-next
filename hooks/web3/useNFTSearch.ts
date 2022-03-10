@@ -4,12 +4,9 @@ import FuzzySearch from "fuzzy-search";
 import { atom, useAtom } from "jotai";
 import { ArchiveCuration } from "../../types/curations";
 
-const searchNFTsAtom = atom<ArchiveCuration[]>([]);
-export const useSearchNFTs = () => useAtom(searchNFTsAtom);
-
-export const useGetAllNFTs = () => {
+export const useAllSubmissions = () => {
   // TODO: caching?
-  const [nfts, setNFTs] = useSearchNFTs();
+  const [submissions, setSubmissions] = React.useState<ArchiveCuration[]>([]);
 
   const phlote = usePhlote();
 
@@ -17,7 +14,7 @@ export const useGetAllNFTs = () => {
     const getContent = () => {
       phlote.getAllCurations().then((content) => {
         const reversed = ([...content] as ArchiveCuration[]).reverse();
-        setNFTs(reversed);
+        setSubmissions(reversed);
       });
     };
 
@@ -33,9 +30,9 @@ export const useGetAllNFTs = () => {
     return () => {
       phlote?.removeAllListeners();
     };
-  }, [phlote, setNFTs]);
+  }, [phlote, setSubmissions]);
 
-  return nfts;
+  return { submissions, setSubmissions };
 };
 
 const NFTSearchFiltersAtom = atom<Partial<ArchiveCuration>>({});
@@ -51,9 +48,9 @@ const isPartialMatch = (
 };
 
 export const useNFTSearch = (searchTerm = "") => {
-  const nfts = useGetAllNFTs();
+  const { submissions } = useAllSubmissions();
   const [filters] = useNFTSearchFilters();
-  const searcher = new FuzzySearch(nfts);
+  const searcher = new FuzzySearch(submissions);
   const searchResults = searcher.search(searchTerm.trim());
 
   const filtered = searchResults
