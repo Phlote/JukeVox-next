@@ -5,7 +5,6 @@ import tw from "twin.macro";
 import { useOnClickOut } from "../../hooks/useOnClickOut";
 import {
   useNFTSearchFilters,
-  useGetAllNFTs,
   useAllSubmissions,
 } from "../../hooks/web3/useNFTSearch";
 import { ShortenedWallet } from "../Account";

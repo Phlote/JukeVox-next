@@ -4,11 +4,7 @@ import { ShortenedWallet } from "../components/Account";
 import { ArchiveLayout } from "../components/Layouts";
 import { BigNumber, ethers } from "ethers";
 import { useSearchTerm } from "../components/SearchBar";
-import {
-  useGetAllNFTs,
-  useNFTSearch,
-  useNFTSearchFilters,
-} from "../hooks/web3/useNFTSearch";
+import { useNFTSearch, useNFTSearchFilters } from "../hooks/web3/useNFTSearch";
 import Image from "next/image";
 import { DropdownList } from "../components/DropdownList";
 import { useOnClickOut } from "../hooks/useOnClickOut";
