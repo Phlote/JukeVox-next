@@ -7,7 +7,7 @@ import { useOnCopy } from "../hooks/useOnCopy";
 import useENSName from "../hooks/web3/useENSName";
 import useMetaMaskOnboarding from "../hooks/web3/useMetaMaskOnboarding";
 
-import { formatEtherscanLink, shortenHex } from "../util";
+import { formatEtherscanLink, shortenHex } from "../utils/web3";
 import { HollowButtonContainer, HollowInputContainer } from "./Hollow";
 
 type AccountProps = {

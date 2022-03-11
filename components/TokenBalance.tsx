@@ -1,7 +1,7 @@
 import type { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import useTokenBalance from "../hooks/web3/useTokenBalance";
-import { balanceToString } from "../util";
+import { balanceToString } from "../utils/web3";
 
 type TokenBalanceProps = {
   tokenAddress: string;

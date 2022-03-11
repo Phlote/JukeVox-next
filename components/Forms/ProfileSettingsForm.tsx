@@ -1,6 +1,8 @@
-import { useCallback } from "react";
+import Image from "next/image";
+import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { useField, useForm } from "react-final-form-hooks";
+import { supabase } from "../../utils/supabase";
 import { HollowInput, HollowInputContainer } from "../Hollow";
 
 export const ProfileSettingsForm = ({ onSubmit, wallet }) => {
@@ -20,7 +22,7 @@ export const ProfileSettingsForm = ({ onSubmit, wallet }) => {
   return (
     <div className="flex flex-row w-3/4">
       <div className="w-1/2">
-        <ProfilePictureUpload />
+        <ProfilePictureUpload wallet={wallet} />
       </div>
       <div className="w-1/2 grid grid-cols-2 gap-4 my-auto">
         <HollowInputContainer type="form">
@@ -66,21 +68,58 @@ export const ProfileSettingsForm = ({ onSubmit, wallet }) => {
   );
 };
 
-const ProfilePictureUpload = () => {
-  const onDrop = useCallback((acceptedFiles) => {
-    // Do something with the files
-    console.log(acceptedFiles);
-  }, []);
+const ProfilePictureUpload = ({ wallet }) => {
+  const [profilePic, setProfilePic] = React.useState<string>();
+  const path = `${wallet}/profile`;
+
+  // TODO: use query?
+  React.useEffect(() => {
+    const getProfilePic = async () => {
+      const { data, error } = await supabase.storage
+        .from("profile-pics")
+        .download(path);
+
+      const url = URL.createObjectURL(data);
+      setProfilePic(url);
+    };
+    if (wallet) getProfilePic();
+  }, [wallet]);
+
+  const onDrop = useCallback(
+    async (acceptedFiles) => {
+      const { data, error } = await supabase.storage
+        .from("profile-pics")
+        .upload(path, acceptedFiles[0], {
+          cacheControl: "3600",
+          upsert: true,
+        });
+
+      const url = URL.createObjectURL(acceptedFiles[0]);
+      setProfilePic(url);
+    },
+    [wallet]
+  );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
     <div
-      className="w-80 h-80 border-2 border-white rounded-full flex justify-center items-center"
+      className="w-80 h-80 border-2 border-white rounded-full flex justify-center items-center relative"
       {...getRootProps()}
     >
       <input {...getInputProps()} />
-      {isDragActive ? (
+      {/* {isDragActive ? (
         <p>Drop the files here ...</p>
+      ) : (
+        <p className="text-base italic">Drop or select visual to upload</p>
+      )} */}
+      {profilePic ? (
+        <Image
+          className="rounded-full"
+          src={profilePic}
+          objectFit={"cover"}
+          layout="fill"
+          alt="profile picture"
+        />
       ) : (
         <p className="text-base italic">Drop or select visual to upload</p>
       )}

@@ -1,6 +1,6 @@
 import { useWeb3React } from "@web3-react/core";
 import { useQuery } from "react-query";
-import { nextApiRequest } from "../util";
+import { nextApiRequest } from "../utils/";
 
 export const useIsCurator = () => {
   const { account } = useWeb3React();
