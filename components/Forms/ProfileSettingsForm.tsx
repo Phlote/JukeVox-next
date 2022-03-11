@@ -2,6 +2,7 @@ import Image from "next/image";
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { useField, useForm } from "react-final-form-hooks";
+import { useQuery, useQueryClient } from "react-query";
 import { supabase } from "../../utils/supabase";
 import { HollowInput, HollowInputContainer } from "../Hollow";
 
@@ -70,32 +71,30 @@ export const ProfileSettingsForm = ({ onSubmit, wallet }) => {
 
 const ProfilePictureUpload = ({ wallet }) => {
   const [profilePic, setProfilePic] = React.useState<string>();
+  const profileQuery = useProfile(wallet);
+  const queryClient = useQueryClient();
   const path = `${wallet}/profile`;
 
-  // TODO: use query?
   React.useEffect(() => {
-    const getProfilePic = async () => {
-      const { data, error } = await supabase.storage
-        .from("profile-pics")
-        .download(path);
-
-      const url = URL.createObjectURL(data);
-      setProfilePic(url);
-    };
-    if (wallet) getProfilePic();
-  }, [wallet]);
+    if (profileQuery.data && !profilePic) {
+      setProfilePic(profileQuery.data.profilePic);
+    }
+  }, [profileQuery.data]);
 
   const onDrop = useCallback(
     async (acceptedFiles) => {
-      const { data, error } = await supabase.storage
+      const { error } = await supabase.storage
         .from("profile-pics")
         .upload(path, acceptedFiles[0], {
           cacheControl: "3600",
           upsert: true,
         });
 
-      const url = URL.createObjectURL(acceptedFiles[0]);
-      setProfilePic(url);
+      if (!error) {
+        const url = URL.createObjectURL(acceptedFiles[0]);
+        setProfilePic(url);
+        queryClient.invalidateQueries("profile");
+      } else alert(error); //TODO: error toasts?
     },
     [wallet]
   );
@@ -107,12 +106,8 @@ const ProfilePictureUpload = ({ wallet }) => {
       {...getRootProps()}
     >
       <input {...getInputProps()} />
-      {/* {isDragActive ? (
-        <p>Drop the files here ...</p>
-      ) : (
-        <p className="text-base italic">Drop or select visual to upload</p>
-      )} */}
-      {profilePic ? (
+
+      {profilePic && !isDragActive ? (
         <Image
           className="rounded-full"
           src={profilePic}
@@ -121,8 +116,30 @@ const ProfilePictureUpload = ({ wallet }) => {
           alt="profile picture"
         />
       ) : (
-        <p className="text-base italic">Drop or select visual to upload</p>
+        <p className="text-base italic">
+          {isDragActive ? "Drop image here" : "Drop or select visual to upload"}
+        </p>
       )}
     </div>
   );
+};
+
+export interface UserProfile {
+  profilePic: string;
+}
+
+export const useProfile = (wallet) => {
+  const path = `${wallet}/profile`;
+
+  const getProfileData = async () => {
+    const { data, error } = await supabase.storage
+      .from("profile-pics")
+      .download(path);
+
+    const url = URL.createObjectURL(data);
+
+    return { profilePic: url } as UserProfile;
+  };
+
+  return useQuery(["profile", wallet], getProfileData);
 };
