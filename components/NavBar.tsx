@@ -1,14 +1,13 @@
-import Account from "./Account";
 import { useWeb3React } from "@web3-react/core";
-import { HollowButtonContainer } from "./Hollow";
 import Link from "next/link";
-import { useSubmitSidenavOpen } from "./SideNav";
-import styled from "styled-components";
-import { useIsCurator } from "../hooks/useIsCurator";
-import { SearchBar } from "./SearchBar";
 import { useRouter } from "next/router";
-import useEagerConnect from "../hooks/web3/useEagerConnect";
 import tw from "twin.macro";
+import { useIsCurator } from "../hooks/useIsCurator";
+import useEagerConnect from "../hooks/web3/useEagerConnect";
+import Account from "./Account";
+import { HollowButtonContainer } from "./Hollow";
+import { SearchBar } from "./SearchBar";
+import { useSubmitSidenavOpen } from "./SideNav";
 
 export const NavBar = () => {
   const triedToEagerConnect = useEagerConnect();
@@ -47,9 +46,9 @@ export const NavBar = () => {
         {active && account && (
           <>
             <NavBarElementContainer>
-              <Link href={`/myarchive?wallet=${account}`} passHref>
+              <Link href={`/profile?wallet=${account}`} passHref>
                 <HollowButtonContainer className="cursor-pointer flex justify-center items-center ">
-                  My Archive
+                  My Profile
                 </HollowButtonContainer>
               </Link>
             </NavBarElementContainer>

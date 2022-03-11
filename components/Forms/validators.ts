@@ -38,6 +38,13 @@ export const validateCurationSubmission = (values: Curation) => {
     }
   }
 
-  //TODO: if there is a value for artistWallet, check if it's on chain
+  return errors;
+};
+
+export const validateProfileSettings = (values: Curation) => {
+  const errors: Record<string, string> = {};
+
+  //TODO: check if we have this info
+
   return errors;
 };
