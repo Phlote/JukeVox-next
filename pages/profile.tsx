@@ -8,7 +8,7 @@ function Profile() {
 
   return (
     <ProfileLayout>
-      <ProfileSettingsForm onSubmit={(v) => console.log(v)} wallet={wallet} />
+      <ProfileSettingsForm wallet={wallet} />
     </ProfileLayout>
   );
 }

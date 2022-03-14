@@ -1,5 +1,5 @@
-import tw from "twin.macro";
 import styled from "styled-components";
+import tw from "twin.macro";
 
 export const HollowButtonContainer = tw.div`bg-phlote-button text-white p-4 rounded-full flex flex-row items-center justify-center border border-white max-h-14`;
 
@@ -24,5 +24,6 @@ export const HollowInput = styled.input`
 
   &::placeholder {
     color: white;
+    opacity: 50%;
   }
 `;
