@@ -45,10 +45,6 @@ export const ProfileSettingsForm = ({ wallet }) => {
     initialValues: profile.data ?? undefined,
   });
 
-  const formErrors = form.getState().errors;
-
-  //TODO init values here
-  //TODO need to check if handle is taken
   const username = useField("username", form);
   const city = useField("city", form);
   const twitter = useField("twitter", form);

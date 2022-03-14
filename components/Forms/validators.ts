@@ -60,7 +60,6 @@ export const validateProfileSettings = async (values: UserProfile) => {
       errors.username = "Username taken!";
     }
   }
-  //TODO: check if we have this info
 
   return errors;
 };
