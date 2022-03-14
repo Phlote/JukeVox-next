@@ -84,15 +84,6 @@ export const ProfileSettingsForm = ({ wallet }) => {
         <HollowButtonContainer className="w-1/4" onClick={handleSubmit}>
           <HollowButton>Submit</HollowButton>
         </HollowButtonContainer>
-        <HollowButtonContainer
-          className="absolute -bottom-20 -right-60 cursor-pointer"
-          onClick={() => router.push(`/myarchive?wallet=${wallet}`)}
-        >
-          <HollowButton>
-            View My Curations{" "}
-            <Image src="/arrow.svg" alt={"link"} height={12} width={12} />
-          </HollowButton>
-        </HollowButtonContainer>
       </div>
     </div>
   );
