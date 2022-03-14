@@ -15,7 +15,7 @@ import {
 import { validateProfileSettings } from "./validators";
 
 export interface UserProfile {
-  wallet: string; // provided by web3
+  wallet: string; // user has already connected wallet, so this is not a form field
   username: string;
   city: string;
   twitter: string;

@@ -99,8 +99,6 @@ export const ShortenedWallet: React.FC<{ wallet: string }> = ({ wallet }) => {
   const ENSName = useENSName(wallet);
   const ref = useRef();
   useOnCopy(ref, wallet);
-  if (!wallet) return null;
-
   return <span ref={ref}>{ENSName || `${shortenHex(wallet, 5)}`}</span>;
 };
 
