@@ -1,14 +1,14 @@
-import Account from "./Account";
 import { useWeb3React } from "@web3-react/core";
-import { HollowButtonContainer } from "./Hollow";
 import Link from "next/link";
-import { useSubmitSidenavOpen } from "./SideNav";
-import styled from "styled-components";
-import { useIsCurator } from "../hooks/useIsCurator";
-import { SearchBar } from "./SearchBar";
 import { useRouter } from "next/router";
-import useEagerConnect from "../hooks/web3/useEagerConnect";
 import tw from "twin.macro";
+import { useIsCurator } from "../hooks/useIsCurator";
+import useEagerConnect from "../hooks/web3/useEagerConnect";
+import Close from "../public/close.svg";
+import Account from "./Account";
+import { HollowButtonContainer } from "./Hollow";
+import { SearchBar } from "./SearchBar";
+import { useSubmitSidenavOpen } from "./SideNav";
 
 export const NavBar = () => {
   const triedToEagerConnect = useEagerConnect();
@@ -84,10 +84,12 @@ export const NavBar = () => {
           <>
             <NavBarElementContainer>
               <HollowButtonContainer
-                className="cursor-pointer flex justify-center items-center "
+                className="cursor-pointer flex justify-center items-center"
                 onClick={() => setOpen(true)}
               >
-                Submit
+                Stamp
+                <div className="w-4" />
+                <Close fill="white" className="rotate-45 h-4 w-4" />
               </HollowButtonContainer>
             </NavBarElementContainer>
             <div className="w-4" />
