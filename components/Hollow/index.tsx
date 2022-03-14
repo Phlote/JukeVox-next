@@ -1,19 +1,21 @@
 import styled from "styled-components";
 import tw from "twin.macro";
 
-export const HollowButtonContainer = styled.button`
-  ${tw`bg-phlote-button text-white p-4 rounded-full flex flex-row items-center justify-center border border-white max-h-14`}
+export const HollowButtonContainer = styled.div`
+  ${tw`bg-phlote-button text-white rounded-full flex p-4 flex-row items-center justify-center border border-white max-h-14`}
   &:hover {
     opacity: 75%;
   }
 `;
 
-export const HollowButton = styled.button`
-  ${tw`bg-transparent opacity-100 text-white flex-grow max-w-full outline-none border-none text-center`}
+export const HollowButton = styled.button(({ submitting }) => [
+  tw`bg-transparent opacity-100 text-white  max-w-full  h-full outline-none border-none text-center`,
+  `
   &:disabled {
     opacity: 50%;
   }
-`;
+  `,
+]);
 
 export const HollowInputContainer = styled.div(({ type }) => [
   tw`bg-phlote-container text-white p-4 rounded-full flex flex-grow flex-row items-center justify-start`,

@@ -39,10 +39,11 @@ export const ProfileSettingsForm = ({ wallet }) => {
 
   const profile = useProfile(wallet);
 
-  const { form, handleSubmit, valid } = useForm({
+  const { form, handleSubmit, submitting } = useForm({
     onSubmit,
     initialValues: profile.data ?? undefined,
   });
+  console.log("submitting", submitting);
 
   //TODO init values here
   //TODO need to check if handle is taken
@@ -80,13 +81,14 @@ export const ProfileSettingsForm = ({ wallet }) => {
             )}
           </HollowInputContainer>
         </div>
-        <HollowButtonContainer className="w-1/4">
-          <HollowButton onClick={handleSubmit}>Submit</HollowButton>
+        <HollowButtonContainer className="w-1/4" onClick={handleSubmit}>
+          <HollowButton>Submit</HollowButton>
         </HollowButtonContainer>
-        <HollowButtonContainer className="absolute -bottom-20 -right-60">
-          <HollowButton
-            onClick={() => router.push(`/myarchive?wallet=${wallet}`)}
-          >
+        <HollowButtonContainer
+          className="absolute -bottom-20 -right-60"
+          onClick={() => router.push(`/myarchive?wallet=${wallet}`)}
+        >
+          <HollowButton>
             View My Curations{" "}
             <Image src="/arrow.svg" alt={"link"} height={12} width={12} />
           </HollowButton>

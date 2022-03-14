@@ -1,15 +1,14 @@
-import React, { useState } from "react";
+import Image from "next/image";
+import { useState } from "react";
+import { useField, useForm } from "react-final-form-hooks";
 import { DropdownList } from "../DropdownList";
 import {
-  HollowInputContainer,
-  HollowInput,
-  HollowButtonContainer,
   HollowButton,
+  HollowButtonContainer,
+  HollowInput,
+  HollowInputContainer,
 } from "../Hollow";
 import { HollowTagsInput } from "../Hollow/HollowTagsInput";
-import Image from "next/image";
-import { atom, useAtom } from "jotai";
-import { useForm, useField } from "react-final-form-hooks";
 import { validateCurationSubmission } from "./validators";
 
 export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
