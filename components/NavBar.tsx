@@ -87,9 +87,9 @@ export const NavBar = () => {
                 className="cursor-pointer flex justify-center items-center"
                 onClick={() => setOpen(true)}
               >
-                Stamp
-                <div className="w-4" />
                 <Close fill="white" className="rotate-45 h-4 w-4" />
+                <div className="w-4" />
+                Stamp
               </HollowButtonContainer>
             </NavBarElementContainer>
             <div className="w-4" />
