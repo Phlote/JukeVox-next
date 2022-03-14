@@ -38,7 +38,7 @@ export const ProfileSettingsForm = ({ wallet }) => {
 
   const profile = useProfile(wallet);
 
-  const { form, handleSubmit, submitting } = useForm({
+  const { form, handleSubmit } = useForm({
     onSubmit,
     initialValues: profile.data ?? undefined,
   });
@@ -100,11 +100,6 @@ const ProfilePictureUpload = ({ wallet }) => {
   const queryClient = useQueryClient();
   const path = `${wallet}/profile`;
   const profilePicQuery = useProfilePic(wallet);
-  const [submitting, setSubmitting] = React.useState<boolean>(false);
-
-  React.useEffect(() => {
-    if (submitting && profilePicQuery.isFetched) setSubmitting(false);
-  }, [submitting, profilePicQuery.isFetched]);
 
   const onDrop = useCallback(
     async (acceptedFiles) => {
@@ -117,8 +112,6 @@ const ProfilePictureUpload = ({ wallet }) => {
         });
 
       if (!error) {
-        // queryClient.invalidateQueries(["profile-pic", wallet]);
-
         queryClient.refetchQueries(["profile-pic", wallet]);
       } else toast.error(error);
     },
@@ -127,7 +120,6 @@ const ProfilePictureUpload = ({ wallet }) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const [isHovering, setIsHovering] = React.useState<boolean>();
-  console.log("submitting", submitting);
   return (
     <div
       className="w-80 h-80 border-2 border-white rounded-full flex justify-center items-center relative"
@@ -137,16 +129,11 @@ const ProfilePictureUpload = ({ wallet }) => {
     >
       <input {...getInputProps()} />
 
-      {submitting && <p className="text-base italic">{"Loading"}</p>}
-      {isHovering && !submitting && (
-        <p className="text-base italic">{"Upload new photo"}</p>
-      )}
+      {isHovering && <p className="text-base italic">{"Upload new photo"}</p>}
 
       {profilePicQuery?.data && !isDragActive ? (
         <Image
-          className={`rounded-full ${
-            (isHovering || submitting) && "opacity-25"
-          }`}
+          className={`rounded-full ${isHovering && "opacity-25"}`}
           src={profilePicQuery?.data}
           objectFit={"cover"}
           layout="fill"
