@@ -26,7 +26,7 @@ const MyArchive = (props) => {
       <div className="flex flex-col">
         <h1 className="text-xl italic">
           {" "}
-          {`${profile.data.username}'s Curations`}
+          {`${profile?.data?.username}'s Curations`}
         </h1>
         <table className="table-fixed w-full text-center mt-8">
           <thead>

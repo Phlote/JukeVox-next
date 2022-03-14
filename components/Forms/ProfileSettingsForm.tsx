@@ -119,7 +119,7 @@ const ProfilePictureUpload = ({ wallet }) => {
         queryClient.invalidateQueries(["profile", wallet]);
       } else alert(error); //TODO: error toasts?
     },
-    [wallet]
+    [path, queryClient, wallet]
   );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
