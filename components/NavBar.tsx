@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import tw from "twin.macro";
 import { useIsCurator } from "../hooks/useIsCurator";
 import useEagerConnect from "../hooks/web3/useEagerConnect";
+import Close from "../public/close.svg";
 import Account from "./Account";
 import { HollowButtonContainer } from "./Hollow";
 import { SearchBar } from "./SearchBar";
@@ -35,7 +36,7 @@ export const NavBar = () => {
           <>
             <NavBarElementContainer>
               <Link href="/archive" passHref>
-                <HollowButtonContainer className=" flex justify-center items-center ">
+                <HollowButtonContainer className="flex justify-center items-center ">
                   Index
                 </HollowButtonContainer>
               </Link>
@@ -47,7 +48,7 @@ export const NavBar = () => {
           <>
             <NavBarElementContainer>
               <Link href={`/profile?wallet=${account}`} passHref>
-                <HollowButtonContainer className=" flex justify-center items-center ">
+                <HollowButtonContainer className="flex justify-center items-center ">
                   My Profile
                 </HollowButtonContainer>
               </Link>
@@ -67,7 +68,7 @@ export const NavBar = () => {
           <>
             <NavBarElementContainer>
               <HollowButtonContainer
-                className="max-w-xs  flex justify-center items-center"
+                className="max-w-xs flex justify-center items-center"
                 onClick={async () => {
                   deactivate();
                 }}
@@ -83,10 +84,12 @@ export const NavBar = () => {
           <>
             <NavBarElementContainer>
               <HollowButtonContainer
-                className=" flex justify-center items-center "
+                className="flex justify-center items-center "
                 onClick={() => setOpen(true)}
               >
-                Submit
+                <Close fill="white" className="rotate-45 h-4 w-4" />
+                <div className="w-4" />
+                Stamp
               </HollowButtonContainer>
             </NavBarElementContainer>
             <div className="w-4" />
