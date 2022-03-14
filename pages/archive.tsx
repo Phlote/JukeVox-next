@@ -1,24 +1,15 @@
-import React from "react";
-import styled from "styled-components";
-import { ShortenedWallet } from "../components/Account";
 import { ArchiveLayout } from "../components/Layouts";
-import { BigNumber, ethers } from "ethers";
-import { useSearchTerm } from "../components/SearchBar";
-import { useNFTSearch, useNFTSearchFilters } from "../hooks/web3/useNFTSearch";
-import Image from "next/image";
-import { DropdownList } from "../components/DropdownList";
-import { useOnClickOut } from "../hooks/useOnClickOut";
-import Close from "../public/close.svg";
-import classNames from "classnames";
-import tw from "twin.macro";
-import { usePhlote } from "../hooks/web3/usePhlote";
 import { RatingsMeter } from "../components/RatingsMeter";
+import { useSearchTerm } from "../components/SearchBar";
 import {
+  ArchiveTableDataCell,
   ArchiveTableHeader,
   ArchiveTableRow,
-  ArchiveTableDataCell,
   SubmissionDate,
 } from "../components/Tables/archive";
+import { Username } from "../components/Username";
+import { useNFTSearch } from "../hooks/web3/useNFTSearch";
+import { usePhlote } from "../hooks/web3/usePhlote";
 
 function Archive() {
   const [searchTerm] = useSearchTerm();
@@ -88,7 +79,7 @@ function Archive() {
                       <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>
-                        <ShortenedWallet wallet={curatorWallet} />
+                        <Username wallet={curatorWallet} />
                       </ArchiveTableDataCell>
                       <ArchiveTableDataCell>
                         <RatingsMeter
