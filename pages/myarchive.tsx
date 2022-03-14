@@ -1,11 +1,11 @@
 import { useRouter } from "next/router";
-import { ShortenedWallet } from "../components/Account";
+import { useProfile } from "../components/Forms/ProfileSettingsForm";
 import { ArchiveLayout } from "../components/Layouts";
 import { RatingsMeter } from "../components/RatingsMeter";
 import {
+  ArchiveTableDataCell,
   ArchiveTableHeader,
   ArchiveTableRow,
-  ArchiveTableDataCell,
   SubmissionDate,
 } from "../components/Tables/archive";
 import { useAllSubmissions } from "../hooks/web3/useNFTSearch";
@@ -19,10 +19,15 @@ const MyArchive = (props) => {
     (submission) => submission.curatorWallet === wallet
   );
 
+  const profile = useProfile(wallet);
+
   return (
     <ArchiveLayout>
       <div className="flex flex-col">
-        <h1 className="text-xl italic">My Archive</h1>
+        <h1 className="text-xl italic">
+          {" "}
+          {`${profile.data.username}'s Curations`}
+        </h1>
         <table className="table-fixed w-full text-center mt-8">
           <thead>
             <tr

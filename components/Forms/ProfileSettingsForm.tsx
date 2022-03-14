@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { useField, useForm } from "react-final-form-hooks";
@@ -14,19 +15,20 @@ import {
 export interface UserProfile {
   profilePic?: string; // Not in DB
   wallet: string;
-  handle: string;
+  username: string;
   city: string;
   twitter: string;
 }
 
 export const ProfileSettingsForm = ({ wallet }) => {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const onSubmit = async (formData: Partial<UserProfile>) => {
-    const { handle, city, twitter } = formData;
+    const { username, city, twitter } = formData;
     const { data, error } = await supabase
       .from("profiles")
-      .upsert({ wallet, handle, city, twitter });
+      .upsert({ wallet, username, city, twitter });
     if (error) alert(error.message);
     else queryClient.invalidateQueries(["profile", wallet]);
   };
@@ -40,7 +42,7 @@ export const ProfileSettingsForm = ({ wallet }) => {
 
   //TODO init values here
   //TODO need to check if handle is taken
-  const handle = useField("handle", form);
+  const username = useField("username", form);
   const city = useField("city", form);
   const twitter = useField("twitter", form);
 
@@ -49,16 +51,16 @@ export const ProfileSettingsForm = ({ wallet }) => {
       <div className="w-1/2">
         <ProfilePictureUpload wallet={wallet} />
       </div>
-      <div className="flex flex-col items-center w-1/2">
+      <div className="flex flex-col items-center w-1/2 relative">
         <div className="grid grid-cols-1 gap-4 my-auto">
           <HollowInputContainer type="form">
             <HollowInput
-              {...handle.input}
+              {...username.input}
               type="text"
-              placeholder="Phlote handle"
+              placeholder="Username"
             />
-            {handle.meta.error && (
-              <span className="text-red-600 ml-2">{handle.meta.error}</span>
+            {username.meta.error && (
+              <span className="text-red-600 ml-2">{username.meta.error}</span>
             )}
           </HollowInputContainer>
           <HollowInputContainer type="form">
@@ -76,6 +78,14 @@ export const ProfileSettingsForm = ({ wallet }) => {
         </div>
         <HollowButtonContainer className="w-1/4">
           <HollowButton onClick={handleSubmit}>Submit</HollowButton>
+        </HollowButtonContainer>
+        <HollowButtonContainer className="absolute -bottom-20 -right-60">
+          <HollowButton
+            onClick={() => router.push(`/myarchive?wallet=${wallet}`)}
+          >
+            View My Curations{" "}
+            <Image src="/arrow.svg" alt={"link"} height={12} width={12} />
+          </HollowButton>
         </HollowButtonContainer>
       </div>
     </div>
@@ -113,22 +123,31 @@ const ProfilePictureUpload = ({ wallet }) => {
   );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
+  const [isHovering, setIsHovering] = React.useState<boolean>();
+
   return (
     <div
-      className="w-80 h-80 border-2 border-white rounded-full flex justify-center items-center relative"
+      className="w-80 h-80 border-2 border-white rounded-full flex justify-center items-center relative "
       {...getRootProps()}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
     >
       <input {...getInputProps()} />
 
       {profilePic && !isDragActive ? (
-        <Image
-          className="rounded-full"
-          src={profilePic}
-          objectFit={"cover"}
-          layout="fill"
-          alt="profile picture"
-          priority
-        />
+        <>
+          <Image
+            className={`rounded-full ${isHovering && "opacity-25"}`}
+            src={profilePic}
+            objectFit={"cover"}
+            layout="fill"
+            alt="profile picture"
+            priority
+          />
+          {isHovering && (
+            <p className="text-base italic">{"Upload new photo"}</p>
+          )}
+        </>
       ) : (
         <p className="text-base italic">
           {isDragActive ? "Drop image here" : "Drop or select visual to upload"}
