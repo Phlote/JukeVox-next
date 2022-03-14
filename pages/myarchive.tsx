@@ -1,11 +1,10 @@
 import { useRouter } from "next/router";
-import { ShortenedWallet } from "../components/Account";
 import { ArchiveLayout } from "../components/Layouts";
 import { RatingsMeter } from "../components/RatingsMeter";
 import {
+  ArchiveTableDataCell,
   ArchiveTableHeader,
   ArchiveTableRow,
-  ArchiveTableDataCell,
   SubmissionDate,
 } from "../components/Tables/archive";
 import { useAllSubmissions } from "../hooks/web3/useNFTSearch";
@@ -36,7 +35,7 @@ const MyArchive = (props) => {
               <ArchiveTableHeader label="Title" />
               <ArchiveTableHeader label="Media Type" filterKey={"mediaType"} />
               <ArchiveTableHeader label="Marketplace" filterKey="marketplace" />
-              <ArchiveTableHeader label="Rating" />
+              <ArchiveTableHeader label="Co-Signs" />
             </tr>
           </thead>
 
