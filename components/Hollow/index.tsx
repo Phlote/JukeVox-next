@@ -18,7 +18,7 @@ export const HollowButton = styled.button(({ submitting }) => [
 ]);
 
 export const HollowInputContainer = styled.div(({ type }) => [
-  tw`bg-phlote-container text-white p-4 rounded-full flex flex-grow flex-row items-center justify-start`,
+  tw`bg-phlote-container text-white p-4 rounded-full flex flex-grow flex-row items-center justify-start relative`,
   type === "form" && tw`border border-white max-h-14`,
 ]);
 

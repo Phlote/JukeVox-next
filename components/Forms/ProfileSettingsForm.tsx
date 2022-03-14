@@ -12,6 +12,7 @@ import {
   HollowInput,
   HollowInputContainer,
 } from "../Hollow";
+import { validateProfileSettings } from "./validators";
 
 export interface UserProfile {
   wallet: string; // provided by web3
@@ -40,8 +41,11 @@ export const ProfileSettingsForm = ({ wallet }) => {
 
   const { form, handleSubmit } = useForm({
     onSubmit,
+    validate: validateProfileSettings,
     initialValues: profile.data ?? undefined,
   });
+
+  const formErrors = form.getState().errors;
 
   //TODO init values here
   //TODO need to check if handle is taken
@@ -50,21 +54,23 @@ export const ProfileSettingsForm = ({ wallet }) => {
   const twitter = useField("twitter", form);
 
   return (
-    <div className="flex flex-row w-8/12">
+    <div className="flex flex-row w-10/12">
       <div className="w-1/2">
         <ProfilePictureUpload wallet={wallet} />
       </div>
-      <div className="flex flex-col items-center w-1/2 relative">
-        <div className="grid grid-cols-1 gap-4 my-auto">
+      <div className="flex flex-col items-center w-1/2">
+        <div className="grid grid-cols-1 gap-4 w-full mr-auto my-auto relative">
           <HollowInputContainer type="form">
+            {username.meta.error && (
+              <p className="absolute text-red-600 -top-10">
+                {username.meta.error}
+              </p>
+            )}
             <HollowInput
               {...username.input}
               type="text"
               placeholder="Username"
             />
-            {username.meta.error && (
-              <span className="text-red-600 ml-2">{username.meta.error}</span>
-            )}
           </HollowInputContainer>
           <HollowInputContainer type="form">
             <HollowInput {...city.input} type="text" placeholder="City" />
