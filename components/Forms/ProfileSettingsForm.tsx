@@ -33,7 +33,7 @@ export const ProfileSettingsForm = ({ wallet }) => {
     if (error) toast.error(error.message);
     else {
       queryClient.invalidateQueries(["profile", wallet]);
-      toast.success("Sumbitted!");
+      toast.success("Submitted!");
     }
   };
 

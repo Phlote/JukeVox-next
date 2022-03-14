@@ -2,7 +2,7 @@ import { useWeb3React } from "@web3-react/core";
 import { BigNumber } from "ethers";
 import Image from "next/image";
 import React, { useState } from "react";
-import { NFT_MINT_CONTRACT_RINKEBY } from "../contracts/addresses";
+import { NFT_MINT_CONTRACT_RINKEBY, NULL_WALLET } from "../contracts/addresses";
 import { useAllSubmissions } from "../hooks/web3/useNFTSearch";
 import { usePhlote } from "../hooks/web3/usePhlote";
 import { Curation } from "../types/curations";
@@ -69,7 +69,7 @@ export const CurationSubmissionFlow = (props) => {
         marketplace,
         tags ?? [],
         artistName,
-        artistWallet,
+        artistWallet ?? NULL_WALLET,
         mediaType,
         mediaTitle,
         tokenURI
