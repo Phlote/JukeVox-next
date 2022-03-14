@@ -116,7 +116,7 @@ const ProfilePictureUpload = ({ wallet }) => {
       if (!error) {
         const url = URL.createObjectURL(acceptedFiles[0]);
         setProfilePic(url);
-        queryClient.invalidateQueries("profile");
+        queryClient.invalidateQueries(["profile", wallet]);
       } else alert(error); //TODO: error toasts?
     },
     [wallet]
