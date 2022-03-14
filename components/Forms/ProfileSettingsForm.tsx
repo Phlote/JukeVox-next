@@ -14,8 +14,7 @@ import {
 } from "../Hollow";
 
 export interface UserProfile {
-  profilePic?: string; // Not in DB
-  wallet: string;
+  wallet: string; // provided by web3
   username: string;
   city: string;
   twitter: string;
@@ -43,7 +42,6 @@ export const ProfileSettingsForm = ({ wallet }) => {
     onSubmit,
     initialValues: profile.data ?? undefined,
   });
-  console.log("submitting", submitting);
 
   //TODO init values here
   //TODO need to check if handle is taken
@@ -99,19 +97,18 @@ export const ProfileSettingsForm = ({ wallet }) => {
 };
 
 const ProfilePictureUpload = ({ wallet }) => {
-  const [profilePic, setProfilePic] = React.useState<string>();
-  const profileQuery = useProfile(wallet);
   const queryClient = useQueryClient();
   const path = `${wallet}/profile`;
+  const profilePicQuery = useProfilePic(wallet);
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    if (profileQuery.data && !profilePic) {
-      setProfilePic(profileQuery.data.profilePic);
-    }
-  }, [profileQuery.data, profilePic]);
+    if (submitting && profilePicQuery.isFetched) setSubmitting(false);
+  }, [submitting, profilePicQuery.isFetched]);
 
   const onDrop = useCallback(
     async (acceptedFiles) => {
+      setSubmitting(true);
       const { error } = await supabase.storage
         .from("profile-pics")
         .upload(path, acceptedFiles[0], {
@@ -120,40 +117,42 @@ const ProfilePictureUpload = ({ wallet }) => {
         });
 
       if (!error) {
-        const url = URL.createObjectURL(acceptedFiles[0]);
-        setProfilePic(url);
-        queryClient.invalidateQueries(["profile", wallet]);
-      } else toast.error(error); //TODO: error toasts?
+        // queryClient.invalidateQueries(["profile-pic", wallet]);
+
+        queryClient.refetchQueries(["profile-pic", wallet]);
+      } else toast.error(error);
     },
     [path, queryClient, wallet]
   );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const [isHovering, setIsHovering] = React.useState<boolean>();
-
+  console.log("submitting", submitting);
   return (
     <div
-      className="w-80 h-80 border-2 border-white rounded-full flex justify-center items-center relative "
+      className="w-80 h-80 border-2 border-white rounded-full flex justify-center items-center relative"
       {...getRootProps()}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
       <input {...getInputProps()} />
 
-      {profilePic && !isDragActive ? (
-        <>
-          <Image
-            className={`rounded-full ${isHovering && "opacity-25"}`}
-            src={profilePic}
-            objectFit={"cover"}
-            layout="fill"
-            alt="profile picture"
-            priority
-          />
-          {isHovering && (
-            <p className="text-base italic">{"Upload new photo"}</p>
-          )}
-        </>
+      {submitting && <p className="text-base italic">{"Loading"}</p>}
+      {isHovering && !submitting && (
+        <p className="text-base italic">{"Upload new photo"}</p>
+      )}
+
+      {profilePicQuery?.data && !isDragActive ? (
+        <Image
+          className={`rounded-full ${
+            (isHovering || submitting) && "opacity-25"
+          }`}
+          src={profilePicQuery?.data}
+          objectFit={"cover"}
+          layout="fill"
+          alt="profile picture"
+          priority
+        />
       ) : (
         <p className="text-base italic">
           {isDragActive ? "Drop image here" : "Drop or select visual to upload"}
@@ -164,19 +163,33 @@ const ProfilePictureUpload = ({ wallet }) => {
 };
 
 export const useProfile = (wallet) => {
-  const path = `${wallet}/profile`;
-
   const getProfileData = async () => {
-    const profilePic = await supabase.storage
-      .from("profile-pics")
-      .getPublicUrl(path);
     const query = await supabase.from("profiles").select().match({ wallet });
     const profileMeta = query.data[0] as UserProfile;
-    return {
-      profilePic: profilePic.data.publicURL,
-      ...profileMeta,
-    } as UserProfile;
+    return profileMeta as UserProfile;
   };
 
   return useQuery(["profile", wallet], getProfileData);
+};
+
+export const useProfilePic = (wallet) => {
+  const path = `${wallet}/profile`;
+
+  const getProfilePic = async () => {
+    if (!wallet) return null;
+
+    const { data, error } = await supabase.storage
+      .from("profile-pics")
+      .download(path);
+
+    if (error) {
+      toast.error(error);
+      return null;
+    }
+
+    const url = URL.createObjectURL(data);
+    return url;
+  };
+
+  return useQuery(["profile-pic", wallet], getProfilePic);
 };
