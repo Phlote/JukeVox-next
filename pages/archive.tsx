@@ -32,10 +32,7 @@ function Archive() {
               <ArchiveTableHeader label="Title" />
               <ArchiveTableHeader label="Media Type" filterKey={"mediaType"} />
               <ArchiveTableHeader label="Marketplace" filterKey="marketplace" />
-              <ArchiveTableHeader
-                label="Curator Wallet"
-                filterKey="curatorWallet"
-              />
+              <ArchiveTableHeader label="Curator" filterKey="curatorWallet" />
               <ArchiveTableHeader label="Co-Signs" />
             </tr>
           </thead>
