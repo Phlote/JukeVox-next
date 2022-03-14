@@ -4,6 +4,7 @@ import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { useField, useForm } from "react-final-form-hooks";
 import { useQuery, useQueryClient } from "react-query";
+import { toast } from "react-toastify";
 import { supabase } from "../../utils/supabase";
 import {
   HollowButton,
@@ -29,8 +30,11 @@ export const ProfileSettingsForm = ({ wallet }) => {
     const { data, error } = await supabase
       .from("profiles")
       .upsert({ wallet, username, city, twitter });
-    if (error) alert(error.message);
-    else queryClient.invalidateQueries(["profile", wallet]);
+    if (error) toast.error(error.message);
+    else {
+      queryClient.invalidateQueries(["profile", wallet]);
+      toast.success("Sumbitted!");
+    }
   };
 
   const profile = useProfile(wallet);
@@ -117,7 +121,7 @@ const ProfilePictureUpload = ({ wallet }) => {
         const url = URL.createObjectURL(acceptedFiles[0]);
         setProfilePic(url);
         queryClient.invalidateQueries(["profile", wallet]);
-      } else alert(error); //TODO: error toasts?
+      } else toast.error(error); //TODO: error toasts?
     },
     [path, queryClient, wallet]
   );
