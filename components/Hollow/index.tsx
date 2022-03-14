@@ -2,7 +2,7 @@ import styled from "styled-components";
 import tw from "twin.macro";
 
 export const HollowButtonContainer = styled.div`
-  ${tw`bg-phlote-button text-white rounded-full flex p-4 flex-row items-center justify-center border border-white max-h-14`}
+  ${tw`bg-phlote-button text-white rounded-full flex p-4 flex-row items-center justify-center border border-white max-h-14 cursor-pointer`}
   &:hover {
     opacity: 75%;
   }

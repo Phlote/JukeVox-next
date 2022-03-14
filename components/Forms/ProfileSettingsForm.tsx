@@ -83,7 +83,7 @@ export const ProfileSettingsForm = ({ wallet }) => {
           <HollowButton>Submit</HollowButton>
         </HollowButtonContainer>
         <HollowButtonContainer
-          className="absolute -bottom-20 -right-60"
+          className="absolute -bottom-20 -right-60 cursor-pointer"
           onClick={() => router.push(`/myarchive?wallet=${wallet}`)}
         >
           <HollowButton>
@@ -103,7 +103,6 @@ const ProfilePictureUpload = ({ wallet }) => {
 
   const onDrop = useCallback(
     async (acceptedFiles) => {
-      setSubmitting(true);
       const { error } = await supabase.storage
         .from("profile-pics")
         .upload(path, acceptedFiles[0], {

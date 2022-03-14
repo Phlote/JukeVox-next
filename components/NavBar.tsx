@@ -35,7 +35,7 @@ export const NavBar = () => {
           <>
             <NavBarElementContainer>
               <Link href="/archive" passHref>
-                <HollowButtonContainer className="cursor-pointer flex justify-center items-center ">
+                <HollowButtonContainer className=" flex justify-center items-center ">
                   Index
                 </HollowButtonContainer>
               </Link>
@@ -47,7 +47,7 @@ export const NavBar = () => {
           <>
             <NavBarElementContainer>
               <Link href={`/profile?wallet=${account}`} passHref>
-                <HollowButtonContainer className="cursor-pointer flex justify-center items-center ">
+                <HollowButtonContainer className=" flex justify-center items-center ">
                   My Profile
                 </HollowButtonContainer>
               </Link>
@@ -67,7 +67,7 @@ export const NavBar = () => {
           <>
             <NavBarElementContainer>
               <HollowButtonContainer
-                className="max-w-xs cursor-pointer flex justify-center items-center"
+                className="max-w-xs  flex justify-center items-center"
                 onClick={async () => {
                   deactivate();
                 }}
@@ -83,7 +83,7 @@ export const NavBar = () => {
           <>
             <NavBarElementContainer>
               <HollowButtonContainer
-                className="cursor-pointer flex justify-center items-center "
+                className=" flex justify-center items-center "
                 onClick={() => setOpen(true)}
               >
                 Submit
