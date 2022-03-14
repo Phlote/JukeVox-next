@@ -30,9 +30,7 @@ export const validateCurationSubmission = (values: Curation) => {
     errors.marketplace = "Required";
   }
 
-  if (!values.artistWallet) {
-    errors.artistWallet = "Required";
-  } else if (values.artistWallet) {
+  if (values.artistWallet) {
     if (!ethers.utils.isAddress(values.artistWallet)) {
       errors.artistWallet = "Invalid Address";
     }

@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import Image from "next/image";
+import { useState } from "react";
+import { useField, useForm } from "react-final-form-hooks";
+import Close from "../../public/close.svg";
 import { DropdownList } from "../DropdownList";
 import {
-  HollowInputContainer,
-  HollowInput,
-  HollowButtonContainer,
   HollowButton,
+  HollowButtonContainer,
+  HollowInput,
+  HollowInputContainer,
 } from "../Hollow";
 import { HollowTagsInput } from "../Hollow/HollowTagsInput";
-import Image from "next/image";
-import { atom, useAtom } from "jotai";
-import { useForm, useField } from "react-final-form-hooks";
 import { validateCurationSubmission } from "./validators";
 
 export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
@@ -30,7 +30,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
   return (
     <div className="mt-8">
       <HollowInputContainer type="form">
-        <HollowInput {...mediaURI.input} type="text" placeholder="NFT Link" />
+        <HollowInput {...mediaURI.input} type="text" placeholder="Link" />
         {mediaURI.meta.touched && mediaURI.meta.error && (
           <span className="text-red-600 ml-2">{mediaURI.meta.error}</span>
         )}
@@ -117,7 +117,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
         <HollowInput
           {...artistWallet.input}
           type="text"
-          placeholder="Artist Wallet Address"
+          placeholder="Artist Wallet Address (Optional)"
         />
         {artistWallet.meta.touched && artistWallet.meta.error && (
           <span className="text-red-600 ml-2">{artistWallet.meta.error}</span>
@@ -138,9 +138,9 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
               handleSubmit();
             }}
           >
-            {metamaskLoading ? "Waiting for Wallet..." : "Mint"}
+            {metamaskLoading ? "Waiting for Wallet..." : "Stamp"}
           </HollowButton>
-          <Image src="/favicon.svg" height={16} width={16} alt={"Gem"} />
+          <Close className="rotate-45 h-4 w-4" fill="white" />
         </HollowButtonContainer>
       </div>
       <div className="h-3" />
