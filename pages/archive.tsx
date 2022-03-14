@@ -36,7 +36,7 @@ function Archive() {
                 label="Curator Wallet"
                 filterKey="curatorWallet"
               />
-              <ArchiveTableHeader label="Rating" />
+              <ArchiveTableHeader label="Co-Signs" />
             </tr>
           </thead>
 

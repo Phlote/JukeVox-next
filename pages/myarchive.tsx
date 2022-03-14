@@ -39,7 +39,7 @@ const MyArchive = (props) => {
               <ArchiveTableHeader label="Title" />
               <ArchiveTableHeader label="Media Type" filterKey={"mediaType"} />
               <ArchiveTableHeader label="Marketplace" filterKey="marketplace" />
-              <ArchiveTableHeader label="Rating" />
+              <ArchiveTableHeader label="Co-Signs" />
             </tr>
           </thead>
 
