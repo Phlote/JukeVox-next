@@ -122,7 +122,10 @@ const ProfilePictureUpload = ({ wallet }) => {
     },
     [path, queryClient, wallet]
   );
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: "image/jpeg,image/png",
+  });
 
   const [isHovering, setIsHovering] = React.useState<boolean>();
   return (
