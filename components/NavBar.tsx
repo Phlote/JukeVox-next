@@ -36,7 +36,7 @@ export const NavBar = () => {
           <>
             <NavBarElementContainer>
               <Link href="/archive" passHref>
-                <HollowButtonContainer className="cursor-pointer flex justify-center items-center ">
+                <HollowButtonContainer className="flex justify-center items-center ">
                   Index
                 </HollowButtonContainer>
               </Link>
@@ -47,9 +47,9 @@ export const NavBar = () => {
         {active && account && (
           <>
             <NavBarElementContainer>
-              <Link href={`/myarchive?wallet=${account}`} passHref>
-                <HollowButtonContainer className="cursor-pointer flex justify-center items-center ">
-                  My Archive
+              <Link href={`/profile?wallet=${account}`} passHref>
+                <HollowButtonContainer className="flex justify-center items-center ">
+                  My Profile
                 </HollowButtonContainer>
               </Link>
             </NavBarElementContainer>
@@ -68,7 +68,7 @@ export const NavBar = () => {
           <>
             <NavBarElementContainer>
               <HollowButtonContainer
-                className="max-w-xs cursor-pointer flex justify-center items-center"
+                className="max-w-xs flex justify-center items-center"
                 onClick={async () => {
                   deactivate();
                 }}
@@ -84,7 +84,7 @@ export const NavBar = () => {
           <>
             <NavBarElementContainer>
               <HollowButtonContainer
-                className="cursor-pointer flex justify-center items-center"
+                className="flex justify-center items-center "
                 onClick={() => setOpen(true)}
               >
                 <Close fill="white" className="rotate-45 h-4 w-4" />

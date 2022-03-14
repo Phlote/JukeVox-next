@@ -9,8 +9,8 @@ import {
   useAllSubmissions,
   useNFTSearchFilters,
 } from "../../hooks/web3/useNFTSearch";
-import { ShortenedWallet } from "../Account";
 import { DropdownList } from "../DropdownList";
+import { Username } from "../Username";
 
 export const ArchiveTableHeader = (props) => {
   const [dropdownOpen, setDropdownOpen] = React.useState<boolean>(false);
@@ -74,7 +74,7 @@ export const ArchiveFilterLabel: React.FC<{ filter: string }> = ({
   filter,
 }) => {
   const isAddress = ethers.utils.isAddress(filter);
-  if (isAddress) return <ShortenedWallet wallet={filter} />;
+  if (isAddress) return <Username wallet={filter} />;
   else return <span>{filter}</span>;
 };
 

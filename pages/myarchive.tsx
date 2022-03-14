@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { useProfile } from "../components/Forms/ProfileSettingsForm";
 import { ArchiveLayout } from "../components/Layouts";
 import { RatingsMeter } from "../components/RatingsMeter";
 import {
@@ -13,15 +14,18 @@ const MyArchive = (props) => {
   const router = useRouter();
   const { wallet } = router.query;
   const { submissions } = useAllSubmissions();
-  // console.log("submissions", submissions);
   const mySubmissions = submissions?.filter(
     (submission) => submission.curatorWallet === wallet
   );
 
+  const profile = useProfile(wallet);
+
   return (
     <ArchiveLayout>
       <div className="flex flex-col">
-        <h1 className="text-xl italic">My Archive</h1>
+        <h1 className="text-xl italic">
+          {`${profile?.data?.username ?? wallet}'s Curations`}
+        </h1>
         <table className="table-fixed w-full text-center mt-8">
           <thead>
             <tr

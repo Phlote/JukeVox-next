@@ -1,4 +1,3 @@
-import { ShortenedWallet } from "../components/Account";
 import { ArchiveLayout } from "../components/Layouts";
 import { RatingsMeter } from "../components/RatingsMeter";
 import { useSearchTerm } from "../components/SearchBar";
@@ -8,6 +7,7 @@ import {
   ArchiveTableRow,
   SubmissionDate,
 } from "../components/Tables/archive";
+import { Username } from "../components/Username";
 import { useNFTSearch } from "../hooks/web3/useNFTSearch";
 import { usePhlote } from "../hooks/web3/usePhlote";
 
@@ -32,10 +32,7 @@ function Archive() {
               <ArchiveTableHeader label="Title" />
               <ArchiveTableHeader label="Media Type" filterKey={"mediaType"} />
               <ArchiveTableHeader label="Marketplace" filterKey="marketplace" />
-              <ArchiveTableHeader
-                label="Curator Wallet"
-                filterKey="curatorWallet"
-              />
+              <ArchiveTableHeader label="Curator" filterKey="curatorWallet" />
               <ArchiveTableHeader label="Co-Signs" />
             </tr>
           </thead>
@@ -79,7 +76,7 @@ function Archive() {
                       <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>
-                        <ShortenedWallet wallet={curatorWallet} />
+                        <Username wallet={curatorWallet} />
                       </ArchiveTableDataCell>
                       <ArchiveTableDataCell>
                         <RatingsMeter

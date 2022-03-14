@@ -1,6 +1,6 @@
 import type { BigNumberish } from "@ethersproject/bignumber";
 import { formatUnits } from "@ethersproject/units";
-import { NETWORKS } from "./constants";
+import { NETWORKS } from "../constants";
 
 export function shortenHex(hex: string, length = 4) {
   return `${hex.substring(0, length + 2)}…${hex.substring(
@@ -60,17 +60,3 @@ export const changeNetwork = async (
     setError(err.message);
   }
 };
-
-export function nextApiRequest(
-  path: string,
-  method = "GET",
-  data?: Record<string, any>
-): Promise<Record<string, any>> {
-  return fetch(`/api/${path}`, {
-    method: method,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: data ? JSON.stringify(data) : undefined,
-  }).then((response) => response.json());
-}

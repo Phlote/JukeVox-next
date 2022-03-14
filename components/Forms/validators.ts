@@ -1,5 +1,7 @@
 import { ethers } from "ethers";
 import { Curation } from "../../types/curations";
+import { supabase } from "../../utils/supabase";
+import { UserProfile } from "./ProfileSettingsForm";
 
 export const validateCurationSubmission = (values: Curation) => {
   const errors: Record<string, string> = {};
@@ -36,6 +38,26 @@ export const validateCurationSubmission = (values: Curation) => {
     }
   }
 
-  //TODO: if there is a value for artistWallet, check if it's on chain
+  return errors;
+};
+
+// TODO memoize?
+export const usernameTaken = async (username: string, wallet: string) => {
+  const query = await supabase.from("profiles").select().match({ username });
+  return query.data.length > 0 && query.data[0].wallet !== wallet;
+};
+
+export const validateProfileSettings = async (values: UserProfile) => {
+  const errors: Record<string, string> = {};
+  if (values.username) {
+    if (values.username.length < 4 || values.username.length > 15)
+      errors.username =
+        "Usernames must be between 4 and 15 characters in length!";
+
+    if (await usernameTaken(values.username, values.wallet)) {
+      errors.username = "Username taken!";
+    }
+  }
+
   return errors;
 };

@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { ethers } from "ethers";
 import React from "react";
-import { ShortenedWallet } from "./Account";
+import { Username } from "./Username";
 
 interface DropdownList {
   fields: string[];
@@ -55,7 +55,7 @@ export const DropdownList: React.FC<DropdownList> = ({
             ></input>
             <div className="w-4" />
             <label className="text-xl" htmlFor={field}>
-              {isAddress ? <ShortenedWallet wallet={field} /> : field}
+              {isAddress ? <Username wallet={field} /> : field}
             </label>
           </div>
         );
