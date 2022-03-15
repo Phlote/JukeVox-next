@@ -130,7 +130,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
       <div className="flex justify-center items-center">
         <HollowButtonContainer>
           <HollowButton
-            className="w-24"
+            className="w-16"
             disabled={metamaskLoading || !valid}
             style={metamaskLoading ? { width: "16rem" } : undefined}
             onClick={() => {
