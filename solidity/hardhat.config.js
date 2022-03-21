@@ -4,11 +4,12 @@ require('@nomiclabs/hardhat-ethers')
 require('@nomiclabs/hardhat-waffle')
 require("@openzeppelin/hardhat-upgrades");
 require("@nomiclabs/hardhat-solhint");
+require("@nomiclabs/hardhat-etherscan");
 require("hardhat-contract-sizer");
 
 module.exports = {
   solidity: {
-    version: '0.8.4',
+    version: '0.8.2',
     settings: {
       optimizer: {
         enabled: true,
@@ -34,5 +35,8 @@ module.exports = {
     alwaysGenerateOverloads: false,
     // optional array of glob patterns with external artifacts to process (for example external libs from node_modules)
     externalArtifacts: ['artifacts/*.json'],
+  },
+  etherscan: {
+    apiKey: process.env.ETHERSCAN_API_KEY,
   },
 };
