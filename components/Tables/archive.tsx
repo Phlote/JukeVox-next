@@ -120,7 +120,7 @@ export const ArchiveDropdown: React.FC<{
 
   return (
     <div
-      className="absolute z-10 h-64 w-64 mb-4 top-10"
+      className="absolute z-10 h-64 w-64 mb-4 top-10 overflow-y-scroll p-2"
       style={{ backgroundColor: "#1d1d1d" }}
     >
       <DropdownList
