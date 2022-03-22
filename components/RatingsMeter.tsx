@@ -1,8 +1,8 @@
-import React from "react";
-import { usePhlote } from "../hooks/web3/usePhlote";
-import Image from "next/image";
-import { useWeb3React } from "@web3-react/core";
 import { BigNumber } from "ethers";
+import Image from "next/image";
+import React from "react";
+import { useIsCurator } from "../hooks/useIsCurator";
+import { usePhlote } from "../hooks/web3/usePhlote";
 
 export const RatingsMeter: React.FC<{
   editionId: BigNumber;
@@ -14,6 +14,7 @@ export const RatingsMeter: React.FC<{
   );
 
   const phlote = usePhlote();
+  const isCurator = useIsCurator();
 
   React.useEffect(() => {
     const getCosigns = async () => {
@@ -48,22 +49,27 @@ export const RatingsMeter: React.FC<{
   };
 
   return (
-    <div className="flex gap-1 justify-center">
+    <div
+      className="flex gap-1 justify-center"
+      style={!isCurator ? { opacity: "25%" } : undefined}
+    >
       {Array(5)
         .fill(null)
         .map((_, idx) => {
           if (idx > cosigns.length - 1) {
             return (
-              <div
+              <button
                 onClick={onCosign}
-                className="h-6 w-6 relative cursor-pointer"
+                className="h-6 w-6 relative"
+                style={isCurator ? { cursor: "pointer" } : undefined}
+                disabled={!isCurator}
               >
                 <Image
                   src="/clear_diamond.png"
                   alt="cosign here"
                   layout="fill"
                 />
-              </div>
+              </button>
             );
           } else {
             if (cosigns[idx] === "pending") {

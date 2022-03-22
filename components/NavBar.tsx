@@ -20,7 +20,7 @@ export const NavBar = () => {
 
   const { NODE_ENV } = process.env;
 
-  const allowCurate = active && isCurator.data && isCurator.data.isCurator;
+  const allowCurate = active && isCurator;
 
   return (
     <div className="py-4 flex-none w-screen px-12">
@@ -80,7 +80,7 @@ export const NavBar = () => {
           </>
         )}
 
-        {allowCurate && (
+        {active && (
           <>
             <NavBarElementContainer>
               <HollowButtonContainer
