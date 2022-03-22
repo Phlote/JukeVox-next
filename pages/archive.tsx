@@ -9,12 +9,10 @@ import {
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
 import { useNFTSearch } from "../hooks/web3/useNFTSearch";
-import { usePhlote } from "../hooks/web3/usePhlote";
 
 function Archive() {
   const [searchTerm] = useSearchTerm();
   const curations = useNFTSearch(searchTerm);
-  const phlote = usePhlote();
 
   return (
     <ArchiveLayout>
@@ -31,7 +29,7 @@ function Archive() {
               <ArchiveTableHeader label="Artist" />
               <ArchiveTableHeader label="Title" />
               <ArchiveTableHeader label="Media Type" filterKey={"mediaType"} />
-              <ArchiveTableHeader label="Marketplace" filterKey="marketplace" />
+              <ArchiveTableHeader label="Platform" filterKey="marketplace" />
               <ArchiveTableHeader label="Curator" filterKey="curatorWallet" />
               <ArchiveTableHeader label="Co-Signs" />
             </tr>
@@ -76,7 +74,7 @@ function Archive() {
                       <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>
-                        <Username wallet={curatorWallet} />
+                        <Username wallet={curatorWallet} linkToProfile />
                       </ArchiveTableDataCell>
                       <ArchiveTableDataCell>
                         <RatingsMeter

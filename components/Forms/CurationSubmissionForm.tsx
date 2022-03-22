@@ -104,7 +104,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
         <HollowInput
           {...marketplace.input}
           type="text"
-          placeholder="Marketplace"
+          placeholder="Marketplace/Platform"
         />
         {marketplace.meta.touched && marketplace.meta.error && (
           <span className="text-red-600 ml-2">{marketplace.meta.error}</span>

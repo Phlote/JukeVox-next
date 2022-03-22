@@ -1,12 +1,14 @@
-import React, { useEffect } from "react";
-import { usePhlote } from "./usePhlote";
 import FuzzySearch from "fuzzy-search";
 import { atom, useAtom } from "jotai";
+import React from "react";
 import { ArchiveCuration } from "../../types/curations";
+import { usePhlote } from "./usePhlote";
+
+const submissionsAtom = atom<ArchiveCuration[]>([]);
 
 export const useAllSubmissions = () => {
   // TODO: caching?
-  const [submissions, setSubmissions] = React.useState<ArchiveCuration[]>([]);
+  const [submissions, setSubmissions] = useAtom(submissionsAtom);
 
   const phlote = usePhlote();
 
@@ -14,7 +16,10 @@ export const useAllSubmissions = () => {
     const getContent = () => {
       phlote.getAllCurations().then((content) => {
         const reversed = ([...content] as ArchiveCuration[]).reverse();
-        setSubmissions(reversed);
+        const cleaned = reversed.map((submission) =>
+          cleanSubmission(submission)
+        );
+        setSubmissions(cleaned);
       });
     };
 
@@ -33,6 +38,25 @@ export const useAllSubmissions = () => {
   }, [phlote, setSubmissions]);
 
   return { submissions, setSubmissions };
+};
+
+//TODO: remove this, is just bandaid
+const cleanSubmission = (submission: ArchiveCuration) => {
+  const cleaned = { ...submission };
+  if (submission.mediaURI.includes("opensea")) {
+    cleaned.marketplace = "OpenSea";
+  }
+  if (submission.mediaURI.includes("catalog")) {
+    cleaned.marketplace = "Catalog";
+  }
+  if (submission.mediaURI.includes("zora")) {
+    cleaned.marketplace = "Zora";
+  }
+  if (submission.mediaURI.includes("foundation")) {
+    cleaned.marketplace = "Foundation";
+  }
+
+  return cleaned;
 };
 
 const NFTSearchFiltersAtom = atom<Partial<ArchiveCuration>>({});

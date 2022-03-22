@@ -31,7 +31,7 @@ export const DropdownList: React.FC<DropdownList> = ({
 
   return (
     <div
-      className={classNames("grid grid-cols-1 w-full", {
+      className={classNames("grid grid-cols-1 w-full overflow-y-scroll", {
         "divide-y": borders,
       })}
     >
