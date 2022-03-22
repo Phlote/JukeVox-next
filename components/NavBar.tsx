@@ -89,7 +89,7 @@ export const NavBar = () => {
               >
                 <Close fill="white" className="rotate-45 h-4 w-4" />
                 <div className="w-4" />
-                Stamp
+                Submit
               </HollowButtonContainer>
             </NavBarElementContainer>
             <div className="w-4" />
