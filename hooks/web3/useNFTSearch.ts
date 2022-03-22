@@ -1,12 +1,14 @@
-import React, { useEffect } from "react";
-import { usePhlote } from "./usePhlote";
 import FuzzySearch from "fuzzy-search";
 import { atom, useAtom } from "jotai";
+import React from "react";
 import { ArchiveCuration } from "../../types/curations";
+import { usePhlote } from "./usePhlote";
+
+const submissionsAtom = atom<ArchiveCuration[]>([]);
 
 export const useAllSubmissions = () => {
   // TODO: caching?
-  const [submissions, setSubmissions] = React.useState<ArchiveCuration[]>([]);
+  const [submissions, setSubmissions] = useAtom(submissionsAtom);
 
   const phlote = usePhlote();
 

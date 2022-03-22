@@ -14,7 +14,6 @@ import { usePhlote } from "../hooks/web3/usePhlote";
 function Archive() {
   const [searchTerm] = useSearchTerm();
   const curations = useNFTSearch(searchTerm);
-  const phlote = usePhlote();
 
   return (
     <ArchiveLayout>
