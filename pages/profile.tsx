@@ -13,7 +13,7 @@ function Profile() {
 
   return (
     <ProfileLayout>
-      <ProfileSettingsForm wallet={account} />q
+      <ProfileSettingsForm wallet={account} />
       <ToastContainer position="bottom-right" autoClose={5000} />
       <HollowButtonContainer
         className="absolute bottom-10 right-10 cursor-pointer"
