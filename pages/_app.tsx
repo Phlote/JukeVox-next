@@ -1,10 +1,10 @@
 import { Web3ReactProvider } from "@web3-react/core";
 import type { AppProps } from "next/app";
+import Head from "next/head";
 import { QueryClient, QueryClientProvider } from "react-query";
+import "tailwindcss/tailwind.css";
 import getLibrary from "../getLibrary";
 import "../styles/globals.css";
-import Head from "next/head";
-import "tailwindcss/tailwind.css";
 
 const queryClient = new QueryClient();
 
