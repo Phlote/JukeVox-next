@@ -2,15 +2,6 @@ import pinataSDK from "@pinata/sdk";
 import { NextApiRequest, NextApiResponse } from "next";
 import { Curation } from "../../types/curations";
 
-interface PinataPinJSONToIPFSResult {
-  data: {
-    IpfsHash: string;
-    PinSize: number;
-    Timestamp: string;
-    isDuplicate: true;
-  };
-}
-
 export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
