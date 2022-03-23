@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { NFTStorage, File } from "nft.storage";
+import { File } from "nft.storage";
 import { Curation } from "../../types/curations";
 import { PHLOTE_CURATION_NFT_IMAGE } from "./common";
 import nftStorage from "./lib/nftStorage";
@@ -57,6 +57,5 @@ export default async function handler(
     ],
   });
 
-  console.log(metadata);
   response.status(200).send({ tokenURI: metadata.url });
 }

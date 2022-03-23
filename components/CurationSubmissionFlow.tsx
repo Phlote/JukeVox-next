@@ -1,12 +1,11 @@
 import { useWeb3React } from "@web3-react/core";
-import { BigNumber } from "ethers";
-import Image from "next/image";
 import React, { useState } from "react";
-import { NFT_MINT_CONTRACT_RINKEBY, NULL_WALLET } from "../contracts/addresses";
+import { toast } from "react-toastify";
 import { useAllSubmissions } from "../hooks/web3/useNFTSearch";
 import { usePhlote } from "../hooks/web3/usePhlote";
 import { Curation } from "../types/curations";
 import { nextApiRequest } from "../utils";
+import { supabase } from "../utils/supabase";
 import { CurationSubmissionForm } from "./Forms/CurationSubmissionForm";
 import { HollowButton, HollowButtonContainer } from "./Hollow";
 
@@ -44,51 +43,29 @@ export const CurationSubmissionFlow = (props) => {
     };
   }, [phloteContract]);
 
-  const submitCuration = async (curationData: Curation) => {
-    const {
-      mediaType,
-      artistName,
-      artistWallet,
-      mediaTitle,
-      mediaURI,
-      marketplace,
-      tags,
-    } = curationData;
-
+  const submitCuration = async (curation: Curation) => {
     setLoading(true);
-    try {
-      const { tokenURI } = await nextApiRequest(
-        "store-nft",
-        "POST",
-        curationData
-      );
 
-      const res = await phloteContract.submitPost(
-        account,
-        mediaURI,
-        marketplace,
-        tags ?? [],
-        artistName,
-        artistWallet ?? NULL_WALLET,
-        mediaType,
-        mediaTitle,
-        tokenURI
-      );
-      console.log(res);
-      setTxnHash(res.hash);
-      setPage(1);
-      setSubmissions((curations) => [
-        {
-          curatorWallet: account,
-          ...curationData,
-          transactionPending: true,
-          submissionTime: BigNumber.from(Date.now()),
-        },
-        ...curations,
-      ]);
-    } catch (e) {
-      console.error(e);
+    const { ipfsURL } = await nextApiRequest(
+      "store-submission-on-ipfs",
+      "POST",
+      curation
+    );
+    console.log(ipfsURL);
+
+    const { data, error } = await supabase
+      .from("submissions")
+      .insert([{ curatorWallet: account, ...curation }]);
+
+    if (error) {
+      toast.error(error);
+      console.error(error);
+      return;
     }
+
+    setPage(1);
+    setSubmissions((curations) => [data[0], ...curations]);
+
     setLoading(false);
   };
 
@@ -109,7 +86,7 @@ export const CurationSubmissionFlow = (props) => {
         <div className="flex flex-col items-center text-sm mt-8">
           <p>Congratulations! Your submission has been added</p>
           <div className="h-8" />
-          <a
+          {/* <a
             className="underline flex"
             rel="noreferrer"
             target="_blank"
@@ -135,7 +112,7 @@ export const CurationSubmissionFlow = (props) => {
             {nftMintId === "Loading" && " (Waiting on transaction...)"}
             <div className="w-1" />
             <Image src="/arrow.svg" alt={"link"} height={12} width={12} />
-          </a>
+          </a> */}
 
           <div className="h-8" />
           <HollowButtonContainer className="w-1/2" onClick={() => setPage(0)}>
