@@ -23,10 +23,8 @@ export const NavBar = () => {
         <Link href="/" passHref>
           <h1 className="text-6xl cursor-pointer">Phlote</h1>
         </Link>
-
         <div className="flex-grow" />
         <div className="w-4" />
-
         {active && (
           <>
             <NavBarElementContainer>
@@ -51,24 +49,9 @@ export const NavBar = () => {
             <div className="w-4" />
           </>
         )}
-
         {router.pathname !== "/" && (
           <>
             <SearchBar />
-            <div className="w-4" />
-          </>
-        )}
-
-        {NODE_ENV !== "production" && (
-          <>
-            <NavBarElementContainer>
-              <HollowButtonContainer
-                className="max-w-xs flex justify-center items-center"
-                onClick={deactivate}
-              >
-                Disconnect Wallet
-              </HollowButtonContainer>
-            </NavBarElementContainer>
             <div className="w-4" />
           </>
         )}
