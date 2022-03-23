@@ -1,10 +1,9 @@
 import { useWeb3React } from "@web3-react/core";
-import { atom, useAtom } from "jotai";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
-import { NETWORKS, RINKEBY_CHAIN_ID } from "../constants";
-import { HollowButtonContainer, HollowButton } from "./Hollow";
+import { RINKEBY_CHAIN_ID } from "../utils/constants";
+import { HollowButton, HollowButtonContainer } from "./Hollow";
 
 interface ModalProps {
   open: boolean;

@@ -1,8 +1,8 @@
 import type { BigNumberish } from "@ethersproject/bignumber";
 import { formatUnits } from "@ethersproject/units";
 import { nextApiRequest } from ".";
-import { NETWORKS } from "../constants";
 import { UserNonce } from "../types";
+import { NETWORKS } from "./constants";
 
 export function shortenHex(hex: string, length = 4) {
   return `${hex.substring(0, length + 2)}…${hex.substring(
@@ -64,14 +64,13 @@ export const changeNetwork = async (
 };
 
 // determines if the holder of an address actually holds the wallet
-export const verifyUser = async (address: string, provider) => {
+export const verifyUser = async (address: string, library) => {
   //TODO: should have a controller so we have better typing here
   const user = (await nextApiRequest(
     `auth?address=${address}`,
     "GET"
   )) as UserNonce;
-
-  const signer = provider.getSigner();
+  const signer = library.getSigner();
   const signature = await signer.signMessage(user.nonce.toString());
   const { authenticated } = (await nextApiRequest(
     `confirm?wallet=${address}&signature=${signature}`,

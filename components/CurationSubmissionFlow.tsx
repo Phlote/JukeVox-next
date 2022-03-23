@@ -6,11 +6,12 @@ import { usePhlote } from "../hooks/web3/usePhlote";
 import { Curation } from "../types/curations";
 import { nextApiRequest } from "../utils";
 import { supabase } from "../utils/supabase";
+import { verifyUser } from "../utils/web3";
 import { CurationSubmissionForm } from "./Forms/CurationSubmissionForm";
 import { HollowButton, HollowButtonContainer } from "./Hollow";
 
 export const CurationSubmissionFlow = (props) => {
-  const { account } = useWeb3React();
+  const { account, library } = useWeb3React();
 
   const [page, setPage] = useState<number>(0);
   const [txnHash, setTxnHash] = useState<string>("0x0");
@@ -45,6 +46,9 @@ export const CurationSubmissionFlow = (props) => {
 
   const submitCuration = async (curation: Curation) => {
     setLoading(true);
+
+    const authenticated = await verifyUser(account, library);
+    console.log(authenticated);
 
     const { ipfsURL } = await nextApiRequest(
       "store-submission-on-ipfs",
