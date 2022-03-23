@@ -55,6 +55,12 @@ const cleanSubmission = (submission: ArchiveCuration) => {
   if (submission.mediaURI.includes("foundation")) {
     cleaned.marketplace = "Foundation";
   }
+  if (submission.mediaURI.includes("spotify")) {
+    cleaned.marketplace = "Spotify";
+  }
+  if (submission.mediaURI.includes("soundcloud")) {
+    cleaned.marketplace = "Soundcloud";
+  }
 
   return cleaned;
 };
