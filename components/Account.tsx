@@ -1,10 +1,10 @@
 import { useWeb3React } from "@web3-react/core";
 import { UserRejectedRequestError } from "@web3-react/injected-connector";
 import { useEffect, useRef, useState } from "react";
-import { injected } from "../connectors";
 import { useOnCopy } from "../hooks/useOnCopy";
 import useENSName from "../hooks/web3/useENSName";
 import useMetaMaskOnboarding from "../hooks/web3/useMetaMaskOnboarding";
+import { injected } from "../utils/connectors";
 import { shortenHex } from "../utils/web3";
 import { HollowInputContainer } from "./Hollow";
 

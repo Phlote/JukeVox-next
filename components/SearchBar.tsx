@@ -1,11 +1,11 @@
+import { useWeb3React } from "@web3-react/core";
 import { atom, useAtom } from "jotai";
-import { HollowInputContainer, HollowInput } from "./Hollow";
 import Image from "next/image";
 import React from "react";
-import { useWeb3React } from "@web3-react/core";
-import { injected } from "../connectors";
-import Close from "../public/close.svg";
 import { useKeyPress } from "../hooks/useKeyPress";
+import Close from "../public/close.svg";
+import { injected } from "../utils/connectors";
+import { HollowInput, HollowInputContainer } from "./Hollow";
 
 const searchTermAtom = atom<string>("");
 export const useSearchTerm = () => useAtom(searchTermAtom);
