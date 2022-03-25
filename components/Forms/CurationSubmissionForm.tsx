@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { useField, useForm } from "react-final-form-hooks";
-import { DropdownList } from "../DropdownList";
+import { DropdownChecklist } from "../Dropdowns/DropdownChecklist";
 import {
   HollowButton,
   HollowButtonContainer,
@@ -67,7 +67,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
         <>
           <div className="h-4" />{" "}
           <HollowInputContainer style={{ borderRadius: "60px" }}>
-            <DropdownList
+            <DropdownChecklist
               {...mediaType.input}
               close={() => setDropdownOpen(false)}
               fields={["Audio", "Text", "Video", "Visual Art"]}

@@ -2,7 +2,6 @@ import { useWeb3React } from "@web3-react/core";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import tw from "twin.macro";
-import { useIsCurator } from "../hooks/useIsCurator";
 import useEagerConnect from "../hooks/web3/useEagerConnect";
 import Close from "../public/close.svg";
 import Account from "./Account";
@@ -13,14 +12,10 @@ import { useSubmitSidenavOpen } from "./SideNav";
 export const NavBar = () => {
   const triedToEagerConnect = useEagerConnect();
   const [, setOpen] = useSubmitSidenavOpen();
-  // const [, setCurations] = useUserCurations();
-  const isCurator = useIsCurator();
   const router = useRouter();
   const { active, account, deactivate } = useWeb3React();
 
   const { NODE_ENV } = process.env;
-
-  const allowCurate = active && isCurator;
 
   return (
     <div className="py-4 flex-none w-screen px-12">
@@ -28,10 +23,8 @@ export const NavBar = () => {
         <Link href="/" passHref>
           <h1 className="text-6xl cursor-pointer">Phlote</h1>
         </Link>
-
         <div className="flex-grow" />
         <div className="w-4" />
-
         {active && (
           <>
             <NavBarElementContainer>
@@ -56,26 +49,9 @@ export const NavBar = () => {
             <div className="w-4" />
           </>
         )}
-
         {router.pathname !== "/" && (
           <>
             <SearchBar />
-            <div className="w-4" />
-          </>
-        )}
-
-        {NODE_ENV !== "production" && (
-          <>
-            <NavBarElementContainer>
-              <HollowButtonContainer
-                className="max-w-xs flex justify-center items-center"
-                onClick={async () => {
-                  deactivate();
-                }}
-              >
-                Disconnect Wallet
-              </HollowButtonContainer>
-            </NavBarElementContainer>
             <div className="w-4" />
           </>
         )}
