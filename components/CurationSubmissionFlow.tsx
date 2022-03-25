@@ -14,8 +14,7 @@ export const CurationSubmissionFlow = (props) => {
   const { account, library } = useWeb3React();
 
   const [page, setPage] = useState<number>(0);
-  const [txnHash, setTxnHash] = useState<string>("0x0");
-  const [nftMintId, setNFTMintId] = useState<number | "Loading">("Loading");
+
   const [loading, setLoading] = useState<boolean>(false);
   const { setSubmissions } = useAllSubmissions();
 
@@ -34,7 +33,6 @@ export const CurationSubmissionFlow = (props) => {
           console.log("minted");
           console.log(res);
           console.log(res.args["tokenId"].toNumber());
-          setNFTMintId(res.args["tokenId"].toNumber());
         }
       });
     }
@@ -46,31 +44,33 @@ export const CurationSubmissionFlow = (props) => {
 
   const submitCuration = async (curation: Curation) => {
     setLoading(true);
+    try {
+      const authenticated = await verifyUser(account, library);
 
-    const authenticated = await verifyUser(account, library);
-    console.log(authenticated);
+      if (!authenticated) {
+        toast.error("Authentication failed");
+        return;
+      }
 
-    const { ipfsURL } = await nextApiRequest(
-      "store-submission-on-ipfs",
-      "POST",
-      curation
-    );
-    console.log(ipfsURL);
+      const { cid } = await nextApiRequest(
+        "store-submission-on-ipfs",
+        "POST",
+        curation
+      );
 
-    const { data, error } = await supabase
-      .from("submissions")
-      .insert([{ curatorWallet: account, ...curation }]);
+      const { data, error } = await supabase
+        .from("submissions")
+        .insert([{ curatorWallet: account, cid, ...curation }]);
 
-    if (error) {
-      toast.error(error);
-      console.error(error);
-      return;
+      if (error) throw error;
+
+      setPage(1);
+      setSubmissions((curations) => [data[0], ...curations]);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
     }
-
-    setPage(1);
-    setSubmissions((curations) => [data[0], ...curations]);
-
-    setLoading(false);
   };
 
   return (

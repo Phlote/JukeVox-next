@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import { NextApiRequest, NextApiResponse } from "next/dist/shared/lib/utils";
 import { UserNonce } from "../../types";
+import { PhloteSignatureMessage } from "../../utils/constants";
 import { supabase } from "../../utils/supabase";
 
 export default async function confirm(
@@ -15,7 +16,7 @@ export default async function confirm(
   const user = userQuery.data[0] as UserNonce;
 
   const decodedAddress = ethers.utils.verifyMessage(
-    user.nonce.toString(),
+    PhloteSignatureMessage + user.nonce.toString(),
     signature as string
   );
   if (address.toLowerCase() === decodedAddress.toLowerCase())

@@ -41,7 +41,5 @@ export default async function handler(
   };
   const pin = await pinata.pinJSONToIPFS(erc1155Metadata);
   console.log(pin);
-  response
-    .status(200)
-    .send({ ipfsURL: `https://gateway.pinata.cloud/ipfs/${pin.IpfsHash}` });
+  response.status(200).send({ cid: pin.IpfsHash });
 }
