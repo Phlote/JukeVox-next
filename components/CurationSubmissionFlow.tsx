@@ -46,10 +46,11 @@ export const CurationSubmissionFlow = (props) => {
     setLoading(true);
     try {
       const authenticated = await verifyUser(account, library);
+      console.log(authenticated);
 
       if (!authenticated) {
         toast.error("Authentication failed");
-        return;
+        throw "Not Authenticated";
       }
 
       const { cid } = await nextApiRequest(

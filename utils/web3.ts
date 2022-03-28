@@ -2,7 +2,7 @@ import type { BigNumberish } from "@ethersproject/bignumber";
 import { formatUnits } from "@ethersproject/units";
 import { nextApiRequest } from ".";
 import { UserNonce } from "../types";
-import { NETWORKS, PhloteSignatureMessage } from "./constants";
+import { NETWORKS, PHLOTE_SIGNATURE_REQUEST_MESSAGE } from "./constants";
 
 export function shortenHex(hex: string, length = 4) {
   return `${hex.substring(0, length + 2)}…${hex.substring(
@@ -72,7 +72,7 @@ export const verifyUser = async (address: string, library) => {
   )) as UserNonce;
   const signer = library.getSigner();
   const signature = await signer.signMessage(
-    PhloteSignatureMessage + user.nonce.toString()
+    PHLOTE_SIGNATURE_REQUEST_MESSAGE + user.nonce.toString()
   );
   const { authenticated } = (await nextApiRequest(
     `confirm?wallet=${address}&signature=${signature}`,

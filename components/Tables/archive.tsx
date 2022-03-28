@@ -88,7 +88,6 @@ const submissionTimeToDate = (submissionTimestamp: BigNumber | number) => {
   let time = submissionTimestamp;
   if (submissionTimestamp instanceof BigNumber) {
     time = submissionTimestamp.toNumber();
-    // do something
   }
 
   return new Date((time as number) * 1000).toLocaleDateString();

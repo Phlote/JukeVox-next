@@ -18,5 +18,5 @@ export const NETWORKS = {
   },
 };
 
-export const PhloteSignatureMessage =
+export const PHLOTE_SIGNATURE_REQUEST_MESSAGE =
   "Hi there from Phlote! Sign this message to prove you have access to this wallet and we'll log you in. This won't cost you any gas. \n\n";
