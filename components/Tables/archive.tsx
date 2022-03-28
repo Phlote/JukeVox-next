@@ -76,17 +76,19 @@ export const ArchiveFilterLabel: React.FC<{ filter: string }> = ({
 };
 
 export const SubmissionDate: React.FC<{
-  submissionTimestamp: BigNumber | number;
+  submissionTimestamp: BigNumber | number | string;
 }> = ({ submissionTimestamp }) => {
   return <span>{submissionTimeToDate(submissionTimestamp)}</span>;
 };
 
-const submissionTimeToDate = (submissionTimestamp: BigNumber | number) => {
-  let time = submissionTimestamp;
-  if (submissionTimestamp instanceof BigNumber) {
-    time = submissionTimestamp.toNumber();
+const submissionTimeToDate = (timeStamp: BigNumber | number | string) => {
+  let time = timeStamp;
+  if (timeStamp instanceof BigNumber) {
+    time = timeStamp.toNumber();
   }
-
+  if (typeof timeStamp === "string") {
+    time = parseInt(timeStamp as string);
+  }
   return new Date((time as number) * 1000).toLocaleDateString();
 };
 

@@ -61,11 +61,7 @@ const MyArchive = (props) => {
                   <>
                     <ArchiveTableRow key={`${submissionTime}`}>
                       <ArchiveTableDataCell>
-                        <SubmissionDate
-                          submissionTimestamp={
-                            new Date(submissionTime).getTime() / 1000
-                          }
-                        />
+                        <SubmissionDate submissionTimestamp={submissionTime} />
                       </ArchiveTableDataCell>
                       <ArchiveTableDataCell>{artistName}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>

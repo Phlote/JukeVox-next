@@ -1,4 +1,3 @@
-import { toast } from "react-toastify";
 import { ArchiveLayout } from "../components/Layouts";
 import { RatingsMeter } from "../components/RatingsMeter";
 import { useSearchTerm } from "../components/SearchBar";
@@ -55,11 +54,7 @@ function Archive() {
                   <>
                     <ArchiveTableRow key={`${submissionTime}`}>
                       <ArchiveTableDataCell>
-                        <SubmissionDate
-                          submissionTimestamp={
-                            new Date(submissionTime).getTime() / 1000
-                          }
-                        />
+                        <SubmissionDate submissionTimestamp={submissionTime} />
                       </ArchiveTableDataCell>
                       <ArchiveTableDataCell>{artistName}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>
