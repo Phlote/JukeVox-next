@@ -14,6 +14,7 @@ async function main() {
 
   const sanitized = submissions.map((sub) => {
     const {
+      id,
       submissionTime,
       mediaType,
       artistName,
@@ -26,6 +27,7 @@ async function main() {
     } = sub;
 
     return {
+      id: id.toNumber(),
       mediaType,
       artistName,
       artistWallet,
