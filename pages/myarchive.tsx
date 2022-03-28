@@ -8,7 +8,7 @@ import {
   ArchiveTableRow,
   SubmissionDate,
 } from "../components/Tables/archive";
-import { useAllSubmissions } from "../hooks/web3/useNFTSearch";
+import { useAllSubmissions } from "../hooks/web3/useSubmissions";
 
 const MyArchive = (props) => {
   const router = useRouter();

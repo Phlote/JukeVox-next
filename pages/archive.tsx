@@ -8,7 +8,7 @@ import {
   SubmissionDate,
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
-import { useNFTSearch } from "../hooks/web3/useNFTSearch";
+import { useNFTSearch } from "../hooks/web3/useSubmissions";
 
 function Archive() {
   const [searchTerm] = useSearchTerm();

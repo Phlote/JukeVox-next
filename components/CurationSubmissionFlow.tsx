@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { useAllSubmissions } from "../hooks/web3/useNFTSearch";
+import { useAllSubmissions } from "../hooks/web3/useSubmissions";
 import { usePhlote } from "../hooks/web3/usePhlote";
 import { Curation } from "../types/curations";
 import { nextApiRequest } from "../utils";

@@ -8,7 +8,7 @@ import { useOnClickOut } from "../../hooks/useOnClickOut";
 import {
   useAllSubmissions,
   useNFTSearchFilters,
-} from "../../hooks/web3/useNFTSearch";
+} from "../../hooks/web3/useSubmissions";
 import { DropdownList } from "../DropdownList";
 import { Username } from "../Username";
 
