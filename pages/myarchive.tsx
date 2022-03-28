@@ -14,9 +14,9 @@ const MyArchive = (props) => {
   const router = useRouter();
   const { wallet } = router.query;
   const submissions = useSubmissions();
-  const mySubmissions = submissions?.filter(
-    (submission) => submission.curatorWallet === wallet
-  );
+  const mySubmissions =
+    submissions?.filter((submission) => submission.curatorWallet === wallet) ??
+    [];
 
   const profile = useProfile(wallet);
 
