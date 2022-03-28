@@ -3,6 +3,7 @@ export type ArchiveCuration = Curation;
 type MediaType = "Audio" | "Text" | "Video" | "Visual Art";
 export interface Curation {
   id: number;
+  submissionTime: string;
   mediaType: MediaType;
   artistName: string;
   artistWallet: string;

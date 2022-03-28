@@ -6,9 +6,9 @@ import styled from "styled-components";
 import tw from "twin.macro";
 import { useOnClickOut } from "../../hooks/useOnClickOut";
 import {
-  useAllSubmissions,
   useNFTSearchFilters,
-} from "../../hooks/web3/useSubmissions";
+  useSubmissions,
+} from "../../hooks/useSubmissions";
 import { DropdownList } from "../DropdownList";
 import { Username } from "../Username";
 
@@ -101,7 +101,7 @@ export const ArchiveDropdown: React.FC<{
 }> = (props) => {
   //TODO: grey out fields that are usually present but not in current results (this is a maybe)
   const { filterKey, close } = props;
-  const { submissions } = useAllSubmissions();
+  const submissions = useSubmissions();
   const [filters, setFilters] = useNFTSearchFilters();
 
   const updateFilter = (val) => {

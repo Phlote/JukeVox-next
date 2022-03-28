@@ -8,12 +8,12 @@ import {
   ArchiveTableRow,
   SubmissionDate,
 } from "../components/Tables/archive";
-import { useAllSubmissions } from "../hooks/web3/useSubmissions";
+import { useSubmissions } from "../hooks/useSubmissions";
 
 const MyArchive = (props) => {
   const router = useRouter();
   const { wallet } = router.query;
-  const { submissions } = useAllSubmissions();
+  const submissions = useSubmissions();
   const mySubmissions = submissions?.filter(
     (submission) => submission.curatorWallet === wallet
   );

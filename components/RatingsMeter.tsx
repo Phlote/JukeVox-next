@@ -1,14 +1,12 @@
-import { BigNumber } from "ethers";
 import Image from "next/image";
 import React from "react";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { usePhlote } from "../hooks/web3/usePhlote";
 
 export const RatingsMeter: React.FC<{
-  editionId: BigNumber;
-  txnPending: boolean;
+  editionId: number;
 }> = (props) => {
-  const { editionId, txnPending } = props;
+  const { editionId } = props;
   const [cosigns, setCosigns] = React.useState<(string | "pending" | null)[]>(
     []
   );
@@ -22,7 +20,7 @@ export const RatingsMeter: React.FC<{
       setCosigns(currentCosigns);
     };
 
-    if (phlote && !txnPending) {
+    if (phlote) {
       getCosigns();
 
       phlote.on("*", (res) => {
@@ -30,14 +28,12 @@ export const RatingsMeter: React.FC<{
           getCosigns();
         }
       });
-    } else if (txnPending) {
-      setCosigns(Array(5).fill("pending"));
     }
 
     return () => {
       phlote?.removeAllListeners();
     };
-  }, [phlote, txnPending, editionId]);
+  }, [phlote, editionId]);
 
   const onCosign = async () => {
     setCosigns([...cosigns, "pending"]);

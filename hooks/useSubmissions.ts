@@ -1,9 +1,19 @@
 import FuzzySearch from "fuzzy-search";
 import { atom, useAtom } from "jotai";
-import { ArchiveCuration } from "../../types/curations";
+import { useQuery } from "react-query";
+import { ArchiveCuration, Curation } from "../types/curations";
+import { supabase } from "../utils/supabase";
 
 export const useSubmissions = () => {
-  const getSubmissions = async () => {};
+  const getSubmissions = async () => {
+    const res = await supabase.from("submissions").select();
+    const cleaned = res.data.map((s) => cleanSubmission(s));
+    const rev = cleaned.reverse();
+    return rev as Curation[];
+  };
+
+  const query = useQuery("submissions", getSubmissions);
+  return query.data;
 };
 
 //TODO: remove this, is just bandaid
@@ -44,7 +54,7 @@ const isPartialMatch = (
 };
 
 export const useSubmissionSearch = (searchTerm = "") => {
-  const { submissions } = useAllSubmissions();
+  const submissions = useSubmissions();
   const [filters] = useNFTSearchFilters();
   const searcher = new FuzzySearch(submissions);
   const searchResults = searcher.search(searchTerm.trim());

@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import React, { useState } from "react";
+import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import { useAllSubmissions } from "../hooks/web3/useSubmissions";
 import { usePhlote } from "../hooks/web3/usePhlote";
 import { Curation } from "../types/curations";
 import { nextApiRequest } from "../utils";
@@ -12,11 +12,11 @@ import { HollowButton, HollowButtonContainer } from "./Hollow";
 
 export const CurationSubmissionFlow = (props) => {
   const { account, library } = useWeb3React();
+  const queryClient = useQueryClient();
 
   const [page, setPage] = useState<number>(0);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const { setSubmissions } = useAllSubmissions();
 
   const phloteContract = usePhlote();
 
@@ -65,7 +65,7 @@ export const CurationSubmissionFlow = (props) => {
       if (error) throw error;
 
       setPage(1);
-      setSubmissions((curations) => [data[0], ...curations]);
+      queryClient.invalidateQueries("submissions");
     } catch (e) {
       console.error(e);
     } finally {
