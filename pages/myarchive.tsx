@@ -49,24 +49,23 @@ const MyArchive = (props) => {
               {mySubmissions?.map((curation) => {
                 const {
                   id,
-                  curatorWallet,
                   artistName,
                   mediaTitle,
                   mediaType,
                   mediaURI,
                   marketplace,
-                  transactionPending,
                   submissionTime,
                 } = curation;
 
                 return (
                   <>
-                    <ArchiveTableRow
-                      style={transactionPending ? { opacity: 0.5 } : undefined}
-                      key={`${submissionTime}`}
-                    >
+                    <ArchiveTableRow key={`${submissionTime}`}>
                       <ArchiveTableDataCell>
-                        <SubmissionDate submissionTimestamp={submissionTime} />
+                        <SubmissionDate
+                          submissionTimestamp={
+                            new Date(submissionTime).getTime() / 1000
+                          }
+                        />
                       </ArchiveTableDataCell>
                       <ArchiveTableDataCell>{artistName}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>
@@ -83,10 +82,7 @@ const MyArchive = (props) => {
                       <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
 
                       <ArchiveTableDataCell>
-                        <RatingsMeter
-                          editionId={id}
-                          txnPending={transactionPending}
-                        />
+                        <RatingsMeter editionId={id} />
                       </ArchiveTableDataCell>
                     </ArchiveTableRow>
                     <tr className="h-4" />

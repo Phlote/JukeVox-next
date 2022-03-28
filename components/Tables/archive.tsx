@@ -5,11 +5,8 @@ import React from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 import { useOnClickOut } from "../../hooks/useOnClickOut";
-import {
-  useNFTSearchFilters,
-  useSubmissions,
-} from "../../hooks/useSubmissions";
-import { DropdownList } from "../DropdownList";
+import { useSearchFilters, useSubmissions } from "../../hooks/useSubmissions";
+import { DropdownChecklist } from "../Dropdowns/DropdownChecklist";
 import { Username } from "../Username";
 
 export const ArchiveTableHeader = (props) => {
@@ -17,7 +14,7 @@ export const ArchiveTableHeader = (props) => {
   const { label, filterKey } = props;
   const ref = React.useRef();
   useOnClickOut(ref, () => setDropdownOpen(false));
-  const [filters] = useNFTSearchFilters();
+  const [filters] = useSearchFilters();
 
   const isActiveFilter = !!filters[filterKey];
 
@@ -101,7 +98,7 @@ export const ArchiveDropdown: React.FC<{
   //TODO: grey out fields that are usually present but not in current results (this is a maybe)
   const { filterKey, close } = props;
   const submissions = useSubmissions();
-  const [filters, setFilters] = useNFTSearchFilters();
+  const [filters, setFilters] = useSearchFilters();
 
   const updateFilter = (val) => {
     setFilters((current) => {
@@ -122,7 +119,7 @@ export const ArchiveDropdown: React.FC<{
       className="absolute z-10 h-64 w-64 mb-4 top-10 overflow-y-scroll p-2"
       style={{ backgroundColor: "#1d1d1d" }}
     >
-      <DropdownList
+      <DropdownChecklist
         value={filters[filterKey]}
         onChange={updateFilter}
         fields={options}

@@ -41,8 +41,8 @@ const cleanSubmission = (submission: ArchiveCuration) => {
   return cleaned;
 };
 
-const NFTSearchFiltersAtom = atom<Partial<ArchiveCuration>>({});
-export const useNFTSearchFilters = () => useAtom(NFTSearchFiltersAtom);
+const searchFiltersAtom = atom<Partial<ArchiveCuration>>({});
+export const useSearchFilters = () => useAtom(searchFiltersAtom);
 
 const isPartialMatch = (
   curation: ArchiveCuration,
@@ -55,7 +55,7 @@ const isPartialMatch = (
 
 export const useSubmissionSearch = (searchTerm = "") => {
   const submissions = useSubmissions();
-  const [filters] = useNFTSearchFilters();
+  const [filters] = useSearchFilters();
   const searcher = new FuzzySearch(submissions);
   const searchResults = searcher.search(searchTerm.trim());
 
