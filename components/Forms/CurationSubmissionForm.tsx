@@ -128,14 +128,11 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
       <div className="h-3" />
 
       <div className="flex justify-center items-center">
-        <HollowButtonContainer>
+        <HollowButtonContainer onClick={handleSubmit}>
           <HollowButton
             className="w-16"
             disabled={metamaskLoading || !valid}
             style={metamaskLoading ? { width: "16rem" } : undefined}
-            onClick={() => {
-              handleSubmit();
-            }}
           >
             {metamaskLoading ? "Waiting for Wallet..." : "Mint"}
           </HollowButton>
