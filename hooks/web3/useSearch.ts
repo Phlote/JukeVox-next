@@ -1,7 +1,8 @@
-import FuzzySearch from "fuzzy-search";
 import { atom, useAtom } from "jotai";
 import React from "react";
+import { useQuery } from "react-query";
 import { ArchiveCuration } from "../../types/curations";
+import { nextApiRequest } from "../../utils";
 import { usePhlote } from "./usePhlote";
 
 const submissionsAtom = atom<ArchiveCuration[]>([]);
@@ -77,18 +78,29 @@ const isPartialMatch = (
   }, true);
 };
 
-export const useNFTSearch = (searchTerm = "") => {
-  const { submissions } = useAllSubmissions();
+export const useSearch = (searchTerm = ""): ArchiveCuration[] => {
+  // const { submissions } = useAllSubmissions();
   const [filters] = useNFTSearchFilters();
-  const searcher = new FuzzySearch(submissions);
-  const searchResults = searcher.search(searchTerm.trim());
+  // const searcher = new FuzzySearch(submissions);
+  // const searchResults = searcher.search(searchTerm.trim());
+  // const filtered = searchResults
+  //   .map((result) => {
+  //     if (isPartialMatch(result, filters)) return result;
+  //     else return null;
+  //   })
+  //   .filter((n) => n);
+  // return filtered as ArchiveCuration[];
 
-  const filtered = searchResults
-    .map((result) => {
-      if (isPartialMatch(result, filters)) return result;
-      else return null;
-    })
-    .filter((n) => n);
+  const query = async () => {
+    if (searchTerm === "") return [];
+    const res = await nextApiRequest(
+      `elastic/search-curations?searchTerm=${searchTerm}`,
+      "POST",
+      { searchTerm, filters }
+    );
+    return res.results;
+  };
 
-  return filtered as ArchiveCuration[];
+  const elasticSearchQuery = useQuery([searchTerm, "search"], query);
+  return elasticSearchQuery.data ?? [];
 };

@@ -1,9 +1,8 @@
 import { useWeb3React } from "@web3-react/core";
-import { BigNumber } from "ethers";
 import Image from "next/image";
 import React, { useState } from "react";
-import { NFT_MINT_CONTRACT_RINKEBY } from "../contracts/addresses";
-import { useAllSubmissions } from "../hooks/web3/useNFTSearch";
+import { NFT_MINT_CONTRACT_RINKEBY, NULL_WALLET } from "../contracts/addresses";
+import { useAllSubmissions } from "../hooks/web3/useSearch";
 import { usePhlote } from "../hooks/web3/usePhlote";
 import { Curation } from "../types/curations";
 import { nextApiRequest } from "../utils";
@@ -16,24 +15,24 @@ export const CurationSubmissionFlow = (props) => {
   const [page, setPage] = useState<number>(0);
   const [txnHash, setTxnHash] = useState<string>("0x0");
   const [nftMintId, setNFTMintId] = useState<number | "Loading">("Loading");
+  const [documentId, setDocumentId] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
   const { setSubmissions } = useAllSubmissions();
 
   const phloteContract = usePhlote();
 
   React.useEffect(() => {
+    const updateDocument = async (edition) => {};
+
     if (phloteContract) {
       phloteContract.on("*", (res) => {
-        console.log(res);
         if (res.event === "EditionCreated") {
           console.log("created");
           console.log(res);
+          console.log(res.editionId);
         }
 
         if (res.event === "EditionMinted") {
-          console.log("minted");
-          console.log(res);
-          console.log(res.args["tokenId"].toNumber());
           setNFTMintId(res.args["tokenId"].toNumber());
         }
       });
@@ -44,7 +43,7 @@ export const CurationSubmissionFlow = (props) => {
     };
   }, [phloteContract]);
 
-  const submitCuration = async (curationData: Curation) => {
+  const submitCuration = async (formData: Curation) => {
     const {
       mediaType,
       artistName,
@@ -53,43 +52,43 @@ export const CurationSubmissionFlow = (props) => {
       mediaURI,
       marketplace,
       tags,
-    } = curationData;
+    } = formData;
 
     setLoading(true);
     try {
-      const { tokenURI } = await nextApiRequest(
-        "store-nft",
-        "POST",
-        curationData
+      const { tokenURI } = await nextApiRequest("store-nft", "POST", formData);
+
+      // this will be removed or replaces in some fashion
+      const res = await phloteContract.submitPost(
+        account,
+        mediaURI,
+        marketplace,
+        tags ?? [],
+        artistName,
+        artistWallet ?? NULL_WALLET,
+        mediaType,
+        mediaTitle,
+        tokenURI
       );
 
-      // const res = await phloteContract.submitPost(
-      //   account,
-      //   mediaURI,
-      //   marketplace,
-      //   tags ?? [],
-      //   artistName,
-      //   artistWallet ?? NULL_WALLET,
-      //   mediaType,
-      //   mediaTitle,
-      //   tokenURI
-      // );
-
-      // setTxnHash(res.hash);
+      setTxnHash(res.hash);
       setPage(1);
+      const curation = {
+        curatorWallet: account,
+        submissionTime: Date.now(),
+        ...formData,
+      };
       setSubmissions((curations) => [
         {
-          curatorWallet: account,
-          ...curationData,
+          ...curation,
           transactionPending: true,
-          submissionTime: BigNumber.from(Date.now()),
         },
         ...curations,
       ]);
       const { documents } = await nextApiRequest(
         "elastic/index-curations",
         "POST",
-        [curationData]
+        [curation]
       );
       console.log(documents);
     } catch (e) {

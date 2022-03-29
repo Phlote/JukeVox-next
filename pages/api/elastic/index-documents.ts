@@ -22,6 +22,7 @@ export default async function handler(
       mediaURI,
       marketplace,
       tags,
+      submissionTime,
     } = s;
     return {
       media_type: mediaType,
@@ -32,6 +33,7 @@ export default async function handler(
       media_uri: mediaURI,
       marketplace,
       tags,
+      submission_time: submissionTime,
     } as CurationElasticSearchDocument;
   });
   try {

@@ -8,11 +8,11 @@ import {
   SubmissionDate,
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
-import { useNFTSearch } from "../hooks/web3/useNFTSearch";
+import { useSearch } from "../hooks/web3/useSearch";
 
 function Archive() {
   const [searchTerm] = useSearchTerm();
-  const curations = useNFTSearch(searchTerm);
+  const curations = useSearch(searchTerm);
 
   return (
     <ArchiveLayout>
@@ -55,7 +55,7 @@ function Archive() {
                   <>
                     <ArchiveTableRow
                       style={transactionPending ? { opacity: 0.5 } : undefined}
-                      key={`${submissionTime}`}
+                      key={`${id}`}
                     >
                       <ArchiveTableDataCell>
                         <SubmissionDate submissionTimestamp={submissionTime} />

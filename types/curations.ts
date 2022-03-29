@@ -2,14 +2,13 @@ import { BigNumber } from "ethers";
 
 export type ArchiveCuration = Curation & {
   transactionPending?: boolean;
-  submissionTime: BigNumber | number;
 };
 
 // TODO: use our generated types
 
 type MediaType = "Audio" | "Text" | "Video" | "Visual Art";
 export interface Curation {
-  id: BigNumber;
+  editionId?: BigNumber; // id as it exists in our smart contract
   mediaType: MediaType;
   artistName: string;
   artistWallet: string;
@@ -18,6 +17,7 @@ export interface Curation {
   mediaURI: string;
   marketplace: string;
   tags?: string[];
+  submissionTime: BigNumber | number;
 }
 
 export interface CurationElasticSearchDocument {
@@ -29,4 +29,5 @@ export interface CurationElasticSearchDocument {
   media_uri: string;
   marketplace: string;
   tags?: string[];
+  submission_time: number;
 }
