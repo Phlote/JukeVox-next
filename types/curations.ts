@@ -19,3 +19,7 @@ export interface Curation {
   marketplace: string;
   tags?: string[];
 }
+
+export interface IndexSubmissionsRequest {
+  submissions: Curation;
+}
