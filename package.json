@@ -11,6 +11,7 @@
     "postinstall": "npm run compile-contract-types"
   },
   "dependencies": {
+    "@elastic/app-search-node": "^7.16.1-beta.1",
     "@ethersproject/bignumber": "^5.5.0",
     "@ethersproject/contracts": "^5.5.0",
     "@ethersproject/providers": "^5.5.3",
