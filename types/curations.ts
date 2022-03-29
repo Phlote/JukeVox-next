@@ -20,6 +20,13 @@ export interface Curation {
   tags?: string[];
 }
 
-export interface IndexSubmissionsRequest {
-  submissions: Curation;
+export interface CurationElasticSearchDocument {
+  media_type: MediaType;
+  artist_name: string;
+  artist_wallet: string;
+  curator_wallet: string;
+  media_title: string;
+  media_uri: string;
+  marketplace: string;
+  tags?: string[];
 }

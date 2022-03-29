@@ -2,7 +2,7 @@ import { useWeb3React } from "@web3-react/core";
 import { BigNumber } from "ethers";
 import Image from "next/image";
 import React, { useState } from "react";
-import { NFT_MINT_CONTRACT_RINKEBY, NULL_WALLET } from "../contracts/addresses";
+import { NFT_MINT_CONTRACT_RINKEBY } from "../contracts/addresses";
 import { useAllSubmissions } from "../hooks/web3/useNFTSearch";
 import { usePhlote } from "../hooks/web3/usePhlote";
 import { Curation } from "../types/curations";
@@ -63,19 +63,19 @@ export const CurationSubmissionFlow = (props) => {
         curationData
       );
 
-      const res = await phloteContract.submitPost(
-        account,
-        mediaURI,
-        marketplace,
-        tags ?? [],
-        artistName,
-        artistWallet ?? NULL_WALLET,
-        mediaType,
-        mediaTitle,
-        tokenURI
-      );
-      console.log(res);
-      setTxnHash(res.hash);
+      // const res = await phloteContract.submitPost(
+      //   account,
+      //   mediaURI,
+      //   marketplace,
+      //   tags ?? [],
+      //   artistName,
+      //   artistWallet ?? NULL_WALLET,
+      //   mediaType,
+      //   mediaTitle,
+      //   tokenURI
+      // );
+
+      // setTxnHash(res.hash);
       setPage(1);
       setSubmissions((curations) => [
         {
@@ -86,6 +86,12 @@ export const CurationSubmissionFlow = (props) => {
         },
         ...curations,
       ]);
+      const { documents } = await nextApiRequest(
+        "elastic/index-curations",
+        "POST",
+        [curationData]
+      );
+      console.log(documents);
     } catch (e) {
       console.error(e);
     }

@@ -17,5 +17,3 @@ export const NETWORKS = {
     blockExplorerUrls: ["https://polygonscan.com/"],
   },
 };
-
-export const ELASTIC_ENGINE_NAME = "phlote-search-engine";
