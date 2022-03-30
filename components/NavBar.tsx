@@ -2,6 +2,7 @@ import { useWeb3React } from "@web3-react/core";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import tw from "twin.macro";
+import { useIsCurator } from "../hooks/useIsCurator";
 import useEagerConnect from "../hooks/web3/useEagerConnect";
 import Close from "../public/close.svg";
 import Account from "./Account";
@@ -13,9 +14,8 @@ export const NavBar = () => {
   const triedToEagerConnect = useEagerConnect();
   const [, setOpen] = useSubmitSidenavOpen();
   const router = useRouter();
-  const { active, account, deactivate } = useWeb3React();
-
-  const { NODE_ENV } = process.env;
+  const { active, account } = useWeb3React();
+  const isCurator = useIsCurator();
 
   return (
     <div className="py-4 flex-none w-screen px-12">
@@ -37,12 +37,12 @@ export const NavBar = () => {
             <div className="w-4" />
           </>
         )}
-        {active && account && (
+        {active && account && isCurator && (
           <>
             <NavBarElementContainer>
-              <Link href={`/profile?wallet=${account}`} passHref>
+              <Link href={`/editprofile`} passHref>
                 <HollowButtonContainer className="flex justify-center items-center ">
-                  My Profile
+                  Edit Profile
                 </HollowButtonContainer>
               </Link>
             </NavBarElementContainer>
