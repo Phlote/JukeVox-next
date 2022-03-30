@@ -1,6 +1,6 @@
 import React from "react";
 import { Footer } from "./Footer";
-import { RinkebyPromptModal } from "./Modal";
+import { RinkebyPromptModal } from "./Modals/ConnectWalletModal";
 import { NavBar } from "./NavBar";
 import { SubmitSidenav } from "./SideNav";
 

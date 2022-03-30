@@ -34,7 +34,6 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
     }
   }, [active, error, stopOnboarding]);
 
-  const ENSName = useENSName(account);
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
 
   if (error) {
@@ -44,7 +43,7 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
         className="h-full"
         style={{ justifyContent: "center" }}
       >
-        {"Check Metamask"}
+        {"Check Wallet"}
       </HollowInputContainer>
     );
   }
@@ -63,7 +62,6 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
             disabled={connecting}
             onClick={() => {
               setConnecting(true);
-
               activate(injected, undefined, true).catch((error) => {
                 // ignore the error if it's a user rejected request
                 if (error instanceof UserRejectedRequestError) {
