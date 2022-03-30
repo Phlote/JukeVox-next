@@ -25,7 +25,8 @@
     "deploy-notupgradeable:rinkeby": "hardhat run scripts/deploy.js --network rinkeby",
     "deploy:rinkeby": "hardhat run scripts/deploy-upgradeable.js --network rinkeby",
     "upgrade:rinkeby": "hardhat run scripts/upgrade.js --network rinkeby",
-    "verify:rinkeby": "hardhat verify --network rinkeby --constructor-args"
+    "verify:rinkeby": "hardhat verify --network rinkeby --constructor-args",
+    "migrate-submissions": "npx hardhat run scripts/migrate-submissions.js --network rinkeby"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.5.0",

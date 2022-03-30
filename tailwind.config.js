@@ -18,6 +18,7 @@ module.exports = {
           // these should only be used for firefox because they don't support filter-blur
           "ff-modal": "#292929",
           "ff-sidenav": "#1d1d1d",
+          dropdown: "#1d1d1d",
         },
       },
     },

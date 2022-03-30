@@ -1,19 +1,19 @@
 import classNames from "classnames";
 import { ethers } from "ethers";
 import React from "react";
-import { Username } from "./Username";
+import { Username } from "../Username";
 
-interface DropdownList {
+interface DropdownChecklist {
   fields: string[];
   close: () => void;
-  value: string;
+  value?: string;
   onChange: (field: string) => void;
   onFocus?: () => void;
   closeOnSelect?: boolean;
   borders?: boolean;
 }
 
-export const DropdownList: React.FC<DropdownList> = ({
+export const DropdownChecklist: React.FC<DropdownChecklist> = ({
   fields,
   close,
   value,
@@ -31,7 +31,7 @@ export const DropdownList: React.FC<DropdownList> = ({
 
   return (
     <div
-      className={classNames("grid grid-cols-1 w-full", {
+      className={classNames("grid grid-cols-1 w-full overflow-y-scroll", {
         "divide-y": borders,
       })}
     >

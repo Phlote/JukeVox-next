@@ -9,7 +9,7 @@ import {
   useAllSubmissions,
   useNFTSearchFilters,
 } from "../../hooks/web3/useNFTSearch";
-import { DropdownList } from "../DropdownList";
+import { DropdownChecklist } from "../Dropdowns/DropdownChecklist";
 import { Username } from "../Username";
 
 export const ArchiveTableHeader = (props) => {
@@ -120,10 +120,10 @@ export const ArchiveDropdown: React.FC<{
 
   return (
     <div
-      className="absolute z-10 h-64 w-64 mb-4 top-10"
+      className="absolute z-10 h-64 w-64 mb-4 top-10 overflow-y-scroll p-2"
       style={{ backgroundColor: "#1d1d1d" }}
     >
-      <DropdownList
+      <DropdownChecklist
         value={filters[filterKey]}
         onChange={updateFilter}
         fields={options}

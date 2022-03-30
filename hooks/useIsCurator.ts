@@ -6,7 +6,7 @@ export const useIsCurator = () => {
   const { account } = useWeb3React();
 
   const cacheKey = ["is-curator", account];
-  return useQuery(
+  const query = useQuery(
     cacheKey,
     async () => {
       if (account)
@@ -19,4 +19,6 @@ export const useIsCurator = () => {
     },
     { refetchOnWindowFocus: false }
   );
+
+  return query.data && query.data.isCurator;
 };

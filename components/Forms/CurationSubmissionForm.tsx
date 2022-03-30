@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { useField, useForm } from "react-final-form-hooks";
-import { DropdownList } from "../DropdownList";
+import { DropdownChecklist } from "../Dropdowns/DropdownChecklist";
 import {
   HollowButton,
   HollowButtonContainer,
@@ -67,7 +67,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
         <>
           <div className="h-4" />{" "}
           <HollowInputContainer style={{ borderRadius: "60px" }}>
-            <DropdownList
+            <DropdownChecklist
               {...mediaType.input}
               close={() => setDropdownOpen(false)}
               fields={["Audio", "Text", "Video", "Visual Art"]}
@@ -104,7 +104,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
         <HollowInput
           {...marketplace.input}
           type="text"
-          placeholder="Marketplace"
+          placeholder="Marketplace/Platform"
         />
         {marketplace.meta.touched && marketplace.meta.error && (
           <span className="text-red-600 ml-2">{marketplace.meta.error}</span>
@@ -128,14 +128,11 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
       <div className="h-3" />
 
       <div className="flex justify-center items-center">
-        <HollowButtonContainer>
+        <HollowButtonContainer onClick={handleSubmit}>
           <HollowButton
             className="w-16"
             disabled={metamaskLoading || !valid}
             style={metamaskLoading ? { width: "16rem" } : undefined}
-            onClick={() => {
-              handleSubmit();
-            }}
           >
             {metamaskLoading ? "Waiting for Wallet..." : "Mint"}
           </HollowButton>
