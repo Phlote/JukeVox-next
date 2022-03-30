@@ -1,5 +1,6 @@
 import type { BigNumberish } from "@ethersproject/bignumber";
 import { formatUnits } from "@ethersproject/units";
+import { ethers } from "ethers";
 import { nextApiRequest } from ".";
 import { UserNonce } from "../types";
 import { NETWORKS, PHLOTE_SIGNATURE_REQUEST_MESSAGE } from "./constants";
@@ -66,6 +67,8 @@ export const changeNetwork = async (
 // determines if the holder of an address actually holds the wallet
 export const verifyUser = async (address: string, library) => {
   //TODO: should have a controller so we have better typing here
+  if (!ethers.utils.isAddress(address)) throw "Not an address";
+
   const user = (await nextApiRequest(
     `auth?address=${address}`,
     "GET"
