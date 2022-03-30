@@ -42,7 +42,7 @@ export default async function handler(
       documents
     );
     // Does not throw on indexing error, see: https://github.com/elastic/app-search-node
-    if (res[0].errors) throw res;
+    if (res[0].errors.length > 0) throw res;
 
     response.status(200).send({ documents: res });
   } catch (e) {

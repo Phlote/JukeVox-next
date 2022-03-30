@@ -66,35 +66,19 @@ const cleanSubmission = (submission: ArchiveCuration) => {
   return cleaned;
 };
 
-const NFTSearchFiltersAtom = atom<Partial<ArchiveCuration>>({});
-export const useNFTSearchFilters = () => useAtom(NFTSearchFiltersAtom);
+const searchFiltersAtom = atom<Partial<ArchiveCuration>>({});
+export const useSearchFilters = () => useAtom(searchFiltersAtom);
 
-const isPartialMatch = (
-  curation: ArchiveCuration,
-  filters: Partial<ArchiveCuration>
-) => {
-  return Object.keys(filters).reduce((acc, key) => {
-    return acc && filters[key] === curation[key];
-  }, true);
-};
+const searchResultsAtom = atom<ArchiveCuration[]>([]);
 
-export const useSearch = (searchTerm = ""): ArchiveCuration[] => {
-  // const { submissions } = useAllSubmissions();
-  const [filters] = useNFTSearchFilters();
-  // const searcher = new FuzzySearch(submissions);
-  // const searchResults = searcher.search(searchTerm.trim());
-  // const filtered = searchResults
-  //   .map((result) => {
-  //     if (isPartialMatch(result, filters)) return result;
-  //     else return null;
-  //   })
-  //   .filter((n) => n);
-  // return filtered as ArchiveCuration[];
+export const useSearch = (searchTerm = "") => {
+  const [filters] = useSearchFilters();
+  const [searchResults, setSearchResults] = useAtom(searchResultsAtom);
 
   const query = async () => {
     if (searchTerm === "") return [];
     const res = await nextApiRequest(
-      `elastic/search-curations?searchTerm=${searchTerm}`,
+      `elastic/search-documents?searchTerm=${searchTerm}`,
       "POST",
       { searchTerm, filters }
     );
@@ -102,5 +86,17 @@ export const useSearch = (searchTerm = ""): ArchiveCuration[] => {
   };
 
   const elasticSearchQuery = useQuery([searchTerm, "search"], query);
-  return elasticSearchQuery.data ?? [];
+
+  React.useEffect(() => {
+    console.log(elasticSearchQuery.data);
+    if (elasticSearchQuery.data) {
+      const pending = searchResults.filter(
+        (result) => result.transactionPending
+      );
+      setSearchResults([...pending, ...elasticSearchQuery.data]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [elasticSearchQuery.data]);
+
+  return { searchResults, setSearchResults };
 };

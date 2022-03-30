@@ -1,9 +1,10 @@
 import { useWeb3React } from "@web3-react/core";
+import { BigNumber } from "ethers";
 import Image from "next/image";
 import React, { useState } from "react";
 import { NFT_MINT_CONTRACT_RINKEBY, NULL_WALLET } from "../contracts/addresses";
-import { useAllSubmissions } from "../hooks/web3/useSearch";
 import { usePhlote } from "../hooks/web3/usePhlote";
+import { useSearch } from "../hooks/web3/useSearch";
 import { Curation } from "../types/curations";
 import { nextApiRequest } from "../utils";
 import { CurationSubmissionForm } from "./Forms/CurationSubmissionForm";
@@ -17,19 +18,25 @@ export const CurationSubmissionFlow = (props) => {
   const [nftMintId, setNFTMintId] = useState<number | "Loading">("Loading");
   const [documentId, setDocumentId] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
-  const { setSubmissions } = useAllSubmissions();
+  const { setSearchResults } = useSearch();
 
   const phloteContract = usePhlote();
 
   React.useEffect(() => {
-    const updateDocument = async (edition) => {};
+    const updateDocument = async (editionId: BigNumber) => {
+      await nextApiRequest("elastic/update-document", "POST", {
+        documentId,
+        editionId,
+      });
+    };
 
     if (phloteContract) {
       phloteContract.on("*", (res) => {
         if (res.event === "EditionCreated") {
           console.log("created");
           console.log(res);
-          console.log(res.editionId);
+          console.log(res.args.editionId);
+          updateDocument(res.args.editionId);
         }
 
         if (res.event === "EditionMinted") {
@@ -75,10 +82,10 @@ export const CurationSubmissionFlow = (props) => {
       setPage(1);
       const curation = {
         curatorWallet: account,
-        submissionTime: Date.now(),
+        submissionTime: Date.now() / 1000,
         ...formData,
       };
-      setSubmissions((curations) => [
+      setSearchResults((curations) => [
         {
           ...curation,
           transactionPending: true,
@@ -86,11 +93,12 @@ export const CurationSubmissionFlow = (props) => {
         ...curations,
       ]);
       const { documents } = await nextApiRequest(
-        "elastic/index-curations",
+        "elastic/index-documents",
         "POST",
         [curation]
       );
       console.log(documents);
+      setDocumentId(documents[0].id);
     } catch (e) {
       console.error(e);
     }

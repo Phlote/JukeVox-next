@@ -8,7 +8,7 @@ export type ArchiveCuration = Curation & {
 
 type MediaType = "Audio" | "Text" | "Video" | "Visual Art";
 export interface Curation {
-  editionId?: BigNumber; // id as it exists in our smart contract
+  id: BigNumber; // id as it exists in our smart contract
   mediaType: MediaType;
   artistName: string;
   artistWallet: string;
@@ -21,6 +21,7 @@ export interface Curation {
 }
 
 export interface CurationElasticSearchDocument {
+  edition_id: BigNumber; // id is reserved by elastic, but double check this
   media_type: MediaType;
   artist_name: string;
   artist_wallet: string;

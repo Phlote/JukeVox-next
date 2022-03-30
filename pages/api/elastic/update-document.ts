@@ -12,10 +12,11 @@ export default async function handler(
     const res = await nodeElasticClient.updateDocuments(ELASTIC_ENGINE_NAME, [
       {
         id: documentId,
-        editionId: editionId,
+        edition_id: editionId,
       },
     ]);
 
+    console.log(res);
     response.status(200).send({ res });
   } catch (e) {
     console.error(e);

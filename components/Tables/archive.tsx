@@ -7,7 +7,7 @@ import tw from "twin.macro";
 import { useOnClickOut } from "../../hooks/useOnClickOut";
 import {
   useAllSubmissions,
-  useNFTSearchFilters,
+  useSearchFilters,
 } from "../../hooks/web3/useSearch";
 import { DropdownChecklist } from "../Dropdowns/DropdownChecklist";
 import { Username } from "../Username";
@@ -17,7 +17,7 @@ export const ArchiveTableHeader = (props) => {
   const { label, filterKey } = props;
   const ref = React.useRef();
   useOnClickOut(ref, () => setDropdownOpen(false));
-  const [filters] = useNFTSearchFilters();
+  const [filters] = useSearchFilters();
 
   const isActiveFilter = !!filters[filterKey];
 
@@ -104,7 +104,7 @@ export const ArchiveDropdown: React.FC<{
   //TODO: grey out fields that are usually present but not in current results (this is a maybe)
   const { filterKey, close } = props;
   const { submissions } = useAllSubmissions();
-  const [filters, setFilters] = useNFTSearchFilters();
+  const [filters, setFilters] = useSearchFilters();
 
   const updateFilter = (val) => {
     setFilters((current) => {

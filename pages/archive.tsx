@@ -12,7 +12,7 @@ import { useSearch } from "../hooks/web3/useSearch";
 
 function Archive() {
   const [searchTerm] = useSearchTerm();
-  const curations = useSearch(searchTerm);
+  const { searchResults } = useSearch(searchTerm);
 
   return (
     <ArchiveLayout>
@@ -35,10 +35,10 @@ function Archive() {
             </tr>
           </thead>
 
-          {curations.length > 0 && (
+          {searchResults.length > 0 && (
             <tbody>
               <tr className="h-4" />
-              {curations?.map((curation) => {
+              {searchResults?.map((curation) => {
                 const {
                   id,
                   curatorWallet,
@@ -90,7 +90,7 @@ function Archive() {
             </tbody>
           )}
         </table>
-        {curations.length === 0 && (
+        {searchResults.length === 0 && (
           <div
             className="w-full mt-4 flex-grow flex justify-center items-center"
             style={{ color: "rgba(105, 105, 105, 1)" }}
