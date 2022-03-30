@@ -1,4 +1,3 @@
-import { parse } from "@ethersproject/transactions";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export const PHOTE_VOTE_TOKEN_ADDRESS =
