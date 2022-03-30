@@ -9,6 +9,10 @@ import "../styles/globals.css";
 const queryClient = new QueryClient();
 
 const NextWeb3App = ({ Component, pageProps }: AppProps) => {
+  if (process.env.MAINTENANCE) {
+    return <div>Down for maintenance. Try again later!</div>;
+  }
+
   return (
     <>
       <Head>
