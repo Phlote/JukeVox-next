@@ -4,7 +4,7 @@ This project demonstrates a basic Hardhat use case. It comes with a sample contr
 
 Try running some of the following tasks:
 
-```shell
+```bash
 npx hardhat accounts
 npx hardhat compile
 npx hardhat clean
@@ -12,6 +12,17 @@ npx hardhat test
 npx hardhat node
 node scripts/sample-script.js
 npx hardhat help
+```
+
+## How to upload the source and verify on etherscan.io
+```bash
+npm run deploy-notupgradeable:rinkeby
+# copy the deployed contract address from the terminal to your clipboard with your mouse
+export DEPLOYED_CONTRACT_ADDRESS=$(pbpaste) # <-- stick it in a variable
+# change ./deploy/Phlote.sol.constructor-args.js to match the deploy
+vim ./deploy/Phlote.sol.constructor-args.js
+# prove to etherscan that we know EXACTLY how this contract got deployed
+npm run verify:rinkeby ./deploy/Phlote.sol.constructor-args.js "$DEPLOYED_CONTRACT_ADDRESS"
 ```
 
 # Phlote Smart Contract Development

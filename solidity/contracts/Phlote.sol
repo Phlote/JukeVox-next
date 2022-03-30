@@ -8,7 +8,7 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 // Helper functions OpenZeppelin provides.
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
-import "hardhat/console.sol";
+//import "hardhat/console.sol";
 
 
 contract Phlote is ERC721Upgradeable, OwnableUpgradeable {
@@ -31,8 +31,8 @@ contract Phlote is ERC721Upgradeable, OwnableUpgradeable {
 
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
-    uint256 private nextPostId ;
-    Edition[] allCurations;
+    uint256 private nextPostId;
+    Edition[] public allCurations;
 
     /***MAPS***/
     //creates a mapping from editionId to description of the Edition struct
@@ -60,15 +60,11 @@ contract Phlote is ERC721Upgradeable, OwnableUpgradeable {
     );
     event EditionCosigned(address cosigner, uint256 indexed editionId);
 
-
-
-    function initialize() initializer public{
+    function initialize() public initializer {
         _tokenIds.increment();
         nextPostId = 1;
         __ERC721_init("Phlote Curation", "PHLOTE");
     }
-
-    
 
     function mintEdition(uint256 editionId) public payable {
         // require(_tokenIds.current()-1 < editionSize,"Song is sold out!");
@@ -78,11 +74,11 @@ contract Phlote is ERC721Upgradeable, OwnableUpgradeable {
         // );
         uint256 newItemId = _tokenIds.current();
         _safeMint(msg.sender, newItemId);
-        console.log(
-            "******Minted %s NFT w/ tokenId %s ******",
-            editions[editionId].mediaTitle,
-            newItemId
-        );
+        //console.log(
+            //"******Minted %s NFT w/ tokenId %s ******",
+            //editions[editionId].mediaTitle,
+            //newItemId
+        //);
         // Keep an easy way to see who owns what NFT.
         nftHolders[msg.sender] = newItemId;
 
@@ -94,7 +90,7 @@ contract Phlote is ERC721Upgradeable, OwnableUpgradeable {
     }
 
     //creates the edition/Post
-      function submitPost(
+    function submitPost(
         address _curatorWallet,
         string memory _mediaURI,
         string memory _marketplace,
@@ -106,8 +102,8 @@ contract Phlote is ERC721Upgradeable, OwnableUpgradeable {
         string memory _tokenURI
     ) public {
         /*
-        This is a post of a curator's submissions. 
-        This function should 
+        This is a post of a curator's submissions.
+        This function should
         - set the curator's submission as an edition
         */
 
@@ -131,12 +127,11 @@ contract Phlote is ERC721Upgradeable, OwnableUpgradeable {
         //add it to their archive of submissions. mapping of address -> submissions[]
         emit EditionCreated(msg.sender, nextPostId);
         mintEdition(nextPostId);
-        nextPostId++; 
+        nextPostId++;
     }
 
-     function getCuratorSubmissions(address _curatorWallet) public view returns (Edition[] memory)
-    {
-         return curatorSubmissions[_curatorWallet];
+    function getCuratorSubmissions(address _curatorWallet) public view returns (Edition[] memory) {
+        return curatorSubmissions[_curatorWallet];
     }
 
     function tokenURI(uint256 _tokenId)
@@ -149,48 +144,28 @@ contract Phlote is ERC721Upgradeable, OwnableUpgradeable {
         return sAttributes.tokenURI;
     }
 
-    
+
     function getAllCurations() public view returns (Edition[] memory) {
         return allCurations;
     }
 
     function cosign(uint256 editionId) public payable {
-        require(editionIdToCosigns[editionId].length < 5,"A submission can only have 5 cosigns!");
-        require(curatorHasCosigned[msg.sender][editionId]==false, "You can only cosign a submission once!");
-        editionIdToCosigns[editionId].push(msg.sender); 
-        curatorHasCosigned[msg.sender][editionId]=true;
+        require(editionIdToCosigns[editionId].length < 5, ">= 5 cosigns exist");
+        require(curatorHasCosigned[msg.sender][editionId] == false, "re-cosign attempt");
+        editionIdToCosigns[editionId].push(msg.sender);
+        curatorHasCosigned[msg.sender][editionId] = true;
         emit EditionCosigned(msg.sender, editionId);
-
     }
 
     function getCosigns(uint256 editionId) public view returns (address[] memory) {
-       return editionIdToCosigns[editionId];
+        return editionIdToCosigns[editionId];
     }
 
-    //-----IMPORTEDFUNCTIONS-----
-    // function withdrawFunds(uint256 editionId, address payable person) external {
-    //     // Compute the amount available for withdrawing from this edition.
-    //     uint256 remainingForEdition = (editions[editionId].songPrice * // Compute total amount of revenue that has been generated for the edition so far.
-    //         editions[editionId].numSold) -
-    //         // Subtract the amount that has already been withdrawn.
-    //         withdrawnForEdition[editionId];
-
-    //     // Update that amount that has already been withdrawn for the edition.
-    //     withdrawnForEdition[editionId] += remainingForEdition;
-    //     // Send the amount that was remaining for the edition, to the funding recipient.
-    //     _sendFunds(person, remainingForEdition);
-    // }
-
     function _sendFunds(address payable recipient, uint256 amount) private {
-        require(
-            address(this).balance >= amount,
-            "Insufficient balance for send"
-        );
-
-        (bool success, ) = recipient.call{value: amount}("");
-        require(success, "Unable to send value: recipient may have reverted");
+        require(address(this).balance >= amount, "low balance");
+        recipient.transfer(amount);
     }
 
     /* ---New Functions---*/
-    
+
 }
