@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { usePhlote } from "../hooks/web3/usePhlote";
 
@@ -14,25 +14,24 @@ export const RatingsMeter: React.FC<{
   const phlote = usePhlote();
   const isCurator = useIsCurator();
 
-  React.useEffect(() => {
+  const canCosign = isCurator && !cosigns.includes("pending");
+
+  useEffect(() => {
     const getCosigns = async () => {
       const currentCosigns = await phlote.getCosigns(editionId);
       setCosigns(currentCosigns);
     };
-
     if (phlote) {
       getCosigns();
-
       phlote.on("*", (res) => {
-        if (res.event === "EditionCosigned") {
-          getCosigns();
-        }
+        if (res.event === "EditionCosigned") getCosigns();
       });
     }
 
     return () => {
       phlote?.removeAllListeners();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phlote, editionId]);
 
   const onCosign = async () => {
@@ -46,8 +45,9 @@ export const RatingsMeter: React.FC<{
 
   return (
     <div
-      className="flex gap-1 justify-center"
-      style={!isCurator ? { opacity: "25%" } : undefined}
+      className={`flex gap-1 justify-center ${
+        canCosign ? "hover:opacity-25 cursor-pointer" : undefined
+      }`}
     >
       {Array(5)
         .fill(null)
@@ -56,9 +56,8 @@ export const RatingsMeter: React.FC<{
             return (
               <button
                 onClick={onCosign}
-                className="h-6 w-6 relative"
-                style={isCurator ? { cursor: "pointer" } : undefined}
-                disabled={!isCurator}
+                className={"h-6 w-6 relative"}
+                disabled={!canCosign}
               >
                 <Image
                   src="/clear_diamond.png"

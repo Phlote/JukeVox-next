@@ -15,7 +15,7 @@ export const Username: React.FC<Username> = ({ wallet, linkToProfile }) => {
       className={linkToProfile ? "hover:opacity-50 cursor-pointer" : undefined}
       onClick={
         linkToProfile
-          ? () => router.push(`/myarchive?wallet=${wallet}`)
+          ? () => router.push(`/profile?wallet=${wallet}`)
           : undefined
       }
     >
