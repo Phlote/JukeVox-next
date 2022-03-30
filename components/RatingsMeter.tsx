@@ -1,9 +1,7 @@
 import { BigNumber } from "ethers";
 import Image from "next/image";
 import React, { useEffect } from "react";
-import { useQueryClient } from "react-query";
 import { useIsCurator } from "../hooks/useIsCurator";
-import { useGetCosigns } from "../hooks/web3/useGetCosigns";
 import { usePhlote } from "../hooks/web3/usePhlote";
 
 export const RatingsMeter: React.FC<{
@@ -11,25 +9,27 @@ export const RatingsMeter: React.FC<{
   txnPending: boolean;
 }> = (props) => {
   const { editionId, txnPending } = props;
-  const [gems, setGems] = React.useState<(string | "pending" | null)[]>([]);
-
-  const { data, isLoading } = useGetCosigns(editionId);
-  const queryClient = useQueryClient();
+  const [cosigns, setCosigns] = React.useState<(string | "pending" | null)[]>(
+    []
+  );
 
   const phlote = usePhlote();
   const isCurator = useIsCurator();
 
-  const canCosign = isCurator && !gems.includes("pending");
+  const canCosign = isCurator && !cosigns.includes("pending");
 
   useEffect(() => {
+    const getCosigns = async () => {
+      const currentCosigns = await phlote.getCosigns(editionId);
+      setCosigns(currentCosigns);
+    };
     if (phlote && !txnPending) {
+      getCosigns();
       phlote.on("*", (res) => {
-        if (res.event === "EditionCosigned") {
-          queryClient.invalidateQueries(["cosigns", editionId]);
-        }
+        if (res.event === "EditionCosigned") getCosigns();
       });
     } else if (txnPending) {
-      setGems(Array(5).fill("pending"));
+      setCosigns(Array(5).fill("pending"));
     }
 
     return () => {
@@ -38,16 +38,12 @@ export const RatingsMeter: React.FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phlote, txnPending, editionId]);
 
-  useEffect(() => {
-    if (data) setGems(data);
-  }, [data]);
-
   const onCosign = async () => {
-    setGems([...gems, "pending"]);
+    setCosigns([...cosigns, "pending"]);
     try {
       await phlote.cosign(editionId);
     } catch (e) {
-      setGems((current) => current.slice(0, current.length - 1));
+      setCosigns((current) => current.slice(0, current.length - 1));
     }
   };
 
@@ -60,7 +56,7 @@ export const RatingsMeter: React.FC<{
       {Array(5)
         .fill(null)
         .map((_, idx) => {
-          if (idx > gems.length - 1) {
+          if (idx > cosigns.length - 1) {
             return (
               <button
                 onClick={onCosign}
@@ -75,7 +71,7 @@ export const RatingsMeter: React.FC<{
               </button>
             );
           } else {
-            if (gems[idx] === "pending") {
+            if (cosigns[idx] === "pending") {
               return (
                 <div className="h-6 w-6 opacity-25 relative">
                   <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
