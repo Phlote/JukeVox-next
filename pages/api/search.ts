@@ -10,8 +10,6 @@ export default async function handler(
   response: NextApiResponse
 ) {
   const { searchTerm, filters } = request.body;
-  console.log("search term", searchTerm);
-  console.log("filters", filters);
 
   try {
     const res = await nodeElasticClient.search(

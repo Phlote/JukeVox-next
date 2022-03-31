@@ -1,9 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { nodeElasticClient } from "../../../lib/elastic-app-search";
-import {
-  Curation,
-  CurationElasticSearchDocument,
-} from "../../../types/curations";
+import { Curation } from "../../../types/curations";
 import { curationToElasticSearchDocument } from "../../../utils";
 
 const { ELASTIC_ENGINE_NAME } = process.env;
@@ -13,7 +10,9 @@ export default async function handler(
   response: NextApiResponse
 ) {
   const submissions = request.body as Curation[];
+  console.log(submissions);
   const documents = submissions.map(curationToElasticSearchDocument);
+  console.log(documents);
   try {
     const res = await nodeElasticClient.indexDocuments(
       ELASTIC_ENGINE_NAME,
