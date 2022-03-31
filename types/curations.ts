@@ -1,5 +1,3 @@
-export type ArchiveCuration = Curation;
-
 type MediaType = "Audio" | "Text" | "Video" | "Visual Art";
 export interface Curation {
   id: number;

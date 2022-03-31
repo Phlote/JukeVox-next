@@ -55,6 +55,7 @@ export const RatingsMeter: React.FC<{
           if (idx > cosigns.length - 1) {
             return (
               <button
+                key={`${editionId}-cosign-${idx}`}
                 onClick={onCosign}
                 className={"h-6 w-6 relative"}
                 disabled={!canCosign}
@@ -69,13 +70,19 @@ export const RatingsMeter: React.FC<{
           } else {
             if (cosigns[idx] === "pending") {
               return (
-                <div className="h-6 w-6 opacity-25 relative">
+                <div
+                  className="h-6 w-6 opacity-25 relative"
+                  key={`${editionId}-cosign-${idx}`}
+                >
                   <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
                 </div>
               );
             } else {
               return (
-                <div className="h-6 w-6 relative">
+                <div
+                  className="h-6 w-6 relative"
+                  key={`${editionId}-cosign-${idx}`}
+                >
                   <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
                 </div>
               );

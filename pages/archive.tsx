@@ -28,7 +28,7 @@ function Archive() {
               <ArchiveTableHeader label="Date" />
               <ArchiveTableHeader label="Artist" />
               <ArchiveTableHeader label="Title" />
-              <ArchiveTableHeader label="Media Type" filterKey={"mediaType"} />
+              <ArchiveTableHeader label="Media Type" filterKey="mediaType" />
               <ArchiveTableHeader label="Platform" filterKey="marketplace" />
               <ArchiveTableHeader label="Curator" filterKey="curatorWallet" />
               <ArchiveTableHeader label="Co-Signs" />
