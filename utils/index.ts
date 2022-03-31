@@ -9,5 +9,7 @@ export function nextApiRequest(
       "Content-Type": "application/json",
     },
     body: data ? JSON.stringify(data) : undefined,
-  }).then((response) => response.json());
+  })
+    .then((response) => response.json())
+    .catch((e) => console.error(e));
 }

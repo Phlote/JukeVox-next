@@ -2,7 +2,7 @@ import { useWeb3React } from "@web3-react/core";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import { usePhlote } from "../hooks/web3/usePhlote";
+import { indexSubmission } from "../controllers/elastic";
 import { Curation } from "../types/curations";
 import { nextApiRequest } from "../utils";
 import { supabase } from "../utils/supabase";
@@ -17,30 +17,6 @@ export const CurationSubmissionFlow = (props) => {
   const [page, setPage] = useState<number>(0);
 
   const [loading, setLoading] = useState<boolean>(false);
-
-  const phloteContract = usePhlote();
-
-  React.useEffect(() => {
-    if (phloteContract) {
-      phloteContract.on("*", (res) => {
-        console.log(res);
-        if (res.event === "EditionCreated") {
-          console.log("created");
-          console.log(res);
-        }
-
-        if (res.event === "EditionMinted") {
-          console.log("minted");
-          console.log(res);
-          console.log(res.args["tokenId"].toNumber());
-        }
-      });
-    }
-
-    return () => {
-      phloteContract?.removeAllListeners();
-    };
-  }, [phloteContract]);
 
   const submitCuration = async (curation: Curation) => {
     setLoading(true);
@@ -63,6 +39,8 @@ export const CurationSubmissionFlow = (props) => {
         .insert([{ curatorWallet: account, cid, ...curation }]);
 
       if (error) throw error;
+
+      await indexSubmission(data[0] as Curation);
 
       setPage(1);
       queryClient.invalidateQueries("submissions");
