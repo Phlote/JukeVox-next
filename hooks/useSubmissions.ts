@@ -17,7 +17,7 @@ export const useSubmissions = () => {
 };
 
 //TODO: remove this, is just bandaid
-const cleanSubmission = (submission: Curation) => {
+export const cleanSubmission = (submission: Curation) => {
   const cleaned = { ...submission };
   if (submission.mediaURI.includes("opensea")) {
     cleaned.marketplace = "OpenSea";
@@ -50,8 +50,9 @@ export const useSearchFilters = () => useAtom(searchFiltersAtom);
 export const useSubmissionSearch = (searchTerm = "") => {
   const [filters] = useSearchFilters();
   const { data, isLoading } = useQuery(
-    [searchTerm, filters.toString(), "search"],
-    async () => searchSubmissions(searchTerm, filters)
+    [searchTerm, filters, "search"],
+    async () => searchSubmissions(searchTerm, filters),
+    { keepPreviousData: true }
   );
 
   return data ?? [];

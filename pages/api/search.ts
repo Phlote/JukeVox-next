@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { nodeElasticClient } from "../../lib/elastic-app-search";
 import { supabase } from "../../lib/supabase";
+import { curationToElasticSearchDocument } from "../../utils";
 
 const { ELASTIC_ENGINE_NAME } = process.env;
 
@@ -16,7 +17,7 @@ export default async function handler(
     const res = await nodeElasticClient.search(
       ELASTIC_ENGINE_NAME,
       searchTerm as string,
-      { filters }
+      { filters: curationToElasticSearchDocument(filters) }
     );
 
     if (res.results.length === 0) response.status(200).send({ results: [] });
@@ -25,8 +26,6 @@ export default async function handler(
       parseInt(document.supabase_id.raw)
     ) as number[];
 
-    // don't use it if we have nothing, right?
-
     const { data, error } = await supabase
       .from("submissions")
       .select()
@@ -34,7 +33,7 @@ export default async function handler(
 
     if (error) throw error;
 
-    response.status(200).send({ results: data });
+    response.status(200).send({ results: data.reverse() });
   } catch (e) {
     console.error(e);
     response.status(500).send(e);
