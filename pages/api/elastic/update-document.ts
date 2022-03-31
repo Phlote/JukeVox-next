@@ -7,12 +7,12 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  const { editionId, documentId } = request.body;
+  const { updates, documentId } = request.body;
   try {
     const res = await nodeElasticClient.updateDocuments(ELASTIC_ENGINE_NAME, [
       {
         id: documentId,
-        edition_id: editionId,
+        ...updates,
       },
     ]);
 
