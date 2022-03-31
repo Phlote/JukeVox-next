@@ -17,3 +17,6 @@ export const NETWORKS = {
     blockExplorerUrls: ["https://polygonscan.com/"],
   },
 };
+
+export const PHLOTE_SIGNATURE_REQUEST_MESSAGE =
+  "Sign this message to prove you have access to this wallet. This won't cost you any gas. \n\n";

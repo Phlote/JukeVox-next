@@ -1,43 +1,19 @@
 import FuzzySearch from "fuzzy-search";
 import { atom, useAtom } from "jotai";
-import React from "react";
-import { ArchiveCuration } from "../../types/curations";
-import { usePhlote } from "./usePhlote";
+import { useQuery } from "react-query";
+import { ArchiveCuration, Curation } from "../types/curations";
+import { supabase } from "../utils/supabase";
 
-const submissionsAtom = atom<ArchiveCuration[]>([]);
+export const useSubmissions = () => {
+  const getSubmissions = async () => {
+    const res = await supabase.from("submissions").select();
+    const cleaned = res.data.map((s) => cleanSubmission(s));
+    const rev = cleaned.reverse();
+    return rev as Curation[];
+  };
 
-export const useAllSubmissions = () => {
-  // TODO: caching?
-  const [submissions, setSubmissions] = useAtom(submissionsAtom);
-
-  const phlote = usePhlote();
-
-  React.useEffect(() => {
-    const getContent = () => {
-      phlote.getAllCurations().then((content) => {
-        const reversed = ([...content] as ArchiveCuration[]).reverse();
-        const cleaned = reversed.map((submission) =>
-          cleanSubmission(submission)
-        );
-        setSubmissions(cleaned);
-      });
-    };
-
-    if (phlote) {
-      getContent();
-      phlote.on("*", (res) => {
-        if (res.event === "EditionCreated") {
-          getContent();
-        }
-      });
-    }
-
-    return () => {
-      phlote?.removeAllListeners();
-    };
-  }, [phlote, setSubmissions]);
-
-  return { submissions, setSubmissions };
+  const query = useQuery("submissions", getSubmissions);
+  return query.data;
 };
 
 //TODO: remove this, is just bandaid
@@ -61,12 +37,15 @@ const cleanSubmission = (submission: ArchiveCuration) => {
   if (submission.mediaURI.includes("soundcloud")) {
     cleaned.marketplace = "Soundcloud";
   }
+  if (submission.mediaURI.includes("youtube")) {
+    cleaned.marketplace = "Youtube";
+  }
 
   return cleaned;
 };
 
-const NFTSearchFiltersAtom = atom<Partial<ArchiveCuration>>({});
-export const useNFTSearchFilters = () => useAtom(NFTSearchFiltersAtom);
+const searchFiltersAtom = atom<Partial<ArchiveCuration>>({});
+export const useSearchFilters = () => useAtom(searchFiltersAtom);
 
 const isPartialMatch = (
   curation: ArchiveCuration,
@@ -77,9 +56,9 @@ const isPartialMatch = (
   }, true);
 };
 
-export const useNFTSearch = (searchTerm = "") => {
-  const { submissions } = useAllSubmissions();
-  const [filters] = useNFTSearchFilters();
+export const useSubmissionSearch = (searchTerm = "") => {
+  const submissions = useSubmissions();
+  const [filters] = useSearchFilters();
   const searcher = new FuzzySearch(submissions);
   const searchResults = searcher.search(searchTerm.trim());
 

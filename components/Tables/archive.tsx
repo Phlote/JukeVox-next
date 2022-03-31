@@ -1,14 +1,12 @@
 import classNames from "classnames";
+import dayjs from "dayjs";
 import { BigNumber, ethers } from "ethers";
 import Image from "next/image";
 import React from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 import { useOnClickOut } from "../../hooks/useOnClickOut";
-import {
-  useAllSubmissions,
-  useNFTSearchFilters,
-} from "../../hooks/web3/useNFTSearch";
+import { useSearchFilters, useSubmissions } from "../../hooks/useSubmissions";
 import { DropdownChecklist } from "../Dropdowns/DropdownChecklist";
 import { Username } from "../Username";
 
@@ -17,7 +15,7 @@ export const ArchiveTableHeader = (props) => {
   const { label, filterKey } = props;
   const ref = React.useRef();
   useOnClickOut(ref, () => setDropdownOpen(false));
-  const [filters] = useNFTSearchFilters();
+  const [filters] = useSearchFilters();
 
   const isActiveFilter = !!filters[filterKey];
 
@@ -79,19 +77,21 @@ export const ArchiveFilterLabel: React.FC<{ filter: string }> = ({
 };
 
 export const SubmissionDate: React.FC<{
-  submissionTimestamp: BigNumber | number;
+  submissionTimestamp: BigNumber | number | string;
 }> = ({ submissionTimestamp }) => {
   return <span>{submissionTimeToDate(submissionTimestamp)}</span>;
 };
 
-const submissionTimeToDate = (submissionTimestamp: BigNumber | number) => {
-  let time = submissionTimestamp;
-  if (submissionTimestamp instanceof BigNumber) {
-    time = submissionTimestamp.toNumber();
-    // do something
+const submissionTimeToDate = (timeStamp: BigNumber | number | string) => {
+  let time = timeStamp;
+  if (timeStamp instanceof BigNumber) {
+    time = timeStamp.toNumber();
   }
 
-  return new Date((time as number) * 1000).toLocaleDateString();
+  const submissionDate = dayjs(time as number | string);
+  if (!submissionDate.isValid()) throw "Invalid Date String";
+
+  return submissionDate.format("YYYY-MM-DD");
 };
 
 export const ArchiveDropdown: React.FC<{
@@ -101,8 +101,8 @@ export const ArchiveDropdown: React.FC<{
 }> = (props) => {
   //TODO: grey out fields that are usually present but not in current results (this is a maybe)
   const { filterKey, close } = props;
-  const { submissions } = useAllSubmissions();
-  const [filters, setFilters] = useNFTSearchFilters();
+  const submissions = useSubmissions();
+  const [filters, setFilters] = useSearchFilters();
 
   const updateFilter = (val) => {
     setFilters((current) => {

@@ -1,6 +1,9 @@
 import type { BigNumberish } from "@ethersproject/bignumber";
 import { formatUnits } from "@ethersproject/units";
-import { NETWORKS } from "../constants";
+import { ethers } from "ethers";
+import { nextApiRequest } from ".";
+import { UserNonce } from "../types";
+import { NETWORKS, PHLOTE_SIGNATURE_REQUEST_MESSAGE } from "./constants";
 
 export function shortenHex(hex: string, length = 4) {
   return `${hex.substring(0, length + 2)}…${hex.substring(
@@ -59,4 +62,24 @@ export const changeNetwork = async (
   } catch (err) {
     setError(err.message);
   }
+};
+
+// determines if the holder of an address actually holds the wallet
+export const verifyUser = async (address: string, library) => {
+  //TODO: should have a controller so we have better typing here
+  if (!ethers.utils.isAddress(address)) throw "Not an address";
+
+  const user = (await nextApiRequest(
+    `auth?address=${address}`,
+    "GET"
+  )) as UserNonce;
+  const signer = library.getSigner();
+  const signature = await signer.signMessage(
+    PHLOTE_SIGNATURE_REQUEST_MESSAGE + user.nonce.toString()
+  );
+  const { authenticated } = (await nextApiRequest(
+    `confirm?wallet=${address}&signature=${signature}`,
+    "GET"
+  )) as { authenticated: boolean };
+  return authenticated;
 };

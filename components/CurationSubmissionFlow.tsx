@@ -1,23 +1,22 @@
 import { useWeb3React } from "@web3-react/core";
-import { BigNumber } from "ethers";
-import Image from "next/image";
 import React, { useState } from "react";
-import { NFT_MINT_CONTRACT_RINKEBY, NULL_WALLET } from "../contracts/addresses";
-import { useAllSubmissions } from "../hooks/web3/useNFTSearch";
+import { useQueryClient } from "react-query";
+import { toast } from "react-toastify";
 import { usePhlote } from "../hooks/web3/usePhlote";
 import { Curation } from "../types/curations";
 import { nextApiRequest } from "../utils";
+import { supabase } from "../utils/supabase";
+import { verifyUser } from "../utils/web3";
 import { CurationSubmissionForm } from "./Forms/CurationSubmissionForm";
 import { HollowButton, HollowButtonContainer } from "./Hollow";
 
 export const CurationSubmissionFlow = (props) => {
-  const { account } = useWeb3React();
+  const { account, library } = useWeb3React();
+  const queryClient = useQueryClient();
 
   const [page, setPage] = useState<number>(0);
-  const [txnHash, setTxnHash] = useState<string>("0x0");
-  const [nftMintId, setNFTMintId] = useState<number | "Loading">("Loading");
+
   const [loading, setLoading] = useState<boolean>(false);
-  const { setSubmissions } = useAllSubmissions();
 
   const phloteContract = usePhlote();
 
@@ -34,7 +33,6 @@ export const CurationSubmissionFlow = (props) => {
           console.log("minted");
           console.log(res);
           console.log(res.args["tokenId"].toNumber());
-          setNFTMintId(res.args["tokenId"].toNumber());
         }
       });
     }
@@ -44,52 +42,35 @@ export const CurationSubmissionFlow = (props) => {
     };
   }, [phloteContract]);
 
-  const submitCuration = async (curationData: Curation) => {
-    const {
-      mediaType,
-      artistName,
-      artistWallet,
-      mediaTitle,
-      mediaURI,
-      marketplace,
-      tags,
-    } = curationData;
-
+  const submitCuration = async (curation: Curation) => {
     setLoading(true);
     try {
-      const { tokenURI } = await nextApiRequest(
-        "store-nft",
+      const authenticated = await verifyUser(account, library);
+
+      if (!authenticated) {
+        toast.error("Authentication failed");
+        throw "Not Authenticated";
+      }
+
+      const { cid } = await nextApiRequest(
+        "store-submission-on-ipfs",
         "POST",
-        curationData
+        curation
       );
 
-      const res = await phloteContract.submitPost(
-        account,
-        mediaURI,
-        marketplace,
-        tags ?? [],
-        artistName,
-        artistWallet ?? NULL_WALLET,
-        mediaType,
-        mediaTitle,
-        tokenURI
-      );
-      console.log(res);
-      setTxnHash(res.hash);
+      const { data, error } = await supabase
+        .from("submissions")
+        .insert([{ curatorWallet: account, cid, ...curation }]);
+
+      if (error) throw error;
+
       setPage(1);
-      setSubmissions((curations) => [
-        {
-          curatorWallet: account,
-          ...curationData,
-          transactionPending: true,
-          submissionTime: BigNumber.from(Date.now()),
-        },
-        ...curations,
-      ]);
+      queryClient.invalidateQueries("submissions");
     } catch (e) {
       console.error(e);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -109,7 +90,7 @@ export const CurationSubmissionFlow = (props) => {
         <div className="flex flex-col items-center text-sm mt-8">
           <p>Congratulations! Your submission has been added</p>
           <div className="h-8" />
-          <a
+          {/* <a
             className="underline flex"
             rel="noreferrer"
             target="_blank"
@@ -135,7 +116,7 @@ export const CurationSubmissionFlow = (props) => {
             {nftMintId === "Loading" && " (Waiting on transaction...)"}
             <div className="w-1" />
             <Image src="/arrow.svg" alt={"link"} height={12} width={12} />
-          </a>
+          </a> */}
 
           <div className="h-8" />
           <HollowButtonContainer className="w-1/2" onClick={() => setPage(0)}>

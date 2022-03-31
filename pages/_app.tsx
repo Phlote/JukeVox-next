@@ -3,8 +3,8 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { QueryClient, QueryClientProvider } from "react-query";
 import "tailwindcss/tailwind.css";
-import getLibrary from "../getLibrary";
 import "../styles/globals.css";
+import getLibrary from "../utils/getLibrary";
 
 const queryClient = new QueryClient();
 
