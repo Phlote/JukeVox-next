@@ -37,6 +37,9 @@ const cleanSubmission = (submission: ArchiveCuration) => {
   if (submission.mediaURI.includes("soundcloud")) {
     cleaned.marketplace = "Soundcloud";
   }
+  if (submission.mediaURI.includes("youtube")) {
+    cleaned.marketplace = "Youtube";
+  }
 
   return cleaned;
 };

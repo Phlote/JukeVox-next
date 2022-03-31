@@ -3110,6 +3110,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dayjs@npm:^1.11.0":
+  version: 1.11.0
+  resolution: "dayjs@npm:1.11.0"
+  checksum: 2d36f6d71345114cdcd89147adf9e05b4f8fe81684e08c8bf1f86b140aa0b86ecc3cae661a9348d96feb7fbefd03e1bc3697303688e95209670abcb36b4ece15
+  languageName: node
+  linkType: hard
+
 "debug@npm:4, debug@npm:^4.0.1, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.3":
   version: 4.3.4
   resolution: "debug@npm:4.3.4"
@@ -6587,6 +6594,7 @@ __metadata:
     babel-plugin-twin: ^1.0.2
     bufferutil: ^4.0.6
     classnames: ^2.3.1
+    dayjs: ^1.11.0
     eslint: 7.32.0
     eslint-config-next: 12.0.8
     ethers: ^5.5.4

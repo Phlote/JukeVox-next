@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import dayjs from "dayjs";
 import { BigNumber, ethers } from "ethers";
 import Image from "next/image";
 import React from "react";
@@ -86,10 +87,11 @@ const submissionTimeToDate = (timeStamp: BigNumber | number | string) => {
   if (timeStamp instanceof BigNumber) {
     time = timeStamp.toNumber();
   }
-  if (typeof timeStamp === "string") {
-    time = parseInt(timeStamp as string);
-  }
-  return new Date((time as number) * 1000).toLocaleDateString();
+
+  const submissionDate = dayjs(time as number | string);
+  if (!submissionDate.isValid()) throw "Invalid Date String";
+
+  return submissionDate.format("YYYY-MM-DD");
 };
 
 export const ArchiveDropdown: React.FC<{
