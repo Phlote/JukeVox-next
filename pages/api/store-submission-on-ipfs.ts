@@ -39,7 +39,11 @@ export default async function handler(
       },
     },
   };
-  const pin = await pinata.pinJSONToIPFS(erc1155Metadata);
-  console.log(pin);
-  response.status(200).send({ cid: pin.IpfsHash });
+  try {
+    const pin = await pinata.pinJSONToIPFS(erc1155Metadata);
+    console.log(pin);
+    response.status(200).send({ cid: pin.IpfsHash });
+  } catch (e) {
+    response.status(500).send(e);
+  }
 }
