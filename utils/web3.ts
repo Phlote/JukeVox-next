@@ -68,18 +68,21 @@ export const changeNetwork = async (
 export const verifyUser = async (address: string, library) => {
   //TODO: should have a controller so we have better typing here
   if (!ethers.utils.isAddress(address)) throw "Not an address";
-
-  const user = (await nextApiRequest(
-    `auth?address=${address}`,
-    "GET"
-  )) as UserNonce;
-  const signer = library.getSigner();
-  const signature = await signer.signMessage(
-    PHLOTE_SIGNATURE_REQUEST_MESSAGE + user.nonce.toString()
-  );
-  const { authenticated } = (await nextApiRequest(
-    `confirm?wallet=${address}&signature=${signature}`,
-    "GET"
-  )) as { authenticated: boolean };
-  return authenticated;
+  try {
+    const user = (await nextApiRequest(
+      `auth?address=${address}`,
+      "GET"
+    )) as UserNonce;
+    const signer = library.getSigner();
+    const signature = await signer.signMessage(
+      PHLOTE_SIGNATURE_REQUEST_MESSAGE + user.nonce.toString()
+    );
+    const { authenticated } = (await nextApiRequest(
+      `confirm?wallet=${address}&signature=${signature}`,
+      "GET"
+    )) as { authenticated: boolean };
+    return authenticated;
+  } catch (e) {
+    console.error(e);
+  }
 };

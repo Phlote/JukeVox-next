@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { supabase } from "../../utils/supabase";
+import { supabase } from "../../lib/supabase";
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   const { address } = req.query;

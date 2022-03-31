@@ -1,8 +1,8 @@
 import FuzzySearch from "fuzzy-search";
 import { atom, useAtom } from "jotai";
 import { useQuery } from "react-query";
+import { supabase } from "../lib/supabase";
 import { ArchiveCuration, Curation } from "../types/curations";
-import { supabase } from "../utils/supabase";
 
 export const useSubmissions = () => {
   const getSubmissions = async () => {
@@ -37,7 +37,7 @@ const cleanSubmission = (submission: ArchiveCuration) => {
   if (submission.mediaURI.includes("soundcloud")) {
     cleaned.marketplace = "Soundcloud";
   }
-  if (submission.mediaURI.includes("youtube")) {
+  if (submission.mediaURI.includes("youtu")) {
     cleaned.marketplace = "Youtube";
   }
 

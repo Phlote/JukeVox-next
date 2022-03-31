@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { nodeElasticClient } from "../../../utils/elastic-app-search";
+import { nodeElasticClient } from "../../../lib/elastic-app-search";
 
 const { ELASTIC_ENGINE_NAME } = process.env;
 

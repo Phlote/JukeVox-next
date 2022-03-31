@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { nodeElasticClient } from "../../../lib/elastic-app-search";
 import {
   Curation,
   CurationElasticSearchDocument,
 } from "../../../types/curations";
-import { nodeElasticClient } from "../../../utils/elastic-app-search";
 
 const { ELASTIC_ENGINE_NAME } = process.env;
 
@@ -14,6 +14,7 @@ export default async function handler(
   const submissions = request.body as Curation[];
   const documents = submissions.map((s) => {
     const {
+      id,
       mediaType,
       artistName,
       artistWallet,
@@ -25,6 +26,7 @@ export default async function handler(
       submissionTime,
     } = s;
     return {
+      supabase_id: id,
       media_type: mediaType,
       artist_name: artistName,
       artist_wallet: artistWallet,

@@ -43,5 +43,5 @@ export interface CurationElasticSearchDocument {
   media_uri: string;
   marketplace: string;
   tags?: string[];
-  submission_time: number;
+  submission_time: string;
 }

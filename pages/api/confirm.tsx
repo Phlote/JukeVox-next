@@ -1,8 +1,8 @@
 import { ethers } from "ethers";
 import { NextApiRequest, NextApiResponse } from "next/dist/shared/lib/utils";
+import { supabase } from "../../lib/supabase";
 import { UserNonce } from "../../types";
 import { PHLOTE_SIGNATURE_REQUEST_MESSAGE } from "../../utils/constants";
-import { supabase } from "../../utils/supabase";
 
 export default async function confirm(
   req: NextApiRequest,

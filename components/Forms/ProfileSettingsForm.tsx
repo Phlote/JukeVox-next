@@ -5,7 +5,7 @@ import { useDropzone } from "react-dropzone";
 import { useField, useForm } from "react-final-form-hooks";
 import { useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import { supabase } from "../../utils/supabase";
+import { supabase } from "../../lib/supabase";
 import {
   HollowButton,
   HollowButtonContainer,
