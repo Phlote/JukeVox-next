@@ -44,7 +44,7 @@ const Profile = (props) => {
             </tr>
           </thead>
 
-          {mySubmissions.length > 0 && (
+          {mySubmissions?.length > 0 && (
             <tbody>
               <tr className="h-4" />
               {mySubmissions?.map((curation) => {
@@ -90,7 +90,7 @@ const Profile = (props) => {
             </tbody>
           )}
         </table>
-        {mySubmissions.length === 0 && (
+        {mySubmissions?.length === 0 && (
           <div
             className="w-full mt-4 flex-grow flex justify-center items-center"
             style={{ color: "rgba(105, 105, 105, 1)" }}
