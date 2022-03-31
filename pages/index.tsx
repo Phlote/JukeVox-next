@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import React from "react";
 import { HomeLayout } from "../components/Layouts";
 import { SearchBar, useSearchTerm } from "../components/SearchBar";
 import { useKeyPress } from "../hooks/useKeyPress";
