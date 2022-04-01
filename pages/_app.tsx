@@ -1,6 +1,8 @@
 import { Web3ReactProvider } from "@web3-react/core";
 import type { AppProps } from "next/app";
 import Head from "next/head";
+import { NextPage } from "next/types";
+import { ReactElement, ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import "tailwindcss/tailwind.css";
 import "../styles/globals.css";
@@ -8,10 +10,20 @@ import getLibrary from "../utils/getLibrary";
 
 const queryClient = new QueryClient();
 
-const NextWeb3App = ({ Component, pageProps }: AppProps) => {
+type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+const NextWeb3App = ({ Component, pageProps }: AppPropsWithLayout) => {
   if (process.env.NEXT_PUBLIC_MAINTENANCE) {
     return <div>Down for maintenance. Try again later!</div>;
   }
+
+  const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
     <>

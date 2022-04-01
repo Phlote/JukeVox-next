@@ -1,4 +1,4 @@
-import { ArchiveLayout } from "../components/Layouts";
+import Layout, { ArchiveLayout } from "../components/Layouts";
 import { RatingsMeter } from "../components/RatingsMeter";
 import { useSearchTerm } from "../components/SearchBar";
 import {
@@ -95,5 +95,13 @@ function Archive() {
     </ArchiveLayout>
   );
 }
+
+Archive.getLayout = function getLayout(page) {
+  return (
+    <Layout>
+      <ArchiveLayout>{page}</ArchiveLayout>
+    </Layout>
+  );
+};
 
 export default Archive;

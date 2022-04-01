@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { useRouter } from "next/router";
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { useField, useForm } from "react-final-form-hooks";
@@ -23,7 +22,6 @@ export interface UserProfile {
 
 export const ProfileSettingsForm = ({ wallet }) => {
   const queryClient = useQueryClient();
-  const router = useRouter();
 
   const onSubmit = async (formData: Partial<UserProfile>) => {
     const { username, city, twitter } = formData;
@@ -126,7 +124,9 @@ const ProfilePictureUpload = ({ wallet }) => {
 
       {isHovering && <p className="text-base italic">{"Upload new photo"}</p>}
 
-      {profilePicQuery?.data && !isDragActive ? (
+      {isDragActive && <p className="text-base italic">{"Drop image here"}</p>}
+
+      {profilePicQuery?.data && !isDragActive && (
         <Image
           className={`rounded-full ${isHovering && "opacity-25"}`}
           src={profilePicQuery?.data}
@@ -135,10 +135,10 @@ const ProfilePictureUpload = ({ wallet }) => {
           alt="profile picture"
           priority
         />
-      ) : (
-        <p className="text-base italic">
-          {isDragActive ? "Drop image here" : "Drop or select visual to upload"}
-        </p>
+      )}
+
+      {!isHovering && !isDragActive && !profilePicQuery.data && (
+        <p className="text-base italic">{"Drop or select visual to upload"}</p>
       )}
     </div>
   );
