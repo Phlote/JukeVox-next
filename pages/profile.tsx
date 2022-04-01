@@ -8,12 +8,13 @@ import {
   ArchiveTableRow,
   SubmissionDate,
 } from "../components/Tables/archive";
-import { useAllSubmissions } from "../hooks/web3/useNFTSearch";
+import { useSubmissions } from "../hooks/useSubmissions";
 
 const Profile = (props) => {
   const router = useRouter();
   const { wallet } = router.query;
-  const { submissions } = useAllSubmissions();
+  //TODO: we can just query the DB properly now lol
+  const submissions = useSubmissions();
   const mySubmissions = submissions?.filter(
     (submission) => submission.curatorWallet === wallet
   );
@@ -43,7 +44,7 @@ const Profile = (props) => {
             </tr>
           </thead>
 
-          {mySubmissions.length > 0 && (
+          {mySubmissions?.length > 0 && (
             <tbody>
               <tr className="h-4" />
               {mySubmissions?.map((curation) => {
@@ -55,16 +56,12 @@ const Profile = (props) => {
                   mediaType,
                   mediaURI,
                   marketplace,
-                  transactionPending,
                   submissionTime,
                 } = curation;
 
                 return (
                   <>
-                    <ArchiveTableRow
-                      style={transactionPending ? { opacity: 0.5 } : undefined}
-                      key={`${submissionTime}`}
-                    >
+                    <ArchiveTableRow key={`${submissionTime}`}>
                       <ArchiveTableDataCell>
                         <SubmissionDate submissionTimestamp={submissionTime} />
                       </ArchiveTableDataCell>
@@ -83,10 +80,7 @@ const Profile = (props) => {
                       <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
 
                       <ArchiveTableDataCell>
-                        <RatingsMeter
-                          editionId={id}
-                          txnPending={transactionPending}
-                        />
+                        <RatingsMeter editionId={id} />
                       </ArchiveTableDataCell>
                     </ArchiveTableRow>
                     <tr className="h-4" />
@@ -96,7 +90,7 @@ const Profile = (props) => {
             </tbody>
           )}
         </table>
-        {mySubmissions.length === 0 && (
+        {mySubmissions?.length === 0 && (
           <div
             className="w-full mt-4 flex-grow flex justify-center items-center"
             style={{ color: "rgba(105, 105, 105, 1)" }}

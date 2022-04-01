@@ -8,11 +8,11 @@ import {
   SubmissionDate,
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
-import { useNFTSearch } from "../hooks/web3/useNFTSearch";
+import { useSubmissionSearch } from "../hooks/useSubmissions";
 
 function Archive() {
   const [searchTerm] = useSearchTerm();
-  const curations = useNFTSearch(searchTerm);
+  const curations = useSubmissionSearch(searchTerm);
 
   return (
     <ArchiveLayout>
@@ -28,7 +28,7 @@ function Archive() {
               <ArchiveTableHeader label="Date" />
               <ArchiveTableHeader label="Artist" />
               <ArchiveTableHeader label="Title" />
-              <ArchiveTableHeader label="Media Type" filterKey={"mediaType"} />
+              <ArchiveTableHeader label="Media Type" filterKey="mediaType" />
               <ArchiveTableHeader label="Platform" filterKey="marketplace" />
               <ArchiveTableHeader label="Curator" filterKey="curatorWallet" />
               <ArchiveTableHeader label="Co-Signs" />
@@ -47,16 +47,12 @@ function Archive() {
                   mediaType,
                   mediaURI,
                   marketplace,
-                  transactionPending,
                   submissionTime,
                 } = curation;
 
                 return (
                   <>
-                    <ArchiveTableRow
-                      style={transactionPending ? { opacity: 0.5 } : undefined}
-                      key={`${submissionTime}`}
-                    >
+                    <ArchiveTableRow key={`${submissionTime}`}>
                       <ArchiveTableDataCell>
                         <SubmissionDate submissionTimestamp={submissionTime} />
                       </ArchiveTableDataCell>
@@ -77,10 +73,7 @@ function Archive() {
                         <Username wallet={curatorWallet} linkToProfile />
                       </ArchiveTableDataCell>
                       <ArchiveTableDataCell>
-                        <RatingsMeter
-                          editionId={id}
-                          txnPending={transactionPending}
-                        />
+                        <RatingsMeter editionId={id} />
                       </ArchiveTableDataCell>
                     </ArchiveTableRow>
                     <tr className="h-4" />

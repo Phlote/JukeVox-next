@@ -1,10 +1,8 @@
-import React from "react";
-import Image from "next/image";
-import { HollowInput, HollowInputContainer } from "../components/Hollow";
-import { HomeLayout } from "../components/Layouts";
-import { useKeyPress } from "../hooks/useKeyPress";
 import { useRouter } from "next/router";
+import React from "react";
+import { HomeLayout } from "../components/Layouts";
 import { SearchBar, useSearchTerm } from "../components/SearchBar";
+import { useKeyPress } from "../hooks/useKeyPress";
 
 function Home() {
   const [searchTerm, setSearchTerm] = useSearchTerm();
