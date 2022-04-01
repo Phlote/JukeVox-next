@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
+import { supabase } from "../../lib/supabase";
 import { Curation } from "../../types/curations";
-import { supabase } from "../../utils/supabase";
 import { UserProfile } from "./ProfileSettingsForm";
 
 export const validateCurationSubmission = (values: Curation) => {

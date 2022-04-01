@@ -1,8 +1,8 @@
-import FuzzySearch from "fuzzy-search";
 import { atom, useAtom } from "jotai";
 import { useQuery } from "react-query";
-import { ArchiveCuration, Curation } from "../types/curations";
-import { supabase } from "../utils/supabase";
+import { searchSubmissions } from "../controllers/search";
+import { supabase } from "../lib/supabase";
+import { Curation } from "../types/curations";
 
 export const useSubmissions = () => {
   const getSubmissions = async () => {
@@ -17,7 +17,7 @@ export const useSubmissions = () => {
 };
 
 //TODO: remove this, is just bandaid
-const cleanSubmission = (submission: ArchiveCuration) => {
+export const cleanSubmission = (submission: Curation) => {
   const cleaned = { ...submission };
   if (submission.mediaURI.includes("opensea")) {
     cleaned.marketplace = "OpenSea";
@@ -37,37 +37,23 @@ const cleanSubmission = (submission: ArchiveCuration) => {
   if (submission.mediaURI.includes("soundcloud")) {
     cleaned.marketplace = "Soundcloud";
   }
-  if (submission.mediaURI.includes("youtube")) {
+  if (submission.mediaURI.includes("youtu")) {
     cleaned.marketplace = "Youtube";
   }
 
   return cleaned;
 };
 
-const searchFiltersAtom = atom<Partial<ArchiveCuration>>({});
+const searchFiltersAtom = atom<Partial<Curation>>({});
 export const useSearchFilters = () => useAtom(searchFiltersAtom);
 
-const isPartialMatch = (
-  curation: ArchiveCuration,
-  filters: Partial<ArchiveCuration>
-) => {
-  return Object.keys(filters).reduce((acc, key) => {
-    return acc && filters[key] === curation[key];
-  }, true);
-};
-
 export const useSubmissionSearch = (searchTerm = "") => {
-  const submissions = useSubmissions();
   const [filters] = useSearchFilters();
-  const searcher = new FuzzySearch(submissions);
-  const searchResults = searcher.search(searchTerm.trim());
+  const { data, isLoading } = useQuery(
+    [searchTerm, filters, "search"],
+    async () => searchSubmissions(searchTerm, filters),
+    { keepPreviousData: true }
+  );
 
-  const filtered = searchResults
-    .map((result) => {
-      if (isPartialMatch(result, filters)) return result;
-      else return null;
-    })
-    .filter((n) => n);
-
-  return filtered as ArchiveCuration[];
+  return data ?? [];
 };
