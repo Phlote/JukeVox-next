@@ -39,7 +39,7 @@ export default async function handler(
 
     const { data, error } = await query;
     const searchResults = data.sort((a, b) => {
-      return new Date(b.date).getTime() - new Date(a.date).getTime();
+      return new Date(a.date).getTime() - new Date(b.date).getTime();
     });
     console.log("search results: ", searchResults);
 
