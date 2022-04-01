@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useProfile } from "../components/Forms/ProfileSettingsForm";
-import { ArchiveLayout } from "../components/Layouts";
+import Layout, { ArchiveLayout } from "../components/Layouts";
 import { RatingsMeter } from "../components/RatingsMeter";
 import {
   ArchiveTableDataCell,
@@ -100,6 +100,14 @@ const Profile = (props) => {
         )}
       </div>
     </ArchiveLayout>
+  );
+};
+
+Profile.getLayout = function getLayout(page) {
+  return (
+    <Layout>
+      <ArchiveLayout>{page}</ArchiveLayout>
+    </Layout>
   );
 };
 
