@@ -25,7 +25,7 @@ const NextWeb3App = ({ Component, pageProps }: AppProps) => {
       </Head>
       <QueryClientProvider client={queryClient}>
         <Web3ReactProvider getLibrary={getLibrary}>
-          <Component {...pageProps} />
+          <Component {...pageProps}></Component>
         </Web3ReactProvider>
       </QueryClientProvider>
     </>

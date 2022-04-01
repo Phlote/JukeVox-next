@@ -1,6 +1,6 @@
 import { useWeb3React } from "@web3-react/core";
 import { useEffect, useState } from "react";
-import { RINKEBY_CHAIN_ID } from "../../utils/constants";
+import { SupportedChainId } from "../../utils/constants";
 import { HollowButton, HollowButtonContainer } from "../Hollow";
 import { Modal } from "../Modal";
 
@@ -9,9 +9,7 @@ export const RinkebyPromptModal = () => {
   const { active, chainId, library } = useWeb3React();
   useEffect(() => {
     if (active) {
-      console.log("active", active);
-      console.log("chainId", chainId);
-      if (chainId !== 4) {
+      if (chainId !== SupportedChainId.RINKEBY) {
         setOpen(true);
       } else setOpen(false);
     }

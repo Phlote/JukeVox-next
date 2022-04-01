@@ -1,13 +1,11 @@
 import { useWeb3React } from "@web3-react/core";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import { useOnCopy } from "../hooks/useOnCopy";
-import useENSName from "../hooks/web3/useENSName";
+import { useEffect, useState } from "react";
 import useMetaMaskOnboarding from "../hooks/web3/useMetaMaskOnboarding";
-import { shortenHex } from "../utils/web3";
 import { DropdownActions } from "./Dropdowns/DropdownActions";
 import { HollowInputContainer } from "./Hollow";
 import { useConnectWalletModalOpen } from "./Modals/ConnectWalletModal";
+import { ShortenedWallet } from "./ShortenedWallet";
 
 type AccountProps = {
   triedToEagerConnect: boolean;
@@ -126,13 +124,6 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
       )}
     </HollowInputContainer>
   );
-};
-
-export const ShortenedWallet: React.FC<{ wallet: string }> = ({ wallet }) => {
-  const ENSName = useENSName(wallet);
-  const ref = useRef();
-  useOnCopy(ref, wallet);
-  return <span ref={ref}>{ENSName || `${shortenHex(wallet, 5)}`}</span>;
 };
 
 export default Account;

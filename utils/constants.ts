@@ -14,7 +14,7 @@ export enum SupportedChainId {
   // OPTIMISM = 10,
   // OPTIMISTIC_KOVAN = 69,
 
-  // POLYGON = 137,
+  POLYGON = 137,
   // POLYGON_MUMBAI = 80001,
 }
 
