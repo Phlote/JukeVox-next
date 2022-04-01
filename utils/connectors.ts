@@ -1,13 +1,17 @@
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
-import { POLYGON_CHAIN_ID, RINKEBY_CHAIN_ID } from "./constants";
 
-export const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, RINKEBY_CHAIN_ID, 5, 42, POLYGON_CHAIN_ID],
+const SUPPORTED_CHAIN_IDS = [4];
+
+export const Injected = new InjectedConnector({
+  supportedChainIds: SUPPORTED_CHAIN_IDS,
 });
 
-export const walletConnect = new WalletConnectConnector({
-  // rpcUrl: `https://mainnet.infura.io/v3/${process.env.INFURA_KEY}`,
-  // bridge: "https://bridge.walletconnect.org",
+export const WalletConnect = new WalletConnectConnector({
+  supportedChainIds: SUPPORTED_CHAIN_IDS,
+  rpc: {
+    // 137: `https://polygon-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_POLYGON}`,
+    4: `https://eth-rinkeby.alchemyapi.io/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`,
+  },
   qrcode: true,
 });

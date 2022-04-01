@@ -1,6 +1,7 @@
 import React from "react";
 import { Footer } from "./Footer";
-import { RinkebyPromptModal } from "./Modals/ConnectWalletModal";
+import { ConnectWalletModal } from "./Modals/ConnectWalletModal";
+import { RinkebyPromptModal } from "./Modals/RinkebyPromptModal";
 import { NavBar } from "./NavBar";
 import { SubmitSidenav } from "./SideNav";
 
@@ -9,6 +10,7 @@ export const HomeLayout: React.FC = ({ children }) => {
     <div className="min-h-screen flex flex-col w-full overflow-y-auto	">
       <SubmitSidenav />
       <RinkebyPromptModal />
+      <ConnectWalletModal />
 
       <NavBar />
       <div className="container flex justify-center mx-auto max-h-max items-center flex-grow">

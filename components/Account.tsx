@@ -1,14 +1,13 @@
 import { useWeb3React } from "@web3-react/core";
-import { UserRejectedRequestError } from "@web3-react/injected-connector";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useOnCopy } from "../hooks/useOnCopy";
 import useENSName from "../hooks/web3/useENSName";
 import useMetaMaskOnboarding from "../hooks/web3/useMetaMaskOnboarding";
-import { injected } from "../utils/connectors";
 import { shortenHex } from "../utils/web3";
 import { DropdownActions } from "./Dropdowns/DropdownActions";
 import { HollowInputContainer } from "./Hollow";
+import { useConnectWalletModalOpen } from "./Modals/ConnectWalletModal";
 
 type AccountProps = {
   triedToEagerConnect: boolean;
@@ -35,6 +34,7 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
   }, [active, error, stopOnboarding]);
 
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+  const [open, setOpen] = useConnectWalletModalOpen();
 
   if (error) {
     console.log(error);
@@ -43,7 +43,7 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
         className="h-full"
         style={{ justifyContent: "center" }}
       >
-        {"Check Wallet"}
+        {`Error: ${error}`}
       </HollowInputContainer>
     );
   }
@@ -54,35 +54,43 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
 
   if (typeof account !== "string") {
     return (
-      <>
-        {isWeb3Available ? (
-          <HollowInputContainer
-            className="cursor-pointer h-full text-white"
-            style={{ justifyContent: "center" }}
-            disabled={connecting}
-            onClick={() => {
-              setConnecting(true);
-              activate(injected, undefined, true).catch((error) => {
-                // ignore the error if it's a user rejected request
-                if (error instanceof UserRejectedRequestError) {
-                  setConnecting(false);
-                } else {
-                  setError(error);
-                }
-              });
-            }}
-          >
-            Connect Wallet
-          </HollowInputContainer>
-        ) : (
-          <HollowInputContainer
-            className="cursor-pointer h-full justify-center"
-            onClick={startOnboarding}
-          >
-            <a href="https://metamask.io/download/"></a>Install Metamask
-          </HollowInputContainer>
-        )}
-      </>
+      // Use the stuff below for the metamask connect button
+      // <>
+      //   {isWeb3Available ? (
+      //     <HollowInputContainer
+      //       className="cursor-pointer h-full text-white"
+      //       style={{ justifyContent: "center" }}
+      //       disabled={connecting}
+      //       onClick={() => {
+      //         setConnecting(true);
+      //         activate(injected, undefined, true).catch((error) => {
+      //           // ignore the error if it's a user rejected request
+      //           if (error instanceof UserRejectedRequestError) {
+      //             setConnecting(false);
+      //           } else {
+      //             setError(error);
+      //           }
+      //         });
+      //       }}
+      //     >
+      //       Connect Wallet
+      //     </HollowInputContainer>
+      //   ) : (
+      //     <HollowInputContainer
+      //       className="cursor-pointer h-full justify-center"
+      //       onClick={startOnboarding}
+      //     >
+      //       <a href="https://metamask.io/download/"></a>Install Metamask
+      //     </HollowInputContainer>
+      //   )}
+      // </>
+      <HollowInputContainer
+        className="cursor-pointer h-full text-white"
+        style={{ justifyContent: "center" }}
+        onClick={() => setOpen(true)}
+      >
+        Connect
+      </HollowInputContainer>
     );
   }
 

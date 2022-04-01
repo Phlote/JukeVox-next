@@ -4,7 +4,7 @@ import Image from "next/image";
 import React from "react";
 import { useKeyPress } from "../hooks/useKeyPress";
 import Close from "../public/close.svg";
-import { injected } from "../utils/connectors";
+import { Injected } from "../utils/connectors";
 import { HollowInput, HollowInputContainer } from "./Hollow";
 
 const searchTermAtom = atom<string>("");
@@ -28,7 +28,7 @@ export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
       <HollowInputContainer
         onClick={() => {
           if (active) inputRef.current.focus();
-          else activate(injected, undefined, true);
+          else activate(Injected, undefined, true);
         }}
       >
         <Image height={30} width={30} src="/search.svg" alt="search" />
