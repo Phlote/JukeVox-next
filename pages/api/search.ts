@@ -29,9 +29,13 @@ export default async function handler(
       .select()
       .in("id", ids);
 
+    const searchResults = data.reverse();
+
+    console.log("search results: ", searchResults);
+
     if (error) throw error;
 
-    response.status(200).send({ results: data.reverse() });
+    response.status(200).send({ results: searchResults });
   } catch (e) {
     console.error(e);
     response.status(500).send(e);
