@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { nodeElasticClient } from "../../lib/elastic-app-search";
 import { supabase } from "../../lib/supabase";
+import { Curation } from "../../types/curations";
 import { curationToElasticSearchDocument } from "../../utils";
 
 const { ELASTIC_ENGINE_NAME } = process.env;
@@ -38,8 +39,11 @@ export default async function handler(
     }
 
     const { data, error } = await query;
-    const searchResults = data.sort((a, b) => {
-      return new Date(a.date).getTime() - new Date(b.date).getTime();
+    const searchResults = data.sort((a: Curation, b: Curation) => {
+      return (
+        new Date(b.submissionTime).getTime() -
+        new Date(a.submissionTime).getTime()
+      );
     });
     console.log("search results: ", searchResults);
 
