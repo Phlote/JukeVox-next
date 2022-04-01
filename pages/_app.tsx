@@ -1,9 +1,11 @@
 import { Web3ReactProvider } from "@web3-react/core";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
-import { Head } from "next/head";
+import Head from "next/head";
 import { ReactElement, ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
+import "tailwindcss/tailwind.css";
+import "../styles/globals.css";
 import getLibrary from "../utils/getLibrary";
 
 const queryClient = new QueryClient();
@@ -35,7 +37,7 @@ const NextWeb3App = ({ Component, pageProps }: AppPropsWithLayout) => {
       </Head>
       <QueryClientProvider client={queryClient}>
         <Web3ReactProvider getLibrary={getLibrary}>
-          {getLayout(<Component {...pageProps}></Component>)}
+          {getLayout(<Component {...pageProps} />)}
         </Web3ReactProvider>
       </QueryClientProvider>
     </>

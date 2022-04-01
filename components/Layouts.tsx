@@ -1,7 +1,6 @@
-import React from "react";
 import { ToastContainer } from "react-toastify";
-import { RinkebyPromptModal } from "./Modal";
 import { ConnectWalletModal } from "./Modals/ConnectWalletModal";
+import { RinkebyPromptModal } from "./Modals/RinkebyPromptModal";
 import { NavBar } from "./NavBar";
 import { SubmitSidenav } from "./SideNav";
 
