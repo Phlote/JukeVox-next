@@ -1,6 +1,5 @@
-import styled from "styled-components";
-import React from "react";
 import Image from "next/image";
+import React from "react";
 import Clock from "./Clock";
 
 export const Footer: React.FC = (props) => {
@@ -29,7 +28,7 @@ export const Footer: React.FC = (props) => {
           <a
             rel="noreferrer"
             target="_blank"
-            href={"https://phlote.mirror.xyz/y"}
+            href={"https://phlote.mirror.xyz/"}
             className="underline"
           >
             Blog
