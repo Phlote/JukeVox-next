@@ -28,7 +28,9 @@ export const Footer: React.FC = (props) => {
           <a
             rel="noreferrer"
             target="_blank"
-            href={"https://phlote.mirror.xyz/"}
+            href={
+              "https://phlote.mirror.xyz/cCRyjklDd_JBEsj2fsVMY6XqEIktwZD7HyGETUdGtoE"
+            }
             className="underline"
           >
             Blog
