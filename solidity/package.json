@@ -26,11 +26,13 @@
     "deploy:rinkeby": "hardhat run scripts/deploy-upgradeable.js --network rinkeby",
     "upgrade:rinkeby": "hardhat run scripts/upgrade.js --network rinkeby",
     "verify:rinkeby": "hardhat verify --network rinkeby --constructor-args",
-    "migrate-submissions": "npx hardhat run scripts/migrate-submissions.js --network rinkeby"
+    "migrate-submissions": "hardhat run scripts/migrate-submissions.js --network rinkeby",
+    "migrate-cosigns": "hardhat run scripts/migrate-cosigns.js --network rinkeby"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.5.0",
     "@openzeppelin/contracts-upgradeable": "^4.5.1",
+    "@supabase/supabase-js": "^1.33.3",
     "dotenv": "^16.0.0"
   }
 }
