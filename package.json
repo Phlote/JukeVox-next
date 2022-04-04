@@ -22,7 +22,7 @@
     "@metamask/detect-provider": "^1.2.0",
     "@metamask/onboarding": "^1.0.1",
     "@pinata/sdk": "^1.1.23",
-    "@supabase/supabase-js": "^1.31.1",
+    "@supabase/supabase-js": "^1.33.3",
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
     "bufferutil": "^4.0.6",
