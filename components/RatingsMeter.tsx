@@ -1,43 +1,48 @@
+import { useWeb3React } from "@web3-react/core";
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React from "react";
+import { useQueryClient } from "react-query";
+import { toast } from "react-toastify";
+import { useCosigns } from "../hooks/useCosigns";
 import { useIsCurator } from "../hooks/useIsCurator";
-import { usePhlote } from "../hooks/web3/usePhlote";
+import { supabase } from "../lib/supabase";
+import { verifyUser } from "../utils/web3";
 
 export const RatingsMeter: React.FC<{
-  editionId: number;
+  submissionId: number;
 }> = (props) => {
-  const { editionId } = props;
-  const [cosigns, setCosigns] = React.useState<(string | "pending" | null)[]>(
-    []
-  );
+  const { submissionId } = props;
 
-  const phlote = usePhlote();
+  const { account, library } = useWeb3React();
+  const cosignsQuery = useCosigns(submissionId);
+  const queryClient = useQueryClient();
+  const [cosigns, setCosigns] = React.useState<string[]>([]);
+
+  React.useEffect(() => {
+    console.log("requery: ", cosignsQuery.data);
+    if (cosignsQuery.data) {
+      setCosigns(cosignsQuery.data);
+    }
+  }, [cosignsQuery.data]);
+
   const isCurator = useIsCurator();
 
   const canCosign = isCurator && !cosigns.includes("pending");
 
-  useEffect(() => {
-    const getCosigns = async () => {
-      const currentCosigns = await phlote.getCosigns(editionId);
-      setCosigns(currentCosigns);
-    };
-    if (phlote) {
-      getCosigns();
-      phlote.on("*", (res) => {
-        if (res.event === "EditionCosigned") getCosigns();
-      });
-    }
-
-    return () => {
-      phlote?.removeAllListeners();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phlote, editionId]);
-
   const onCosign = async () => {
     setCosigns([...cosigns, "pending"]);
     try {
-      await phlote.cosign(editionId);
+      const authenticated = await verifyUser(account, library);
+
+      if (!authenticated) {
+        toast.error("Authentication failed");
+        throw "Not Authenticated";
+      }
+      await supabase
+        .from("cosigns")
+        .insert([{ submissionId, cosigns: [...cosigns, account] }]);
+
+      queryClient.invalidateQueries(["cosigns", submissionId]);
     } catch (e) {
       setCosigns((current) => current.slice(0, current.length - 1));
     }
@@ -55,7 +60,7 @@ export const RatingsMeter: React.FC<{
           if (idx > cosigns.length - 1) {
             return (
               <button
-                key={`${editionId}-cosign-${idx}`}
+                key={`${submissionId}-cosign-${idx}`}
                 onClick={onCosign}
                 className={"h-6 w-6 relative"}
                 disabled={!canCosign}
@@ -72,7 +77,7 @@ export const RatingsMeter: React.FC<{
               return (
                 <div
                   className="h-6 w-6 opacity-25 relative"
-                  key={`${editionId}-cosign-${idx}`}
+                  key={`${submissionId}-cosign-${idx}`}
                 >
                   <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
                 </div>
@@ -81,7 +86,7 @@ export const RatingsMeter: React.FC<{
               return (
                 <div
                   className="h-6 w-6 relative"
-                  key={`${editionId}-cosign-${idx}`}
+                  key={`${submissionId}-cosign-${idx}`}
                 >
                   <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
                 </div>
