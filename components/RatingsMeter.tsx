@@ -3,15 +3,16 @@ import Image from "next/image";
 import React from "react";
 import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
+import { cosign } from "../controllers/cosigns";
 import { useCosigns } from "../hooks/useCosigns";
 import { useIsCurator } from "../hooks/useIsCurator";
-import { supabase } from "../lib/supabase";
 import { verifyUser } from "../utils/web3";
 
 export const RatingsMeter: React.FC<{
   submissionId: number;
+  submitterWallet: string;
 }> = (props) => {
-  const { submissionId } = props;
+  const { submissionId, submitterWallet } = props;
 
   const { account, library } = useWeb3React();
   const cosignsQuery = useCosigns(submissionId);
@@ -19,7 +20,6 @@ export const RatingsMeter: React.FC<{
   const [cosigns, setCosigns] = React.useState<string[]>([]);
 
   React.useEffect(() => {
-    console.log("requery: ", cosignsQuery.data);
     if (cosignsQuery.data) {
       setCosigns(cosignsQuery.data);
     }
@@ -27,23 +27,25 @@ export const RatingsMeter: React.FC<{
 
   const isCurator = useIsCurator();
 
-  const canCosign = isCurator && !cosigns.includes("pending");
+  const canCosign =
+    isCurator &&
+    !cosigns.includes("pending") &&
+    !cosigns.includes(account) &&
+    submitterWallet.toLowerCase() !== account.toLowerCase();
 
   const onCosign = async () => {
     setCosigns([...cosigns, "pending"]);
     try {
       const authenticated = await verifyUser(account, library);
-
       if (!authenticated) {
         toast.error("Authentication failed");
         throw "Not Authenticated";
       }
-      await supabase
-        .from("cosigns")
-        .insert([{ submissionId, cosigns: [...cosigns, account] }]);
 
-      queryClient.invalidateQueries(["cosigns", submissionId]);
+      const cosigns = await cosign(submissionId, account);
+      setCosigns(cosigns);
     } catch (e) {
+      toast.error(e);
       setCosigns((current) => current.slice(0, current.length - 1));
     }
   };

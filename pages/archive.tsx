@@ -73,7 +73,10 @@ function Archive() {
                         <Username wallet={curatorWallet} linkToProfile />
                       </ArchiveTableDataCell>
                       <ArchiveTableDataCell>
-                        <RatingsMeter submissionId={id} />
+                        <RatingsMeter
+                          submissionId={id}
+                          submitterWallet={curatorWallet}
+                        />
                       </ArchiveTableDataCell>
                     </ArchiveTableRow>
                     <tr className="h-4" />
