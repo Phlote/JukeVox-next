@@ -103,7 +103,7 @@ const ProfilePictureUpload = ({ wallet }) => {
 
       if (!error) {
         queryClient.refetchQueries(["profile-pic", wallet]);
-      } else toast.error(error);
+      } else console.error(error);
     },
     [path, queryClient, wallet]
   );
@@ -165,7 +165,7 @@ export const useProfilePic = (wallet) => {
       .download(path);
 
     if (error) {
-      toast.error(error);
+      console.error(error);
       return null;
     }
 

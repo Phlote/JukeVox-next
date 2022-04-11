@@ -80,7 +80,10 @@ const Profile = (props) => {
                       <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
 
                       <ArchiveTableDataCell>
-                        <RatingsMeter editionId={id} />
+                        <RatingsMeter
+                          submissionId={id}
+                          submitterWallet={curatorWallet}
+                        />
                       </ArchiveTableDataCell>
                     </ArchiveTableRow>
                     <tr className="h-4" />

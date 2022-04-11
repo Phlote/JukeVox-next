@@ -10,14 +10,27 @@ export default function Layout({ children }) {
       <SubmitSidenav />
       <RinkebyPromptModal />
       <NavBar />
-      <ToastContainer position="bottom-right" autoClose={5000} />
-      {children}
+      <>
+        {children}
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+      </>
     </div>
   );
 }
 
 interface ArchiveLayoutProps {
   center?: boolean;
+  children: React.ReactNode;
 }
 
 export const ArchiveLayout: React.FC<ArchiveLayoutProps> = ({

@@ -15,9 +15,6 @@ export default async function handler(
   try {
     let query = supabase.from("submissions").select();
 
-    console.log("searchTerm: ", searchTerm);
-    console.log("filters: ", filters);
-
     if (filters) {
       query = query.match(filters);
     }
