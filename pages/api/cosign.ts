@@ -22,7 +22,7 @@ export default async function handler(
     const submissionsQuery = await supabase
       .from("submissions")
       .select()
-      .match({ submissionId });
+      .match({ id: submissionId });
 
     if (!submissionsQuery.data || submissionsQuery.data.length === 0)
       throw "Invalid Submission ID";

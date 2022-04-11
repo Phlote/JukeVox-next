@@ -165,7 +165,7 @@ export const useProfilePic = (wallet) => {
       .download(path);
 
     if (error) {
-      toast.error(error);
+      console.error(error);
       return null;
     }
 

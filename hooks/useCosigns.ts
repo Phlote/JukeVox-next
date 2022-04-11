@@ -12,5 +12,7 @@ export const useCosigns = (submissionId: number) => {
     } else return [];
   };
 
-  return useQuery(["cosigns", submissionId], getCosigns);
+  return useQuery(["cosigns", submissionId], getCosigns, {
+    keepPreviousData: true,
+  });
 };

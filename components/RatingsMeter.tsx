@@ -1,8 +1,6 @@
 import { useWeb3React } from "@web3-react/core";
 import Image from "next/image";
 import React from "react";
-import { useQueryClient } from "react-query";
-import { toast } from "react-toastify";
 import { cosign } from "../controllers/cosigns";
 import { useCosigns } from "../hooks/useCosigns";
 import { useIsCurator } from "../hooks/useIsCurator";
@@ -16,7 +14,6 @@ export const RatingsMeter: React.FC<{
 
   const { account, library } = useWeb3React();
   const cosignsQuery = useCosigns(submissionId);
-  const queryClient = useQueryClient();
   const [cosigns, setCosigns] = React.useState<string[]>([]);
 
   React.useEffect(() => {
@@ -40,11 +37,9 @@ export const RatingsMeter: React.FC<{
       if (!authenticated) {
         throw "Authentication failed";
       }
-
       const cosigns = await cosign(submissionId, account);
       setCosigns(cosigns);
     } catch (e) {
-      toast.error(e);
       console.error(e);
       setCosigns((current) => current.slice(0, current.length - 1));
     }

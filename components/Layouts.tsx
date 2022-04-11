@@ -12,7 +12,17 @@ export default function Layout({ children }) {
       <NavBar />
       <>
         {children}
-        <ToastContainer position="bottom-right" autoClose={5000} />
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </>
     </div>
   );
@@ -20,6 +30,7 @@ export default function Layout({ children }) {
 
 interface ArchiveLayoutProps {
   center?: boolean;
+  children: any;
 }
 
 export const ArchiveLayout: React.FC<ArchiveLayoutProps> = ({
