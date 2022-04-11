@@ -12,7 +12,6 @@ export const cosign = async (
     });
     return cosigns;
   } catch (e) {
-    console.log("actually here:", e);
     toast.error(e);
     console.error(e);
   }

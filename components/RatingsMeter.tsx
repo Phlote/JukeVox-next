@@ -38,14 +38,14 @@ export const RatingsMeter: React.FC<{
     try {
       const authenticated = await verifyUser(account, library);
       if (!authenticated) {
-        toast.error("Authentication failed");
-        throw "Not Authenticated";
+        throw "Authentication failed";
       }
 
       const cosigns = await cosign(submissionId, account);
       setCosigns(cosigns);
     } catch (e) {
       toast.error(e);
+      console.error(e);
       setCosigns((current) => current.slice(0, current.length - 1));
     }
   };

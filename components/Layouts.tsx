@@ -10,8 +10,10 @@ export default function Layout({ children }) {
       <SubmitSidenav />
       <RinkebyPromptModal />
       <NavBar />
-      <ToastContainer position="bottom-right" autoClose={5000} />
-      {children}
+      <>
+        {children}
+        <ToastContainer position="bottom-right" autoClose={5000} />
+      </>
     </div>
   );
 }
