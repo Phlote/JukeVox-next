@@ -22,7 +22,7 @@
     "@metamask/detect-provider": "^1.2.0",
     "@metamask/onboarding": "^1.0.1",
     "@pinata/sdk": "^1.1.23",
-    "@supabase/supabase-js": "^1.33.3",
+    "@supabase/supabase-js": "^1.31.1",
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
     "bufferutil": "^4.0.6",
@@ -53,8 +53,8 @@
     "@metamask/types": "^1.0.0",
     "@typechain/ethers-v5": "^8.0.5",
     "@types/fuzzy-search": "^2.1.2",
-    "@types/node": "^17.0.23",
-    "@types/react": "^18.0.1",
+    "@types/node": "^17.0.21",
+    "@types/react": "^17.0.38",
     "@web3-react/types": "^6.0.7",
     "autoprefixer": "^10.4.2",
     "babel-plugin-inline-react-svg": "^2.0.1",
@@ -68,7 +68,7 @@
     "postcss": "^8.4.6",
     "tailwindcss": "^3.0.18",
     "typechain": "^6.1.0",
-    "typescript": "^4.6.3"
+    "typescript": "^4.5.5"
   },
   "babelMacros": {
     "twin": {

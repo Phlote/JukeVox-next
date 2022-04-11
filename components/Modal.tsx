@@ -1,5 +1,5 @@
 import { useWeb3React } from "@web3-react/core";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 import { RINKEBY_CHAIN_ID } from "../utils/constants";
@@ -8,6 +8,7 @@ import { HollowButton, HollowButtonContainer } from "./Hollow";
 interface ModalProps {
   open: boolean;
   onClose?: () => void;
+  children: React.ReactNode;
 }
 
 export const Modal: React.FC<ModalProps> = ({ children, open, onClose }) => {
