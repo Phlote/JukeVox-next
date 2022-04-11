@@ -30,7 +30,7 @@ export default function Layout({ children }) {
 
 interface ArchiveLayoutProps {
   center?: boolean;
-  children: any;
+  children: React.ReactNode;
 }
 
 export const ArchiveLayout: React.FC<ArchiveLayoutProps> = ({
