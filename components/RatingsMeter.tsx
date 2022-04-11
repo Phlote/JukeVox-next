@@ -38,7 +38,7 @@ export const RatingsMeter: React.FC<{
         throw "Authentication failed";
       }
       const cosigns = await cosign(submissionId, account);
-      setCosigns(cosigns);
+      if (cosigns) setCosigns(cosigns);
     } catch (e) {
       console.error(e);
       setCosigns((current) => current.slice(0, current.length - 1));
