@@ -1,7 +1,9 @@
 import { useWeb3React } from "@web3-react/core";
 import { UserRejectedRequestError } from "@web3-react/injected-connector";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { useOnClickOut } from "../hooks/useOnClickOut";
 import { useOnCopy } from "../hooks/useOnCopy";
 import useENSName from "../hooks/web3/useENSName";
 import useMetaMaskOnboarding from "../hooks/web3/useMetaMaskOnboarding";
@@ -36,6 +38,9 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
 
   const ENSName = useENSName(account);
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+
+  const ref = useRef();
+  useOnClickOut(ref, () => setDropdownOpen(false));
 
   if (error) {
     console.log(error);
@@ -90,6 +95,7 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
 
   return (
     <HollowInputContainer
+      ref={ref}
       className="h-full"
       style={{ justifyContent: "center" }}
     >
@@ -104,7 +110,7 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
         width={16}
       />
       {dropdownOpen && (
-        <DropdownActions bottom={-80}>
+        <DropdownActions bottom={-140}>
           <div
             className="cursor-pointer m-4 text-center text-xl hover:opacity-50 flex items-center"
             onClick={() => {
@@ -116,6 +122,13 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
             <div className="w-4" />
             <Image src="/exit.svg" alt={"disconnect"} height={24} width={24} />
           </div>
+          <div className="w-4" />
+          <Link href={`/editprofile`} passHref>
+            <div className="cursor-pointer m-4 text-center text-xl hover:opacity-50 flex items-center">
+              Edit Profile
+            </div>
+          </Link>
+          <div className="w-4" />
         </DropdownActions>
       )}
     </HollowInputContainer>
