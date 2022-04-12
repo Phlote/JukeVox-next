@@ -1,10 +1,9 @@
 import { useWeb3React } from "@web3-react/core";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useOnClickOut } from "../hooks/useOnClickOut";
 import useEagerConnect from "../hooks/web3/useEagerConnect";
-import useMetaMaskOnboarding from "../hooks/web3/useMetaMaskOnboarding";
 import { DropdownActions } from "./Dropdowns/DropdownActions";
 import { HollowInputContainer } from "./Hollow";
 import { useConnectWalletModalOpen } from "./Modals/ConnectWalletModal";
@@ -26,23 +25,8 @@ const Account = (props) => {
 
   const router = useRouter();
 
-  if (error) {
-    console.log(error);
-    return (
-      <HollowInputContainer
-        className="h-full"
-        style={{ justifyContent: "center" }}
-      >
-        {`Error: ${error}`}
-      </HollowInputContainer>
-    );
-  }
-
   if (typeof account !== "string") {
     return (
-      // Use the stuff below for the metamask connect button
-      // <>
-
       <HollowInputContainer
         className="cursor-pointer h-full text-white"
         style={{ justifyContent: "center" }}

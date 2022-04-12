@@ -25,29 +25,56 @@ export const ConnectWalletModal = () => {
     <Modal open={open} width="24rem" height="24rem">
       <div className="w-full h-full flex flex-col justify-center items-center text-center">
         <div className="w-3/4">
-          <HollowButtonContainer
-            onClick={() => {
-              activate(WalletConnect).then((res) =>
-                cacheConnector(CachedConnector.WalletConnect)
-              );
-            }}
-          >
-            <div className="flex flex-row w-full justify-left items-center">
-              <Image
-                src="/walletconnect.svg"
-                height={32}
-                width={32}
-                alt={"WalletConnect"}
-              />
-              <div className="w-2" />
-              WalletConnect
-            </div>
-          </HollowButtonContainer>
+          <WalletConnectButton />
           <div className="h-4" />
           <InjectedConnectorButton />
         </div>
       </div>
     </Modal>
+  );
+};
+
+export const WalletConnectButton = () => {
+  const { active, error, activate, chainId, account, setError, deactivate } =
+    useWeb3React();
+
+  const [connecting, setConnecting] = useState(false);
+  useEffect(() => {
+    if (active || error) {
+      setConnecting(false);
+    }
+  }, [active, error]);
+
+  return (
+    <HollowButtonContainer
+      disabled={connecting}
+      onClick={() => {
+        setConnecting(true);
+        activate(WalletConnect, undefined, true)
+          .then(() => {
+            cacheConnector(CachedConnector.WalletConnect);
+          })
+          .catch((error) => {
+            // ignore the error if it's a user rejected request
+            if (error instanceof UserRejectedRequestError) {
+              setConnecting(false);
+            } else {
+              setError(error);
+            }
+          });
+      }}
+    >
+      <div className="flex flex-row w-full justify-left items-center">
+        <Image
+          src="/walletconnect.svg"
+          height={32}
+          width={32}
+          alt={"WalletConnect"}
+        />
+        <div className="w-2" />
+        WalletConnect
+      </div>
+    </HollowButtonContainer>
   );
 };
 
