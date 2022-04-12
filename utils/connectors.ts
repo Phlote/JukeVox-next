@@ -12,7 +12,7 @@ export const Injected = new InjectedConnector({
 
 export const WalletConnect = new WalletConnectConnector({
   supportedChainIds: [
-    // SupportedChainId.MAINNET,
+    SupportedChainId.MAINNET,
     SupportedChainId.RINKEBY,
     SupportedChainId.POLYGON,
   ],

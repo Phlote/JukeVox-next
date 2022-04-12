@@ -23,11 +23,25 @@ export const ConnectWalletModal = () => {
 
   return (
     <Modal open={open} width="24rem" height="24rem">
-      <div className="w-full h-full flex flex-col justify-center items-center text-center">
-        <div className="w-3/4">
-          <WalletConnectButton />
-          <div className="h-4" />
-          <InjectedConnectorButton />
+      <div className="w-full h-full flex flex-col  items-center text-center">
+        {/* <p className="mt-8">
+          Make sure you are connected with the{" "}
+          <a
+            className="underline"
+            href={
+              "https://docs.polygon.technology/docs/develop/metamask/config-polygon-on-metamask#polygon-scan"
+            }
+          >
+            Polygon
+          </a>{" "}
+          network to save on gas!
+        </p> */}
+        <div className="flex-grow w-full flex justify-center items-center">
+          <div className="w-3/4">
+            <WalletConnectButton />
+            <div className="h-4" />
+            <InjectedConnectorButton />
+          </div>
         </div>
       </div>
     </Modal>
