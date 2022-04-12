@@ -1,6 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import { UserRejectedRequestError } from "@web3-react/injected-connector";
 import { atom, useAtom } from "jotai";
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import useMetaMaskOnboarding from "../../hooks/web3/useMetaMaskOnboarding";
 import { Injected, WalletConnect } from "../../utils/connectors";
@@ -8,7 +9,7 @@ import { cacheConnector, CachedConnector } from "../../utils/web3";
 import { HollowButtonContainer } from "../Hollow";
 import { Modal } from "../Modal";
 
-const connectWalletModalOpenAtom = atom<boolean>(false);
+const connectWalletModalOpenAtom = atom<boolean>(true);
 export const useConnectWalletModalOpen = () =>
   useAtom(connectWalletModalOpenAtom);
 
@@ -21,20 +22,28 @@ export const ConnectWalletModal = () => {
   }, [account, setOpen]);
 
   return (
-    <Modal open={open} width="30rem" height="24rem">
+    <Modal open={open} width="24rem" height="24rem">
       <div className="w-full h-full flex flex-col justify-center items-center text-center">
         <div className="w-3/4">
           <HollowButtonContainer
-            className="cursor-pointer"
             onClick={() => {
               activate(WalletConnect).then((res) =>
                 cacheConnector(CachedConnector.WalletConnect)
               );
             }}
           >
-            Wallet Connect
+            <div className="flex flex-row w-full justify-left items-center">
+              <Image
+                src="/walletconnect.svg"
+                height={32}
+                width={32}
+                alt={"WalletConnect"}
+              />
+              <div className="w-2" />
+              WalletConnect
+            </div>
           </HollowButtonContainer>
-          <div className="h-8" />
+          <div className="h-4" />
           <InjectedConnectorButton />
         </div>
       </div>
@@ -83,7 +92,7 @@ export const InjectedConnectorButton = () => {
             });
         }}
       >
-        Metamask
+        <InjectedButtonContent />
       </HollowButtonContainer>
     );
   } else
@@ -92,7 +101,18 @@ export const InjectedConnectorButton = () => {
         className="cursor-pointer w-full justify-center"
         onClick={startOnboarding}
       >
-        <a href="https://metamask.io/download/"></a>Install Metamask
+        <a href="https://metamask.io/download/"></a>
+        <InjectedButtonContent />
       </HollowButtonContainer>
     );
+};
+
+const InjectedButtonContent = () => {
+  return (
+    <div className="flex flex-row w-full justify-left items-center">
+      <Image src="/metamask.svg" height={32} width={32} alt={"Metamask"} />
+      <div className="w-2" />
+      Metamask
+    </div>
+  );
 };
