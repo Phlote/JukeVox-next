@@ -2,7 +2,7 @@ export const TEST_PHOTE_TOKEN_ADDRESS =
   "0x31DA0475d29a452DA24Eb2ed0d41AD53E576b780";
 
 export enum SupportedChainId {
-  // MAINNET = 1,
+  MAINNET = 1,
   // ROPSTEN = 3,
   RINKEBY = 4,
   // GOERLI = 5,
@@ -19,7 +19,7 @@ export enum SupportedChainId {
 }
 
 export const CHAIN_IDS_TO_NAMES = {
-  // [SupportedChainId.MAINNET]: "mainnet",
+  [SupportedChainId.MAINNET]: "mainnet",
   // [SupportedChainId.ROPSTEN]: "ropsten",
   [SupportedChainId.RINKEBY]: "rinkeby",
   // [SupportedChainId.GOERLI]: "goerli",
