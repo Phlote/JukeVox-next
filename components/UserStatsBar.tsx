@@ -7,8 +7,6 @@ export const UserStatsBar = (props) => {
   const { wallet } = props;
   const profile = useProfile(wallet);
 
-  console.log(profile?.data?.profilePic);
-
   return (
     <UserStatsBarContainer>
       {profile?.data?.profilePic && (
@@ -42,7 +40,7 @@ export const UserStatsBar = (props) => {
 };
 
 const UserStatsBarContainer = styled.div`
-  ${tw`rounded-full text-white rounded-full flex p-4 flex-row items-center justify-center px-8`}
+  ${tw`rounded-full text-white rounded-full flex p-4 flex-row items-center justify-center pr-8`}
   background: linear-gradient(
       85.96deg,
       rgba(255, 255, 255, 0) -20.51%,

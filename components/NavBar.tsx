@@ -49,7 +49,7 @@ export const NavBar = () => {
             <div className="w-4" />
           </>
         )}
-        {router.pathname !== "/" && (
+        {router.pathname == "/archive" && (
           <>
             <SearchBar />
             <div className="w-4" />

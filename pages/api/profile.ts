@@ -22,7 +22,7 @@ export default async function handler(
 
     const profileMeta = profilesQuery.data[0];
 
-    const { publicURL, error } = await supabase.storage
+    const { publicURL, error } = supabase.storage
       .from("profile-pics")
       .getPublicUrl(`${wallet}/profile`);
 
