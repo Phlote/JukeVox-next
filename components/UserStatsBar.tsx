@@ -1,20 +1,19 @@
 import Image from "next/image";
 import styled from "styled-components";
 import tw from "twin.macro";
-import { useProfile, useProfilePic } from "./Forms/ProfileSettingsForm";
+import { useProfile } from "./Forms/ProfileSettingsForm";
 
 export const UserStatsBar = (props) => {
   const { wallet } = props;
   const profile = useProfile(wallet);
-  const profilePicQuery = useProfilePic(wallet);
 
   return (
     <UserStatsBarContainer>
-      {profilePicQuery?.data && (
+      {profile?.data?.profilePic && (
         <div className="w-20 h-20 rounded-full flex justify-center items-center relative">
           <Image
             className={`rounded-full`}
-            src={profilePicQuery?.data}
+            src={profile?.data?.profilePic}
             objectFit={"cover"}
             layout="fill"
             alt="profile picture"
@@ -30,7 +29,13 @@ export const UserStatsBar = (props) => {
         City: {`${profile?.data?.city ?? undefined}`}
       </p>
       <div className="w-4" />
-      <div className="text-l italic"></div>
+      <div className="flex">
+        <div className="relative h-6 w-6">
+          <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
+        </div>
+
+        <p className="text-l italic">: {`${profile?.data?.cosigns}`}</p>
+      </div>
     </UserStatsBarContainer>
   );
 };
