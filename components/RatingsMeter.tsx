@@ -2,25 +2,24 @@ import { useWeb3React } from "@web3-react/core";
 import Image from "next/image";
 import React from "react";
 import { cosign } from "../controllers/cosigns";
-import { useCosigns } from "../hooks/useCosigns";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { verifyUser } from "../utils/web3";
 
 export const RatingsMeter: React.FC<{
   submissionId: number;
   submitterWallet: string;
+  initialCosigns: string[];
 }> = (props) => {
-  const { submissionId, submitterWallet } = props;
+  const { submissionId, submitterWallet, initialCosigns } = props;
 
   const { account, library } = useWeb3React();
-  const cosignsQuery = useCosigns(submissionId);
   const [cosigns, setCosigns] = React.useState<string[]>([]);
 
   React.useEffect(() => {
-    if (cosignsQuery.data) {
-      setCosigns(cosignsQuery.data);
+    if (initialCosigns) {
+      setCosigns(initialCosigns);
     }
-  }, [cosignsQuery.data]);
+  }, [initialCosigns]);
 
   const isCurator = useIsCurator();
 

@@ -19,7 +19,6 @@ export default async function confirm(
     PHLOTE_SIGNATURE_REQUEST_MESSAGE + user.nonce.toString(),
     signature as string
   );
-  console.log(decodedAddress);
   if (address.toLowerCase() === decodedAddress.toLowerCase())
     authenticated = true;
 

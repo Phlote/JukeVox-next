@@ -42,7 +42,6 @@ export default async function handler(
         new Date(a.submissionTime).getTime()
       );
     });
-    console.log("search results: ", searchResults);
 
     if (error) throw error;
 

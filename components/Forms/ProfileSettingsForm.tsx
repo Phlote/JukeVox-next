@@ -93,8 +93,6 @@ const ProfilePictureUpload = ({ wallet }) => {
   const path = `${wallet}/profile`;
   const profile = useProfile(wallet);
 
-  console.log("profile: ", profile);
-
   const onDrop = useCallback(
     async (acceptedFiles) => {
       const { error } = await supabase.storage

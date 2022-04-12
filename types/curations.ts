@@ -10,6 +10,7 @@ export interface Curation {
   mediaURI: string;
   marketplace: string;
   tags?: string[];
+  cosigns: string[];
 }
 
 export interface CurationNFTMetadata {
