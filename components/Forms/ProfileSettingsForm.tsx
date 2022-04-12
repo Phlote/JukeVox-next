@@ -18,6 +18,7 @@ export interface UserProfile {
   username: string;
   city: string;
   twitter: string;
+  profilePic: string; // url
 }
 
 export const ProfileSettingsForm = ({ wallet }) => {
@@ -90,7 +91,9 @@ export const ProfileSettingsForm = ({ wallet }) => {
 const ProfilePictureUpload = ({ wallet }) => {
   const queryClient = useQueryClient();
   const path = `${wallet}/profile`;
-  const profilePicQuery = useProfilePic(wallet);
+  const profile = useProfile(wallet);
+
+  console.log("profile: ", profile);
 
   const onDrop = useCallback(
     async (acceptedFiles) => {
@@ -102,7 +105,7 @@ const ProfilePictureUpload = ({ wallet }) => {
         });
 
       if (!error) {
-        queryClient.refetchQueries(["profile-pic", wallet]);
+        queryClient.refetchQueries(["profile", wallet]);
       } else console.error(error);
     },
     [path, queryClient, wallet]
@@ -126,10 +129,10 @@ const ProfilePictureUpload = ({ wallet }) => {
 
       {isDragActive && <p className="text-base italic">{"Drop image here"}</p>}
 
-      {profilePicQuery?.data && !isDragActive && (
+      {profile?.data?.profilePic && !isDragActive && (
         <Image
           className={`rounded-full ${isHovering && "opacity-25"}`}
-          src={profilePicQuery?.data}
+          src={profile?.data?.profilePic}
           objectFit={"cover"}
           layout="fill"
           alt="profile picture"
@@ -137,41 +140,41 @@ const ProfilePictureUpload = ({ wallet }) => {
         />
       )}
 
-      {!isHovering && !isDragActive && !profilePicQuery.data && (
+      {!isHovering && !isDragActive && !profile?.data?.profilePic && (
         <p className="text-base italic">{"Drop or select visual to upload"}</p>
       )}
     </div>
   );
 };
 
-export const useProfile = (wallet) => {
-  const getProfileData = async () => {
-    const query = await supabase.from("profiles").select().match({ wallet });
-    const profileMeta = query.data[0] as UserProfile;
-    return profileMeta as UserProfile;
-  };
-
-  return useQuery(["profile", wallet], getProfileData);
-};
-
-export const useProfilePic = (wallet) => {
+const getProfilePic = async (wallet: string) => {
   const path = `${wallet}/profile`;
 
-  const getProfilePic = async () => {
+  const { data, error } = await supabase.storage
+    .from("profile-pics")
+    .download(path);
+
+  if (error) return null;
+
+  return URL.createObjectURL(data);
+};
+
+const getProfileMeta = async (wallet: string) => {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select()
+    .match({ wallet });
+
+  if (error) return null;
+
+  return data[0];
+};
+
+export const useProfile = (wallet) => {
+  return useQuery(["profile", wallet], async () => {
     if (!wallet) return null;
-
-    const { data, error } = await supabase.storage
-      .from("profile-pics")
-      .download(path);
-
-    if (error) {
-      console.error(error);
-      return null;
-    }
-
-    const url = URL.createObjectURL(data);
-    return url;
-  };
-
-  return useQuery(["profile-pic", wallet], getProfilePic);
+    const profilePic = await getProfilePic(wallet);
+    const profileMeta = await getProfileMeta(wallet);
+    return { ...profileMeta, profilePic } as UserProfile;
+  });
 };
