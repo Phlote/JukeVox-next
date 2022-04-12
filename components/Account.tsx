@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import { UserRejectedRequestError } from "@web3-react/injected-connector";
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { useOnClickOut } from "../hooks/useOnClickOut";
 import { useOnCopy } from "../hooks/useOnCopy";
@@ -41,6 +41,8 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
 
   const ref = useRef();
   useOnClickOut(ref, () => setDropdownOpen(false));
+
+  const router = useRouter();
 
   if (error) {
     console.log(error);
@@ -123,11 +125,16 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
             <Image src="/exit.svg" alt={"disconnect"} height={24} width={24} />
           </div>
           <div className="w-4" />
-          <Link href={`/editprofile`} passHref>
+          <div
+            onClick={() => {
+              router.push("/editprofile");
+              setDropdownOpen(false);
+            }}
+          >
             <div className="cursor-pointer m-4 text-center text-xl hover:opacity-50 flex items-center">
               Edit Profile
             </div>
-          </Link>
+          </div>
           <div className="w-4" />
         </DropdownActions>
       )}
