@@ -44,7 +44,7 @@ export const RinkebyPromptModal = () => {
           className="w-1/2 cursor-pointer"
           onClick={() => {
             library?.send("wallet_switchEthereumChain", [
-              { chainId: `0x${Number(RINKEBY_CHAIN_ID).toString(16)}` },
+              { chainId: `0x${Number(SupportedChainId.RINKEBY).toString(16)}` },
             ]);
           }}
         >

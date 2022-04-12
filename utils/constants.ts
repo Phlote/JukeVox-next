@@ -24,7 +24,7 @@ export const CHAIN_IDS_TO_NAMES = {
   [SupportedChainId.RINKEBY]: "rinkeby",
   // [SupportedChainId.GOERLI]: "goerli",
   // [SupportedChainId.KOVAN]: "kovan",
-  // [SupportedChainId.POLYGON]: "polygon",
+  [SupportedChainId.POLYGON]: "polygon",
   // [SupportedChainId.POLYGON_MUMBAI]: "polygon_mumbai",
   // [SupportedChainId.ARBITRUM_ONE]: "arbitrum",
   // [SupportedChainId.ARBITRUM_RINKEBY]: "arbitrum_rinkeby",

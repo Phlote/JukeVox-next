@@ -12,7 +12,7 @@ export default function useEagerConnect() {
 
   useEffect(() => {
     if (!tried && !active && cachedConnector) {
-      if (cachedConnector == CachedConnector.Injected) {
+      if (cachedConnector === CachedConnector.Injected) {
         Injected.isAuthorized().then((isAuthorized) => {
           if (isAuthorized)
             activate(Injected, undefined, true).catch(() => {

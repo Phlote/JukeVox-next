@@ -28,7 +28,7 @@ const Account = (props) => {
   if (typeof account !== "string") {
     return (
       <HollowInputContainer
-        className="cursor-pointer h-full text-white"
+        className="h-full"
         style={{ justifyContent: "center" }}
         onClick={() => setOpen(true)}
       >

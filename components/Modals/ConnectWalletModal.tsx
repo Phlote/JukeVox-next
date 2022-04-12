@@ -9,7 +9,7 @@ import { cacheConnector, CachedConnector } from "../../utils/web3";
 import { HollowButtonContainer } from "../Hollow";
 import { Modal } from "../Modal";
 
-const connectWalletModalOpenAtom = atom<boolean>(true);
+const connectWalletModalOpenAtom = atom<boolean>(false);
 export const useConnectWalletModalOpen = () =>
   useAtom(connectWalletModalOpenAtom);
 
@@ -100,7 +100,7 @@ export const InjectedConnectorButton = () => {
   if (isWeb3Available) {
     return (
       <HollowButtonContainer
-        className="cursor-pointer w-full text-white"
+        className="w-full"
         style={{ justifyContent: "center" }}
         disabled={connecting}
         onClick={() => {
@@ -124,10 +124,7 @@ export const InjectedConnectorButton = () => {
     );
   } else
     return (
-      <HollowButtonContainer
-        className="cursor-pointer w-full justify-center"
-        onClick={startOnboarding}
-      >
+      <HollowButtonContainer className="w-full" onClick={startOnboarding}>
         <a href="https://metamask.io/download/"></a>
         <InjectedButtonContent />
       </HollowButtonContainer>
