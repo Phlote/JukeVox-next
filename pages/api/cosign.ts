@@ -29,10 +29,7 @@ export default async function handler(
 
     const { data, error } = await supabase
       .from("submissions")
-      .upsert(
-        { id, cosigns: [...cosigns, cosignerWallet] },
-        { onConflict: "id" }
-      );
+      .upsert({ id, cosigns: [...cosigns, cosignerWallet] });
 
     if (error || data?.length === 0) throw error;
 

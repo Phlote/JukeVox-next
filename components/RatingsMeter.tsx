@@ -24,7 +24,7 @@ export const RatingsMeter: React.FC<{
   const isCurator = useIsCurator();
 
   const canCosign =
-    isCurator &&
+    // isCurator &&
     !cosigns.includes("pending") &&
     !cosigns.includes(account) &&
     submitterWallet.toLowerCase() !== account.toLowerCase();
