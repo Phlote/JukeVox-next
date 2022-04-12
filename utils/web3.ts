@@ -86,3 +86,20 @@ export const verifyUser = async (address: string, library) => {
     console.error(e);
   }
 };
+
+const WEB3_CONNECT_CACHED_CONNECTOR = "WEB3_CONNECT_CACHED_CONNECT";
+export enum CachedConnector {
+  Injected = "Injected",
+  WalletConnect = "WalletConnect",
+}
+
+export const cacheConnector = (provider: CachedConnector) => {
+  if (typeof window !== "undefined")
+    localStorage.setItem(WEB3_CONNECT_CACHED_CONNECTOR, provider);
+};
+
+export const getCachedConnector = () => {
+  if (typeof window !== "undefined")
+    return localStorage.getItem(WEB3_CONNECT_CACHED_CONNECTOR);
+  else return null;
+};

@@ -6,9 +6,16 @@ interface ModalProps {
   open: boolean;
   onClose?: () => void;
   children: React.ReactNode;
+  width?: string;
 }
 
-export const Modal: React.FC<ModalProps> = ({ children, open, onClose }) => {
+export const Modal: React.FC<ModalProps> = ({
+  children,
+  open,
+  onClose,
+  width,
+  height,
+}) => {
   return (
     <div
       className="flex w-screen h-screen absolute z-20 justify-center items-center"
@@ -21,15 +28,17 @@ export const Modal: React.FC<ModalProps> = ({ children, open, onClose }) => {
         ></div>
       )}
 
-      <ModalContainer>{children}</ModalContainer>
+      <ModalContainer width={width} height={height}>
+        {children}
+      </ModalContainer>
     </div>
   );
 };
 
 const ModalContainer = styled.div`
   ${tw`absolute text-white p-4 bg-phlote-ff-modal`}
-  width: 60rem;
-  height: 32rem;
+  width: ${(props) => (props.width ? props.width : "60rem")};
+  height: ${(props) => (props.height ? props.height : "32rem")};
   border-radius: 100px;
   @supports (backdrop-filter: none) {
     background: linear-gradient(
