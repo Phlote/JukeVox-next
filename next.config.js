@@ -7,6 +7,9 @@ module.exports = {
   reactStrictMode: true,
   // swcMinify: true,
   images: {
-    domains: ["alytqvwillylytpmdjai.supabase.co"],
+    domains: [
+      "alytqvwillylytpmdjai.supabase.co",
+      "erirxjohgmjhfdmzlqsa.supabase.co",
+    ],
   },
 };

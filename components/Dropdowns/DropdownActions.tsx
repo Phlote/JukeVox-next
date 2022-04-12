@@ -1,8 +1,9 @@
-import React from "react";
+import React, { ReactNode } from "react";
 
 interface DropdownActions {
   top?: number;
   bottom?: number;
+  children: ReactNode;
 }
 
 export const DropdownActions: React.FC<DropdownActions> = (props) => {

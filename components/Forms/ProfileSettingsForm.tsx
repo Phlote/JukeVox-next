@@ -4,6 +4,7 @@ import { useDropzone } from "react-dropzone";
 import { useField, useForm } from "react-final-form-hooks";
 import { useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
+import { getProfile } from "../../controllers/profiles";
 import { supabase } from "../../lib/supabase";
 import {
   HollowButton,
@@ -18,6 +19,8 @@ export interface UserProfile {
   username: string;
   city: string;
   twitter: string;
+  profilePic: string; // url
+  cosigns: number; // total number of cosigns that the user has earned on their submissions
 }
 
 export const ProfileSettingsForm = ({ wallet }) => {
@@ -90,7 +93,7 @@ export const ProfileSettingsForm = ({ wallet }) => {
 const ProfilePictureUpload = ({ wallet }) => {
   const queryClient = useQueryClient();
   const path = `${wallet}/profile`;
-  const profilePicQuery = useProfilePic(wallet);
+  const profile = useProfile(wallet);
 
   const onDrop = useCallback(
     async (acceptedFiles) => {
@@ -102,8 +105,8 @@ const ProfilePictureUpload = ({ wallet }) => {
         });
 
       if (!error) {
-        queryClient.refetchQueries(["profile-pic", wallet]);
-      } else toast.error(error);
+        queryClient.refetchQueries(["profile", wallet]);
+      } else console.error(error);
     },
     [path, queryClient, wallet]
   );
@@ -126,10 +129,10 @@ const ProfilePictureUpload = ({ wallet }) => {
 
       {isDragActive && <p className="text-base italic">{"Drop image here"}</p>}
 
-      {profilePicQuery?.data && !isDragActive && (
+      {profile?.data?.profilePic && !isDragActive && (
         <Image
           className={`rounded-full ${isHovering && "opacity-25"}`}
-          src={profilePicQuery?.data}
+          src={profile?.data?.profilePic}
           objectFit={"cover"}
           layout="fill"
           alt="profile picture"
@@ -137,7 +140,7 @@ const ProfilePictureUpload = ({ wallet }) => {
         />
       )}
 
-      {!isHovering && !isDragActive && !profilePicQuery.data && (
+      {!isHovering && !isDragActive && !profile?.data?.profilePic && (
         <p className="text-base italic">{"Drop or select visual to upload"}</p>
       )}
     </div>
@@ -145,33 +148,8 @@ const ProfilePictureUpload = ({ wallet }) => {
 };
 
 export const useProfile = (wallet) => {
-  const getProfileData = async () => {
-    const query = await supabase.from("profiles").select().match({ wallet });
-    const profileMeta = query.data[0] as UserProfile;
-    return profileMeta as UserProfile;
-  };
-
-  return useQuery(["profile", wallet], getProfileData);
-};
-
-export const useProfilePic = (wallet) => {
-  const path = `${wallet}/profile`;
-
-  const getProfilePic = async () => {
+  return useQuery(["profile", wallet], async () => {
     if (!wallet) return null;
-
-    const { data, error } = await supabase.storage
-      .from("profile-pics")
-      .download(path);
-
-    if (error) {
-      toast.error(error);
-      return null;
-    }
-
-    const url = URL.createObjectURL(data);
-    return url;
-  };
-
-  return useQuery(["profile-pic", wallet], getProfilePic);
+    return getProfile(wallet);
+  });
 };

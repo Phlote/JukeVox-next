@@ -16,7 +16,6 @@ export default async function handler(
       },
     ]);
 
-    console.log(res);
     response.status(200).send({ res });
   } catch (e) {
     console.error(e);

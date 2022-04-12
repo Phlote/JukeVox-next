@@ -15,9 +15,6 @@ export default async function handler(
   try {
     let query = supabase.from("submissions").select();
 
-    console.log("searchTerm: ", searchTerm);
-    console.log("filters: ", filters);
-
     if (filters) {
       query = query.match(filters);
     }
@@ -45,7 +42,6 @@ export default async function handler(
         new Date(a.submissionTime).getTime()
       );
     });
-    console.log("search results: ", searchResults);
 
     if (error) throw error;
 

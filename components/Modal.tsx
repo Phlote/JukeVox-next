@@ -1,9 +1,11 @@
+import React from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 
 interface ModalProps {
   open: boolean;
   onClose?: () => void;
+  children: React.ReactNode;
 }
 
 export const Modal: React.FC<ModalProps> = ({ children, open, onClose }) => {

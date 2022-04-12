@@ -13,7 +13,9 @@ export function nextApiRequest(
     body: data ? JSON.stringify(data) : undefined,
   })
     .then((response) => response.json())
-    .catch((e) => console.error(e));
+    .catch((e) => {
+      console.error(e);
+    });
 }
 
 export const curationToElasticSearchDocument = (curation: Curation) => {

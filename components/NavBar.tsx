@@ -40,16 +40,16 @@ export const NavBar = () => {
         {active && account && isCurator && (
           <>
             <NavBarElementContainer>
-              <Link href={`/editprofile`} passHref>
+              <Link href={`/profile?wallet=${account}`} passHref>
                 <HollowButtonContainer className="flex justify-center items-center ">
-                  Edit Profile
+                  Profile
                 </HollowButtonContainer>
               </Link>
             </NavBarElementContainer>
             <div className="w-4" />
           </>
         )}
-        {router.pathname !== "/" && (
+        {router.pathname == "/archive" && (
           <>
             <SearchBar />
             <div className="w-4" />

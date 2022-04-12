@@ -1,44 +1,45 @@
+import { useWeb3React } from "@web3-react/core";
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React from "react";
+import { cosign } from "../controllers/cosigns";
 import { useIsCurator } from "../hooks/useIsCurator";
-import { usePhlote } from "../hooks/web3/usePhlote";
+import { verifyUser } from "../utils/web3";
 
 export const RatingsMeter: React.FC<{
-  editionId: number;
+  submissionId: number;
+  submitterWallet: string;
+  initialCosigns: string[];
 }> = (props) => {
-  const { editionId } = props;
-  const [cosigns, setCosigns] = React.useState<(string | "pending" | null)[]>(
-    []
-  );
+  const { submissionId, submitterWallet, initialCosigns } = props;
 
-  const phlote = usePhlote();
+  const { account, library } = useWeb3React();
+  const [cosigns, setCosigns] = React.useState<string[]>([]);
+
+  React.useEffect(() => {
+    if (initialCosigns) {
+      setCosigns(initialCosigns);
+    }
+  }, [initialCosigns]);
+
   const isCurator = useIsCurator();
 
-  const canCosign = isCurator && !cosigns.includes("pending");
-
-  useEffect(() => {
-    const getCosigns = async () => {
-      const currentCosigns = await phlote.getCosigns(editionId);
-      setCosigns(currentCosigns);
-    };
-    if (phlote) {
-      getCosigns();
-      phlote.on("*", (res) => {
-        if (res.event === "EditionCosigned") getCosigns();
-      });
-    }
-
-    return () => {
-      phlote?.removeAllListeners();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phlote, editionId]);
+  const canCosign =
+    isCurator &&
+    !cosigns.includes("pending") &&
+    !cosigns.includes(account) &&
+    submitterWallet.toLowerCase() !== account.toLowerCase();
 
   const onCosign = async () => {
     setCosigns([...cosigns, "pending"]);
     try {
-      await phlote.cosign(editionId);
+      const authenticated = await verifyUser(account, library);
+      if (!authenticated) {
+        throw "Authentication failed";
+      }
+      const cosigns = await cosign(submissionId, account);
+      if (cosigns) setCosigns(cosigns);
     } catch (e) {
+      console.error(e);
       setCosigns((current) => current.slice(0, current.length - 1));
     }
   };
@@ -55,7 +56,7 @@ export const RatingsMeter: React.FC<{
           if (idx > cosigns.length - 1) {
             return (
               <button
-                key={`${editionId}-cosign-${idx}`}
+                key={`${submissionId}-cosign-${idx}`}
                 onClick={onCosign}
                 className={"h-6 w-6 relative"}
                 disabled={!canCosign}
@@ -72,7 +73,7 @@ export const RatingsMeter: React.FC<{
               return (
                 <div
                   className="h-6 w-6 opacity-25 relative"
-                  key={`${editionId}-cosign-${idx}`}
+                  key={`${submissionId}-cosign-${idx}`}
                 >
                   <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
                 </div>
@@ -81,7 +82,7 @@ export const RatingsMeter: React.FC<{
               return (
                 <div
                   className="h-6 w-6 relative"
-                  key={`${editionId}-cosign-${idx}`}
+                  key={`${submissionId}-cosign-${idx}`}
                 >
                   <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
                 </div>

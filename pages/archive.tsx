@@ -48,6 +48,7 @@ function Archive() {
                   mediaURI,
                   marketplace,
                   submissionTime,
+                  cosigns,
                 } = curation;
 
                 return (
@@ -73,7 +74,11 @@ function Archive() {
                         <Username wallet={curatorWallet} linkToProfile />
                       </ArchiveTableDataCell>
                       <ArchiveTableDataCell>
-                        <RatingsMeter editionId={id} />
+                        <RatingsMeter
+                          submissionId={id}
+                          submitterWallet={curatorWallet}
+                          initialCosigns={cosigns}
+                        />
                       </ArchiveTableDataCell>
                     </ArchiveTableRow>
                     <tr className="h-4" />
