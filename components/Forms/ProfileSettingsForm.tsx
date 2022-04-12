@@ -19,7 +19,6 @@ export interface UserProfile {
   city: string;
   twitter: string;
   profilePic: string; // url
-  cosigns: number;
 }
 
 export const ProfileSettingsForm = ({ wallet }) => {
