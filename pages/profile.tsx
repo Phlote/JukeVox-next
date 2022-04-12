@@ -57,6 +57,7 @@ const Profile = (props) => {
                   mediaURI,
                   marketplace,
                   submissionTime,
+                  cosigns,
                 } = curation;
 
                 return (
@@ -81,6 +82,7 @@ const Profile = (props) => {
 
                       <ArchiveTableDataCell>
                         <RatingsMeter
+                          initialCosigns={cosigns}
                           submissionId={id}
                           submitterWallet={curatorWallet}
                         />

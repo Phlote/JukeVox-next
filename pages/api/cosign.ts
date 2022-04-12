@@ -9,16 +9,6 @@ export default async function handler(
   try {
     const { submissionId, cosignerWallet } = request.body;
 
-    const cosignsQuery = await supabase
-      .from("cosigns")
-      .select()
-      .match({ submissionId });
-
-    let currentCosigns = [];
-
-    if (cosignsQuery.data && cosignsQuery.data.length)
-      currentCosigns = cosignsQuery.data[0].cosigns as string[];
-
     const submissionsQuery = await supabase
       .from("submissions")
       .select()
@@ -27,21 +17,21 @@ export default async function handler(
     if (!submissionsQuery.data || submissionsQuery.data.length === 0)
       throw "Invalid Submission ID";
 
-    const submission = submissionsQuery.data[0] as Curation;
+    const { id, cosigns, curatorWallet } = submissionsQuery.data[0] as Curation;
 
-    if (currentCosigns.length === 5) throw "Max 5 cosigns per submission";
+    if (cosigns.length === 5) throw "Max 5 cosigns per submission";
 
-    if (submission.curatorWallet === cosignerWallet)
+    if (curatorWallet === cosignerWallet)
       throw "You are not allowed to cosign your own submission!";
 
-    if (currentCosigns.includes(cosignerWallet))
+    if (cosigns.includes(cosignerWallet))
       throw "You are not allowed to cosign a submission more than once!";
 
     const { data, error } = await supabase
-      .from("cosigns")
+      .from("submissions")
       .upsert(
-        { submissionId, cosigns: [...currentCosigns, cosignerWallet] },
-        { onConflict: "submissionId" }
+        { id, cosigns: [...cosigns, cosignerWallet] },
+        { onConflict: "id" }
       );
 
     if (error || data?.length === 0) throw error;
