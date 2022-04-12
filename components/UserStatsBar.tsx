@@ -7,6 +7,8 @@ export const UserStatsBar = (props) => {
   const { wallet } = props;
   const profile = useProfile(wallet);
 
+  console.log(profile?.data?.profilePic);
+
   return (
     <UserStatsBarContainer>
       {profile?.data?.profilePic && (
@@ -22,7 +24,6 @@ export const UserStatsBar = (props) => {
         </div>
       )}
       <div className="w-4" />
-
       <p className="text-l italic">{`${profile?.data?.username ?? wallet}`}</p>
       <div className="w-4" />
       <p className="text-l italic">
@@ -41,7 +42,7 @@ export const UserStatsBar = (props) => {
 };
 
 const UserStatsBarContainer = styled.div`
-  ${tw`rounded-full text-white rounded-full flex p-4 flex-row items-center justify-center`}
+  ${tw`rounded-full text-white rounded-full flex p-4 flex-row items-center justify-center px-8`}
   background: linear-gradient(
       85.96deg,
       rgba(255, 255, 255, 0) -20.51%,

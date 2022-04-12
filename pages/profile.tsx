@@ -1,5 +1,4 @@
 import { useRouter } from "next/router";
-import { useProfile } from "../components/Forms/ProfileSettingsForm";
 import Layout, { ArchiveLayout } from "../components/Layouts";
 import { RatingsMeter } from "../components/RatingsMeter";
 import {
@@ -19,8 +18,6 @@ const Profile = (props) => {
   const mySubmissions = submissions?.filter(
     (submission) => submission.curatorWallet === wallet
   );
-
-  const profile = useProfile(wallet);
 
   return (
     <ArchiveLayout>

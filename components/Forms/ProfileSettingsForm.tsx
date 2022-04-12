@@ -4,6 +4,7 @@ import { useDropzone } from "react-dropzone";
 import { useField, useForm } from "react-final-form-hooks";
 import { useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
+import { getProfile } from "../../controllers/profiles";
 import { supabase } from "../../lib/supabase";
 import {
   HollowButton,
@@ -19,6 +20,7 @@ export interface UserProfile {
   city: string;
   twitter: string;
   profilePic: string; // url
+  cosigns: number; // total number of cosigns that the user has earned on their submissions
 }
 
 export const ProfileSettingsForm = ({ wallet }) => {
@@ -145,34 +147,9 @@ const ProfilePictureUpload = ({ wallet }) => {
   );
 };
 
-const getProfilePic = async (wallet: string) => {
-  const path = `${wallet}/profile`;
-
-  const { data, error } = await supabase.storage
-    .from("profile-pics")
-    .download(path);
-
-  if (error) return null;
-
-  return URL.createObjectURL(data);
-};
-
-const getProfileMeta = async (wallet: string) => {
-  const { data, error } = await supabase
-    .from("profiles")
-    .select()
-    .match({ wallet });
-
-  if (error) return null;
-
-  return data[0];
-};
-
 export const useProfile = (wallet) => {
   return useQuery(["profile", wallet], async () => {
     if (!wallet) return null;
-    const profilePic = await getProfilePic(wallet);
-    const profileMeta = await getProfileMeta(wallet);
-    return { ...profileMeta, profilePic } as UserProfile;
+    return getProfile(wallet);
   });
 };
