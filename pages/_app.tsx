@@ -1,7 +1,7 @@
 import { Web3ReactProvider } from "@web3-react/core";
-import type { AppProps } from "next/app";
+import { NextPage } from "next";
+import { AppProps } from "next/app";
 import Head from "next/head";
-import { NextPage } from "next/types";
 import { ReactElement, ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import "tailwindcss/tailwind.css";

@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import tw from "twin.macro";
 import { useIsCurator } from "../hooks/useIsCurator";
-import useEagerConnect from "../hooks/web3/useEagerConnect";
 import Close from "../public/close.svg";
 import Account from "./Account";
 import { HollowButtonContainer } from "./Hollow";
@@ -11,7 +10,6 @@ import { SearchBar } from "./SearchBar";
 import { useSubmitSidenavOpen } from "./SideNav";
 
 export const NavBar = () => {
-  const triedToEagerConnect = useEagerConnect();
   const [, setOpen] = useSubmitSidenavOpen();
   const router = useRouter();
   const { active, account } = useWeb3React();
@@ -72,7 +70,7 @@ export const NavBar = () => {
           </>
         )}
         <NavBarElementContainer style={{ width: "13rem" }}>
-          <Account triedToEagerConnect={triedToEagerConnect} />
+          <Account />
         </NavBarElementContainer>
       </div>
     </div>

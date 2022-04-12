@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
-import { ShortenedWallet } from "./Account";
 import { useProfile } from "./Forms/ProfileSettingsForm";
+import { ShortenedWallet } from "./ShortenedWallet";
 
 interface Username {
   wallet: string;

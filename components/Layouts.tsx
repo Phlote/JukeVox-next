@@ -1,5 +1,5 @@
-import React from "react";
 import { ToastContainer } from "react-toastify";
+import { ConnectWalletModal } from "./Modals/ConnectWalletModal";
 import { NavBar } from "./NavBar";
 import { SubmitSidenav } from "./SideNav";
 
@@ -7,6 +7,7 @@ export default function Layout({ children }) {
   return (
     <div className="min-h-screen flex flex-col w-full overflow-y-auto	">
       <SubmitSidenav />
+      <ConnectWalletModal />
       <NavBar />
       <>
         {children}

@@ -4,8 +4,8 @@ import Image from "next/image";
 import React from "react";
 import { useKeyPress } from "../hooks/useKeyPress";
 import Close from "../public/close.svg";
-import { injected } from "../utils/connectors";
 import { HollowInput, HollowInputContainer } from "./Hollow";
+import { useConnectWalletModalOpen } from "./Modals/ConnectWalletModal";
 
 const searchTermAtom = atom<string>("");
 export const useSearchTerm = () => useAtom(searchTermAtom);
@@ -19,6 +19,8 @@ export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
   const [searchTerm, setSearchTerm] = useSearchTerm();
   const inputRef = React.useRef(null);
 
+  const [open, setOpen] = useConnectWalletModalOpen();
+
   useKeyPress("Escape", () => {
     if (inputRef.current === document.activeElement) setSearchTerm("");
   });
@@ -28,7 +30,7 @@ export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
       <HollowInputContainer
         onClick={() => {
           if (active) inputRef.current.focus();
-          else activate(injected, undefined, true);
+          else setOpen(true);
         }}
       >
         <Image height={30} width={30} src="/search.svg" alt="search" />
