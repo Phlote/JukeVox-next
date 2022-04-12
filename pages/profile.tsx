@@ -8,6 +8,7 @@ import {
   ArchiveTableRow,
   SubmissionDate,
 } from "../components/Tables/archive";
+import { UserStatsBar } from "../components/UserStatsBar";
 import { useSubmissions } from "../hooks/useSubmissions";
 
 const Profile = (props) => {
@@ -24,9 +25,10 @@ const Profile = (props) => {
   return (
     <ArchiveLayout>
       <div className="flex flex-col">
-        <h1 className="text-xl italic">
-          {`${profile?.data?.username ?? wallet}'s Curations`}
-        </h1>
+        <div className="flex">
+          <div className="flex-grow"></div> <UserStatsBar wallet={wallet} />
+        </div>
+
         <table className="table-fixed w-full text-center mt-8">
           <thead>
             <tr
