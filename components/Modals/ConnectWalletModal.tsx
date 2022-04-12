@@ -21,7 +21,7 @@ export const ConnectWalletModal = () => {
   }, [account, setOpen]);
 
   return (
-    <Modal open={open} width="30rem">
+    <Modal open={open} width="30rem" height="24rem">
       <div className="w-full h-full flex flex-col justify-center items-center text-center">
         <div className="w-3/4">
           <HollowButtonContainer

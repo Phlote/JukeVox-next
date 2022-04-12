@@ -7,6 +7,7 @@ interface ModalProps {
   onClose?: () => void;
   children: React.ReactNode;
   width?: string;
+  height?: string;
 }
 
 export const Modal: React.FC<ModalProps> = ({
