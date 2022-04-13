@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import { indexSubmission } from "../controllers/elastic";
 import { supabase } from "../lib/supabase";
 import { Curation } from "../types/curations";
-import { nextApiRequest } from "../utils";
 import { verifyUser } from "../utils/web3";
 import { CurationSubmissionForm } from "./Forms/CurationSubmissionForm";
 import { HollowButton, HollowButtonContainer } from "./Hollow";
@@ -32,15 +31,9 @@ export const CurationSubmissionFlow = (props) => {
         throw "Not Authenticated";
       }
 
-      const { cid } = await nextApiRequest(
-        "store-submission-on-ipfs",
-        "POST",
-        curation
-      );
-
       const { data, error } = await supabase
         .from("submissions")
-        .insert([{ curatorWallet: account, cid, ...curation }]);
+        .insert([{ curatorWallet: account, ...curation }]);
 
       if (error) throw error;
 
