@@ -1,6 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import Image from "next/image";
 import React from "react";
+import { toast } from "react-toastify";
 import { cosign } from "../controllers/cosigns";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { verifyUser } from "../utils/web3";
@@ -36,10 +37,11 @@ export const RatingsMeter: React.FC<{
       if (!authenticated) {
         throw "Authentication failed";
       }
-      const cosigns = await cosign(submissionId, account);
-      if (cosigns) setCosigns(cosigns);
+      const newCosigns = await cosign(submissionId, account);
+      if (newCosigns) setCosigns(newCosigns);
     } catch (e) {
       console.error(e);
+      toast.error(e.message);
       setCosigns((current) => current.slice(0, current.length - 1));
     }
   };

@@ -25,11 +25,10 @@ export const CurationSubmissionFlow = (props) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const submitCuration = async (curation: Curation) => {
+    toast.error("submit");
     setLoading(true);
-    toast.success("submitting!");
     try {
       const authenticated = await verifyUser(account, library);
-
       if (!authenticated) {
         throw "Not Authenticated";
       }
