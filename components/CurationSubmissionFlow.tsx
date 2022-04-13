@@ -26,11 +26,11 @@ export const CurationSubmissionFlow = (props) => {
 
   const submitCuration = async (curation: Curation) => {
     setLoading(true);
+    toast.success("submitting!");
     try {
       const authenticated = await verifyUser(account, library);
 
       if (!authenticated) {
-        toast.error("Authentication failed");
         throw "Not Authenticated";
       }
 
@@ -51,6 +51,7 @@ export const CurationSubmissionFlow = (props) => {
       setPage(1);
       queryClient.invalidateQueries("submissions");
     } catch (e) {
+      toast.error(e);
       console.error(e);
     } finally {
       setLoading(false);
