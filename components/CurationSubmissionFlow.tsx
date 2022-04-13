@@ -9,12 +9,18 @@ import { nextApiRequest } from "../utils";
 import { verifyUser } from "../utils/web3";
 import { CurationSubmissionForm } from "./Forms/CurationSubmissionForm";
 import { HollowButton, HollowButtonContainer } from "./Hollow";
+import { useSubmitSidenavOpen } from "./SideNav";
 
 export const CurationSubmissionFlow = (props) => {
   const { account, library } = useWeb3React();
   const queryClient = useQueryClient();
 
   const [page, setPage] = useState<number>(0);
+
+  const [open] = useSubmitSidenavOpen();
+  React.useEffect(() => {
+    if (!open) setPage(0);
+  }, [open]);
 
   const [loading, setLoading] = useState<boolean>(false);
 

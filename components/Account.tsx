@@ -28,7 +28,7 @@ const Account = (props) => {
   if (typeof account !== "string") {
     return (
       <HollowInputContainer
-        className="h-full"
+        className="h-full cursor-pointer"
         style={{ justifyContent: "center" }}
         onClick={() => setOpen(true)}
       >
@@ -40,7 +40,7 @@ const Account = (props) => {
   return (
     <HollowInputContainer
       ref={ref}
-      className="h-full"
+      className="h-full cursor-pointer"
       style={{ justifyContent: "center" }}
     >
       <ShortenedWallet wallet={account} />

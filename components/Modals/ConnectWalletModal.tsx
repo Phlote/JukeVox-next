@@ -21,8 +21,10 @@ export const ConnectWalletModal = () => {
     if (account) setOpen(closed);
   }, [account, setOpen]);
 
+  const onClose = () => setOpen(false);
+
   return (
-    <Modal open={open} width="24rem" height="24rem">
+    <Modal open={open} onClose={onClose} width="24rem" height="24rem">
       <div className="w-full h-full flex flex-col  items-center text-center">
         {/* <p className="mt-8">
           Make sure you are connected with the{" "}
