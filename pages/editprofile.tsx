@@ -15,7 +15,8 @@ function ProfileEdit() {
       <ProfileSettingsForm wallet={account} />
 
       <HollowButtonContainer
-        className="absolute bottom-10 right-10 cursor-pointer"
+        className="bottom-24 right-0 cursor-pointer"
+        style={{ position: "absolute" }}
         onClick={() => router.push(`/profile?wallet=${account}`)}
       >
         <HollowButton>
@@ -30,7 +31,7 @@ function ProfileEdit() {
 ProfileEdit.getLayout = function getLayout(page) {
   return (
     <Layout>
-      <div className="container flex justify-center mx-auto max-h-max items-center flex-grow">
+      <div className="container flex justify-center max-h-max items-center flex-grow  relative">
         {page}
       </div>
     </Layout>
