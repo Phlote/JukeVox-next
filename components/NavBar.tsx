@@ -77,4 +77,4 @@ export const NavBar = () => {
   );
 };
 
-const NavBarElementContainer = tw.div`w-40 h-16`;
+const NavBarElementContainer = tw.div`w-40 h-14`;
