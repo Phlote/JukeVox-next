@@ -1,6 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import { atom, useAtom } from "jotai";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import React from "react";
 import { useKeyPress } from "../hooks/useKeyPress";
 import Close from "../public/close.svg";
@@ -18,12 +19,17 @@ export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
   const { active, activate } = useWeb3React();
   const [searchTerm, setSearchTerm] = useSearchTerm();
   const inputRef = React.useRef(null);
+  const router = useRouter();
 
   const [open, setOpen] = useConnectWalletModalOpen();
 
   useKeyPress("Escape", () => {
     if (inputRef.current === document.activeElement) setSearchTerm("");
   });
+
+  React.useEffect(() => {
+    if (router.pathname === "/") setSearchTerm("");
+  }, [router.pathname, setSearchTerm]);
 
   return (
     <div className="w-80 h-16" style={{ lineHeight: "0.5rem" }}>
