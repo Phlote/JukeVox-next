@@ -40,7 +40,7 @@ export const NavBar = () => {
             <NavBarElementContainer>
               <Link href={`/profile?wallet=${account}`} passHref>
                 <HollowButtonContainer className="flex justify-center items-center ">
-                  My Profile
+                  Profile
                 </HollowButtonContainer>
               </Link>
             </NavBarElementContainer>

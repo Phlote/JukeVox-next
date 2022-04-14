@@ -24,9 +24,9 @@ export const UserStatsBar = (props) => {
       <div className="w-4" />
       <p className="text-l italic">{`${profile?.data?.username ?? wallet}`}</p>
       <div className="w-4" />
-      {profile?.data?.city && (
-        <p className="text-l italic">City: {`${profile?.data?.city}`}</p>
-      )}
+      <p className="text-l italic">
+        City: {`${profile?.data?.city ?? undefined}`}
+      </p>
       <div className="w-4" />
       <div className="flex">
         <div className="relative h-6 w-6">

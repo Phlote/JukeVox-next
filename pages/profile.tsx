@@ -14,7 +14,10 @@ const Profile = (props) => {
   const router = useRouter();
   const { wallet } = router.query;
   //TODO: we can just query the DB properly now lol
-  const mySubmissions = useSubmissions({ curatorWallet: wallet as string });
+  const submissions = useSubmissions();
+  const mySubmissions = submissions?.filter(
+    (submission) => submission.curatorWallet === wallet
+  );
 
   return (
     <ArchiveLayout>
