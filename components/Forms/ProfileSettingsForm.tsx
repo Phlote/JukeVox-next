@@ -106,7 +106,10 @@ const ProfilePictureUpload = ({ wallet }) => {
 
       if (!error) {
         queryClient.refetchQueries(["profile", wallet]);
-      } else console.error(error);
+      } else {
+        console.error(error);
+        toast.error(error);
+      }
     },
     [path, queryClient, wallet]
   );

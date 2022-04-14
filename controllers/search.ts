@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { cleanSubmission } from "../hooks/useSubmissions";
 import { Curation } from "../types/curations";
 import { nextApiRequest } from "../utils";
@@ -14,5 +15,6 @@ export const searchSubmissions = async (
     return results.map(cleanSubmission);
   } catch (e) {
     console.error(e);
+    toast.error(e);
   }
 };
