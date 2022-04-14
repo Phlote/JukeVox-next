@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { supabase } from "../../lib/supabase";
 import { Curation } from "../../types/curations";
+import { cleanSubmission } from "../../utils";
 
 export default async function handler(
   request: NextApiRequest,
@@ -17,35 +18,14 @@ export default async function handler(
   const { data, error } = await selectStatement;
   if (error) throw error;
 
-  const cleaned = data.map((s) => cleanSubmission(s));
-  const reversed = cleaned.reverse();
+  const sorted = data.sort((a: Curation, b: Curation) => {
+    return (
+      new Date(b.submissionTime).getTime() -
+      new Date(a.submissionTime).getTime()
+    );
+  });
 
-  response.status(200).json(data);
+  const cleaned = sorted.map(cleanSubmission);
+
+  response.status(200).json(cleaned);
 }
-
-export const cleanSubmission = (submission: Curation) => {
-  const cleaned = { ...submission };
-  if (submission.mediaURI.includes("opensea")) {
-    cleaned.marketplace = "OpenSea";
-  }
-  if (submission.mediaURI.includes("catalog")) {
-    cleaned.marketplace = "Catalog";
-  }
-  if (submission.mediaURI.includes("zora")) {
-    cleaned.marketplace = "Zora";
-  }
-  if (submission.mediaURI.includes("foundation")) {
-    cleaned.marketplace = "Foundation";
-  }
-  if (submission.mediaURI.includes("spotify")) {
-    cleaned.marketplace = "Spotify";
-  }
-  if (submission.mediaURI.includes("soundcloud")) {
-    cleaned.marketplace = "Soundcloud";
-  }
-  if (submission.mediaURI.includes("youtu")) {
-    cleaned.marketplace = "Youtube";
-  }
-
-  return cleaned;
-};
