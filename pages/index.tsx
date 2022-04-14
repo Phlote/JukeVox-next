@@ -15,7 +15,13 @@ function Home() {
     }
   });
 
-  return <SearchBar placeholder="Search our archive" />;
+  return (
+    <div className="flex flex-col justify-center items-center">
+      <h1 className="text-6xl cursor-pointer sm:hidden">Phlote</h1>
+      <div className="h-16"></div>
+      <SearchBar placeholder="Search our archive" />
+    </div>
+  );
 }
 
 Home.getLayout = function getLayout(page) {
