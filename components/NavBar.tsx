@@ -31,7 +31,13 @@ const NavBarMobileWeb = () => {
         </MobileNavBarElementContainer>
       )} */}
       {active && (
-        <MobileNavBarElementContainer onClick={() => setOpen(true)}>
+        <MobileNavBarElementContainer
+          className="focus:opacity-25"
+          onClick={(e) => {
+            setOpen(true);
+            (e.target as any).blur();
+          }}
+        >
           Submit
         </MobileNavBarElementContainer>
       )}
@@ -42,7 +48,7 @@ const NavBarMobileWeb = () => {
   );
 };
 
-const MobileNavBarElementContainer = tw.button`h-full w-full py-8 text-center focus:opacity-25`;
+const MobileNavBarElementContainer = tw.button`h-full w-full py-8 text-center `;
 
 const NavBarDesktop = (props) => {
   const [, setOpen] = useSubmissionFlowOpen();

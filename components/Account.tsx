@@ -64,13 +64,14 @@ const AccountDropdown = (props) => {
 
   const router = useRouter();
 
+  const onClickHandler = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
   const { dropdownOpen, setDropdownOpen } = props;
   return (
     <>
-      <div
-        className="hidden sm:block"
-        onClick={() => setDropdownOpen(!dropdownOpen)}
-      >
+      <div className="hidden sm:block" onClick={onClickHandler}>
         <Image
           className={dropdownOpen ? "-rotate-90" : "rotate-90"}
           src={"/chevron.svg"}
@@ -80,10 +81,7 @@ const AccountDropdown = (props) => {
         />
       </div>
 
-      <div
-        className="block sm:hidden"
-        onClick={() => setDropdownOpen(!dropdownOpen)}
-      >
+      <div className="block sm:hidden" onClick={onClickHandler}>
         <Hamburger fill="white" height={24} width={24} />
       </div>
 
