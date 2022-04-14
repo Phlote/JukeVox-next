@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { nodeElasticClient } from "../../lib/elastic-app-search";
 import { supabase } from "../../lib/supabase";
 import { Curation } from "../../types/curations";
-import { curationToElasticSearchDocument } from "../../utils";
+import { cleanSubmission, curationToElasticSearchDocument } from "../../utils";
 
 const { ELASTIC_ENGINE_NAME } = process.env;
 
@@ -36,6 +36,8 @@ export default async function handler(
     }
 
     const { data, error } = await query;
+    if (error) throw error;
+
     const searchResults = data.sort((a: Curation, b: Curation) => {
       return (
         new Date(b.submissionTime).getTime() -
@@ -43,9 +45,9 @@ export default async function handler(
       );
     });
 
-    if (error) throw error;
+    const cleaned = searchResults.map(cleanSubmission);
 
-    response.status(200).send({ results: searchResults });
+    response.status(200).send(cleaned);
   } catch (e) {
     console.error(e);
     response.status(500).send(e);
