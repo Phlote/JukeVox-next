@@ -1,4 +1,3 @@
-import { ToastContainer } from "react-toastify";
 import { ConnectWalletModal } from "./Modals/ConnectWalletModal";
 import { NavBar } from "./NavBar";
 import { SubmitSidenav } from "./SideNav";
@@ -9,20 +8,8 @@ export default function Layout({ children }) {
       <SubmitSidenav />
       <ConnectWalletModal />
       <NavBar />
-      <>
-        {children}
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
-      </>
+
+      {children}
     </div>
   );
 }

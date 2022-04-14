@@ -1,4 +1,4 @@
-import { cleanSubmission } from "../hooks/useSubmissions";
+import { toast } from "react-toastify";
 import { Curation } from "../types/curations";
 import { nextApiRequest } from "../utils";
 
@@ -7,12 +7,13 @@ export const searchSubmissions = async (
   filters: Partial<Curation>
 ): Promise<Curation[]> => {
   try {
-    const { results } = await nextApiRequest("search", "POST", {
+    const results = await nextApiRequest("search", "POST", {
       searchTerm,
       filters,
     });
-    return results.map(cleanSubmission);
+    return results as Curation[];
   } catch (e) {
     console.error(e);
+    toast.error(e);
   }
 };
