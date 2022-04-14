@@ -1,11 +1,17 @@
 import { ConnectWalletModal } from "./Modals/ConnectWalletModal";
+import { MobileSubmissionModal } from "./Modals/MobileSubmissionModal";
 import { NavBar } from "./NavBar";
 import { SubmitSidenav } from "./SideNav";
 
 export default function Layout({ children }) {
   return (
     <div className="min-h-screen flex flex-col w-full overflow-y-auto	">
-      <SubmitSidenav />
+      <div className="hidden sm:block">
+        <SubmitSidenav />
+      </div>
+      <div className="sm:hidden block">
+        <MobileSubmissionModal />
+      </div>
       <ConnectWalletModal />
       <NavBar />
       {children}

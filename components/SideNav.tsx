@@ -11,11 +11,9 @@ export const SubmitSidenav = (props) => {
   const [open, setOpen] = useSubmissionFlowOpen();
 
   return (
-    <div className="hidden sm:block">
-      <SideNav onClose={() => setOpen(false)} open={open}>
-        <CurationSubmissionFlow />
-      </SideNav>
-    </div>
+    <SideNav onClose={() => setOpen(false)} open={open}>
+      <CurationSubmissionFlow />
+    </SideNav>
   );
 };
 
@@ -36,7 +34,7 @@ export const SideNav = ({ children, onClose, open }) => {
         <div className="flex flex-row flex-column h-full w-full">
           <div
             onClick={onClose}
-            className="absolute top-16 left-4 cursor-pointer"
+            className="absolute top-8 left-4 cursor-pointer"
           >
             <Image src={"/chevron.svg"} alt="close" height={16} width={16} />
           </div>

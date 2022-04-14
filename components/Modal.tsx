@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
+import Close from "../public/close.svg";
 
 interface ModalProps {
   open: boolean;
@@ -36,8 +37,26 @@ export const Modal: React.FC<ModalProps> = ({
   );
 };
 
+export const MobileModal: React.FC<ModalProps> = ({
+  children,
+  open,
+  onClose,
+  width,
+  height,
+}) => {
+  return (
+    <div className="z-20 flex w-screen h-screen justify-center items-center absolute bg-phlote-ff-modal py-8">
+      <div className="absolute top-0 left-5 z-10" onClick={onClose}>
+        <Close fill="white" />
+      </div>
+      <div></div>
+      {children}
+    </div>
+  );
+};
+
 const ModalContainer = styled.div`
-  ${tw`absolute text-white p-4 bg-phlote-ff-modal`}
+  ${tw`absolute text-white p-4 bg-phlote-ff-modal overflow-y-scroll overflow-x-hidden`}
   width: ${(props) => (props.width ? props.width : "60rem")};
   height: ${(props) => (props.height ? props.height : "32rem")};
   border-radius: 100px;
