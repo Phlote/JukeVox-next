@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { Curation } from "../types/curations";
 import { nextApiRequest } from "../utils";
 
@@ -13,5 +14,6 @@ export const searchSubmissions = async (
     return results as Curation[];
   } catch (e) {
     console.error(e);
+    toast.error(e);
   }
 };

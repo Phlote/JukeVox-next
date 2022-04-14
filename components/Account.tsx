@@ -24,6 +24,17 @@ const Account = (props) => {
   useOnClickOut(ref, () => setDropdownOpen(false));
 
   const router = useRouter();
+  // need to do something more intelligent here
+  // if (error) {
+  //   return (
+  //     <HollowInputContainer
+  //       className="h-full cursor-pointer"
+  //       style={{ justifyContent: "center" }}
+  //     >
+  //       Check Wallet
+  //     </HollowInputContainer>
+  //   );
+  // }
 
   if (typeof account !== "string") {
     return (

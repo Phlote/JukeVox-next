@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { Curation, CurationElasticSearchDocument } from "../types/curations";
 
 export function nextApiRequest(
@@ -15,6 +16,7 @@ export function nextApiRequest(
     .then((response) => response.json())
     .catch((e) => {
       console.error(e);
+      toast.error(e);
     });
 }
 
