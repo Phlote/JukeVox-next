@@ -5,7 +5,6 @@ import { useRef, useState } from "react";
 import { useOnClickOut } from "../hooks/useOnClickOut";
 import useEagerConnect from "../hooks/web3/useEagerConnect";
 import { DropdownActions } from "./Dropdowns/DropdownActions";
-import { HollowInputContainer } from "./Hollow";
 import { useConnectWalletModalOpen } from "./Modals/ConnectWalletModal";
 import { ShortenedWallet } from "./ShortenedWallet";
 
@@ -38,20 +37,16 @@ const Account = (props) => {
 
   if (typeof account !== "string") {
     return (
-      <HollowInputContainer
-        className="h-full cursor-pointer"
-        style={{ justifyContent: "center" }}
-        onClick={() => setOpen(true)}
-      >
+      <div className="w-full h-full text-center" onClick={() => setOpen(true)}>
         Connect
-      </HollowInputContainer>
+      </div>
     );
   }
 
   return (
-    <HollowInputContainer
+    <div
       ref={ref}
-      className="h-full cursor-pointer"
+      className="h-full w-full text-center flex flex-row"
       style={{ justifyContent: "center" }}
     >
       <ShortenedWallet wallet={account} />
@@ -91,7 +86,7 @@ const Account = (props) => {
           <div className="w-4" />
         </DropdownActions>
       )}
-    </HollowInputContainer>
+    </div>
   );
 };
 

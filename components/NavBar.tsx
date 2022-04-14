@@ -5,17 +5,40 @@ import tw from "twin.macro";
 import { useIsCurator } from "../hooks/useIsCurator";
 import Close from "../public/close.svg";
 import Account from "./Account";
-import { HollowButtonContainer } from "./Hollow";
+import { HollowButtonContainer, HollowInputContainer } from "./Hollow";
 import { SearchBar } from "./SearchBar";
 import { useSubmitSidenavOpen } from "./SideNav";
 
 const NavBarMobileWeb = () => {
+  const [, setOpen] = useSubmitSidenavOpen();
+  const router = useRouter();
+  const { active, account } = useWeb3React();
+  const isCurator = useIsCurator();
   return (
-    <div className="w-screen grid grid-cols-4 absolute bottom-0  bg-phlote-container divide-x">
-      <MobileNavBarElementContainer>Index</MobileNavBarElementContainer>
-      <MobileNavBarElementContainer>My Profile</MobileNavBarElementContainer>
-      <MobileNavBarElementContainer>Submit</MobileNavBarElementContainer>
-      <MobileNavBarElementContainer>Account</MobileNavBarElementContainer>
+    <div className="w-screen flex flex-row absolute bottom-0 bg-phlote-container divide-x">
+      {/* {active && (
+        <MobileNavBarElementContainer>
+          <Link href="/archive" passHref>
+            Index
+          </Link>
+        </MobileNavBarElementContainer>
+      )}*/}
+      {/* {active && account && isCurator && (
+        <MobileNavBarElementContainer>
+          <Link href={`/profile?wallet=${account}`} passHref>
+            My Profile
+          </Link>
+        </MobileNavBarElementContainer>
+      )} */}
+      {active && (
+        <MobileNavBarElementContainer onClick={() => setOpen(true)}>
+          Submit
+        </MobileNavBarElementContainer>
+      )}
+      <MobileNavBarElementContainer>
+        <Account />
+        {/* Connect */}
+      </MobileNavBarElementContainer>
     </div>
   );
 };
@@ -67,7 +90,12 @@ const NavBarDesktop = (props) => {
           </NavBarElementContainer>
         )}
         <NavBarElementContainer style={{ width: "13rem" }}>
-          <Account />
+          <HollowInputContainer
+            className="h-full cursor-pointer"
+            style={{ justifyContent: "center" }}
+          >
+            <Account />
+          </HollowInputContainer>
         </NavBarElementContainer>
       </div>
     </div>
