@@ -13,7 +13,6 @@ import { useSubmissionSearch } from "../hooks/useSubmissions";
 function Archive() {
   const [searchTerm] = useSearchTerm();
   const curations = useSubmissionSearch(searchTerm);
-  console.log("the curations: ", curations);
 
   return (
     <ArchiveLayout>
