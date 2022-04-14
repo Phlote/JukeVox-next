@@ -18,7 +18,7 @@ const Account = (props) => {
   // manage connecting state for injected connector
 
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-  const [open, setOpen] = useConnectWalletModalOpen();
+  const [, setOpen] = useConnectWalletModalOpen();
 
   const ref = useRef();
   useOnClickOut(ref, () => setDropdownOpen(false));

@@ -8,7 +8,6 @@ export default function Layout({ children }) {
       <SubmitSidenav />
       <ConnectWalletModal />
       <NavBar />
-
       {children}
     </div>
   );

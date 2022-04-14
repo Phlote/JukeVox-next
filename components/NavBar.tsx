@@ -5,12 +5,12 @@ import tw from "twin.macro";
 import { useIsCurator } from "../hooks/useIsCurator";
 import Close from "../public/close.svg";
 import Account from "./Account";
+import { useSubmissionFlowOpen } from "./CurationSubmissionFlow";
 import { HollowButtonContainer, HollowInputContainer } from "./Hollow";
 import { SearchBar } from "./SearchBar";
-import { useSubmitSidenavOpen } from "./SideNav";
 
 const NavBarMobileWeb = () => {
-  const [, setOpen] = useSubmitSidenavOpen();
+  const [, setOpen] = useSubmissionFlowOpen();
   const router = useRouter();
   const { active, account } = useWeb3React();
   const isCurator = useIsCurator();
@@ -37,16 +37,15 @@ const NavBarMobileWeb = () => {
       )}
       <MobileNavBarElementContainer>
         <Account />
-        {/* Connect */}
       </MobileNavBarElementContainer>
     </div>
   );
 };
 
-const MobileNavBarElementContainer = tw.div`h-full w-full py-8 text-center`;
+const MobileNavBarElementContainer = tw.button`h-full w-full py-8 text-center focus:opacity-25`;
 
 const NavBarDesktop = (props) => {
-  const [, setOpen] = useSubmitSidenavOpen();
+  const [, setOpen] = useSubmissionFlowOpen();
   const router = useRouter();
   const { active, account } = useWeb3React();
   const isCurator = useIsCurator();

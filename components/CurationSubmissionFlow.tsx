@@ -1,4 +1,5 @@
 import { useWeb3React } from "@web3-react/core";
+import { atom, useAtom } from "jotai";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
@@ -9,7 +10,9 @@ import { nextApiRequest } from "../utils";
 import { verifyUser } from "../utils/web3";
 import { CurationSubmissionForm } from "./Forms/CurationSubmissionForm";
 import { HollowButton, HollowButtonContainer } from "./Hollow";
-import { useSubmitSidenavOpen } from "./SideNav";
+
+const submissionFlowOpen = atom<boolean>(false);
+export const useSubmissionFlowOpen = () => useAtom(submissionFlowOpen);
 
 export const CurationSubmissionFlow = (props) => {
   const { account, library } = useWeb3React();
@@ -17,7 +20,7 @@ export const CurationSubmissionFlow = (props) => {
 
   const [page, setPage] = useState<number>(0);
 
-  const [open] = useSubmitSidenavOpen();
+  const [open] = useSubmissionFlowOpen();
   React.useEffect(() => {
     if (!open) setPage(0);
   }, [open]);

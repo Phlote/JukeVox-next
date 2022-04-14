@@ -1,21 +1,21 @@
-import { atom, useAtom } from "jotai";
-import styled from "styled-components";
-import React from "react";
-import { HollowInputContainer, HollowInput } from "./Hollow";
 import Image from "next/image";
-import { CurationSubmissionFlow } from "./CurationSubmissionFlow";
+import React from "react";
+import styled from "styled-components";
 import tw from "twin.macro";
-
-const submitSidenavOpen = atom<boolean>(false);
-export const useSubmitSidenavOpen = () => useAtom(submitSidenavOpen);
+import {
+  CurationSubmissionFlow,
+  useSubmissionFlowOpen,
+} from "./CurationSubmissionFlow";
 
 export const SubmitSidenav = (props) => {
-  const [open, setOpen] = useSubmitSidenavOpen();
+  const [open, setOpen] = useSubmissionFlowOpen();
 
   return (
-    <SideNav onClose={() => setOpen(false)} open={open}>
-      <CurationSubmissionFlow />
-    </SideNav>
+    <div className="hidden sm:block">
+      <SideNav onClose={() => setOpen(false)} open={open}>
+        <CurationSubmissionFlow />
+      </SideNav>
+    </div>
   );
 };
 
