@@ -9,7 +9,6 @@ export const MobileSubmissionModal = () => {
   const [open, setOpen] = useSubmissionFlowOpen();
 
   const onClose = () => setOpen(false);
-
   return (
     <MobileModal open={open} onClose={onClose}>
       <CurationSubmissionFlow />

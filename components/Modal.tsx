@@ -45,9 +45,15 @@ export const MobileModal: React.FC<ModalProps> = ({
   height,
 }) => {
   return (
-    <div className="z-20 flex w-screen h-screen justify-center items-center absolute bg-phlote-ff-modal py-8">
-      <div className="absolute top-0 left-5 z-10" onClick={onClose}>
-        <Close fill="white" />
+    <div
+      className="z-20 flex w-screen h-screen justify-center items-center fixed bg-phlote-ff-modal py-8"
+      style={!open ? { display: "none" } : undefined}
+    >
+      <div
+        className="absolute top-5 left-5 z-10 cursor-pointer"
+        onClick={onClose}
+      >
+        <Close fill="white" height={16} width={16} />
       </div>
       <div></div>
       {children}
