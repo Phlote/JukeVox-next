@@ -7,7 +7,7 @@ import { Curation } from "../types/curations";
 export const useSubmissions = (filters: Partial<Curation> = {}) => {
   const { data } = useQuery(
     ["submissions", filters],
-    async () => await getSubmissions(filters),
+    async () => getSubmissions(filters),
     { keepPreviousData: true }
   );
   return data ?? [];

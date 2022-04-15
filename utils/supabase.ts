@@ -8,9 +8,7 @@ export const getSubmissionsWithFilter = async (
 ) => {
   let selectStatement = supabase.from("submissions").select();
 
-  for (const key in filters as Curation) {
-    selectStatement = selectStatement.eq(key, filters[key]);
-  }
+  if (filters !== {}) selectStatement = selectStatement.match(filters);
 
   const { data, error } = await selectStatement;
   if (error) throw error;

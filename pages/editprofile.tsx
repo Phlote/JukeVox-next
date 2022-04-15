@@ -17,7 +17,7 @@ function ProfileEdit() {
       <HollowButtonContainer
         className="bottom-24 right-0 cursor-pointer"
         style={{ position: "absolute" }}
-        onClick={() => router.push(`/profile?wallet=${account}`)}
+        onClick={() => router.push(`/profile/${account}`)}
       >
         <HollowButton>
           View My Curations{" "}
