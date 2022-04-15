@@ -25,16 +25,31 @@ export interface UserProfile {
 
 export const ProfileSettingsForm = ({ wallet }) => {
   const queryClient = useQueryClient();
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
 
   const onSubmit = async (formData: Partial<UserProfile>) => {
-    const { username, city, twitter } = formData;
-    const { data, error } = await supabase
-      .from("profiles")
-      .upsert({ wallet, username, city, twitter });
-    if (error) toast.error(error.message);
-    else {
-      queryClient.invalidateQueries(["profile", wallet]);
+    setSubmitting(true);
+    try {
+      const { username, city, twitter } = formData;
+      const { data, error } = await supabase
+        .from("profiles")
+        .upsert({ wallet, username, city, twitter }, { onConflict: "wallet" });
+      if (error) throw error;
+
+      const submissionsUpdate = await supabase
+        .from("submissions")
+        .update({ username })
+        .match({ curatorWallet: wallet });
+
+      if (submissionsUpdate.error) throw submissionsUpdate.error;
+
+      await queryClient.invalidateQueries(["profile", wallet]);
+
       toast.success("Submitted!");
+    } catch (e) {
+      toast.error(e.message);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -83,7 +98,7 @@ export const ProfileSettingsForm = ({ wallet }) => {
           </HollowInputContainer>
         </div>
         <HollowButtonContainer className="w-1/4" onClick={handleSubmit}>
-          <HollowButton>Submit</HollowButton>
+          <HollowButton disabled={submitting}>Submit</HollowButton>
         </HollowButtonContainer>
       </div>
     </div>
