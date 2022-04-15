@@ -18,7 +18,10 @@ export const Username: React.FC<Username> = ({ submission, linkToProfile }) => {
 
   if (linkToProfile) {
     return (
-      <Link href={`/profile/${encodeURIComponent(curatorWallet)}`} passHref>
+      <Link
+        href={`/profile?wallet=${encodeURIComponent(curatorWallet)}`}
+        passHref
+      >
         <div className="hover:opacity-50 cursor-pointer">{content}</div>
       </Link>
     );
