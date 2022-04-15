@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getAllSubmissionsWithFilter } from "../../utils/supabase";
+import { getSubmissionsWithFilter } from "../../utils/supabase";
 
 export default async function handler(
   request: NextApiRequest,
@@ -7,7 +7,7 @@ export default async function handler(
 ) {
   const { filters } = request.body;
 
-  const submissions = await getAllSubmissionsWithFilter(filters);
+  const submissions = await getSubmissionsWithFilter(filters);
 
   response.status(200).json(submissions);
 }

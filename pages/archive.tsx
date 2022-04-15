@@ -11,12 +11,12 @@ import {
 import { Username } from "../components/Username";
 import { useSubmissionSearch } from "../hooks/useSubmissions";
 import { Curation } from "../types/curations";
-import { getAllSubmissionsWithFilter } from "../utils/supabase";
+import { getSubmissionsWithFilter } from "../utils/supabase";
 
 function Archive(props) {
-  const { allCurations } = props;
+  const { allSubmissions } = props;
   // we can do this because the prop is unchanging
-  const [curations, setCurations] = useState<Curation[]>(allCurations);
+  const [submissions, setSubmissions] = useState<Curation[]>(allSubmissions);
   const [searchTerm] = useSearchTerm();
   const searchResults = useSubmissionSearch(searchTerm);
 
@@ -26,10 +26,10 @@ function Archive(props) {
       searchTerm &&
       searchTerm !== "" &&
       searchResults &&
-      searchResults !== curations
+      searchResults !== submissions
     )
-      setCurations(searchResults);
-  }, [searchResults, curations, searchTerm]);
+      setSubmissions(searchResults);
+  }, [searchResults, submissions, searchTerm]);
 
   return (
     <ArchiveLayout>
@@ -52,10 +52,10 @@ function Archive(props) {
             </tr>
           </thead>
 
-          {curations.length > 0 && (
+          {submissions.length > 0 && (
             <tbody>
               <tr className="h-4" />
-              {curations?.map((curation) => {
+              {submissions?.map((curation) => {
                 const {
                   id,
                   curatorWallet,
@@ -105,7 +105,7 @@ function Archive(props) {
             </tbody>
           )}
         </table>
-        {curations.length === 0 && (
+        {submissions.length === 0 && (
           <div
             className="w-full mt-4 flex-grow flex justify-center items-center"
             style={{ color: "rgba(105, 105, 105, 1)" }}
@@ -129,7 +129,7 @@ Archive.getLayout = function getLayout(page) {
 export async function getStaticProps({ params }) {
   return {
     props: {
-      allCurations: await getAllSubmissionsWithFilter(),
+      allSubmissions: await getSubmissionsWithFilter(),
     },
     revalidate: 60,
   };

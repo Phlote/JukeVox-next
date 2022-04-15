@@ -1,19 +1,18 @@
 import Image from "next/image";
 import styled from "styled-components";
 import tw from "twin.macro";
-import { useProfile } from "./Forms/ProfileSettingsForm";
+import { UserProfile } from "./Forms/ProfileSettingsForm";
 
-export const UserStatsBar = (props) => {
-  const { wallet } = props;
-  const profile = useProfile(wallet);
+export const UserStatsBar: React.FC<{ profile: UserProfile }> = (props) => {
+  const { profilePic, username, city, cosigns } = props.profile;
 
   return (
     <UserStatsBarContainer>
-      {profile?.data?.profilePic && (
+      {profilePic && (
         <div className="w-20 h-20 rounded-full flex justify-center items-center relative">
           <Image
             className={`rounded-full`}
-            src={profile?.data?.profilePic}
+            src={profilePic}
             objectFit={"cover"}
             layout="fill"
             alt="profile picture"
@@ -22,18 +21,16 @@ export const UserStatsBar = (props) => {
         </div>
       )}
       <div className="w-4" />
-      <p className="text-l italic">{`${profile?.data?.username ?? wallet}`}</p>
+      <p className="text-l italic">{`${username}`}</p>
       <div className="w-4" />
-      {profile?.data?.city && (
-        <p className="text-l italic">City: {`${profile?.data?.city}`}</p>
-      )}
+      {city && <p className="text-l italic">City: {`${city}`}</p>}
       <div className="w-4" />
       <div className="flex">
         <div className="relative h-6 w-6">
           <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
         </div>
 
-        <p className="text-l italic">: {`${profile?.data?.cosigns}`}</p>
+        <p className="text-l italic">: {`${cosigns}`}</p>
       </div>
     </UserStatsBarContainer>
   );

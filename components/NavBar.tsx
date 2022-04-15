@@ -25,7 +25,7 @@ const NavBarMobileWeb = () => {
       )}*/}
       {/* {active && account && isCurator && (
         <MobileNavBarElementContainer>
-          <Link href={`/profile?wallet=${account}`} passHref>
+          <Link href={`/profile/${account}`} passHref>
             My Profile
           </Link>
         </MobileNavBarElementContainer>
@@ -73,7 +73,7 @@ const NavBarDesktop = (props) => {
         )}
         {active && account && isCurator && (
           <NavBarElementContainer>
-            <Link href={`/profile?wallet=${account}`} passHref>
+            <Link href={`/profile/${account}`} passHref>
               <HollowButtonContainer className="flex justify-center items-center ">
                 My Profile
               </HollowButtonContainer>
