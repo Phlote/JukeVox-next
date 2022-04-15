@@ -1,4 +1,5 @@
 import { useWeb3React } from "@web3-react/core";
+import { atom, useAtom } from "jotai";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
@@ -9,15 +10,17 @@ import { nextApiRequest } from "../utils";
 import { verifyUser } from "../utils/web3";
 import { CurationSubmissionForm } from "./Forms/CurationSubmissionForm";
 import { HollowButton, HollowButtonContainer } from "./Hollow";
-import { useSubmitSidenavOpen } from "./SideNav";
 
-export const CurationSubmissionFlow = (props) => {
+const submissionFlowOpen = atom<boolean>(false);
+export const useSubmissionFlowOpen = () => useAtom(submissionFlowOpen);
+
+export const CurationSubmissionFlow: React.FC = (props) => {
   const { account, library } = useWeb3React();
   const queryClient = useQueryClient();
 
   const [page, setPage] = useState<number>(0);
 
-  const [open] = useSubmitSidenavOpen();
+  const [open] = useSubmissionFlowOpen();
   React.useEffect(() => {
     if (!open) setPage(0);
   }, [open]);
@@ -57,12 +60,10 @@ export const CurationSubmissionFlow = (props) => {
   };
 
   return (
-    <div className="flex flex-col w-full mx-8 ">
-      <div className="h-8" />
+    <div className="flex flex-col w-full mx-8 gap-4 justify-center">
       <h1 className="font-extrabold	text-4xl underline underline-offset-16 text-center">
         Submit
       </h1>
-      <div className="h-8" />
       {page === 0 && (
         <CurationSubmissionForm
           metamaskLoading={loading}
@@ -70,9 +71,8 @@ export const CurationSubmissionFlow = (props) => {
         />
       )}
       {page === 1 && (
-        <div className="flex flex-col items-center text-sm mt-8">
+        <div className="flex flex-col items-center text-sm mt-8 gap-8">
           <p>Congratulations! Your submission has been added</p>
-          <div className="h-8" />
           {/* <a
             className="underline flex"
             rel="noreferrer"
@@ -101,7 +101,6 @@ export const CurationSubmissionFlow = (props) => {
             <Image src="/arrow.svg" alt={"link"} height={12} width={12} />
           </a> */}
 
-          <div className="h-8" />
           <HollowButtonContainer className="w-1/2" onClick={() => setPage(0)}>
             <HollowButton>Submit Another</HollowButton>
           </HollowButtonContainer>

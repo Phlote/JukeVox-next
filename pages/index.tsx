@@ -15,7 +15,21 @@ function Home() {
     }
   });
 
-  return <SearchBar placeholder="Search our archive" />;
+  return (
+    <div className="flex flex-col justify-center items-center">
+      <div className="sm:hidden text-center mx-4">
+        <h1 className="text-6xl">Phlote</h1>
+        <div className="h-16"></div>
+        <p>Help us save talented artists from being lost on the internet.</p>
+        <br />
+        <p>Submit the music of your favorite independent artists.</p>
+      </div>
+
+      <div className="hidden sm:block">
+        <SearchBar placeholder="Search our archive" />
+      </div>
+    </div>
+  );
 }
 
 Home.getLayout = function getLayout(page) {
