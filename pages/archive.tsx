@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Layout, { ArchiveLayout } from "../components/Layouts";
 import { RatingsMeter } from "../components/RatingsMeter";
 import { useSearchTerm } from "../components/SearchBar";
@@ -9,10 +10,26 @@ import {
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
 import { useSubmissionSearch } from "../hooks/useSubmissions";
+import { Curation } from "../types/curations";
+import { getAllSubmissionsWithFilter } from "../utils/supabase";
 
-function Archive() {
+function Archive(props) {
+  const { allCurations } = props;
+  // we can do this because the prop is unchanging
+  const [curations, setCurations] = useState<Curation[]>(allCurations);
   const [searchTerm] = useSearchTerm();
-  const curations = useSubmissionSearch(searchTerm);
+  const searchResults = useSubmissionSearch(searchTerm);
+
+  // subject to change based on user's search query
+  useEffect(() => {
+    if (
+      searchTerm &&
+      searchTerm !== "" &&
+      searchResults &&
+      searchResults !== curations
+    )
+      setCurations(searchResults);
+  }, [searchResults, curations, searchTerm]);
 
   return (
     <ArchiveLayout>
@@ -108,5 +125,14 @@ Archive.getLayout = function getLayout(page) {
     </Layout>
   );
 };
+
+export async function getStaticProps({ params }) {
+  return {
+    props: {
+      allCurations: await getAllSubmissionsWithFilter(),
+    },
+    revalidate: 60,
+  };
+}
 
 export default Archive;
