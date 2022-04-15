@@ -29,12 +29,10 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
   return (
     <div className="grid grid-cols-1 gap-3">
       <HollowInputContainer type="form">
-        <div className="flex flex-row max-w-full">
-          <HollowInput {...mediaURI.input} type="text" placeholder="Link" />
-          {mediaURI.meta.touched && mediaURI.meta.error && (
-            <span className="text-red-600 ml-2">{mediaURI.meta.error}</span>
-          )}
-        </div>
+        <HollowInput {...mediaURI.input} type="text" placeholder="Link" />
+        {mediaURI.meta.touched && mediaURI.meta.error && (
+          <span className="text-red-600 ml-2">{mediaURI.meta.error}</span>
+        )}
       </HollowInputContainer>
       <HollowInputContainer
         onClick={() => setDropdownOpen(!dropdownOpen)}
