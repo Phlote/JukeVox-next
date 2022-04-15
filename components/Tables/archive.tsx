@@ -8,7 +8,7 @@ import tw from "twin.macro";
 import { useOnClickOut } from "../../hooks/useOnClickOut";
 import { useSearchFilters, useSubmissions } from "../../hooks/useSubmissions";
 import { DropdownChecklist } from "../Dropdowns/DropdownChecklist";
-import { Username } from "../Username";
+import { ShortenedWallet } from "../ShortenedWallet";
 
 export const ArchiveTableHeader = (props) => {
   const [dropdownOpen, setDropdownOpen] = React.useState<boolean>(false);
@@ -72,7 +72,7 @@ export const ArchiveFilterLabel: React.FC<{ filter: string }> = ({
   filter,
 }) => {
   const isAddress = ethers.utils.isAddress(filter);
-  if (isAddress) return <Username wallet={filter} />;
+  if (isAddress) return <ShortenedWallet wallet={filter} />;
   else return <span>{filter}</span>;
 };
 
