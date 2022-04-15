@@ -11,6 +11,7 @@ export interface Curation {
   marketplace: string;
   tags?: string[];
   cosigns: string[];
+  username: string;
 }
 
 export interface CurationNFTMetadata {

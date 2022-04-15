@@ -71,7 +71,7 @@ function Archive() {
                       <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>
-                        <Username wallet={curatorWallet} linkToProfile />
+                        <Username submission={curation} linkToProfile />
                       </ArchiveTableDataCell>
                       <ArchiveTableDataCell>
                         <RatingsMeter
