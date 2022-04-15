@@ -18,7 +18,7 @@ export const Username: React.FC<Username> = ({ wallet, linkToProfile }) => {
     <ShortenedWallet wallet={wallet} />
   );
 
-  if (linkToProfile) {
+  if (linkToProfile && username) {
     return (
       <Link href={`/profile/${encodeURIComponent(wallet)}`} passHref>
         <div className="hover:opacity-50 cursor-pointer">{username}</div>

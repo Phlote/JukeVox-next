@@ -22,14 +22,15 @@ function Archive(props) {
 
   // subject to change based on user's search query
   useEffect(() => {
-    if (
+    if (!searchTerm || searchTerm === "") setSubmissions(allSubmissions);
+    else if (
       searchTerm &&
       searchTerm !== "" &&
       searchResults &&
       searchResults !== submissions
     )
       setSubmissions(searchResults);
-  }, [searchResults, submissions, searchTerm]);
+  }, [searchResults, submissions, searchTerm, allSubmissions]);
 
   return (
     <ArchiveLayout>
@@ -131,7 +132,7 @@ export async function getStaticProps({ params }) {
     props: {
       allSubmissions: await getSubmissionsWithFilter(),
     },
-    revalidate: 60,
+    revalidate: 15,
   };
 }
 
