@@ -39,7 +39,7 @@ export const DropdownChecklist: React.FC<DropdownChecklist> = ({
         const isAddress = ethers.utils.isAddress(field);
         return (
           <div
-            className="w-full h-14 flex justify-left items-center"
+            className="w-full sm:h-14 h-12 flex justify-left items-center"
             key={field}
             onClick={() => {
               onChange(field);

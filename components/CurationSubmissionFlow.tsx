@@ -60,10 +60,11 @@ export const CurationSubmissionFlow: React.FC = (props) => {
   };
 
   return (
-    <div className="flex flex-col w-full mx-8 gap-4 justify-center">
+    <div className="flex flex-col w-full sm:mx-8 justify-center py-16">
       <h1 className="font-extrabold	text-4xl underline underline-offset-16 text-center">
         Submit
       </h1>
+      <div className="h-8" />
       {page === 0 && (
         <CurationSubmissionForm
           metamaskLoading={loading}

@@ -27,15 +27,15 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
   const tags = useField("tags", form);
 
   return (
-    <div className="mt-8">
+    <div className="grid grid-cols-1 gap-3">
       <HollowInputContainer type="form">
-        <HollowInput {...mediaURI.input} type="text" placeholder="Link" />
-        {mediaURI.meta.touched && mediaURI.meta.error && (
-          <span className="text-red-600 ml-2">{mediaURI.meta.error}</span>
-        )}
+        <div className="flex flex-row max-w-full">
+          <HollowInput {...mediaURI.input} type="text" placeholder="Link" />
+          {mediaURI.meta.touched && mediaURI.meta.error && (
+            <span className="text-red-600 ml-2">{mediaURI.meta.error}</span>
+          )}
+        </div>
       </HollowInputContainer>
-      <div className="h-3" />
-
       <HollowInputContainer
         onClick={() => setDropdownOpen(!dropdownOpen)}
         type="form"
@@ -64,22 +64,17 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
       </HollowInputContainer>
 
       {dropdownOpen && (
-        <>
-          <div className="h-4" />{" "}
-          <HollowInputContainer style={{ borderRadius: "60px" }}>
-            <DropdownChecklist
-              {...mediaType.input}
-              close={() => setDropdownOpen(false)}
-              fields={["Audio", "Text", "Video", "Visual Art"]}
-              closeOnSelect
-              borders
-            />
-          </HollowInputContainer>
-          <div className="h-3" />{" "}
-        </>
+        <HollowInputContainer style={{ borderRadius: "60px" }}>
+          <DropdownChecklist
+            {...mediaType.input}
+            close={() => setDropdownOpen(false)}
+            fields={["Audio", "Text", "Video", "Visual Art"]}
+            closeOnSelect
+            borders
+          />
+        </HollowInputContainer>
       )}
 
-      <div className="h-3" />
       <HollowInputContainer type="form">
         <HollowInput
           {...artistName.input}
@@ -90,7 +85,6 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
           <span className="text-red-600 ml-2">{artistName.meta.error}</span>
         )}
       </HollowInputContainer>
-      <div className="h-3" />
 
       <HollowInputContainer type="form">
         <HollowInput {...mediaTitle.input} type="text" placeholder="Title" />
@@ -98,7 +92,6 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
           <span className="text-red-600 ml-2">{mediaTitle.meta.error}</span>
         )}
       </HollowInputContainer>
-      <div className="h-3" />
 
       <HollowInputContainer type="form">
         <HollowInput
@@ -110,7 +103,6 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
           <span className="text-red-600 ml-2">{marketplace.meta.error}</span>
         )}
       </HollowInputContainer>
-      <div className="h-3" />
 
       <HollowInputContainer type="form">
         <HollowInput
@@ -122,11 +114,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
           <span className="text-red-600 ml-2">{artistWallet.meta.error}</span>
         )}
       </HollowInputContainer>
-      <div className="h-3" />
-
       <HollowTagsInput {...tags.input} />
-      <div className="h-3" />
-
       <div className="flex justify-center items-center">
         <HollowButtonContainer onClick={handleSubmit}>
           <HollowButton
@@ -139,7 +127,6 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
           <Image src="/favicon.svg" height={16} width={16} alt={"Gem"} />
         </HollowButtonContainer>
       </div>
-      <div className="h-3" />
     </div>
   );
 };
