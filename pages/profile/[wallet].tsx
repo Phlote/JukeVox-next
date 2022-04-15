@@ -7,7 +7,6 @@ import {
   SubmissionDate,
 } from "../../components/Tables/archive";
 import { UserStatsBar } from "../../components/UserStatsBar";
-import { supabase } from "../../lib/supabase";
 import {
   getProfileForWallet,
   getSubmissionsWithFilter,
@@ -114,24 +113,21 @@ Profile.getLayout = function getLayout(page) {
 
 // params will contain the wallet for each generated page.
 export async function getStaticProps({ params }) {
-  console.log("get static props in profile");
   const { wallet } = params;
   return {
     props: {
       submissions: await getSubmissionsWithFilter({ curatorWallet: wallet }),
       profile: await getProfileForWallet(wallet),
     },
-    // revalidate: 60,
+    revalidate: 60,
   };
 }
 
 export async function getStaticPaths() {
-  console.log("getstaticpaths");
-  const profilesQuery = await supabase.from("profiles").select();
-  console.log(profilesQuery.data);
-  const paths = profilesQuery.data.map(({ wallet }) => ({
+  const submissions = await getSubmissionsWithFilter();
+  const paths = submissions.map(({ curatorWallet }) => ({
     params: {
-      wallet,
+      wallet: curatorWallet,
     },
   }));
   console.log(paths);
