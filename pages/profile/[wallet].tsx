@@ -13,7 +13,7 @@ import {
   getSubmissionsWithFilter,
 } from "../../utils/supabase";
 
-const Profile = (props) => {
+export default function Profile(props) {
   const { submissions, profile } = props;
 
   return (
@@ -102,7 +102,7 @@ const Profile = (props) => {
       </div>
     </ArchiveLayout>
   );
-};
+}
 
 Profile.getLayout = function getLayout(page) {
   return (
@@ -126,6 +126,7 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
+  console.log("getstaticpaths");
   const profilesQuery = await supabase.from("profiles").select();
   console.log(profilesQuery.data);
   const paths = profilesQuery.data.map(({ wallet }) => ({
@@ -141,5 +142,3 @@ export async function getStaticPaths() {
   //TODO we should set a fallback so that people without profiles will see something
   return { paths, fallback: false };
 }
-
-export default Profile;
