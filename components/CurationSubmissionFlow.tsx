@@ -3,7 +3,10 @@ import { atom, useAtom } from "jotai";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import { revalidate } from "../controllers/revalidate";
+import {
+  revalidateArchive,
+  revalidateProfile,
+} from "../controllers/revalidate";
 import { submit } from "../controllers/submissions";
 import { Curation } from "../types/curations";
 import { verifyUser } from "../utils/web3";
@@ -40,7 +43,9 @@ export const CurationSubmissionFlow: React.FC = (props) => {
 
       setPage(1);
       queryClient.invalidateQueries("submissions");
-      revalidate(profile?.data?.username);
+      await revalidateArchive();
+      if (profile?.data?.username)
+        await revalidateProfile(profile?.data?.username);
     } catch (e) {
       toast.error(e);
       console.error(e);
