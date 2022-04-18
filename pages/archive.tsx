@@ -90,7 +90,11 @@ function Archive(props) {
                       <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>
-                        <Username username={username} linkToProfile />
+                        <Username
+                          username={username}
+                          wallet={curatorWallet}
+                          linkToProfile
+                        />
                       </ArchiveTableDataCell>
                       <ArchiveTableDataCell>
                         <RatingsMeter

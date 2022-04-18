@@ -15,15 +15,16 @@ export const Username: React.FC<Username> = (props) => {
     enabled: !username && validWallet,
   });
 
-  let content;
-
+  let content = null;
+  // if we have a username, use it
   if (username) content = username;
+  // otherwise check if we have a valid wallet
   else if (validWallet) {
     if (profileQuery?.data?.username) content = profileQuery.data.username;
     else content = <ShortenedWallet wallet={wallet} />;
   }
 
-  // if a username is provided, simply use this
+  if (!content) throw "<Username/> is being used wrong";
 
   if (linkToProfile && username) {
     return (
