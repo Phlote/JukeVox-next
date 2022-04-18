@@ -122,9 +122,10 @@ export async function getStaticProps({ params }) {
     .match({ username });
 
   if (profilesQuery.error) throw profilesQuery.error;
-
+  // TODO this is a bit redundant, update the profiles table
   const { wallet } = profilesQuery.data[0];
-
+  console.log(username);
+  console.log(wallet);
   return {
     props: {
       submissions: await getSubmissionsWithFilter({ username }),
