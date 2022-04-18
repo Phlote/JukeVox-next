@@ -130,7 +130,6 @@ export async function getStaticProps({ params }) {
       submissions: await getSubmissionsWithFilter({ username }),
       profile: await getProfileForWallet(wallet),
     },
-    revalidate: 10,
   };
 }
 

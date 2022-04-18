@@ -4,11 +4,13 @@ import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { indexSubmission } from "../controllers/elastic";
+import { revalidate } from "../controllers/revalidate";
 import { supabase } from "../lib/supabase";
 import { Curation } from "../types/curations";
 import { nextApiRequest } from "../utils";
 import { verifyUser } from "../utils/web3";
 import { CurationSubmissionForm } from "./Forms/CurationSubmissionForm";
+import { useProfile } from "./Forms/ProfileSettingsForm";
 import { HollowButton, HollowButtonContainer } from "./Hollow";
 
 const submissionFlowOpen = atom<boolean>(false);
@@ -26,6 +28,7 @@ export const CurationSubmissionFlow: React.FC = (props) => {
   }, [open]);
 
   const [loading, setLoading] = useState<boolean>(false);
+  const profile = useProfile(account);
 
   const submitCuration = async (curation: Curation) => {
     setLoading(true);
@@ -51,6 +54,7 @@ export const CurationSubmissionFlow: React.FC = (props) => {
 
       setPage(1);
       queryClient.invalidateQueries("submissions");
+      revalidate(profile?.data?.username);
     } catch (e) {
       toast.error(e);
       console.error(e);
