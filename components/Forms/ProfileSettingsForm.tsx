@@ -167,9 +167,13 @@ const ProfilePictureUpload = ({ wallet }) => {
   );
 };
 
-export const useProfile = (wallet) => {
-  return useQuery(["profile", wallet], async () => {
-    if (!wallet) return null;
-    return getProfile(wallet);
-  });
+export const useProfile = (wallet, options = {}) => {
+  return useQuery(
+    ["profile", wallet],
+    async () => {
+      if (!wallet) return null;
+      return getProfile(wallet);
+    },
+    options
+  );
 };
