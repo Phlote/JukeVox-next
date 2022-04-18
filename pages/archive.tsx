@@ -132,6 +132,7 @@ export async function getStaticProps({ params }) {
     props: {
       allSubmissions: await getSubmissionsWithFilter(),
     },
+    revalidate: 60,
   };
 }
 
