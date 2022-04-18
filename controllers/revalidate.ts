@@ -5,13 +5,12 @@ export const revalidateArchive = async () => {
   // revalidate the archive page
   // if they have a profile, revalidate their profile
 
-  nextApiRequest(`revalidate`, "POST", { page: "/archive" });
+  nextApiRequest(`revalidate`, "POST", { path: "/archive" });
 };
 
 export const revalidateProfile = async (username: string) => {
   // when a user submits something
   // revalidate the archive page
   // if they have a profile, revalidate their profile
-
-  nextApiRequest(`revalidate`, "POST", { page: `/profile/${username}` });
+  nextApiRequest(`revalidate`, "POST", { path: `/profile/${username}` });
 };

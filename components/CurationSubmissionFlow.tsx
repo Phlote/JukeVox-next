@@ -45,7 +45,7 @@ export const CurationSubmissionFlow: React.FC = (props) => {
       queryClient.invalidateQueries("submissions");
       await revalidateArchive();
       if (profile?.data?.username)
-        await revalidateProfile(profile?.data?.username);
+        await revalidateProfile(profile.data.username);
     } catch (e) {
       toast.error(e);
       console.error(e);
