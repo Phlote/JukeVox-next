@@ -31,7 +31,6 @@ export const ProfileSettingsForm = ({ wallet }) => {
   const onSubmit = async (formData: Partial<UserProfile>) => {
     setSubmitting(true);
     try {
-      console.log(formData);
       const { username, city, twitter } = formData;
       const { data, error } = await supabase
         .from("profiles")

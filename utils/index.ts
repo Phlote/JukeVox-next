@@ -7,7 +7,9 @@ export function nextApiRequest(
 ): Promise<Record<string, any>> {
   return fetch(`/api/${path}`, {
     method: method,
-    headers: {},
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: data ? JSON.stringify(data) : undefined,
   }).then((response) => {
     if (!response.ok) throw `Error calling /api/${path}`;
