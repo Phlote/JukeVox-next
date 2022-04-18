@@ -135,9 +135,9 @@ export async function getStaticProps({ params }) {
 
 export async function getStaticPaths() {
   const submissions = await getSubmissionsWithFilter();
-  const paths = submissions.map(({ curatorWallet }) => ({
+  const paths = submissions.map(({ username }) => ({
     params: {
-      wallet: curatorWallet,
+      username,
     },
   }));
 
