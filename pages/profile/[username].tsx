@@ -133,14 +133,11 @@ export async function getStaticProps({ params }) {
   if (profilesQuery.error) throw profilesQuery.error;
   // TODO this is a bit redundant, update the profiles table
   const { wallet } = profilesQuery.data[0];
-  console.log(username);
-  console.log(wallet);
-  const profile = await getProfileForWallet(wallet);
-  console.log(profile);
+
   return {
     props: {
       submissions: await getSubmissionsWithFilter({ username }),
-      profile,
+      profile: await getProfileForWallet(wallet),
     },
     revalidate: 60,
   };
