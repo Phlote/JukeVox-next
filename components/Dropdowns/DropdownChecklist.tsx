@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { ethers } from "ethers";
 import React from "react";
-import { Username } from "../Username";
+import { ShortenedWallet } from "../ShortenedWallet";
 
 interface DropdownChecklist {
   fields: string[];
@@ -39,7 +39,7 @@ export const DropdownChecklist: React.FC<DropdownChecklist> = ({
         const isAddress = ethers.utils.isAddress(field);
         return (
           <div
-            className="w-full h-14 flex justify-left items-center"
+            className="w-full sm:h-14 h-12 flex justify-left items-center"
             key={field}
             onClick={() => {
               onChange(field);
@@ -55,7 +55,7 @@ export const DropdownChecklist: React.FC<DropdownChecklist> = ({
             ></input>
             <div className="w-4" />
             <label className="text-xl" htmlFor={field}>
-              {isAddress ? <Username wallet={field} /> : field}
+              {isAddress ? <ShortenedWallet wallet={field} /> : field}
             </label>
           </div>
         );

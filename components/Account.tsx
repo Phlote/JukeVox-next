@@ -86,7 +86,7 @@ const AccountDropdown = (props) => {
       </div>
 
       {dropdownOpen && (
-        <div className="absolute sm:top-14 bottom-16">
+        <div className="absolute sm:top-14 bottom-16 z-20">
           <DropdownActions>
             <div
               className="cursor-pointer m-4 text-center text-xl hover:opacity-50 flex items-center"

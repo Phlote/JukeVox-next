@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { HollowInput, HollowInputContainer } from ".";
 import Image from "next/image";
+import React, { useState } from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
+import { HollowInput, HollowInputContainer } from ".";
 
 interface TagsInput {
   value: string[];
@@ -69,24 +69,27 @@ export const HollowTagsInput: React.FC<TagsInput> = ({
           onChange={localOnChange}
         ></HollowInput>
       </HollowInputContainer>
-      <div className="h-3" />
-      <div className="flex pl-1 flex-wrap w-full gap-4">
-        {value &&
-          value.map((tag, index) => (
-            <Tag key={`${tag}${index}`}>
-              {tag}
-              <div className="w-1" />
-              <Image
-                className="cursor-pointer"
-                onClick={() => deleteTag(index)}
-                src="/close.svg"
-                alt="delete"
-                height={12}
-                width={12}
-              />
-            </Tag>
-          ))}
-      </div>
+      {value && (
+        <>
+          <div className="h-3" />
+          <div className="flex pl-1 flex-wrap w-full gap-4">
+            {value.map((tag, index) => (
+              <Tag key={`${tag}${index}`}>
+                {tag}
+                <div className="w-1" />
+                <Image
+                  className="cursor-pointer"
+                  onClick={() => deleteTag(index)}
+                  src="/close.svg"
+                  alt="delete"
+                  height={12}
+                  width={12}
+                />
+              </Tag>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };

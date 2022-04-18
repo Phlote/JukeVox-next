@@ -1,30 +1,27 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { useProfile } from "./Forms/ProfileSettingsForm";
+import { Curation } from "../types/curations";
 import { ShortenedWallet } from "./ShortenedWallet";
-
 interface Username {
-  wallet: string;
-  linkToProfile?: boolean;
+  submission: Curation;
+  linkToProfile: boolean;
 }
 
-export const Username: React.FC<Username> = ({ wallet, linkToProfile }) => {
-  const profileQuery = useProfile(wallet);
-  const router = useRouter();
+export const Username: React.FC<Username> = ({ submission, linkToProfile }) => {
+  const { username, curatorWallet } = submission;
 
-  const username = profileQuery?.data?.username ? (
-    profileQuery?.data?.username
+  const content = username ? (
+    username
   ) : (
-    <ShortenedWallet wallet={wallet} />
+    <ShortenedWallet wallet={curatorWallet} />
   );
 
   if (linkToProfile && username) {
     return (
-      <Link href={`/profile/${encodeURIComponent(wallet)}`} passHref>
-        <div className="hover:opacity-50 cursor-pointer">{username}</div>
+      <Link href={`/profile/${username}`} passHref>
+        <div className="hover:opacity-50 cursor-pointer">{content}</div>
       </Link>
     );
   }
 
-  return <div>{username}</div>;
+  return <span>{content}</span>;
 };

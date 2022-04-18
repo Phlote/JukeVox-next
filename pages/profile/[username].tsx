@@ -7,6 +7,7 @@ import {
   SubmissionDate,
 } from "../../components/Tables/archive";
 import { UserStatsBar } from "../../components/UserStatsBar";
+import { supabase } from "../../lib/supabase";
 import {
   getProfileForWallet,
   getSubmissionsWithFilter,
@@ -114,6 +115,16 @@ Profile.getLayout = function getLayout(page) {
 // params will contain the wallet for each generated page.
 export async function getStaticProps({ params }) {
   const { username } = params;
+
+  const profilesQuery = await supabase
+    .from("profiles")
+    .select()
+    .match({ username });
+
+  if (profilesQuery.error) throw profilesQuery.error;
+
+  const { wallet } = profilesQuery.data[0];
+
   return {
     props: {
       submissions: await getSubmissionsWithFilter({ username }),

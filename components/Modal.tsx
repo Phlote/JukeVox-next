@@ -46,7 +46,7 @@ export const MobileModal: React.FC<ModalProps> = ({
 }) => {
   return (
     <div
-      className="z-20 flex w-screen h-screen justify-center items-center fixed bg-phlote-ff-modal py-8"
+      className="flex justify-center items-center z-20 w-screen h-screen fixed bg-phlote-ff-modal overflow-y-scroll overflow-x-hidden"
       style={!open ? { display: "none" } : undefined}
     >
       <div
@@ -55,8 +55,7 @@ export const MobileModal: React.FC<ModalProps> = ({
       >
         <Close fill="white" height={16} width={16} />
       </div>
-      <div></div>
-      {children}
+      <div className="h-full mx-8">{children}</div>
     </div>
   );
 };
