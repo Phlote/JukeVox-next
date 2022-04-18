@@ -134,8 +134,11 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-  const submissions = await getSubmissionsWithFilter();
-  const paths = submissions.map(({ username }) => ({
+  const profilesQuery = await supabase.from("profiles").select();
+
+  if (profilesQuery.error) throw profilesQuery.error;
+
+  const paths = profilesQuery.data.map(({ username }) => ({
     params: {
       username,
     },
