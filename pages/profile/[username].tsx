@@ -145,9 +145,5 @@ export async function getStaticPaths() {
     },
   }));
 
-  // fallback: false means pages that don’t have the
-  // correct id will 404.
-
-  //TODO we should set a fallback so that people without profiles will see something
-  return { paths, fallback: false };
+  return { paths, fallback: true };
 }
