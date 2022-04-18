@@ -5,7 +5,10 @@ import { useField, useForm } from "react-final-form-hooks";
 import { useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { getProfile } from "../../controllers/profiles";
-import { revalidateProfile } from "../../controllers/revalidate";
+import {
+  revalidateArchive,
+  revalidateProfile,
+} from "../../controllers/revalidate";
 import { supabase } from "../../lib/supabase";
 import {
   HollowButton,
@@ -53,6 +56,7 @@ export const ProfileSettingsForm = ({ wallet }) => {
 
       await queryClient.invalidateQueries(["profile", wallet]);
       await revalidateProfile(username);
+      await revalidateArchive();
 
       toast.success("Submitted!");
     } catch (e) {
