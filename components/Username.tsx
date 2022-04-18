@@ -1,3 +1,4 @@
+import { ethers } from "ethers";
 import Link from "next/link";
 import { ShortenedWallet } from "./ShortenedWallet";
 interface Username {
@@ -9,7 +10,11 @@ interface Username {
 export const Username: React.FC<Username> = (props) => {
   const { wallet, username, linkToProfile } = props;
 
-  const content = username ? username : <ShortenedWallet wallet={wallet} />;
+  let content;
+
+  if (wallet && ethers.utils.isAddress(wallet))
+    content = <ShortenedWallet wallet={wallet} />;
+  if (username) content = username;
 
   if (linkToProfile && username) {
     return (
