@@ -3,11 +3,9 @@ import { atom, useAtom } from "jotai";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import { indexSubmission } from "../controllers/elastic";
 import { revalidate } from "../controllers/revalidate";
-import { supabase } from "../lib/supabase";
+import { submit } from "../controllers/submissions";
 import { Curation } from "../types/curations";
-import { nextApiRequest } from "../utils";
 import { verifyUser } from "../utils/web3";
 import { CurationSubmissionForm } from "./Forms/CurationSubmissionForm";
 import { useProfile } from "./Forms/ProfileSettingsForm";
@@ -38,19 +36,7 @@ export const CurationSubmissionFlow: React.FC = (props) => {
         throw "Not Authenticated";
       }
 
-      const { cid } = await nextApiRequest(
-        "store-submission-on-ipfs",
-        "POST",
-        curation
-      );
-
-      const { data, error } = await supabase
-        .from("submissions")
-        .insert([{ curatorWallet: account, cid, ...curation }]);
-
-      if (error) throw error;
-
-      await indexSubmission(data[0] as Curation);
+      await submit(curation, account);
 
       setPage(1);
       queryClient.invalidateQueries("submissions");
