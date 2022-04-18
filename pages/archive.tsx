@@ -67,6 +67,7 @@ function Archive(props) {
                   marketplace,
                   submissionTime,
                   cosigns,
+                  username,
                 } = curation;
 
                 return (
@@ -89,7 +90,7 @@ function Archive(props) {
                       <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>
-                        <Username submission={curation} linkToProfile />
+                        <Username username={username} linkToProfile />
                       </ArchiveTableDataCell>
                       <ArchiveTableDataCell>
                         <RatingsMeter

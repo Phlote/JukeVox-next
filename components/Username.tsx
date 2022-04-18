@@ -1,19 +1,15 @@
 import Link from "next/link";
-import { Curation } from "../types/curations";
 import { ShortenedWallet } from "./ShortenedWallet";
 interface Username {
-  submission: Curation;
-  linkToProfile: boolean;
+  wallet?: string;
+  username?: string;
+  linkToProfile?: boolean;
 }
 
-export const Username: React.FC<Username> = ({ submission, linkToProfile }) => {
-  const { username, curatorWallet } = submission;
+export const Username: React.FC<Username> = (props) => {
+  const { wallet, username, linkToProfile } = props;
 
-  const content = username ? (
-    username
-  ) : (
-    <ShortenedWallet wallet={curatorWallet} />
-  );
+  const content = username ? username : <ShortenedWallet wallet={wallet} />;
 
   if (linkToProfile && username) {
     return (
