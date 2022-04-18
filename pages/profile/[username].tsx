@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import Layout, { ArchiveLayout } from "../../components/Layouts";
 import { RatingsMeter } from "../../components/RatingsMeter";
 import {
@@ -14,7 +15,15 @@ import {
 } from "../../utils/supabase";
 
 export default function Profile(props) {
+  const router = useRouter();
   const { submissions, profile } = props;
+  console.log("submissions:\n ", submissions);
+  console.log("profile:\n", profile);
+
+  if (router.isFallback) {
+    //TODO better loading
+    return <div>Loading...</div>;
+  }
 
   return (
     <ArchiveLayout>
@@ -126,10 +135,12 @@ export async function getStaticProps({ params }) {
   const { wallet } = profilesQuery.data[0];
   console.log(username);
   console.log(wallet);
+  const profile = await getProfileForWallet(wallet);
+  console.log(profile);
   return {
     props: {
       submissions: await getSubmissionsWithFilter({ username }),
-      profile: await getProfileForWallet(wallet),
+      profile,
     },
     revalidate: 60,
   };
