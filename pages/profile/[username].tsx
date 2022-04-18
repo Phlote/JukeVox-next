@@ -113,13 +113,13 @@ Profile.getLayout = function getLayout(page) {
 
 // params will contain the wallet for each generated page.
 export async function getStaticProps({ params }) {
-  const { wallet } = params;
+  const { username } = params;
   return {
     props: {
-      submissions: await getSubmissionsWithFilter({ curatorWallet: wallet }),
+      submissions: await getSubmissionsWithFilter({ username }),
       profile: await getProfileForWallet(wallet),
     },
-    revalidate: 60,
+    revalidate: 10,
   };
 }
 
@@ -130,7 +130,6 @@ export async function getStaticPaths() {
       wallet: curatorWallet,
     },
   }));
-  console.log(paths);
 
   // fallback: false means pages that don’t have the
   // correct id will 404.
