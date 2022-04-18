@@ -49,7 +49,7 @@ export const ProfileSettingsForm = ({ wallet }) => {
 
       toast.success("Submitted!");
     } catch (e) {
-      toast.error(e.message);
+      toast.error(e);
     } finally {
       setSubmitting(false);
     }

@@ -2,7 +2,7 @@ import { Web3ReactProvider } from "@web3-react/core";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import Head from "next/head";
-import { ReactElement, ReactNode } from "react";
+import React, { ReactElement, ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -21,6 +21,13 @@ type AppPropsWithLayout = AppProps & {
 };
 
 const NextWeb3App = ({ Component, pageProps }: AppPropsWithLayout) => {
+  // React.useEffect(() => {
+  //   if (window)
+  //     window.addEventListener("unhandledrejection", function (event) {
+  //       toast.error(event.reason);
+  //     });
+  // }, []);
+
   if (process.env.NEXT_PUBLIC_MAINTENANCE) {
     return <div>Down for maintenance. Try again later!</div>;
   }

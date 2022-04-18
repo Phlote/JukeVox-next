@@ -8,6 +8,8 @@ export default async function handler(req, res) {
 
   const { path } = req.body;
 
+  throw "Fuck you";
+
   try {
     console.log("Revalidating: ", path);
     await res.unstable_revalidate(path);

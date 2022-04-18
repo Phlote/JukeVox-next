@@ -7,11 +7,13 @@ export function nextApiRequest(
 ): Promise<Record<string, any>> {
   return fetch(`/api/${path}`, {
     method: method,
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: {},
     body: data ? JSON.stringify(data) : undefined,
-  }).then((response) => response.json());
+  }).then((response) => {
+    if (!response.ok) throw `Error calling /api/${path}`;
+
+    return response.json();
+  });
 }
 
 export const curationToElasticSearchDocument = (curation: Curation) => {
