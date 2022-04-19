@@ -20,9 +20,11 @@ function Home() {
       <div className="sm:hidden text-center mx-4">
         <h1 className="text-6xl">Phlote</h1>
         <div className="h-16"></div>
-        <p>Help us save talented artists from being lost on the internet.</p>
+        <p>Save talented artists from being lost on the internet forever. </p>
         <br />
-        <p>Submit the music of your favorite independent artists.</p>
+        <p>
+          Submit links to the music of your favorite independent artists below.
+        </p>
       </div>
 
       <div className="hidden sm:block">

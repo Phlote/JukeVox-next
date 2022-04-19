@@ -48,7 +48,10 @@ export const ConnectWalletModal = () => {
         <div className="flex-grow w-full flex justify-center items-center">
           <div className="w-3/4 grid grid-cols-1 gap-4">
             <WalletConnectButton />
-            <InjectedConnectorButton />
+            <div className="sm:block hidden">
+              <InjectedConnectorButton />
+            </div>
+
             {isUnsupportedChainId && (
               <p className="text-red-500">
                 {
