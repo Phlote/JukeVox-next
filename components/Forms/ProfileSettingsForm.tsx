@@ -31,9 +31,15 @@ export const ProfileSettingsForm = ({ wallet }) => {
     setSubmitting(true);
     try {
       const { username, city, twitter } = formData;
-      const { data, error } = await supabase
-        .from("profiles")
-        .upsert({ wallet, username, city, twitter }, { onConflict: "wallet" });
+      const { data, error } = await supabase.from("profiles").upsert(
+        {
+          wallet,
+          username: username?.trim(),
+          city: city?.trim(),
+          twitter: twitter?.trim(),
+        },
+        { onConflict: "wallet" }
+      );
       if (error) throw error;
 
       const submissionsUpdate = await supabase
