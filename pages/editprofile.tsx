@@ -14,16 +14,18 @@ function ProfileEdit() {
     <>
       <ProfileSettingsForm wallet={account} />
 
-      <HollowButtonContainer
-        className="bottom-24 right-0 cursor-pointer"
-        style={{ position: "absolute" }}
-        onClick={() => router.push(`/profile?wallet=${account}`)}
-      >
-        <HollowButton>
-          View My Curations{" "}
-          <Image src="/arrow.svg" alt={"link"} height={12} width={12} />
-        </HollowButton>
-      </HollowButtonContainer>
+      <div className="lg:block hidden">
+        <HollowButtonContainer
+          className="bottom-24 right-10 cursor-pointer"
+          style={{ position: "absolute" }}
+          onClick={() => router.push(`/profile?wallet=${account}`)}
+        >
+          <HollowButton>
+            View My Curations{" "}
+            <Image src="/arrow.svg" alt={"link"} height={12} width={12} />
+          </HollowButton>
+        </HollowButtonContainer>
+      </div>
     </>
   );
 }
@@ -31,7 +33,7 @@ function ProfileEdit() {
 ProfileEdit.getLayout = function getLayout(page) {
   return (
     <Layout>
-      <div className="container flex justify-center max-h-max items-center flex-grow  relative">
+      <div className="container flex justify-center items-center mx-auto flex-grow">
         {page}
       </div>
     </Layout>
