@@ -17,7 +17,7 @@ function Home() {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <div className="sm:hidden text-center mx-4">
+      <div className="sm:hidden text-center mx-4 flex flex-col justify-center items-center">
         <h1 className="text-6xl">Phlote</h1>
         <div className="h-16"></div>
         <p>Save talented artists from being lost on the internet forever. </p>

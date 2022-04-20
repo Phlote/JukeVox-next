@@ -33,7 +33,7 @@ function ProfileEdit() {
 ProfileEdit.getLayout = function getLayout(page) {
   return (
     <Layout>
-      <div className="container flex justify-center items-center mx-auto flex-grow">
+      <div className="container flex justify-center mx-auto flex-grow">
         {page}
       </div>
     </Layout>

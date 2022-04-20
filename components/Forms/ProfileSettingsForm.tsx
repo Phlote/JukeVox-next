@@ -111,7 +111,8 @@ export const ProfileSettingsForm = ({ wallet }) => {
   // );
 
   return (
-    <div className="grid lg:grid-cols-2 grid-cols-1 w-10/12 md:gap-16 gap-8 h-full">
+    // <div className="grid lg:grid-cols-2 grid-cols-1 w-10/12 md:gap-16 gap-8 h-full flex flex-grow">
+    <div className="grid lg:grid-cols-2 grid-cols-1 w-10/12  min-h-full flex flex-grow">
       <div className="flex justify-center items-center">
         <ProfilePictureUpload wallet={wallet} />
       </div>
@@ -187,7 +188,7 @@ const ProfilePictureUpload = ({ wallet }) => {
   const [isHovering, setIsHovering] = React.useState<boolean>();
   return (
     <div
-      className="lg:w-80 lg:h-80 w-60 h-60 border-2 border-white rounded-full flex justify-center items-center relative"
+      className="lg:w-80 lg:h-80 w-1/2 h-1/2 border-2 border-white rounded-full flex justify-center items-center relative"
       {...getRootProps()}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}

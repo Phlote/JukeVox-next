@@ -1,6 +1,6 @@
 import { ConnectWalletModal } from "./Modals/ConnectWalletModal";
 import { MobileSubmissionModal } from "./Modals/MobileSubmissionModal";
-import { NavBar } from "./NavBar";
+import { NavBarDesktop, NavBarMobileWeb } from "./NavBar";
 import { SubmitSidenav } from "./SideNav";
 
 export default function Layout({ children }) {
@@ -13,8 +13,13 @@ export default function Layout({ children }) {
         <MobileSubmissionModal />
       </div>
       <ConnectWalletModal />
-      <NavBar />
+      <div className="hidden sm:flex">
+        <NavBarDesktop />
+      </div>
       {children}
+      <div className="sm:hidden ">
+        <NavBarMobileWeb />
+      </div>
     </div>
   );
 }
