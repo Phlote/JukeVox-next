@@ -37,7 +37,7 @@ function Home() {
 Home.getLayout = function getLayout(page) {
   return (
     <Layout>
-      <div className="container flex justify-center mx-auto max-h-max items-center flex-grow">
+      <div className="container flex justify-center mx-auto items-center flex-grow">
         {page}
       </div>
       <Footer />
