@@ -5,7 +5,7 @@ import { SubmitSidenav } from "./SideNav";
 
 export default function Layout({ children }) {
   return (
-    <div className="min-h-screen flex flex-col w-full overflow-y-auto	">
+    <div className="min-h-screen flex flex-col w-full overflow-y-auto">
       <div className="hidden sm:block">
         <SubmitSidenav />
       </div>
