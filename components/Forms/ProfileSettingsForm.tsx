@@ -112,12 +112,12 @@ export const ProfileSettingsForm = ({ wallet }) => {
 
   return (
     // <div className="grid lg:grid-cols-2 grid-cols-1 w-10/12 md:gap-16 gap-8 h-full flex flex-grow">
-    <div className="grid lg:grid-cols-2 grid-cols-1 w-10/12  min-h-full flex flex-grow">
+    <div className="grid lg:grid-cols-2 grid-cols-1 w-10/12 md:gap-16 gap-1 min-h-full flex flex-grow my-8">
       <div className="flex justify-center items-center">
         <ProfilePictureUpload wallet={wallet} />
       </div>
 
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center justify-center">
         <div className="grid grid-cols-1 gap-4 lg:w-full w-3/4">
           <HollowInputContainer type="form">
             {username.meta.error && (
@@ -188,7 +188,7 @@ const ProfilePictureUpload = ({ wallet }) => {
   const [isHovering, setIsHovering] = React.useState<boolean>();
   return (
     <div
-      className="lg:w-80 lg:h-80 w-1/2 h-1/2 border-2 border-white rounded-full flex justify-center items-center relative"
+      className="lg:w-80 lg:h-80 md:w-44 md:h-44 w-28 h-28 border-2 border-white rounded-full flex justify-center items-center text-center relative"
       {...getRootProps()}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}

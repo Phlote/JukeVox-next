@@ -16,7 +16,7 @@ function ProfileEdit() {
 
       <div className="lg:block hidden">
         <HollowButtonContainer
-          className="bottom-24 right-10 cursor-pointer"
+          className="bottom-20 right-10 cursor-pointer"
           style={{ position: "absolute" }}
           onClick={() => router.push(`/profile?wallet=${account}`)}
         >
