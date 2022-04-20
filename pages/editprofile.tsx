@@ -12,6 +12,19 @@ function ProfileEdit() {
 
   return (
     <>
+      <div
+        className="sm:hidden absolute top-5 left-5"
+        onClick={() => router.back()}
+      >
+        <Image
+          // className={dropdownOpen ? "-rotate-90" : "rotate-90"}
+          className="rotate-180"
+          src={"/chevron.svg"}
+          alt="dropdown"
+          height={16}
+          width={16}
+        />
+      </div>
       <ProfileSettingsForm wallet={account} />
 
       <div className="lg:block hidden">
