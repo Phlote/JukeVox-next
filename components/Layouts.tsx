@@ -5,20 +5,22 @@ import { SubmitSidenav } from "./SideNav";
 
 export default function Layout({ children }) {
   return (
-    <div className="min-h-screen flex flex-col w-full overflow-y-auto">
-      <div className="hidden sm:block">
-        <SubmitSidenav />
-      </div>
-      <div className="sm:hidden block">
-        <MobileSubmissionModal />
-      </div>
-      <ConnectWalletModal />
-      <div className="hidden sm:flex">
-        <NavBarDesktop />
-      </div>
-      {children}
-      <div className="sm:hidden ">
-        <NavBarMobileWeb />
+    <div className="absolute inset-0">
+      <div className="h-screen flex flex-col w-full overflow-y-auto overflow-x-hidden">
+        <div className="hidden sm:block">
+          <SubmitSidenav />
+        </div>
+        <div className="sm:hidden block">
+          <MobileSubmissionModal />
+        </div>
+        <ConnectWalletModal />
+        <div className="hidden sm:flex">
+          <NavBarDesktop />
+        </div>
+        {children}
+        <div className="sm:hidden ">
+          <NavBarMobileWeb />
+        </div>
       </div>
     </div>
   );
