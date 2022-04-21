@@ -27,7 +27,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
   const tags = useField("tags", form);
 
   return (
-    <div className="grid grid-cols-1 gap-3">
+    <div className="grid grid-cols-1 gap-3 md:my-8">
       <HollowInputContainer type="form">
         <HollowInput {...mediaURI.input} type="text" placeholder="Link" />
         {mediaURI.meta.touched && mediaURI.meta.error && (

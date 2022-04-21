@@ -72,12 +72,14 @@ export const ProfileSettingsForm = ({ wallet }) => {
   const twitter = useField("twitter", form);
 
   return (
-    <div className="flex flex-row w-10/12">
-      <div className="w-1/2">
+    // <div className="grid lg:grid-cols-2 grid-cols-1 w-10/12 md:gap-16 gap-8 h-full flex flex-grow">
+    <div className="grid lg:grid-cols-2 grid-cols-1 w-10/12 md:gap-16 gap-1 max-h-full flex flex-grow my-8">
+      <div className="flex justify-center items-center">
         <ProfilePictureUpload wallet={wallet} />
       </div>
-      <div className="flex flex-col items-center w-1/2">
-        <div className="grid grid-cols-1 gap-4 w-full mr-auto my-auto relative">
+
+      <div className="flex flex-col items-center justify-center">
+        <div className="grid grid-cols-1 gap-4 lg:w-full w-3/4">
           <HollowInputContainer type="form">
             {username.meta.error && (
               <p className="absolute text-red-600 -top-10">
@@ -102,10 +104,15 @@ export const ProfileSettingsForm = ({ wallet }) => {
               <span className="text-red-600 ml-2">{twitter.meta.error}</span>
             )}
           </HollowInputContainer>
+          <div className="w-full flex justify-center items-center">
+            <HollowButtonContainer
+              className="lg:w-1/4  w-full"
+              onClick={handleSubmit}
+            >
+              <HollowButton disabled={submitting}>Submit</HollowButton>
+            </HollowButtonContainer>
+          </div>
         </div>
-        <HollowButtonContainer className="w-1/4" onClick={handleSubmit}>
-          <HollowButton disabled={submitting}>Submit</HollowButton>
-        </HollowButtonContainer>
       </div>
     </div>
   );
@@ -142,7 +149,7 @@ const ProfilePictureUpload = ({ wallet }) => {
   const [isHovering, setIsHovering] = React.useState<boolean>();
   return (
     <div
-      className="w-80 h-80 border-2 border-white rounded-full flex justify-center items-center relative"
+      className="lg:w-80 lg:h-80 md:w-44 md:h-44 w-28 h-28 border-2 border-white rounded-full flex justify-center items-center text-center relative"
       {...getRootProps()}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}

@@ -17,12 +17,14 @@ function Home() {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <div className="sm:hidden text-center mx-4">
+      <div className="sm:hidden text-center mx-4 flex flex-col justify-center items-center">
         <h1 className="text-6xl">Phlote</h1>
         <div className="h-16"></div>
-        <p>Help us save talented artists from being lost on the internet.</p>
+        <p>Save talented artists from being lost on the internet forever. </p>
         <br />
-        <p>Submit the music of your favorite independent artists.</p>
+        <p>
+          Submit links to the music of your favorite independent artists below.
+        </p>
       </div>
 
       <div className="hidden sm:block">
@@ -35,7 +37,7 @@ function Home() {
 Home.getLayout = function getLayout(page) {
   return (
     <Layout>
-      <div className="container flex justify-center mx-auto max-h-max items-center flex-grow">
+      <div className="container flex justify-center mx-auto items-center flex-grow">
         {page}
       </div>
       <Footer />
