@@ -22,13 +22,13 @@ export const useSearchFilters = () => useAtom(searchFiltersAtom);
 
 export const useSubmissionSearch = (searchTerm = "") => {
   const [filters] = useSearchFilters();
-  const isCurator = useIsCurator();
+  const isCuratorQuery = useIsCurator();
 
   const { data } = useQuery(
-    ["search", searchTerm, filters, isCurator],
+    ["search", searchTerm, filters, isCuratorQuery?.data?.isCurator],
     async () =>
-      searchSubmissions(searchTerm, filters, isCurator.data.isCurator),
-    { keepPreviousData: true, enabled: isCurator.isSuccess }
+      searchSubmissions(searchTerm, filters, isCuratorQuery?.data?.isCurator),
+    { keepPreviousData: true, enabled: isCuratorQuery?.isSuccess }
   );
 
   return data ?? [];

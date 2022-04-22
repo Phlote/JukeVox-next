@@ -40,7 +40,7 @@ export const NavBarDesktop = (props) => {
   const router = useRouter();
   const { active, account } = useWeb3React();
   const profileQuery = useProfile(account);
-  const isCurator = useIsCurator();
+  const isCuratorQuery = useIsCurator();
 
   return (
     <div className="py-4 flex-none w-screen px-12">
@@ -58,19 +58,21 @@ export const NavBarDesktop = (props) => {
             </Link>
           </NavBarElementContainer>
         )}
-        {active && profileQuery?.data?.username && isCurator.data.isCurator && (
-          <NavBarElementContainer>
-            <Link
-              href={"/profile/[username]"}
-              as={`/profile/${profileQuery.data.username}`}
-              passHref
-            >
-              <HollowButtonContainer className="flex justify-center items-center ">
-                My Profile
-              </HollowButtonContainer>
-            </Link>
-          </NavBarElementContainer>
-        )}
+        {active &&
+          profileQuery?.data?.username &&
+          isCuratorQuery?.data?.isCurator && (
+            <NavBarElementContainer>
+              <Link
+                href={"/profile/[username]"}
+                as={`/profile/${profileQuery.data.username}`}
+                passHref
+              >
+                <HollowButtonContainer className="flex justify-center items-center ">
+                  My Profile
+                </HollowButtonContainer>
+              </Link>
+            </NavBarElementContainer>
+          )}
         {router.pathname == "/archive" && <SearchBar />}
 
         {active && (
