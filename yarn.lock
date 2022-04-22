@@ -6350,6 +6350,7 @@ __metadata:
     "@metamask/onboarding": ^1.0.1
     "@metamask/types": ^1.0.0
     "@pinata/sdk": ^1.1.23
+    "@supabase/postgrest-js": ^0.37.2
     "@supabase/supabase-js": ^1.31.1
     "@typechain/ethers-v5": ^8.0.5
     "@types/fuzzy-search": ^2.1.2

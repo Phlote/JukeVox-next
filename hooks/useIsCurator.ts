@@ -9,16 +9,14 @@ export const useIsCurator = () => {
   const query = useQuery(
     cacheKey,
     async () => {
-      if (account)
-        return nextApiRequest(`is-curator`, "POST", {
-          wallet: account,
-        }) as Promise<{
-          isCurator: boolean;
-        }>;
-      else return false;
+      return nextApiRequest(`is-curator`, "POST", {
+        wallet: account,
+      }) as Promise<{
+        isCurator: boolean;
+      }>;
     },
-    { refetchOnWindowFocus: false }
+    { refetchOnWindowFocus: false, keepPreviousData: true, enabled: !!account }
   );
 
-  return query.data && query.data.isCurator;
+  return query;
 };
