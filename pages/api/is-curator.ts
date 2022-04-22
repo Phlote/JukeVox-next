@@ -1,5 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { walletIsCurator } from "../../utils/web3";
+import { PHOTE_VOTE_TOKEN_ADDRESS } from "../../utils/constants";
+
+interface PolygonScanTokenBalanceResponse {
+  status: string;
+  message: string;
+  result: string;
+}
 
 export default async function handler(
   request: NextApiRequest,
@@ -7,8 +13,12 @@ export default async function handler(
 ) {
   const { wallet } = request.body;
 
-  const isCurator = await walletIsCurator(wallet);
+  const resp = await fetch(
+    `https://api.polygonscan.com/api?module=account&action=tokenbalance&contractaddress=${PHOTE_VOTE_TOKEN_ADDRESS}&address=${wallet}&tag=latest&apikey=${process.env.POLYGONSCAN_API_KEY}`
+  );
 
+  const { result } = (await resp.json()) as PolygonScanTokenBalanceResponse;
+  const isCurator = parseInt(result) > 0;
   response.status(200).json({
     isCurator,
   });

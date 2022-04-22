@@ -11,7 +11,7 @@ export const useSubmissions = (
 ) => {
   const { data } = useQuery(
     ["submissions", filters, wallet],
-    async () => getSubmissions(filters, wallet),
+    async () => getSubmissions(filters),
     { keepPreviousData: true }
   );
   return data ?? [];

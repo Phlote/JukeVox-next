@@ -2,12 +2,10 @@ import { Curation } from "../types/curations";
 import { nextApiRequest } from "../utils";
 
 export const getSubmissions = async (
-  filters: Partial<Curation> = {},
-  wallet: string = undefined
+  filters: Partial<Curation> = {}
 ): Promise<Curation[]> => {
   return nextApiRequest(`get-submissions`, "POST", {
     filters,
-    wallet,
   }) as Promise<Curation[]>;
 };
 
