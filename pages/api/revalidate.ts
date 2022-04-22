@@ -13,11 +13,9 @@ export default async function handler(
   const { username } = req.body;
 
   try {
-    console.log("Revalidating: /archive");
-    await res.unstable_revalidate("/archive");
     if (username) {
       console.log(`Revalidating: /profile/${username}`);
-      await res.unstable_revalidate("/archive");
+      await res.unstable_revalidate(`/profile/${username}`);
     } else console.log("username not provided or was falsy");
 
     return res.json({ revalidated: true });
