@@ -12,9 +12,25 @@ import { SearchBar } from "./SearchBar";
 
 export const NavBarMobileWeb = () => {
   const [, setOpen] = useSubmissionFlowOpen();
-  const { active } = useWeb3React();
+  const router = useRouter();
+  const { active, account } = useWeb3React();
+  const isCurator = useIsCurator();
   return (
     <div className="w-screen flex flex-row flex-none bg-phlote-container divide-x ">
+      {/* {active && (
+        <MobileNavBarElementContainer>
+          <Link href="/archive" passHref>
+            Index
+          </Link>
+        </MobileNavBarElementContainer>
+      )}*/}
+      {/* {active && account && isCurator && (
+        <MobileNavBarElementContainer>
+          <Link href={`/profile/${account}`} passHref>
+            My Profile
+          </Link>
+        </MobileNavBarElementContainer>
+      )} */}
       {active && (
         <MobileNavBarElementContainer
           className="focus:opacity-25"
@@ -40,8 +56,7 @@ export const NavBarDesktop = (props) => {
   const router = useRouter();
   const { active, account } = useWeb3React();
   const profileQuery = useProfile(account);
-  const isCuratorQuery = useIsCurator();
-
+  const isCurator = useIsCurator();
   return (
     <div className="py-4 flex-none w-screen px-12">
       <div className="relative flex flex-row gap-4" style={{ height: 70 }}>
@@ -58,21 +73,19 @@ export const NavBarDesktop = (props) => {
             </Link>
           </NavBarElementContainer>
         )}
-        {active &&
-          profileQuery?.data?.username &&
-          isCuratorQuery?.data?.isCurator && (
-            <NavBarElementContainer>
-              <Link
-                href={"/profile/[username]"}
-                as={`/profile/${profileQuery.data.username}`}
-                passHref
-              >
-                <HollowButtonContainer className="flex justify-center items-center ">
-                  My Profile
-                </HollowButtonContainer>
-              </Link>
-            </NavBarElementContainer>
-          )}
+        {active && profileQuery?.data?.username && isCurator && (
+          <NavBarElementContainer>
+            <Link
+              href={"/profile/[username]"}
+              as={`/profile/${profileQuery.data.username}`}
+              passHref
+            >
+              <HollowButtonContainer className="flex justify-center items-center ">
+                My Profile
+              </HollowButtonContainer>
+            </Link>
+          </NavBarElementContainer>
+        )}
         {router.pathname == "/archive" && <SearchBar />}
 
         {active && (

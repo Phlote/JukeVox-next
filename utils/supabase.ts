@@ -1,19 +1,14 @@
-import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 import { cleanSubmission } from ".";
 import { UserProfile } from "../components/Forms/ProfileSettingsForm";
 import { supabase } from "../lib/supabase";
 import { Curation } from "../types/curations";
 
 export const getSubmissionsWithFilter = async (
-  selectStatement: PostgrestFilterBuilder<any> = null,
-  filters: Partial<Curation> = null,
-  isCurator: boolean = false
+  filters: Partial<Curation> = {}
 ) => {
-  if (!selectStatement) selectStatement = supabase.from("submissions").select();
+  let selectStatement = supabase.from("submissions").select();
 
-  if (!isCurator) selectStatement = selectStatement.not("cosigns", "is", null);
-
-  if (filters) selectStatement = selectStatement.match(filters);
+  if (filters !== {}) selectStatement = selectStatement.match(filters);
 
   const { data, error } = await selectStatement;
   if (error) throw error;
@@ -55,7 +50,7 @@ export const getProfileForWallet = async (wallet: string) => {
 
   const submissions = submissionsQuery.data as Curation[];
   const cosigns = submissions.reduce(
-    (acc, curr) => acc + (curr?.cosigns?.length ?? 0),
+    (acc, curr) => acc + curr.cosigns.length,
     0
   );
 

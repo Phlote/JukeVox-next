@@ -3,14 +3,10 @@ import { useQuery } from "react-query";
 import { searchSubmissions } from "../controllers/search";
 import { getSubmissions } from "../controllers/submissions";
 import { Curation } from "../types/curations";
-import { useIsCurator } from "./useIsCurator";
 
-export const useSubmissions = (
-  filters: Partial<Curation> = {},
-  wallet: string = undefined
-) => {
+export const useSubmissions = (filters: Partial<Curation> = {}) => {
   const { data } = useQuery(
-    ["submissions", filters, wallet],
+    ["submissions", filters],
     async () => getSubmissions(filters),
     { keepPreviousData: true }
   );
@@ -22,13 +18,10 @@ export const useSearchFilters = () => useAtom(searchFiltersAtom);
 
 export const useSubmissionSearch = (searchTerm = "") => {
   const [filters] = useSearchFilters();
-  const isCuratorQuery = useIsCurator();
-
   const { data } = useQuery(
-    ["search", searchTerm, filters, isCuratorQuery?.data?.isCurator],
-    async () =>
-      searchSubmissions(searchTerm, filters, isCuratorQuery?.data?.isCurator),
-    { keepPreviousData: true, enabled: isCuratorQuery?.isSuccess }
+    ["search", searchTerm, filters],
+    async () => searchSubmissions(searchTerm, filters),
+    { keepPreviousData: true }
   );
 
   return data ?? [];

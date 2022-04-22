@@ -7,7 +7,7 @@ export default async function handler(
 ) {
   const { filters } = request.body;
 
-  const submissions = await getSubmissionsWithFilter(null, filters);
+  const submissions = await getSubmissionsWithFilter(filters);
 
   response.status(200).json(submissions);
 }

@@ -48,6 +48,3 @@ export const NETWORKS = {
 
 export const PHLOTE_SIGNATURE_REQUEST_MESSAGE =
   "Sign this message to prove you have access to this wallet. This won't cost you any gas. \n\n";
-
-export const PHOTE_VOTE_TOKEN_ADDRESS =
-  "0x31DA0475d29a452DA24Eb2ed0d41AD53E576b780";
