@@ -1,14 +1,19 @@
 import { useWeb3React } from "@web3-react/core";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import "react-toastify/dist/ReactToastify.css";
-import { ProfileSettingsForm } from "../components/Forms/ProfileSettingsForm";
+import {
+  ProfileSettingsForm,
+  useProfile,
+} from "../components/Forms/ProfileSettingsForm";
 import { HollowButton, HollowButtonContainer } from "../components/Hollow";
 import Layout from "../components/Layouts";
 
 function ProfileEdit() {
   const router = useRouter();
   const { account } = useWeb3React();
+  const profileQuery = useProfile(account);
 
   return (
     <>
@@ -28,16 +33,23 @@ function ProfileEdit() {
       <ProfileSettingsForm wallet={account} />
 
       <div className="lg:block hidden">
-        <HollowButtonContainer
-          className="bottom-20 right-10 cursor-pointer"
-          style={{ position: "absolute" }}
-          onClick={() => router.push(`/profile?wallet=${account}`)}
-        >
-          <HollowButton>
-            View My Curations{" "}
-            <Image src="/arrow.svg" alt={"link"} height={12} width={12} />
-          </HollowButton>
-        </HollowButtonContainer>
+        {profileQuery?.data?.username && (
+          <Link
+            as={`/profile/${profileQuery?.data?.username}`}
+            href="/profile/[username]"
+            passHref
+          >
+            <HollowButtonContainer
+              className="bottom-20 right-10 cursor-pointer"
+              style={{ position: "absolute" }}
+            >
+              <HollowButton>
+                View My Curations{" "}
+                <Image src="/arrow.svg" alt={"link"} height={12} width={12} />
+              </HollowButton>
+            </HollowButtonContainer>
+          </Link>
+        )}
       </div>
     </>
   );

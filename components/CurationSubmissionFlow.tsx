@@ -3,10 +3,12 @@ import { atom, useAtom } from "jotai";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
+import { revalidate } from "../controllers/revalidate";
 import { submit } from "../controllers/submissions";
 import { Curation } from "../types/curations";
 import { verifyUser } from "../utils/web3";
 import { CurationSubmissionForm } from "./Forms/CurationSubmissionForm";
+import { useProfile } from "./Forms/ProfileSettingsForm";
 import { HollowButton, HollowButtonContainer } from "./Hollow";
 
 const submissionFlowOpen = atom<boolean>(false);
@@ -24,6 +26,7 @@ export const CurationSubmissionFlow: React.FC = (props) => {
   }, [open]);
 
   const [loading, setLoading] = useState<boolean>(false);
+  const profile = useProfile(account);
 
   const submitCuration = async (curation: Curation) => {
     setLoading(true);
@@ -37,6 +40,7 @@ export const CurationSubmissionFlow: React.FC = (props) => {
 
       setPage(1);
       queryClient.invalidateQueries("submissions");
+      await revalidate(profile.data.username);
     } catch (e) {
       toast.error(e);
       console.error(e);

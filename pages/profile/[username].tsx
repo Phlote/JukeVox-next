@@ -1,26 +1,33 @@
 import { useRouter } from "next/router";
-import Layout, { ArchiveLayout } from "../components/Layouts";
-import { RatingsMeter } from "../components/RatingsMeter";
+import Layout, { ArchiveLayout } from "../../components/Layouts";
+import { RatingsMeter } from "../../components/RatingsMeter";
 import {
   ArchiveTableDataCell,
   ArchiveTableHeader,
   ArchiveTableRow,
   SubmissionDate,
-} from "../components/Tables/archive";
-import { UserStatsBar } from "../components/UserStatsBar";
-import { useSubmissions } from "../hooks/useSubmissions";
+} from "../../components/Tables/archive";
+import { UserStatsBar } from "../../components/UserStatsBar";
+import { supabase } from "../../lib/supabase";
+import {
+  getProfileForWallet,
+  getSubmissionsWithFilter,
+} from "../../utils/supabase";
 
-const Profile = (props) => {
+export default function Profile(props) {
   const router = useRouter();
-  const { wallet } = router.query;
-  //TODO: we can just query the DB properly now lol
-  const mySubmissions = useSubmissions({ curatorWallet: wallet as string });
+  const { submissions, profile } = props;
+
+  if (router.isFallback) {
+    //TODO better loading
+    return <div>Loading...</div>;
+  }
 
   return (
     <ArchiveLayout>
       <div className="flex flex-col">
         <div className="flex">
-          <div className="flex-grow"></div> <UserStatsBar wallet={wallet} />
+          <div className="flex-grow"></div> <UserStatsBar profile={profile} />
         </div>
 
         <table className="table-fixed w-full text-center mt-8">
@@ -40,10 +47,10 @@ const Profile = (props) => {
             </tr>
           </thead>
 
-          {mySubmissions?.length > 0 && (
+          {submissions?.length > 0 && (
             <tbody>
               <tr className="h-4" />
-              {mySubmissions?.map((curation) => {
+              {submissions?.map((curation) => {
                 const {
                   id,
                   curatorWallet,
@@ -91,7 +98,7 @@ const Profile = (props) => {
             </tbody>
           )}
         </table>
-        {mySubmissions?.length === 0 && (
+        {submissions?.length === 0 && (
           <div
             className="w-full mt-4 flex-grow flex justify-center items-center"
             style={{ color: "rgba(105, 105, 105, 1)" }}
@@ -102,7 +109,7 @@ const Profile = (props) => {
       </div>
     </ArchiveLayout>
   );
-};
+}
 
 Profile.getLayout = function getLayout(page) {
   return (
@@ -112,4 +119,38 @@ Profile.getLayout = function getLayout(page) {
   );
 };
 
-export default Profile;
+// params will contain the wallet for each generated page.
+export async function getStaticProps({ params }) {
+  const { username } = params;
+
+  const profilesQuery = await supabase
+    .from("profiles")
+    .select()
+    .match({ username });
+
+  if (profilesQuery.error) throw profilesQuery.error;
+  // TODO this is a bit redundant, update the profiles table
+  const { wallet } = profilesQuery.data[0];
+
+  return {
+    props: {
+      submissions: await getSubmissionsWithFilter({ username }),
+      profile: await getProfileForWallet(wallet),
+    },
+    revalidate: 60,
+  };
+}
+
+export async function getStaticPaths() {
+  const profilesQuery = await supabase.from("profiles").select();
+
+  if (profilesQuery.error) throw profilesQuery.error;
+
+  const paths = profilesQuery.data.map(({ username }) => ({
+    params: {
+      username,
+    },
+  }));
+
+  return { paths, fallback: true };
+}

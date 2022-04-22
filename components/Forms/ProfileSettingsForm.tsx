@@ -5,6 +5,7 @@ import { useField, useForm } from "react-final-form-hooks";
 import { useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { getProfile } from "../../controllers/profiles";
+import { revalidate } from "../../controllers/revalidate";
 import { supabase } from "../../lib/supabase";
 import {
   HollowButton,
@@ -50,10 +51,10 @@ export const ProfileSettingsForm = ({ wallet }) => {
       if (submissionsUpdate.error) throw submissionsUpdate.error;
 
       await queryClient.invalidateQueries(["profile", wallet]);
-
+      await revalidate(username);
       toast.success("Submitted!");
     } catch (e) {
-      toast.error(e.message);
+      toast.error(e);
     } finally {
       setSubmitting(false);
     }
@@ -178,9 +179,13 @@ const ProfilePictureUpload = ({ wallet }) => {
   );
 };
 
-export const useProfile = (wallet) => {
-  return useQuery(["profile", wallet], async () => {
-    if (!wallet) return null;
-    return getProfile(wallet);
-  });
+export const useProfile = (wallet, options = {}) => {
+  return useQuery(
+    ["profile", wallet],
+    async () => {
+      if (!wallet) return null;
+      return getProfile(wallet);
+    },
+    options
+  );
 };

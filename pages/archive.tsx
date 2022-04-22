@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Layout, { ArchiveLayout } from "../components/Layouts";
 import { RatingsMeter } from "../components/RatingsMeter";
 import { useSearchTerm } from "../components/SearchBar";
@@ -9,10 +10,27 @@ import {
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
 import { useSubmissionSearch } from "../hooks/useSubmissions";
+import { Curation } from "../types/curations";
+import { getSubmissionsWithFilter } from "../utils/supabase";
 
-function Archive() {
+function Archive(props) {
+  const { allSubmissions } = props;
+  // we can do this because the prop is unchanging
+  const [submissions, setSubmissions] = useState<Curation[]>(allSubmissions);
   const [searchTerm] = useSearchTerm();
-  const curations = useSubmissionSearch(searchTerm);
+  const searchResults = useSubmissionSearch(searchTerm);
+
+  // subject to change based on user's search query
+  useEffect(() => {
+    if (!searchTerm || searchTerm === "") setSubmissions(allSubmissions);
+    else if (
+      searchTerm &&
+      searchTerm !== "" &&
+      searchResults &&
+      searchResults !== submissions
+    )
+      setSubmissions(searchResults);
+  }, [searchResults, submissions, searchTerm, allSubmissions]);
 
   return (
     <ArchiveLayout>
@@ -35,10 +53,10 @@ function Archive() {
             </tr>
           </thead>
 
-          {curations.length > 0 && (
+          {submissions.length > 0 && (
             <tbody>
               <tr className="h-4" />
-              {curations?.map((curation) => {
+              {submissions?.map((curation) => {
                 const {
                   id,
                   curatorWallet,
@@ -49,6 +67,7 @@ function Archive() {
                   marketplace,
                   submissionTime,
                   cosigns,
+                  username,
                 } = curation;
 
                 return (
@@ -71,7 +90,11 @@ function Archive() {
                       <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>
-                        <Username submission={curation} linkToProfile />
+                        <Username
+                          username={username}
+                          wallet={curatorWallet}
+                          linkToProfile
+                        />
                       </ArchiveTableDataCell>
                       <ArchiveTableDataCell>
                         <RatingsMeter
@@ -88,7 +111,7 @@ function Archive() {
             </tbody>
           )}
         </table>
-        {curations.length === 0 && (
+        {submissions.length === 0 && (
           <div
             className="w-full mt-4 flex-grow flex justify-center items-center"
             style={{ color: "rgba(105, 105, 105, 1)" }}
@@ -108,5 +131,14 @@ Archive.getLayout = function getLayout(page) {
     </Layout>
   );
 };
+
+export async function getStaticProps({ params }) {
+  return {
+    props: {
+      allSubmissions: await getSubmissionsWithFilter(),
+    },
+    revalidate: 60,
+  };
+}
 
 export default Archive;

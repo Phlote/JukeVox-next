@@ -6,6 +6,7 @@ import { useIsCurator } from "../hooks/useIsCurator";
 import Close from "../public/close.svg";
 import Account from "./Account";
 import { useSubmissionFlowOpen } from "./CurationSubmissionFlow";
+import { useProfile } from "./Forms/ProfileSettingsForm";
 import { HollowButtonContainer, HollowInputContainer } from "./Hollow";
 import { SearchBar } from "./SearchBar";
 
@@ -25,7 +26,7 @@ export const NavBarMobileWeb = () => {
       )}*/}
       {/* {active && account && isCurator && (
         <MobileNavBarElementContainer>
-          <Link href={`/profile?wallet=${account}`} passHref>
+          <Link href={`/profile/${account}`} passHref>
             My Profile
           </Link>
         </MobileNavBarElementContainer>
@@ -54,6 +55,7 @@ export const NavBarDesktop = (props) => {
   const [, setOpen] = useSubmissionFlowOpen();
   const router = useRouter();
   const { active, account } = useWeb3React();
+  const profileQuery = useProfile(account);
   const isCurator = useIsCurator();
   return (
     <div className="py-4 flex-none w-screen px-12">
@@ -71,9 +73,13 @@ export const NavBarDesktop = (props) => {
             </Link>
           </NavBarElementContainer>
         )}
-        {active && account && isCurator && (
+        {active && profileQuery?.data?.username && isCurator && (
           <NavBarElementContainer>
-            <Link href={`/profile?wallet=${account}`} passHref>
+            <Link
+              href={"/profile/[username]"}
+              as={`/profile/${profileQuery.data.username}`}
+              passHref
+            >
               <HollowButtonContainer className="flex justify-center items-center ">
                 My Profile
               </HollowButtonContainer>
