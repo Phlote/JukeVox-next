@@ -9,7 +9,7 @@ import {
   SubmissionDate,
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
-import { useSubmissionSearch } from "../hooks/useSubmissions";
+import { useSearchFilters, useSubmissionSearch } from "../hooks/useSubmissions";
 import { Curation } from "../types/curations";
 import { getSubmissionsWithFilter } from "../utils/supabase";
 
@@ -18,19 +18,18 @@ function Archive(props) {
   // we can do this because the prop is unchanging
   const [submissions, setSubmissions] = useState<Curation[]>(allSubmissions);
   const [searchTerm] = useSearchTerm();
+
   const searchResults = useSubmissionSearch(searchTerm);
+  const [filters] = useSearchFilters();
 
   // subject to change based on user's search query
   useEffect(() => {
-    if (!searchTerm || searchTerm === "") setSubmissions(allSubmissions);
-    else if (
-      searchTerm &&
-      searchTerm !== "" &&
-      searchResults &&
-      searchResults !== submissions
-    )
+    if ((!searchTerm || searchTerm === "") && filters === {}) {
+      setSubmissions(allSubmissions);
+    } else if (searchResults) {
       setSubmissions(searchResults);
-  }, [searchResults, submissions, searchTerm, allSubmissions]);
+    }
+  }, [searchResults, submissions, searchTerm, allSubmissions, filters]);
 
   return (
     <ArchiveLayout>
