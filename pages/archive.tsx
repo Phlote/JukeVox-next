@@ -23,13 +23,24 @@ function Archive(props) {
   const [filters] = useSearchFilters();
 
   // subject to change based on user's search query
+  const noSearchTerm = !searchTerm || searchTerm === "";
   useEffect(() => {
-    if ((!searchTerm || searchTerm === "") && filters === {}) {
+    if (noSearchTerm && Object.keys(filters).length === 0) {
       setSubmissions(allSubmissions);
-    } else if (searchResults) {
+    } else if (
+      searchResults &&
+      JSON.stringify(searchResults) !== JSON.stringify(submissions)
+    ) {
       setSubmissions(searchResults);
     }
-  }, [searchResults, submissions, searchTerm, allSubmissions, filters]);
+  }, [
+    searchResults,
+    submissions,
+    searchTerm,
+    allSubmissions,
+    filters,
+    noSearchTerm,
+  ]);
 
   return (
     <ArchiveLayout>
