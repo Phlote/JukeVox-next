@@ -41,6 +41,7 @@ export const NavBarDesktop = (props) => {
   const { active, account } = useWeb3React();
   const profileQuery = useProfile(account);
   const isCurator = useIsCurator();
+
   return (
     <div className="py-4 flex-none w-screen px-12">
       <div className="relative flex flex-row gap-4" style={{ height: 70 }}>
@@ -57,7 +58,7 @@ export const NavBarDesktop = (props) => {
             </Link>
           </NavBarElementContainer>
         )}
-        {active && profileQuery?.data?.username && isCurator && (
+        {active && profileQuery?.data?.username && isCurator.data.isCurator && (
           <NavBarElementContainer>
             <Link
               href={"/profile/[username]"}

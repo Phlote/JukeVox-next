@@ -8,9 +8,6 @@ export default async function handler(
 ) {
   const { filters, wallet } = request.body;
 
-  const isCurator = wallet && (await walletIsCurator(wallet));
-  console.log("iscurator: ", isCurator);
-
   const submissions = await getSubmissionsWithFilter(null, filters, isCurator);
   console.log("the submissions");
 

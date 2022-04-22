@@ -1,4 +1,3 @@
-import { useWeb3React } from "@web3-react/core";
 import { useEffect, useState } from "react";
 import Layout, { ArchiveLayout } from "../components/Layouts";
 import { RatingsMeter } from "../components/RatingsMeter";
@@ -10,34 +9,19 @@ import {
   SubmissionDate,
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
-import {
-  useSearchFilters,
-  useSubmissions,
-  useSubmissionSearch,
-} from "../hooks/useSubmissions";
+import { useSubmissionSearch } from "../hooks/useSubmissions";
 import { Curation } from "../types/curations";
 
 function Archive(props) {
   // we can do this because the prop is unchanging
   const [searchTerm] = useSearchTerm();
-
   const searchResults = useSubmissionSearch(searchTerm);
-  const { account } = useWeb3React();
-  const [filters] = useSearchFilters();
-
-  const allSubmissions = useSubmissions(filters, account);
-  const [submissions, setSubmissions] = useState<Curation[]>(allSubmissions);
+  const [submissions, setSubmissions] = useState<Curation[]>([]);
 
   // subject to change based on user's search query
   useEffect(() => {
-    if ((!searchTerm || searchTerm === "") && filters === {}) {
-      console.log("use all subs");
-      setSubmissions(allSubmissions);
-    } else if (searchResults) {
-      console.log("use search results");
-      setSubmissions(searchResults);
-    }
-  }, [searchResults, submissions, searchTerm, allSubmissions, filters]);
+    if (searchResults) setSubmissions(searchResults);
+  }, [searchResults]);
 
   return (
     <ArchiveLayout>
