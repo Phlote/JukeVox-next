@@ -10,13 +10,13 @@ import { useProfile } from "./Forms/ProfileSettingsForm";
 import { HollowButtonContainer, HollowInputContainer } from "./Hollow";
 import { SearchBar } from "./SearchBar";
 
-const NavBarMobileWeb = () => {
+export const NavBarMobileWeb = () => {
   const [, setOpen] = useSubmissionFlowOpen();
   const router = useRouter();
   const { active, account } = useWeb3React();
   const isCurator = useIsCurator();
   return (
-    <div className="w-screen flex flex-row absolute bottom-0 bg-phlote-container divide-x">
+    <div className="w-screen flex flex-row flex-none bg-phlote-container divide-x ">
       {/* {active && (
         <MobileNavBarElementContainer>
           <Link href="/archive" passHref>
@@ -51,7 +51,7 @@ const NavBarMobileWeb = () => {
 
 const MobileNavBarElementContainer = tw.button`h-full w-full py-8 text-center `;
 
-const NavBarDesktop = (props) => {
+export const NavBarDesktop = (props) => {
   const [, setOpen] = useSubmissionFlowOpen();
   const router = useRouter();
   const { active, account } = useWeb3React();
@@ -110,19 +110,6 @@ const NavBarDesktop = (props) => {
         </NavBarElementContainer>
       </div>
     </div>
-  );
-};
-
-export const NavBar = () => {
-  return (
-    <>
-      <div className="hidden sm:flex">
-        <NavBarDesktop />
-      </div>
-      <div className="sm:hidden ">
-        <NavBarMobileWeb />
-      </div>
-    </>
   );
 };
 

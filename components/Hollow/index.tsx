@@ -2,7 +2,7 @@ import styled from "styled-components";
 import tw from "twin.macro";
 
 export const HollowButtonContainer = styled.div`
-  ${tw`bg-phlote-button text-white rounded-full flex p-4 flex-row items-center justify-center border border-white sm:max-h-14 max-h-12 cursor-pointer relative`}
+  ${tw`bg-phlote-button text-white rounded-full flex p-4 flex-row items-center justify-center border border-white sm:max-h-14 max-h-12 cursor-pointer relative lg:text-base text-xs`}
   &:hover {
     opacity: 75%;
   }
@@ -19,7 +19,7 @@ export const HollowButton = styled.button(({ submitting }) => [
 
 export const HollowInputContainer = styled.div(({ type }) => [
   tw`bg-phlote-container text-white p-4 rounded-full flex flex-grow flex-row items-center justify-start relative`,
-  type === "form" && tw`border border-white sm:max-h-14 max-h-12`,
+  type === "form" && tw`border border-white sm:max-h-14 max-h-10`,
 ]);
 
 export const HollowInput = styled.input`

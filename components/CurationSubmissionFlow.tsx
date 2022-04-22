@@ -55,7 +55,7 @@ export const CurationSubmissionFlow: React.FC = (props) => {
   };
 
   return (
-    <div className="flex flex-col w-full sm:mx-8 justify-center py-16">
+    <div className="flex flex-col w-full sm:mx-8 justify-center sm:py-16 pt-4">
       <h1 className="font-extrabold	text-4xl underline underline-offset-16 text-center">
         Submit
       </h1>

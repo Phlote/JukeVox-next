@@ -1,4 +1,4 @@
-import { useWeb3React } from "@web3-react/core";
+import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import { UserRejectedRequestError } from "@web3-react/injected-connector";
 import { atom, useAtom } from "jotai";
 import Image from "next/image";
@@ -15,11 +15,18 @@ export const useConnectWalletModalOpen = () =>
 
 export const ConnectWalletModal = () => {
   const [open, setOpen] = useConnectWalletModalOpen();
-  const { account, activate, deactivate } = useWeb3React();
+  const { account, activate, deactivate, chainId, active, error } =
+    useWeb3React();
+
+  const isUnsupportedChainId = error instanceof UnsupportedChainIdError;
 
   React.useEffect(() => {
-    if (account) setOpen(closed);
+    if (account) setOpen(false);
   }, [account, setOpen]);
+
+  React.useEffect(() => {
+    if (isUnsupportedChainId) setOpen(true);
+  }, [isUnsupportedChainId, setOpen]);
 
   const onClose = () => setOpen(false);
 
@@ -39,10 +46,19 @@ export const ConnectWalletModal = () => {
           network to save on gas!
         </p> */}
         <div className="flex-grow w-full flex justify-center items-center">
-          <div className="w-3/4">
+          <div className="w-3/4 grid grid-cols-1 gap-4">
             <WalletConnectButton />
-            <div className="h-4" />
-            <InjectedConnectorButton />
+            <div className="sm:block hidden">
+              <InjectedConnectorButton />
+            </div>
+
+            {isUnsupportedChainId && (
+              <p className="text-red-500">
+                {
+                  "Your wallet is connected to the wrong network, please connect it to Polygon"
+                }
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -71,6 +87,7 @@ export const WalletConnectButton = () => {
             cacheConnector(CachedConnector.WalletConnect);
           })
           .catch((error) => {
+            console.error("this error: ", error);
             // ignore the error if it's a user rejected request
             if (error instanceof UserRejectedRequestError) {
               setConnecting(false);
