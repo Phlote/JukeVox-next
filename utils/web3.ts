@@ -3,7 +3,17 @@ import { formatUnits } from "@ethersproject/units";
 import { ethers } from "ethers";
 import { nextApiRequest } from ".";
 import { UserNonce } from "../types";
-import { NETWORKS, PHLOTE_SIGNATURE_REQUEST_MESSAGE } from "./constants";
+import {
+  NETWORKS,
+  PHLOTE_SIGNATURE_REQUEST_MESSAGE,
+  PHOTE_VOTE_TOKEN_ADDRESS,
+} from "./constants";
+
+interface PolygonScanTokenBalanceResponse {
+  status: string;
+  message: string;
+  result: string;
+}
 
 export function shortenHex(hex: string, length = 4) {
   return `${hex.substring(0, length + 2)}…${hex.substring(
@@ -98,4 +108,14 @@ export const getCachedConnector = () => {
   if (typeof window !== "undefined")
     return localStorage.getItem(WEB3_CONNECT_CACHED_CONNECTOR);
   else return null;
+};
+
+// Checks if a wallet holds PV1 tokens
+export const walletIsCurator = async (wallet) => {
+  const resp = await fetch(
+    `https://api.polygonscan.com/api?module=account&action=tokenbalance&contractaddress=${PHOTE_VOTE_TOKEN_ADDRESS}&address=${wallet}&tag=latest&apikey=${process.env.POLYGONSCAN_API_KEY}`
+  );
+
+  const { result } = (await resp.json()) as PolygonScanTokenBalanceResponse;
+  return parseInt(result) > 0;
 };

@@ -134,7 +134,7 @@ export async function getStaticProps({ params }) {
 
   return {
     props: {
-      submissions: await getSubmissionsWithFilter({ username }),
+      submissions: await getSubmissionsWithFilter(null, { username }),
       profile: await getProfileForWallet(wallet),
     },
     revalidate: 60,

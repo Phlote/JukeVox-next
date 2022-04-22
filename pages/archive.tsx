@@ -1,3 +1,4 @@
+import { useWeb3React } from "@web3-react/core";
 import { useEffect, useState } from "react";
 import Layout, { ArchiveLayout } from "../components/Layouts";
 import { RatingsMeter } from "../components/RatingsMeter";
@@ -9,16 +10,17 @@ import {
   SubmissionDate,
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
-import { useSubmissionSearch } from "../hooks/useSubmissions";
+import { useSubmissions, useSubmissionSearch } from "../hooks/useSubmissions";
 import { Curation } from "../types/curations";
-import { getSubmissionsWithFilter } from "../utils/supabase";
 
 function Archive(props) {
-  const { allSubmissions } = props;
   // we can do this because the prop is unchanging
-  const [submissions, setSubmissions] = useState<Curation[]>(allSubmissions);
   const [searchTerm] = useSearchTerm();
   const searchResults = useSubmissionSearch(searchTerm);
+  const { account } = useWeb3React();
+  const allSubmissions = useSubmissions({}, account);
+
+  const [submissions, setSubmissions] = useState<Curation[]>(allSubmissions);
 
   // subject to change based on user's search query
   useEffect(() => {
@@ -132,13 +134,13 @@ Archive.getLayout = function getLayout(page) {
   );
 };
 
-export async function getStaticProps({ params }) {
-  return {
-    props: {
-      allSubmissions: await getSubmissionsWithFilter(),
-    },
-    revalidate: 60,
-  };
-}
+// export async function getStaticProps({ params }) {
+//   return {
+//     props: {
+//       allSubmissions: await getSubmissionsWithFilter(),
+//     },
+//     revalidate: 60,
+//   };
+// }
 
 export default Archive;

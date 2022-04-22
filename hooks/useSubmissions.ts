@@ -4,10 +4,13 @@ import { searchSubmissions } from "../controllers/search";
 import { getSubmissions } from "../controllers/submissions";
 import { Curation } from "../types/curations";
 
-export const useSubmissions = (filters: Partial<Curation> = {}) => {
+export const useSubmissions = (
+  filters: Partial<Curation> = {},
+  wallet: string
+) => {
   const { data } = useQuery(
-    ["submissions", filters],
-    async () => getSubmissions(filters),
+    ["submissions", filters, wallet],
+    async () => getSubmissions(filters, wallet),
     { keepPreviousData: true }
   );
   return data ?? [];

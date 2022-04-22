@@ -12,25 +12,9 @@ import { SearchBar } from "./SearchBar";
 
 export const NavBarMobileWeb = () => {
   const [, setOpen] = useSubmissionFlowOpen();
-  const router = useRouter();
-  const { active, account } = useWeb3React();
-  const isCurator = useIsCurator();
+  const { active } = useWeb3React();
   return (
     <div className="w-screen flex flex-row flex-none bg-phlote-container divide-x ">
-      {/* {active && (
-        <MobileNavBarElementContainer>
-          <Link href="/archive" passHref>
-            Index
-          </Link>
-        </MobileNavBarElementContainer>
-      )}*/}
-      {/* {active && account && isCurator && (
-        <MobileNavBarElementContainer>
-          <Link href={`/profile/${account}`} passHref>
-            My Profile
-          </Link>
-        </MobileNavBarElementContainer>
-      )} */}
       {active && (
         <MobileNavBarElementContainer
           className="focus:opacity-25"
