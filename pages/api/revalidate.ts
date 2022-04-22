@@ -10,11 +10,16 @@ export default async function handler(
   // if (req.query.secret !== process.env.MY_SECRET_TOKEN) {
   //   return res.status(401).json({ message: 'Invalid token' })
   // }
-  const { path } = req.body;
+  const { username } = req.body;
 
   try {
-    console.log("Revalidating: ", path);
-    await res.unstable_revalidate(path);
+    console.log("Revalidating: /archive");
+    await res.unstable_revalidate("/archive");
+    if (username) {
+      console.log(`Revalidating: /profile/${username}`);
+      await res.unstable_revalidate("/archive");
+    } else console.log("username not provided or was falsy");
+
     return res.json({ revalidated: true });
   } catch (err) {
     // If there was an error, Next.js will continue

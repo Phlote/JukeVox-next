@@ -1,11 +1,7 @@
 import { nextApiRequest } from "../utils";
 
-export const revalidateArchive = async () => {
-  await nextApiRequest(`revalidate`, "POST", { path: "/archive" });
-};
-
-export const revalidateProfile = async (username: string) => {
+export const revalidate = async (username: string) => {
   await nextApiRequest(`revalidate`, "POST", {
-    path: `/profile/${username}`,
+    username,
   });
 };

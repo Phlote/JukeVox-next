@@ -1,5 +1,6 @@
 import { useWeb3React } from "@web3-react/core";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -32,16 +33,23 @@ function ProfileEdit() {
       <ProfileSettingsForm wallet={account} />
 
       <div className="lg:block hidden">
-        <HollowButtonContainer
-          className="bottom-20 right-10 cursor-pointer"
-          style={{ position: "absolute" }}
-          onClick={() => router.push(`/profile?wallet=${account}`)}
-        >
-          <HollowButton>
-            View My Curations{" "}
-            <Image src="/arrow.svg" alt={"link"} height={12} width={12} />
-          </HollowButton>
-        </HollowButtonContainer>
+        {profileQuery?.data?.username && (
+          <Link
+            as={`/profile/${profileQuery?.data?.username}`}
+            href="/profile/[username]"
+            passHref
+          >
+            <HollowButtonContainer
+              className="bottom-20 right-10 cursor-pointer"
+              style={{ position: "absolute" }}
+            >
+              <HollowButton>
+                View My Curations{" "}
+                <Image src="/arrow.svg" alt={"link"} height={12} width={12} />
+              </HollowButton>
+            </HollowButtonContainer>
+          </Link>
+        )}
       </div>
     </>
   );

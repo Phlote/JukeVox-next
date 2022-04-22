@@ -6373,7 +6373,7 @@ __metadata:
     final-form: ^4.20.6
     hardhat: ^2.8.3
     jotai: ^1.5.3
-    next: canary
+    next: "npm:12.1.6-canary.3"
     node-fetch: ^3.2.3
     postcss: ^8.4.6
     prop-types: ^15.8.1
@@ -6395,7 +6395,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"next@npm:canary":
+"next@npm:12.1.6-canary.3":
   version: 12.1.6-canary.3
   resolution: "next@npm:12.1.6-canary.3"
   dependencies:

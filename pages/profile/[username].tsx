@@ -17,8 +17,6 @@ import {
 export default function Profile(props) {
   const router = useRouter();
   const { submissions, profile } = props;
-  console.log("submissions:\n ", submissions);
-  console.log("profile:\n", profile);
 
   if (router.isFallback) {
     //TODO better loading
