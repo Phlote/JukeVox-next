@@ -6,7 +6,7 @@ import { Curation } from "../types/curations";
 
 export const useSubmissions = (
   filters: Partial<Curation> = {},
-  wallet: string
+  wallet: string = undefined
 ) => {
   const { data } = useQuery(
     ["submissions", filters, wallet],

@@ -3,7 +3,7 @@ import { nextApiRequest } from "../utils";
 
 export const getSubmissions = async (
   filters: Partial<Curation> = {},
-  wallet: string = null
+  wallet: string = undefined
 ): Promise<Curation[]> => {
   return nextApiRequest(`get-submissions`, "POST", {
     filters,

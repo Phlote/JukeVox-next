@@ -31,8 +31,10 @@ function Archive(props) {
   // subject to change based on user's search query
   useEffect(() => {
     if ((!searchTerm || searchTerm === "") && filters === {}) {
+      console.log("use all subs");
       setSubmissions(allSubmissions);
     } else if (searchResults) {
+      console.log("use search results");
       setSubmissions(searchResults);
     }
   }, [searchResults, submissions, searchTerm, allSubmissions, filters]);
