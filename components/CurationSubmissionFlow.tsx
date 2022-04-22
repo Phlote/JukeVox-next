@@ -40,7 +40,7 @@ export const CurationSubmissionFlow: React.FC = (props) => {
 
       setPage(1);
       queryClient.invalidateQueries("submissions");
-      await revalidate(profile.data.username);
+      await revalidate(profile?.data?.username);
     } catch (e) {
       toast.error(e);
       console.error(e);

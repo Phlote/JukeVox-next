@@ -15,18 +15,20 @@ export default async function handler(
   const { submission, wallet } = request.body;
 
   try {
+    const submissionWithSubmitterInfo = {
+      curatorWallet: wallet,
+      ...submission,
+    };
+
     const profileQuery = await supabase
       .from("profiles")
       .select()
       .match({ wallet });
 
-    const { username } = profileQuery.data[0];
-
-    const submissionWithSubmitterInfo = {
-      curatorWallet: wallet,
-      username,
-      ...submission,
-    };
+    if (profileQuery.data.length > 0) {
+      const { username } = profileQuery.data[0];
+      submissionWithSubmitterInfo.username = username;
+    }
 
     // could store in IPFS here
 
