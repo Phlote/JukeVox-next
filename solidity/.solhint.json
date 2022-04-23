@@ -1,8 +1,13 @@
-{
-  "extends": "solhint:recommended",
-  "plugins": [
-  ],
-  "rules": {
-     "compiler-version": 0
+  {
+    "extends": "solhint:recommended",
+    "plugins": [],
+    "rules": {
+      "avoid-suicide": "error",
+      "avoid-sha3": "warn",
+      "compiler-version": "off",
+      "not-rely-on-time": "off",
+      "no-unused-vars": "off",
+      "max-len": "off",
+      "indent": ["warn", 2]
+    }
   }
-}
