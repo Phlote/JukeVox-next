@@ -8,6 +8,7 @@ import { submit } from "../controllers/submissions";
 import { Submission } from "../types";
 import { verifyUser } from "../utils/web3";
 import { useProfile } from "./Forms/ProfileSettingsForm";
+import { SubmissionForm } from "./Forms/SubmissionForm";
 import { HollowButton, HollowButtonContainer } from "./Hollow";
 
 const submissionFlowOpen = atom<boolean>(false);
