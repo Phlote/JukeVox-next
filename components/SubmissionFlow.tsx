@@ -8,7 +8,6 @@ import { submit } from "../controllers/submissions";
 import { Submission } from "../types";
 import { verifyUser } from "../utils/web3";
 import { useProfile } from "./Forms/ProfileSettingsForm";
-import { CurationSubmissionForm } from "./Forms/SubmissionForm";
 import { HollowButton, HollowButtonContainer } from "./Hollow";
 
 const submissionFlowOpen = atom<boolean>(false);
@@ -56,7 +55,7 @@ export const SubmissionFlow: React.FC = (props) => {
       </h1>
       <div className="h-8" />
       {page === 0 && (
-        <CurationSubmissionForm metamaskLoading={loading} onSubmit={onSubmit} />
+        <SubmissionForm metamaskLoading={loading} onSubmit={onSubmit} />
       )}
       {page === 1 && (
         <div className="flex flex-col items-center text-sm mt-8 gap-8">
