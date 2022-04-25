@@ -2,7 +2,7 @@ import { atom, useAtom } from "jotai";
 import { useQuery } from "react-query";
 import { searchSubmissions } from "../controllers/search";
 import { getSubmissions } from "../controllers/submissions";
-import { Submission } from "../types/curations";
+import { Submission } from "../types";
 import { useIsCurator } from "./useIsCurator";
 
 export const useSubmissions = (

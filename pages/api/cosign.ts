@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { supabase } from "../../lib/supabase";
-import { Curation } from "../../types/curations";
+import { Submission } from "../../types";
 
 export default async function handler(
   request: NextApiRequest,
@@ -17,7 +17,8 @@ export default async function handler(
     if (!submissionsQuery.data || submissionsQuery.data.length === 0)
       throw "Invalid Submission ID";
 
-    const { id, cosigns, curatorWallet } = submissionsQuery.data[0] as Curation;
+    const { id, cosigns, curatorWallet } = submissionsQuery
+      .data[0] as Submission;
 
     if (cosigns.length === 5) throw "Max 5 cosigns per submission";
 

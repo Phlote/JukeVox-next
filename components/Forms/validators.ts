@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { supabase } from "../../lib/supabase";
-import { Submission } from "../../types/curations";
+import { Submission } from "../../types";
 import { UserProfile } from "./ProfileSettingsForm";
 
 export const validateSubmission = (values: Submission) => {

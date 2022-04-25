@@ -9,13 +9,13 @@ import {
   HollowInputContainer,
 } from "../Hollow";
 import { HollowTagsInput } from "../Hollow/HollowTagsInput";
-import { validateCurationSubmission } from "./validators";
+import { validateSubmission } from "./validators";
 
 export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const { form, handleSubmit, valid } = useForm({
     onSubmit,
-    validate: validateCurationSubmission,
+    validate: validateSubmission,
   });
 
   const mediaURI = useField("mediaURI", form);

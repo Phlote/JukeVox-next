@@ -1,4 +1,4 @@
-import { Submission } from "../types/curations";
+import { Submission, SubmissionElasticSearchDocument } from "../types";
 
 export function nextApiRequest(
   path: string,
@@ -42,10 +42,10 @@ export const submissionToElasticSearchDocument = (submission: Submission) => {
     marketplace,
     tags,
     submission_time: submissionTime,
-  } as CurationElasticSearchDocument;
+  } as SubmissionElasticSearchDocument;
 };
 
-export const cleanSubmission = (submission: Curation) => {
+export const cleanSubmission = (submission: Submission) => {
   const cleaned = { ...submission };
   if (submission.mediaURI.includes("opensea")) {
     cleaned.marketplace = "OpenSea";

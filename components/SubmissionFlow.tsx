@@ -5,10 +5,10 @@ import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { revalidate } from "../controllers/revalidate";
 import { submit } from "../controllers/submissions";
-import { Submission } from "../types/curations";
+import { Submission } from "../types";
 import { verifyUser } from "../utils/web3";
-import { CurationSubmissionForm } from "./Forms/CurationSubmissionForm";
 import { useProfile } from "./Forms/ProfileSettingsForm";
+import { CurationSubmissionForm } from "./Forms/SubmissionForm";
 import { HollowButton, HollowButtonContainer } from "./Hollow";
 
 const submissionFlowOpen = atom<boolean>(false);

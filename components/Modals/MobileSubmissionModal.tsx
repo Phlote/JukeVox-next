@@ -1,9 +1,6 @@
 import React from "react";
-import {
-  CurationSubmissionFlow,
-  useSubmissionFlowOpen,
-} from "../CurationSubmissionFlow";
 import { MobileModal } from "../Modal";
+import { SubmissionFlow, useSubmissionFlowOpen } from "../SubmissionFlow";
 
 export const MobileSubmissionModal = () => {
   const [open, setOpen] = useSubmissionFlowOpen();
@@ -11,7 +8,7 @@ export const MobileSubmissionModal = () => {
   const onClose = () => setOpen(false);
   return (
     <MobileModal open={open} onClose={onClose}>
-      <CurationSubmissionFlow />
+      <SubmissionFlow />
     </MobileModal>
   );
 };

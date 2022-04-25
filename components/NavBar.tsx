@@ -5,7 +5,7 @@ import tw from "twin.macro";
 import { useIsCurator } from "../hooks/useIsCurator";
 import Close from "../public/close.svg";
 import Account from "./Account";
-import { useSubmissionFlowOpen } from "./CurationSubmissionFlow";
+import { useSubmissionFlowOpen } from "./SubmissionFlow";
 import { useProfile } from "./Forms/ProfileSettingsForm";
 import { HollowButtonContainer, HollowInputContainer } from "./Hollow";
 import { SearchBar } from "./SearchBar";

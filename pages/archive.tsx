@@ -10,7 +10,7 @@ import {
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
 import { useSubmissionSearch } from "../hooks/useSubmissions";
-import { Submission } from "../types/curations";
+import { Submission } from "../types";
 
 function Archive(props) {
   // we can do this because the prop is unchanging

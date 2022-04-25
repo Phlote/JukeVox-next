@@ -1,4 +1,4 @@
-import { Submission } from "../types/curations";
+import { Submission } from "../types";
 import { nextApiRequest } from "../utils";
 
 export const getSubmissions = async (

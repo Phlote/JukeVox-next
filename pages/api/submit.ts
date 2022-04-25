@@ -2,8 +2,8 @@ import pinataSDK from "@pinata/sdk";
 import { NextApiRequest, NextApiResponse } from "next";
 import { nodeElasticClient } from "../../lib/elastic-app-search";
 import { supabase } from "../../lib/supabase";
-import { Submission } from "../../types/curations";
-import { curationToElasticSearchDocument } from "../../utils";
+import { Submission } from "../../types";
+import { submissionToElasticSearchDocument } from "../../utils";
 
 const { ELASTIC_ENGINE_NAME, PINATA_API_KEY, PINATA_SECRET_API_KEY } =
   process.env;
@@ -48,7 +48,7 @@ export default async function handler(
 }
 
 const indexSubmission = async (submission: Submission) => {
-  const document = curationToElasticSearchDocument(submission);
+  const document = submissionToElasticSearchDocument(submission);
   const res = await nodeElasticClient.indexDocuments(ELASTIC_ENGINE_NAME, [
     document,
   ]);
