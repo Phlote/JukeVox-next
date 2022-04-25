@@ -5,7 +5,7 @@ import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { revalidate } from "../controllers/revalidate";
 import { submit } from "../controllers/submissions";
-import { Curation } from "../types/curations";
+import { Submission } from "../types/curations";
 import { verifyUser } from "../utils/web3";
 import { CurationSubmissionForm } from "./Forms/CurationSubmissionForm";
 import { useProfile } from "./Forms/ProfileSettingsForm";
@@ -14,7 +14,7 @@ import { HollowButton, HollowButtonContainer } from "./Hollow";
 const submissionFlowOpen = atom<boolean>(false);
 export const useSubmissionFlowOpen = () => useAtom(submissionFlowOpen);
 
-export const CurationSubmissionFlow: React.FC = (props) => {
+export const SubmissionFlow: React.FC = (props) => {
   const { account, library } = useWeb3React();
   const queryClient = useQueryClient();
 
@@ -28,7 +28,7 @@ export const CurationSubmissionFlow: React.FC = (props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const profile = useProfile(account);
 
-  const submitCuration = async (curation: Curation) => {
+  const onSubmit = async (submission: Submission) => {
     setLoading(true);
     try {
       const authenticated = await verifyUser(account, library);
@@ -36,7 +36,7 @@ export const CurationSubmissionFlow: React.FC = (props) => {
         throw "Not Authenticated";
       }
 
-      await submit(curation, account);
+      await submit(submission, account);
 
       setPage(1);
       queryClient.invalidateQueries("submissions");
@@ -56,10 +56,7 @@ export const CurationSubmissionFlow: React.FC = (props) => {
       </h1>
       <div className="h-8" />
       {page === 0 && (
-        <CurationSubmissionForm
-          metamaskLoading={loading}
-          onSubmit={submitCuration}
-        />
+        <CurationSubmissionForm metamaskLoading={loading} onSubmit={onSubmit} />
       )}
       {page === 1 && (
         <div className="flex flex-col items-center text-sm mt-8 gap-8">

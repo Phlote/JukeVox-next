@@ -10,13 +10,13 @@ import {
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
 import { useSubmissionSearch } from "../hooks/useSubmissions";
-import { Curation } from "../types/curations";
+import { Submission } from "../types/curations";
 
 function Archive(props) {
   // we can do this because the prop is unchanging
   const [searchTerm] = useSearchTerm();
   const searchResults = useSubmissionSearch(searchTerm);
-  const [submissions, setSubmissions] = useState<Curation[]>([]);
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
 
   // subject to change based on user's search query
   useEffect(() => {

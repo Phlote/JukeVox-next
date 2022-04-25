@@ -1,4 +1,4 @@
-import { Curation, CurationElasticSearchDocument } from "../types/curations";
+import { Submission } from "../types/curations";
 
 export function nextApiRequest(
   path: string,
@@ -18,7 +18,7 @@ export function nextApiRequest(
   });
 }
 
-export const curationToElasticSearchDocument = (curation: Curation) => {
+export const submissionToElasticSearchDocument = (submission: Submission) => {
   const {
     id,
     mediaType,
@@ -30,7 +30,7 @@ export const curationToElasticSearchDocument = (curation: Curation) => {
     marketplace,
     tags,
     submissionTime,
-  } = curation;
+  } = submission;
   return {
     supabase_id: id,
     media_type: mediaType,

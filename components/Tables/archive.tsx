@@ -114,7 +114,7 @@ export const ArchiveDropdown: React.FC<{
     });
   };
   const options = Array.from(
-    new Set(submissions?.map((curation) => curation[filterKey]))
+    new Set(submissions?.map((submission) => submission[filterKey]))
   ) as string[];
 
   return (

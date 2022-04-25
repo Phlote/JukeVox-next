@@ -1,5 +1,5 @@
 type MediaType = "Audio" | "Text" | "Video" | "Visual Art";
-export interface Curation {
+export interface Submission {
   id: number;
   submissionTime: string;
   mediaType: MediaType;
@@ -14,6 +14,7 @@ export interface Curation {
   username: string;
 }
 
+//TODO: will this be used for submission NFTs? I would imagine no, so its name should rename
 export interface CurationNFTMetadata {
   title: string;
   description: string;
@@ -33,7 +34,7 @@ export interface CurationNFTMetadata {
   };
 }
 
-export interface CurationElasticSearchDocument {
+export interface SubmissionElasticSearchDocument {
   supabase_id: number;
   media_type: MediaType;
   artist_name: string;

@@ -44,7 +44,7 @@ function ProfileEdit() {
               style={{ position: "absolute" }}
             >
               <HollowButton>
-                View My Curations{" "}
+                View My Submissions{" "}
                 <Image src="/arrow.svg" alt={"link"} height={12} width={12} />
               </HollowButton>
             </HollowButtonContainer>

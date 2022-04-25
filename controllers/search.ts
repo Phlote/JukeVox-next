@@ -1,15 +1,15 @@
-import { Curation } from "../types/curations";
+import { Submission } from "../types/curations";
 import { nextApiRequest } from "../utils";
 
 export const searchSubmissions = async (
   searchTerm: string,
-  filters: Partial<Curation>,
+  filters: Partial<Submission>,
   isCurator: boolean
-): Promise<Curation[]> => {
+): Promise<Submission[]> => {
   const results = await nextApiRequest("search", "POST", {
     searchTerm,
     filters,
     isCurator,
   });
-  return results as Curation[];
+  return results as Submission[];
 };
