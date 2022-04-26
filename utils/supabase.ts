@@ -2,11 +2,11 @@ import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 import { cleanSubmission } from ".";
 import { UserProfile } from "../components/Forms/ProfileSettingsForm";
 import { supabase } from "../lib/supabase";
-import { Curation } from "../types/curations";
+import { Submission } from "../types";
 
 export const getSubmissionsWithFilter = async (
   selectStatement: PostgrestFilterBuilder<any> = null,
-  filters: Partial<Curation> = null,
+  filters: Partial<Submission> = null,
   isCurator: boolean = false
 ) => {
   if (!selectStatement) selectStatement = supabase.from("submissions").select();
@@ -18,7 +18,7 @@ export const getSubmissionsWithFilter = async (
   const { data, error } = await selectStatement;
   if (error) throw error;
 
-  const sorted = data.sort((a: Curation, b: Curation) => {
+  const sorted = data.sort((a: Submission, b: Submission) => {
     return (
       new Date(b.submissionTime).getTime() -
       new Date(a.submissionTime).getTime()
@@ -53,7 +53,7 @@ export const getProfileForWallet = async (wallet: string) => {
 
   if (submissionsQuery.error) throw submissionsQuery.error;
 
-  const submissions = submissionsQuery.data as Curation[];
+  const submissions = submissionsQuery.data as Submission[];
   const cosigns = submissions.reduce(
     (acc, curr) => acc + (curr?.cosigns?.length ?? 0),
     0

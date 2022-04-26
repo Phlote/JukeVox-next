@@ -2,17 +2,14 @@ import Image from "next/image";
 import React from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
-import {
-  CurationSubmissionFlow,
-  useSubmissionFlowOpen,
-} from "./CurationSubmissionFlow";
+import { SubmissionFlow, useSubmissionFlowOpen } from "./SubmissionFlow";
 
 export const SubmitSidenav = (props) => {
   const [open, setOpen] = useSubmissionFlowOpen();
 
   return (
     <SideNav onClose={() => setOpen(false)} open={open}>
-      <CurationSubmissionFlow />
+      <SubmissionFlow />
     </SideNav>
   );
 };
