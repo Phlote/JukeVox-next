@@ -50,7 +50,7 @@ export default function Profile(props) {
           {submissions?.length > 0 && (
             <tbody>
               <tr className="h-4" />
-              {submissions?.map((curation) => {
+              {submissions?.map((submission) => {
                 const {
                   id,
                   curatorWallet,
@@ -61,7 +61,7 @@ export default function Profile(props) {
                   marketplace,
                   submissionTime,
                   cosigns,
-                } = curation;
+                } = submission;
 
                 return (
                   <>

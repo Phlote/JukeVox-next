@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { nodeElasticClient } from "../../lib/elastic-app-search";
 import { supabase } from "../../lib/supabase";
-import { curationToElasticSearchDocument } from "../../utils";
+import { submissionToElasticSearchDocument } from "../../utils";
 import { getSubmissionsWithFilter } from "../../utils/supabase";
 
 const { ELASTIC_ENGINE_NAME } = process.env;
@@ -19,7 +19,7 @@ export default async function handler(
       const res = await nodeElasticClient.search(
         ELASTIC_ENGINE_NAME,
         searchTerm as string,
-        { filters: curationToElasticSearchDocument(filters) }
+        { filters: submissionToElasticSearchDocument(filters) }
       );
 
       if (res.results.length === 0) response.status(200).send({ results: [] });

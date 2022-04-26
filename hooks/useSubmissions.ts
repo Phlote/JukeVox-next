@@ -2,11 +2,11 @@ import { atom, useAtom } from "jotai";
 import { useQuery } from "react-query";
 import { searchSubmissions } from "../controllers/search";
 import { getSubmissions } from "../controllers/submissions";
-import { Curation } from "../types/curations";
+import { Submission } from "../types";
 import { useIsCurator } from "./useIsCurator";
 
 export const useSubmissions = (
-  filters: Partial<Curation> = {},
+  filters: Partial<Submission> = {},
   wallet: string = undefined
 ) => {
   const { data } = useQuery(
@@ -17,7 +17,7 @@ export const useSubmissions = (
   return data ?? [];
 };
 
-const searchFiltersAtom = atom<Partial<Curation>>({});
+const searchFiltersAtom = atom<Partial<Submission>>({});
 export const useSearchFilters = () => useAtom(searchFiltersAtom);
 
 export const useSubmissionSearch = (searchTerm = "") => {
