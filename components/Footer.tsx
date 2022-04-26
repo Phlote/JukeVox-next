@@ -14,17 +14,17 @@ export const Footer: React.FC = (props) => {
         Finding Internet Gems since 2022
       </div>
 
-      <div className="flex justify-end mr-8">
+      <div className="flex flex-row items-center justify-end mr-8">
         <div className="my-auto space-x-4">
-          {/* TODO: make phlote <a></a> */}
           <a
             rel="noreferrer"
             target="_blank"
-            href={"https://twitter.com/teamphlote"}
+            href={"/Phlote_Investor_Deck.pdf"}
             className="underline"
           >
             About Phlote
           </a>
+
           <a
             rel="noreferrer"
             target="_blank"
