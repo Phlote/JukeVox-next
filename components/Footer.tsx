@@ -22,7 +22,7 @@ export const Footer: React.FC = (props) => {
             href={"/Phlote_Investor_Deck.pdf"}
             className="underline"
           >
-            About Phlote
+            Investors
           </a>
 
           <a
