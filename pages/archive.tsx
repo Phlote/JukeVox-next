@@ -20,8 +20,12 @@ function Archive(props) {
 
   // subject to change based on user's search query
   useEffect(() => {
-    if (searchResults) setSubmissions(searchResults);
-  }, [searchResults]);
+    if (
+      searchResults &&
+      JSON.stringify(searchResults) !== JSON.stringify(submissions)
+    )
+      setSubmissions(searchResults);
+  }, [searchResults, submissions]);
 
   return (
     <ArchiveLayout>

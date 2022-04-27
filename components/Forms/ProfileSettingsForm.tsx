@@ -145,13 +145,14 @@ const ProfilePictureUpload = ({ wallet }) => {
           {
             wallet,
             profilePic: publicURLQuery.publicURL,
+            updateTime: Date.now(),
           },
           { onConflict: "wallet" }
         );
 
         if (profileUpsert.error) throw profileUpsert.error;
 
-        queryClient.refetchQueries(["profile", wallet]);
+        queryClient.invalidateQueries(["profile", wallet]);
       } catch (e) {
         console.error(e);
         toast.error(e);
@@ -174,11 +175,14 @@ const ProfilePictureUpload = ({ wallet }) => {
     >
       <input {...getInputProps()} />
 
-      {isHovering && <p className="text-base italic">{"Upload new photo"}</p>}
+      <DropzoneText
+        isFetching={profile?.isFetching}
+        isHovering={isHovering}
+        isDragActive={isDragActive}
+        profilePic={profile?.data?.profilePic}
+      />
 
-      {isDragActive && <p className="text-base italic">{"Drop image here"}</p>}
-
-      {profile?.data?.profilePic && !isDragActive && (
+      {!profile?.isFetching && profile?.data?.profilePic && !isDragActive && (
         <Image
           className={`rounded-full ${isHovering && "opacity-25"}`}
           src={profile?.data?.profilePic}
@@ -188,12 +192,25 @@ const ProfilePictureUpload = ({ wallet }) => {
           priority
         />
       )}
-
-      {!isHovering && !isDragActive && !profile?.data?.profilePic && (
-        <p className="text-base italic">{"Drop or select visual to upload"}</p>
-      )}
     </div>
   );
+};
+
+const DropzoneText = ({ isFetching, isHovering, isDragActive, profilePic }) => {
+  if (isFetching) return <p className="text-base italic">{"Loading..."}</p>;
+
+  if (isHovering)
+    return <p className="text-base italic">{"Upload new photo"}</p>;
+
+  if (isDragActive)
+    return <p className="text-base italic">{"Drop image here"}</p>;
+
+  if (!isHovering && !isDragActive && profilePic)
+    return (
+      <p className="text-base italic">{"Drop or select visual to upload"}</p>
+    );
+
+  return null;
 };
 
 export const useProfile = (wallet, options = {}) => {
