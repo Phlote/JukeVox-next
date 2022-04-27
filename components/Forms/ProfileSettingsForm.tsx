@@ -126,17 +126,35 @@ const ProfilePictureUpload = ({ wallet }) => {
 
   const onDrop = useCallback(
     async (acceptedFiles) => {
-      const { error } = await supabase.storage
-        .from("profile-pics")
-        .upload(path, acceptedFiles[0], {
-          upsert: true,
-        });
+      try {
+        const uploadProfilePic = await supabase.storage
+          .from("profile-pics")
+          .upload(path, acceptedFiles[0], {
+            upsert: true,
+          });
 
-      if (!error) {
+        if (uploadProfilePic.error) throw uploadProfilePic.error;
+
+        const publicURLQuery = supabase.storage
+          .from("profile-pics")
+          .getPublicUrl(`${wallet}/profile`);
+
+        if (publicURLQuery.error) throw publicURLQuery.error;
+
+        const profileUpsert = await supabase.from("profiles").upsert(
+          {
+            wallet,
+            profilePic: publicURLQuery.publicURL,
+          },
+          { onConflict: "wallet" }
+        );
+
+        if (profileUpsert.error) throw profileUpsert.error;
+
         queryClient.refetchQueries(["profile", wallet]);
-      } else {
-        console.error(error);
-        toast.error(error);
+      } catch (e) {
+        console.error(e);
+        toast.error(e);
       }
     },
     [path, queryClient, wallet]

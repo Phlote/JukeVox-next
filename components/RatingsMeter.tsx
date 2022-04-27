@@ -123,7 +123,10 @@ const Cosign: React.FC<Cosign> = (props) => {
     );
   else
     return (
-      <div className="h-6 w-6 opacity-25 relative">
+      <div
+        className="h-6 w-6 relative"
+        style={profileQuery.isLoading ? { opacity: 25 } : undefined}
+      >
         <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
       </div>
     );

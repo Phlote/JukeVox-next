@@ -35,15 +35,16 @@ export const getProfileForWallet = async (wallet: string) => {
     .match({ wallet });
 
   if (profilesQuery.error) throw profilesQuery.error;
+
   if (profilesQuery.data.length === 0) return null;
 
   const profileMeta = profilesQuery.data[0];
 
-  const { publicURL, error } = supabase.storage
-    .from("profile-pics")
-    .getPublicUrl(`${wallet}/profile`);
-
-  if (error) throw error;
+  if (profileMeta.profilePic)
+    // TODO: the below is a bandaid, I'd like to do a more complicated solution but I think this is ok for now
+    //See: https://github.com/supabase/supabase/discussions/5737
+    profileMeta.profilePic =
+      profileMeta.profilePic + `?cacheBust=${Date.now()}`;
 
   // get number of cosigns
 
@@ -62,9 +63,6 @@ export const getProfileForWallet = async (wallet: string) => {
 
   return {
     ...profileMeta,
-    // TODO: the below is a bandaid, I'd like to do a more complicated solution but I think this is ok for now
-    // See: https://github.com/supabase/supabase/discussions/5737
-    profilePic: publicURL + `?cacheBust=${Date.now()}`,
     cosigns,
   } as UserProfile;
 };
