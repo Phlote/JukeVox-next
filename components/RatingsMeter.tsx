@@ -50,11 +50,7 @@ export const RatingsMeter: React.FC<{
   };
 
   return (
-    <div
-      className={`flex gap-1 justify-center ${
-        canCosign ? "hover:opacity-25 cursor-pointer" : undefined
-      }`}
-    >
+    <div className={`flex gap-1 justify-center `}>
       {Array(5)
         .fill(null)
         .map((_, idx) => {
@@ -63,7 +59,9 @@ export const RatingsMeter: React.FC<{
               <button
                 key={`${submissionId}-cosign-${idx}`}
                 onClick={onCosign}
-                className={"h-6 w-6 relative"}
+                className={`h-6 w-6 relative ${
+                  canCosign ? "hover:opacity-25 cursor-pointer" : undefined
+                }`}
                 disabled={!canCosign}
               >
                 <Image
@@ -126,7 +124,7 @@ const Cosign: React.FC<Cosign> = (props) => {
         as={`/profile/${profileQuery.data.username}`}
         passHref
       >
-        <div className="h-6 w-6 relative rounded-full cursor-pointer">
+        <div className="h-6 w-6 relative rounded-full cursor-pointer hover:opacity-25">
           <Image
             className="rounded-full"
             src={profileQuery.data.profilePic}
