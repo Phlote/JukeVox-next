@@ -100,10 +100,7 @@ const Cosign: React.FC<Cosign> = (props) => {
     throw "Not a valid wallet";
   }
 
-  const profileQuery = useProfile(wallet, {
-    refetchOnWindowFocus: false,
-    keepPreviousData: true,
-  });
+  const profileQuery = useProfile(wallet);
 
   if (profileQuery?.isLoading) {
     return (
