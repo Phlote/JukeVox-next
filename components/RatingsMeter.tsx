@@ -1,6 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import { toast } from "react-toastify";
 import { cosign } from "../controllers/cosigns";
@@ -102,17 +103,23 @@ const Cosign: React.FC<Cosign> = (props) => {
   }
 
   const profileQuery = useProfile(wallet);
-  console.log(profileQuery.data);
 
   if (profileQuery?.data?.profilePic)
     return (
-      <div className="h-6 w-6 relative">
-        <Image
-          src={profileQuery.data.profilePic}
-          alt={`${wallet} cosign`}
-          layout="fill"
-        />
-      </div>
+      <Link
+        href={"/profile/[username]"}
+        as={`/profile/${profileQuery.data.username}`}
+        passHref
+      >
+        <div className="h-6 w-6 relative rounded-full cursor-pointer">
+          <Image
+            className="rounded-full"
+            src={profileQuery.data.profilePic}
+            alt={`${wallet} cosign`}
+            layout="fill"
+          />
+        </div>
+      </Link>
     );
   else
     return (
