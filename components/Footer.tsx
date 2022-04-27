@@ -19,7 +19,7 @@ export const Footer: React.FC = (props) => {
           <a
             rel="noreferrer"
             target="_blank"
-            href={"/Phlote_Investor_Deck.pdf"}
+            href={"https://docsend.com/view/ssfndm7m2e2pyx35"}
             className="underline"
           >
             Investors
