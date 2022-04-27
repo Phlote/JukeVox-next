@@ -40,11 +40,11 @@ export const getProfileForWallet = async (wallet: string) => {
 
   const profileMeta = profilesQuery.data[0];
 
-  if (profileMeta.profilePic)
-    // TODO: the below is a bandaid, I'd like to do a more complicated solution but I think this is ok for now
-    //See: https://github.com/supabase/supabase/discussions/5737
-    profileMeta.profilePic =
-      profileMeta.profilePic + `?cacheBust=${Date.now()}`;
+  // if (profileMeta.profilePic)
+  // TODO: the below is a bandaid, I'd like to do a more complicated solution but I think this is ok for now
+  //See: https://github.com/supabase/supabase/discussions/5737
+  // profileMeta.profilePic =
+  //   profileMeta.profilePic + `?cacheBust=${Date.now()}`;
 
   // get number of cosigns
 

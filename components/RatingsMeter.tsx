@@ -105,7 +105,7 @@ const Cosign: React.FC<Cosign> = (props) => {
     keepPreviousData: true,
   });
 
-  if (profileQuery?.isLoading || !profileQuery?.data) {
+  if (profileQuery?.isLoading) {
     return (
       <div className="h-6 w-6 relative opacity-25">
         <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
@@ -135,6 +135,7 @@ const Cosign: React.FC<Cosign> = (props) => {
       </Link>
     );
 
+  // This is really an error state
   return (
     <div className="h-6 w-6 relative">
       <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
