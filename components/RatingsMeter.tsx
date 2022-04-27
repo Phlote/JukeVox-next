@@ -115,20 +115,31 @@ const Cosign: React.FC<Cosign> = (props) => {
     );
   }
 
+  if (
+    profileQuery?.data &&
+    profileQuery.data?.username &&
+    profileQuery.data?.profilePic
+  )
+    return (
+      <Link
+        href={"/profile/[username]"}
+        as={`/profile/${profileQuery.data.username}`}
+        passHref
+      >
+        <div className="h-6 w-6 relative rounded-full cursor-pointer">
+          <Image
+            className="rounded-full"
+            src={profileQuery.data.profilePic}
+            alt={`${wallet} cosign`}
+            layout="fill"
+          />
+        </div>
+      </Link>
+    );
+
   return (
-    <Link
-      href={"/profile/[username]"}
-      as={`/profile/${profileQuery.data.username}`}
-      passHref
-    >
-      <div className="h-6 w-6 relative rounded-full cursor-pointer">
-        <Image
-          className="rounded-full"
-          src={profileQuery.data.profilePic}
-          alt={`${wallet} cosign`}
-          layout="fill"
-        />
-      </div>
-    </Link>
+    <div className="h-6 w-6 relative">
+      <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
+    </div>
   );
 };
