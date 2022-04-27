@@ -129,7 +129,6 @@ const ProfilePictureUpload = ({ wallet }) => {
       const { error } = await supabase.storage
         .from("profile-pics")
         .upload(path, acceptedFiles[0], {
-          cacheControl: "3600",
           upsert: true,
         });
 

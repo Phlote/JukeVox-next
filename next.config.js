@@ -11,5 +11,6 @@ module.exports = {
       "alytqvwillylytpmdjai.supabase.co",
       "erirxjohgmjhfdmzlqsa.supabase.co",
     ],
+    minimumCacheTTL: 60,
   },
 };

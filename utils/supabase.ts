@@ -59,5 +59,11 @@ export const getProfileForWallet = async (wallet: string) => {
     0
   );
 
-  return { ...profileMeta, profilePic: publicURL, cosigns } as UserProfile;
+  return {
+    ...profileMeta,
+    // TODO: the below is a bandaid, I'd like to do a more complicated solution but I think this is ok for now
+    // See: https://github.com/supabase/supabase/discussions/5737
+    profilePic: publicURL + `?cacheBust=${Date.now()}`,
+    cosigns,
+  } as UserProfile;
 };
