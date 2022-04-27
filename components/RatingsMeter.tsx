@@ -104,7 +104,7 @@ const Cosign: React.FC<Cosign> = (props) => {
 
   const profileQuery = useProfile(wallet);
 
-  if (profileQuery?.data?.profilePic)
+  if (profileQuery?.data)
     return (
       <Link
         href={"/profile/[username]"}

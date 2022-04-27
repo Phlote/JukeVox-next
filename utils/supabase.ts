@@ -35,6 +35,7 @@ export const getProfileForWallet = async (wallet: string) => {
     .match({ wallet });
 
   if (profilesQuery.error) throw profilesQuery.error;
+  if (profilesQuery.data.length === 0) return null;
 
   const profileMeta = profilesQuery.data[0];
 
