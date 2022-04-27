@@ -1,10 +1,12 @@
 import { useWeb3React } from "@web3-react/core";
+import { ethers } from "ethers";
 import Image from "next/image";
 import React from "react";
 import { toast } from "react-toastify";
 import { cosign } from "../controllers/cosigns";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { verifyUser } from "../utils/web3";
+import { useProfile } from "./Forms/ProfileSettingsForm";
 
 export const RatingsMeter: React.FC<{
   submissionId: number;
@@ -81,17 +83,40 @@ export const RatingsMeter: React.FC<{
                 </div>
               );
             } else {
-              return (
-                <div
-                  className="h-6 w-6 relative"
-                  key={`${submissionId}-cosign-${idx}`}
-                >
-                  <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
-                </div>
-              );
+              return <Cosign wallet={cosigns[idx]} />;
             }
           }
         })}
     </div>
   );
+};
+
+interface Cosign {
+  wallet: string;
+}
+
+const Cosign: React.FC<Cosign> = (props) => {
+  const { wallet } = props;
+  if (!ethers.utils.isAddress(wallet)) {
+    throw "Not a valid wallet";
+  }
+
+  const profileQuery = useProfile(wallet);
+
+  if (profileQuery?.data?.profilePic)
+    return (
+      <div className="h-6 w-6 relative">
+        <Image
+          src={profileQuery.data.profilePic}
+          alt={`${wallet} cosign`}
+          layout="fill"
+        />
+      </div>
+    );
+  else
+    return (
+      <div className="h-6 w-6 opacity-25 relative">
+        <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
+      </div>
+    );
 };
