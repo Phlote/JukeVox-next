@@ -157,10 +157,11 @@ export const InjectedConnectorButton = () => {
     );
   } else
     return (
-      <HollowButtonContainer className="w-full" onClick={startOnboarding}>
-        <a href="https://metamask.io/download/"></a>
-        <InjectedButtonContent />
-      </HollowButtonContainer>
+      <a href="https://metamask.io/download/">
+        <HollowButtonContainer className="w-full" onClick={startOnboarding}>
+          <InjectedButtonContent />
+        </HollowButtonContainer>
+      </a>
     );
 };
 

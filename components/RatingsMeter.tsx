@@ -102,6 +102,7 @@ const Cosign: React.FC<Cosign> = (props) => {
   }
 
   const profileQuery = useProfile(wallet);
+  console.log(profileQuery.data);
 
   if (profileQuery?.data?.profilePic)
     return (
