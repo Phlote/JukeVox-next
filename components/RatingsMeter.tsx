@@ -107,30 +107,28 @@ const Cosign: React.FC<Cosign> = (props) => {
     keepPreviousData: true,
   });
 
-  if (profileQuery?.data)
+  if (profileQuery?.isLoading || !profileQuery?.data) {
     return (
-      <Link
-        href={"/profile/[username]"}
-        as={`/profile/${profileQuery.data.username}`}
-        passHref
-      >
-        <div className="h-6 w-6 relative rounded-full cursor-pointer">
-          <Image
-            className="rounded-full"
-            src={profileQuery.data.profilePic}
-            alt={`${wallet} cosign`}
-            layout="fill"
-          />
-        </div>
-      </Link>
-    );
-  else
-    return (
-      <div
-        className="h-6 w-6 relative"
-        style={profileQuery.isLoading ? { opacity: 25 } : undefined}
-      >
+      <div className="h-6 w-6 relative opacity-25">
         <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
       </div>
     );
+  }
+
+  return (
+    <Link
+      href={"/profile/[username]"}
+      as={`/profile/${profileQuery.data.username}`}
+      passHref
+    >
+      <div className="h-6 w-6 relative rounded-full cursor-pointer">
+        <Image
+          className="rounded-full"
+          src={profileQuery.data.profilePic}
+          alt={`${wallet} cosign`}
+          layout="fill"
+        />
+      </div>
+    </Link>
+  );
 };
