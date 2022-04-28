@@ -16,19 +16,24 @@ function Home() {
   });
 
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col justify-center items-center relative w-full">
       <div className="sm:hidden text-center mx-4 flex flex-col justify-center items-center">
         <h1 className="text-6xl">Phlote</h1>
         <div className="h-16"></div>
-        <p>Save talented artists from being lost on the internet forever. </p>
-        <br />
         <p>
-          Submit links to the music of your favorite independent artists below.
+          Share music links to directly support independent artists by bridging
+          them to Web3.
         </p>
       </div>
 
-      <div className="hidden sm:block">
-        <SearchBar placeholder="Search our archive" />
+      <div className="hidden sm:block w-full">
+        <div className="relative w-full flex justify-center">
+          <h2 className="absolute w-full bottom-32 text-center">
+            Share music links to directly support independent artists by
+            bridging them to Web3.{" "}
+          </h2>
+          <SearchBar placeholder="Search our archive" />
+        </div>
       </div>
     </div>
   );
