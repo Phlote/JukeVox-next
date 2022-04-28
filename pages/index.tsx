@@ -30,7 +30,7 @@ function Home() {
               style={{ justifyContent: "center" }}
               onClick={() => setOpen(true)}
             >
-              Submit music links here
+              Submit music
             </HollowInputContainer>
           </div>
         </div>
