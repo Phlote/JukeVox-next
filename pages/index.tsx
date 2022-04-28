@@ -1,19 +1,11 @@
-import { useRouter } from "next/router";
 import React from "react";
 import { Footer } from "../components/Footer";
+import { HollowInputContainer } from "../components/Hollow";
 import Layout from "../components/Layouts";
-import { SearchBar, useSearchTerm } from "../components/SearchBar";
-import { useKeyPress } from "../hooks/useKeyPress";
+import { useSubmissionFlowOpen } from "../components/SubmissionFlow";
 
 function Home() {
-  const [searchTerm, setSearchTerm] = useSearchTerm();
-  const router = useRouter();
-
-  useKeyPress("Enter", () => {
-    if (!!searchTerm && searchTerm.length > 0) {
-      router.push("/archive");
-    }
-  });
+  const [, setOpen] = useSubmissionFlowOpen();
 
   return (
     <div className="flex flex-col justify-center items-center relative w-full">
@@ -28,11 +20,19 @@ function Home() {
 
       <div className="hidden sm:block w-full">
         <div className="relative w-full flex justify-center">
-          <h2 className="absolute w-full bottom-32 text-center">
+          <h1 className="absolute w-full bottom-32 text-center text-2xl">
             Share music links to directly support independent artists by
             bridging them to Web3.{" "}
-          </h2>
-          <SearchBar placeholder="Search our archive" />
+          </h1>
+          {/* <SearchBar placeholder="Search our archive" /> */}
+          <div className="w-80 h-16 cursor-pointer hover:opacity-75">
+            <HollowInputContainer
+              style={{ justifyContent: "center" }}
+              onClick={() => setOpen(true)}
+            >
+              Submit music links here
+            </HollowInputContainer>
+          </div>
         </div>
       </div>
     </div>
