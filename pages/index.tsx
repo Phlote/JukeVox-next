@@ -25,12 +25,12 @@ function Home() {
             bridging them to Web3.{" "}
           </h1>
           {/* <SearchBar placeholder="Search our archive" /> */}
-          <div className="w-80 h-16 cursor-pointer hover:opacity-75">
+          <div className="w-80 h-16 cursor-pointer hover:opacity-75 shadow-sm">
             <HollowInputContainer
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: "center", border: "1px solid white" }}
               onClick={() => setOpen(true)}
             >
-              Submit music
+              Submit music to Phlote
             </HollowInputContainer>
           </div>
         </div>
