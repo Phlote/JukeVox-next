@@ -20,7 +20,7 @@ function Home() {
       <div className="hidden sm:block w-full">
         <div className="relative w-full flex justify-center">
           <h1 className="absolute w-full bottom-32 text-center text-2xl">
-            Phlote music you love. Drop links before and help onboard talented emerging artists
+            Phlote music you love. Drop links below and help onboard talented emerging artists
            to Web3.{" "}
           </h1>
           {/* <SearchBar placeholder="Search our archive" /> */}
