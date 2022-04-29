@@ -13,14 +13,14 @@ function Home() {
         <h1 className="text-6xl">Phlote</h1>
         <div className="h-16"></div>
         <p>
-          Phlote music you love. Drop links below and be the first to onboard talented emerging artists to Web3.
+          Phlote music you love. Drop links below and help onboard talented emerging artists to Web3.
         </p>
       </div>
 
       <div className="hidden sm:block w-full">
         <div className="relative w-full flex justify-center">
           <h1 className="absolute w-full bottom-32 text-center text-2xl">
-            Phlote music you love. Drop links before and be the first to onboard talented emerging artists
+            Phlote music you love. Drop links before and help onboard talented emerging artists
            to Web3.{" "}
           </h1>
           {/* <SearchBar placeholder="Search our archive" /> */}
