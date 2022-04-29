@@ -15,7 +15,7 @@ export interface Submission {
   mediaURI: string;
   marketplace: string;
   tags?: string[];
-  cosigns: string[];
+  cosigns?: string[];
   username: string;
 }
 

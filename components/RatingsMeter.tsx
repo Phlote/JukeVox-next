@@ -1,10 +1,13 @@
 import { useWeb3React } from "@web3-react/core";
+import { ethers } from "ethers";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import { toast } from "react-toastify";
 import { cosign } from "../controllers/cosigns";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { verifyUser } from "../utils/web3";
+import { useProfile } from "./Forms/ProfileSettingsForm";
 
 export const RatingsMeter: React.FC<{
   submissionId: number;
@@ -47,11 +50,7 @@ export const RatingsMeter: React.FC<{
   };
 
   return (
-    <div
-      className={`flex gap-1 justify-center ${
-        canCosign ? "hover:opacity-25 cursor-pointer" : undefined
-      }`}
-    >
+    <div className={`flex gap-1 justify-center `}>
       {Array(5)
         .fill(null)
         .map((_, idx) => {
@@ -60,7 +59,9 @@ export const RatingsMeter: React.FC<{
               <button
                 key={`${submissionId}-cosign-${idx}`}
                 onClick={onCosign}
-                className={"h-6 w-6 relative"}
+                className={`h-6 w-6 relative ${
+                  canCosign ? "hover:opacity-25 cursor-pointer" : undefined
+                }`}
                 disabled={!canCosign}
               >
                 <Image
@@ -81,17 +82,60 @@ export const RatingsMeter: React.FC<{
                 </div>
               );
             } else {
-              return (
-                <div
-                  className="h-6 w-6 relative"
-                  key={`${submissionId}-cosign-${idx}`}
-                >
-                  <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
-                </div>
-              );
+              return <Cosign wallet={cosigns[idx]} />;
             }
           }
         })}
+    </div>
+  );
+};
+
+interface Cosign {
+  wallet: string;
+}
+
+const Cosign: React.FC<Cosign> = (props) => {
+  const { wallet } = props;
+  if (!ethers.utils.isAddress(wallet)) {
+    throw "Not a valid wallet";
+  }
+
+  const profileQuery = useProfile(wallet);
+
+  if (profileQuery?.isLoading) {
+    return (
+      <div className="h-6 w-6 relative opacity-25">
+        <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
+      </div>
+    );
+  }
+
+  if (
+    profileQuery?.data &&
+    profileQuery.data?.username &&
+    profileQuery.data?.profilePic
+  )
+    return (
+      <Link
+        href={"/profile/[username]"}
+        as={`/profile/${profileQuery.data.username}`}
+        passHref
+      >
+        <div className="h-6 w-6 relative rounded-full cursor-pointer hover:opacity-25">
+          <Image
+            className="rounded-full"
+            src={profileQuery.data.profilePic}
+            alt={`${wallet} cosign`}
+            layout="fill"
+          />
+        </div>
+      </Link>
+    );
+
+  // This is really an error state
+  return (
+    <div className="h-6 w-6 relative">
+      <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
     </div>
   );
 };

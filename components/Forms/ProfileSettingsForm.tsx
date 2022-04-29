@@ -76,7 +76,10 @@ export const ProfileSettingsForm = ({ wallet }) => {
     // <div className="grid lg:grid-cols-2 grid-cols-1 w-10/12 md:gap-16 gap-8 h-full flex flex-grow">
     <div className="grid lg:grid-cols-2 grid-cols-1 w-10/12 md:gap-16 gap-1 max-h-full flex flex-grow my-8">
       <div className="flex justify-center items-center">
-        <ProfilePictureUpload wallet={wallet} />
+        <ProfilePictureUpload
+          wallet={wallet}
+          initialImageURL={profile?.data?.profilePic}
+        />
       </div>
 
       <div className="flex flex-col items-center justify-center">
@@ -119,29 +122,59 @@ export const ProfileSettingsForm = ({ wallet }) => {
   );
 };
 
-const ProfilePictureUpload = ({ wallet }) => {
+const ProfilePictureUpload = ({ wallet, initialImageURL }) => {
   const queryClient = useQueryClient();
   const path = `${wallet}/profile`;
-  const profile = useProfile(wallet);
+  const [imageURL, setImageURL] = React.useState<string>(initialImageURL);
+  const [updating, setUpdating] = React.useState<boolean>();
+
+  React.useEffect(() => {
+    if (initialImageURL && initialImageURL !== imageURL)
+      setImageURL(initialImageURL);
+  }, [initialImageURL, imageURL]);
 
   const onDrop = useCallback(
     async (acceptedFiles) => {
-      const { error } = await supabase.storage
-        .from("profile-pics")
-        .upload(path, acceptedFiles[0], {
-          cacheControl: "3600",
-          upsert: true,
-        });
+      setUpdating(true);
+      const updateTime = Date.now();
+      try {
+        const uploadProfilePic = await supabase.storage
+          .from("profile-pics")
+          .upload(path, acceptedFiles[0], {
+            upsert: true,
+          });
 
-      if (!error) {
-        queryClient.refetchQueries(["profile", wallet]);
-      } else {
-        console.error(error);
-        toast.error(error);
+        if (uploadProfilePic.error) throw uploadProfilePic.error;
+
+        const publicURLQuery = supabase.storage
+          .from("profile-pics")
+          .getPublicUrl(`${wallet}/profile`);
+
+        if (publicURLQuery.error) throw publicURLQuery.error;
+
+        setImageURL(`${publicURLQuery.publicURL}?cacheBust=${updateTime}`);
+
+        const profileUpsert = await supabase.from("profiles").upsert(
+          {
+            wallet,
+            profilePic: publicURLQuery.publicURL,
+            updateTime,
+          },
+          { onConflict: "wallet" }
+        );
+
+        if (profileUpsert.error) throw profileUpsert.error;
+        await queryClient.invalidateQueries(["profile", wallet]);
+      } catch (e) {
+        console.error(e);
+        toast.error(e);
+      } finally {
+        setUpdating(false);
       }
     },
     [path, queryClient, wallet]
   );
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: "image/jpeg,image/png",
@@ -157,26 +190,42 @@ const ProfilePictureUpload = ({ wallet }) => {
     >
       <input {...getInputProps()} />
 
-      {isHovering && <p className="text-base italic">{"Upload new photo"}</p>}
+      <DropzoneText
+        isUpdating={updating}
+        isHovering={isHovering}
+        isDragActive={isDragActive}
+        profilePic={imageURL}
+      />
 
-      {isDragActive && <p className="text-base italic">{"Drop image here"}</p>}
-
-      {profile?.data?.profilePic && !isDragActive && (
+      {imageURL && !isDragActive && (
         <Image
-          className={`rounded-full ${isHovering && "opacity-25"}`}
-          src={profile?.data?.profilePic}
+          className={`rounded-full ${(isHovering || updating) && "opacity-25"}`}
+          src={imageURL}
           objectFit={"cover"}
           layout="fill"
           alt="profile picture"
           priority
         />
       )}
-
-      {!isHovering && !isDragActive && !profile?.data?.profilePic && (
-        <p className="text-base italic">{"Drop or select visual to upload"}</p>
-      )}
     </div>
   );
+};
+
+const DropzoneText = ({ isUpdating, isHovering, isDragActive, profilePic }) => {
+  if (isUpdating) return <p className="text-base italic">{"Updating..."}</p>;
+
+  if (isHovering)
+    return <p className="text-base italic">{"Upload new photo"}</p>;
+
+  if (isDragActive)
+    return <p className="text-base italic">{"Drop image here"}</p>;
+
+  if (!isHovering && !isDragActive && !profilePic)
+    return (
+      <p className="text-base italic">{"Drop or select visual to upload"}</p>
+    );
+
+  return null;
 };
 
 export const useProfile = (wallet, options = {}) => {
@@ -186,6 +235,6 @@ export const useProfile = (wallet, options = {}) => {
       if (!wallet) return null;
       return getProfile(wallet);
     },
-    options
+    { refetchOnWindowFocus: false, keepPreviousData: true, ...options }
   );
 };
