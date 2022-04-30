@@ -134,7 +134,8 @@ export async function getStaticProps({ params }) {
 
   return {
     props: {
-      submissions: await getSubmissionsWithFilter(null, { username }),
+      // TODO: everyone is a curator when it's just their submissions
+      submissions: await getSubmissionsWithFilter(null, { username }, true),
       profile: await getProfileForWallet(wallet),
     },
     revalidate: 60,
