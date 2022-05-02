@@ -29,6 +29,7 @@
   },
   "scripts": {
     "build": "yarn run lint && yarn run compile && yarn run size",
+    "chain": "hardhat node --network hardhat --no-deploy",
     "compile": "hardhat compile",
     "lint": "hardhat check",
     "size": "hardhat size-contracts --no-compile",

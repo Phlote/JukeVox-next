@@ -1,7 +1,7 @@
 import type { HardhatRuntimeEnvironment } from "hardhat/types"
 import type { DeployFunction } from "$/hardhat-deploy"
 
-const ARTIFACT = "PhloteVote"
+export const ARTIFACT = "PhloteVote"
 
 const deployFunc: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployer, tokenOwner } = await hre.getNamedAccounts()
@@ -10,7 +10,6 @@ const deployFunc: DeployFunction = async function (hre: HardhatRuntimeEnvironmen
       log: true,
       from: deployer,
       proxy: {
-        owner: tokenOwner,
         proxyContract: "OptimizedTransparentProxy",
         execute: {
           init: {
@@ -28,8 +27,16 @@ const deployFunc: DeployFunction = async function (hre: HardhatRuntimeEnvironmen
 
   await deploy
 
-  //const { address, implementation } = deploy
-  //console.log({address, implementation})
+  const PhloteVote = await hre.ethers.getContract(`${ARTIFACT}_Implementation`)
+  //const PhloteVote = await hre.ethers.getContract(`${ARTIFACT}`)
+  try {
+    await PhloteVote.initialize()
+  } catch (e) {
+    await PhloteVote.onUpgrade()
+  }
+
+  console.log(await PhloteVote.owner())
+  console.log(deployer, (await PhloteVote.balanceOf(await PhloteVote.owner())).toString())
 }
 
 deployFunc.tags = [ARTIFACT]

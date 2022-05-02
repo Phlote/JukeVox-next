@@ -87,6 +87,12 @@ const config: HardhatPhloteConfig = {
     tokenOwner: {
       default: 0,
     },
+    treasury: {
+      default: 2,
+    },
+    curatorAdmin: {
+      default: 3,
+    },
   },
 
   solidity: {

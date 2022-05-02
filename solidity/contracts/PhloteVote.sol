@@ -9,6 +9,8 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/draft-ERC20Pe
 import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20VotesUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
+import "hardhat/console.sol";
+
 /// @custom:security-contact nohackplz@phlote.xyz
 contract PhloteVote is
     Initializable,
@@ -19,8 +21,11 @@ contract PhloteVote is
     ERC20PermitUpgradeable,
     ERC20VotesUpgradeable
 {
+
+    uint256 public MAX_SUPPLY = 140000000000000000000000;
+
     /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor() public initializer { return; }
+    /*constructor() public initializer { return; }*/
 
     function initialize() public initializer {
         __ERC20_init("Phlote Vote", "PHLOTE");
@@ -29,7 +34,8 @@ contract PhloteVote is
         __Ownable_init();
         __ERC20Permit_init("Phlote Vote (test5)");
 
-        _mint(msg.sender, 140000 * 10 ** decimals());
+        _mint(msg.sender, MAX_SUPPLY);
+        console.log(msg.sender, balanceOf(msg.sender));
     }
 
 
