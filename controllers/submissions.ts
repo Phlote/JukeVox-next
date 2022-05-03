@@ -10,5 +10,5 @@ export const getSubmissions = async (
 };
 
 export const submit = async (submission: Submission, wallet: string) => {
-  await nextApiRequest(`submit`, "POST", { submission, wallet });
+  return await nextApiRequest(`submit`, "POST", { submission, wallet });
 };

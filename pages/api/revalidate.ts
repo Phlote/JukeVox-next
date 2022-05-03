@@ -10,13 +10,18 @@ export default async function handler(
   // if (req.query.secret !== process.env.MY_SECRET_TOKEN) {
   //   return res.status(401).json({ message: 'Invalid token' })
   // }
-  const { username } = req.body;
+  const { username, submissionId } = req.body;
 
   try {
     if (username) {
       console.log(`Revalidating: /profile/${username}`);
       await res.unstable_revalidate(`/profile/${username}`);
     } else console.log("username not provided or was falsy");
+
+    if (submissionId) {
+      console.log(`Revalidating: /submissions/${submissionId}`);
+      await res.unstable_revalidate(`/submissions/${submissionId}`);
+    } else console.log("submissionId not provided or was falsy");
 
     return res.json({ revalidated: true });
   } catch (err) {

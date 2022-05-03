@@ -29,7 +29,7 @@ export const Username: React.FC<Username> = (props) => {
   if (linkToProfile && username) {
     return (
       <Link href={"/profile/[username]"} as={`/profile/${username}`} passHref>
-        <div className="hover:opacity-50 cursor-pointer">{content}</div>
+        <a className="hover:opacity-50 cursor-pointer">{content}</a>
       </Link>
     );
   }
