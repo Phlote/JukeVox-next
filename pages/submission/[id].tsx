@@ -52,6 +52,16 @@ export default function SubmissionPage(props) {
             />
           </div>
         </div>
+        <div className="h-8" />
+
+        <a
+          href="https://twitter.com/share?ref_src=twsrc%5Etfw"
+          className="twitter-share-button"
+          data-text="Check out this track on @teamphlote"
+          data-show-count="false"
+        >
+          Tweet
+        </a>
       </SubmissionCardDetails>
     </div>
   );
