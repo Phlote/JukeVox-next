@@ -77,7 +77,7 @@ function Archive(props) {
                           rel="noreferrer"
                           target="_blank"
                           href={mediaURI}
-                          className="underline"
+                          className="underline hover:opacity-50"
                         >
                           {mediaTitle}
                         </a>

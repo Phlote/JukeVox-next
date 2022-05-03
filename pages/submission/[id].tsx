@@ -11,7 +11,8 @@ export default function SubmissionPage(props) {
   const router = useRouter();
   const { submission } = props as { submission: Submission };
 
-  const { mediaTitle, username, curatorWallet, artistName } = submission;
+  const { mediaTitle, username, curatorWallet, artistName, mediaURI } =
+    submission;
 
   if (router.isFallback) {
     //TODO better loading
@@ -29,14 +30,16 @@ export default function SubmissionPage(props) {
       </div>
 
       <SubmissionCardDetails>
-        <h1 className="text-3xl"> {mediaTitle}</h1>
+        <a href={mediaURI} className="text-3xl hover:opacity-50">
+          {mediaTitle}
+        </a>
         <div className="h-8" />
 
         <div className="flex">
           <div>
             <h2 className="text-base opacity-60"> Artist</h2>
             <div className="h-2" />
-            <p>{artistName}</p>
+            <a>{artistName}</a>
           </div>
           <div className="flex-grow" />
           <div>
@@ -61,7 +64,7 @@ const SubmissionCardDetails = styled.div`
     background: rgba(122, 122, 122, 0.08);
     box-shadow: 0px 0px 55px rgba(42, 45, 61, 0.08),
       inset 0px 0px 90px rgba(0, 0, 0, 0.05);
-    backdrop-filter: blur(458px);
+    backdrop-filter: blur(60px);
   }
 `;
 
