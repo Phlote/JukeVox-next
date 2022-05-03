@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Layout, { ArchiveLayout } from "../components/Layouts";
 import { RatingsMeter } from "../components/RatingsMeter";
@@ -17,6 +18,7 @@ function Archive(props) {
   const [searchTerm] = useSearchTerm();
   const searchResults = useSubmissionSearch(searchTerm);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
+  const router = useRouter();
 
   // subject to change based on user's search query
   useEffect(() => {
@@ -67,7 +69,13 @@ function Archive(props) {
 
                 return (
                   <>
-                    <ArchiveTableRow key={`${submissionTime}`}>
+                    <ArchiveTableRow
+                      key={`${submissionTime}`}
+                      className="hover:opacity-80 cursor-pointer"
+                      onClick={() => {
+                        router.push(`/submission/${id}`);
+                      }}
+                    >
                       <ArchiveTableDataCell>
                         <SubmissionDate submissionTimestamp={submissionTime} />
                       </ArchiveTableDataCell>
@@ -77,7 +85,7 @@ function Archive(props) {
                           rel="noreferrer"
                           target="_blank"
                           href={mediaURI}
-                          className="underline hover:opacity-50"
+                          className="hover:opacity-50"
                         >
                           {mediaTitle}
                         </a>
