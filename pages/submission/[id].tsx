@@ -93,9 +93,11 @@ export async function getStaticProps({ params }) {
   const submissionsQuery = await supabase
     .from("submissions")
     .select()
-    .match({ id });
+    .match({ id: parseInt(id) });
 
   if (submissionsQuery.error) throw submissionsQuery.error;
+
+  console.log(submissionsQuery.data[0]);
 
   return {
     props: {
