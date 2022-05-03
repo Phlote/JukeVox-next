@@ -20,7 +20,7 @@ export default function SubmissionPage(props) {
   }
 
   return (
-    <div className="w-80 h-1/2 flex flex-col">
+    <div className="w-80 flex flex-col">
       <div className="w-full h-60 flex-none relative">
         <Image
           src={"/default_submission_image.jpeg"}
