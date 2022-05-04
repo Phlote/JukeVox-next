@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
+import React from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 import Layout from "../../components/Layouts";
@@ -8,11 +9,8 @@ import { supabase } from "../../lib/supabase";
 import { Submission } from "../../types";
 
 export default function SubmissionPage(props) {
-  const router = useRouter();
   const { submission } = props as { submission: Submission };
-
-  const { mediaTitle, username, curatorWallet, artistName, mediaURI } =
-    submission;
+  const router = useRouter();
 
   if (router.isFallback) {
     //TODO better loading
@@ -30,8 +28,8 @@ export default function SubmissionPage(props) {
       </div>
 
       <SubmissionCardDetails>
-        <a href={mediaURI} className="text-3xl hover:opacity-50">
-          {mediaTitle}
+        <a href={submission.mediaURI} className="text-3xl hover:opacity-50">
+          {submission.mediaTitle}
         </a>
         <div className="h-8" />
 
@@ -39,15 +37,15 @@ export default function SubmissionPage(props) {
           <div>
             <h2 className="text-base opacity-60"> Artist</h2>
             <div className="h-2" />
-            <a>{artistName}</a>
+            <a>{submission.artistName}</a>
           </div>
           <div className="flex-grow" />
           <div>
             <h2 className="text-base opacity-60"> Curator</h2>
             <div className="h-2" />
             <Username
-              username={username}
-              wallet={curatorWallet}
+              username={submission.username}
+              wallet={submission.curatorWallet}
               linkToProfile
             />
           </div>
@@ -93,16 +91,15 @@ export async function getStaticProps({ params }) {
   const submissionsQuery = await supabase
     .from("submissions")
     .select()
-    .match({ id: parseInt(id) });
+    .match({ id });
 
   if (submissionsQuery.error) throw submissionsQuery.error;
-
-  console.log(submissionsQuery.data[0]);
 
   return {
     props: {
       submission: submissionsQuery.data[0] as Submission,
     },
+    revalidate: 60,
   };
 }
 
