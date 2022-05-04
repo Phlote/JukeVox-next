@@ -107,10 +107,6 @@ export async function getStaticProps({ params }) {
     props: {
       submission: submissionsQuery.data[0] as Submission,
     },
-    // This is done because it seems a bit annoying to manually update a user's submission pages whenever they change the username
-    // but it's probably not so expensive, just feel a bit worried using unstable_revalidate so much at once
-    // TODO: revalidate all the user's submission pages
-    revalidate: 60,
   };
 }
 

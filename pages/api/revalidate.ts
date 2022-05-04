@@ -1,6 +1,7 @@
 // pages/api/revalidate.js
 
 import { NextApiRequest, NextApiResponse } from "next";
+import { supabase } from "../../lib/supabase";
 
 export default async function handler(
   req: NextApiRequest,
@@ -16,6 +17,21 @@ export default async function handler(
     if (username) {
       console.log(`Revalidating: /profile/${username}`);
       await res.unstable_revalidate(`/profile/${username}`);
+
+      const submissionsQuery = await supabase
+        .from("submissions")
+        .select()
+        .match({ username });
+
+      if (submissionsQuery.error) throw submissionsQuery.error;
+
+      // update all the submission pages for that user
+      await Promise.all(
+        submissionsQuery.data.map(async ({ submissionId }) => {
+          console.log(`Revalidating: /submissions/${submissionId}`);
+          await res.unstable_revalidate(`/submissions/${submissionId}`);
+        })
+      );
     } else console.log("username not provided or was falsy");
 
     if (submissionId) {
