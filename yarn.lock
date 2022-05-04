@@ -6326,6 +6326,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"next-share@npm:^0.13.0":
+  version: 0.13.0
+  resolution: "next-share@npm:0.13.0"
+  peerDependencies:
+    react: ^17.0.2
+    react-dom: ^17.0.2
+    react-scripts: ^4.0.3
+  checksum: 372c2cab63725300864b9e6193b726e53cf5527006baf81dfe2a0e76fa637c38be9469c20e0332456816374f43139cf731a4168c399843caa361a8e67035b39a
+  languageName: node
+  linkType: hard
+
 "next-tick@npm:^1.1.0":
   version: 1.1.0
   resolution: "next-tick@npm:1.1.0"
@@ -6375,6 +6386,7 @@ __metadata:
     hardhat: ^2.8.3
     jotai: ^1.5.3
     next: "npm:12.1.6-canary.3"
+    next-share: ^0.13.0
     node-fetch: ^3.2.3
     postcss: ^8.4.6
     prop-types: ^15.8.1
