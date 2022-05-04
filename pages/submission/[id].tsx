@@ -104,6 +104,8 @@ export async function getStaticProps({ params }) {
     props: {
       submission: submissionsQuery.data[0] as Submission,
     },
+    // just in case
+    revalidate: 3600,
   };
 }
 
