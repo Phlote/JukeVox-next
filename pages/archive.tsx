@@ -30,100 +30,98 @@ function Archive(props) {
   }, [searchResults, submissions]);
 
   return (
-    <ArchiveLayout>
-      <div className="flex flex-col">
-        <table className="table-fixed w-full text-center mt-8">
-          <thead>
-            <tr
-              style={{
-                borderBottom: "1px solid white",
-                paddingBottom: "1rem",
-              }}
-            >
-              <ArchiveTableHeader label="Date" />
-              <ArchiveTableHeader label="Artist" />
-              <ArchiveTableHeader label="Title" />
-              <ArchiveTableHeader label="Media Type" filterKey="mediaType" />
-              <ArchiveTableHeader label="Platform" filterKey="marketplace" />
-              <ArchiveTableHeader label="Curator" filterKey="curatorWallet" />
-              <ArchiveTableHeader label="Co-Signs" />
-            </tr>
-          </thead>
-
-          {submissions.length > 0 && (
-            <tbody>
-              <tr className="h-4" />
-              {submissions?.map((curation) => {
-                const {
-                  id,
-                  curatorWallet,
-                  artistName,
-                  mediaTitle,
-                  mediaType,
-                  mediaURI,
-                  marketplace,
-                  submissionTime,
-                  cosigns,
-                  username,
-                } = curation;
-
-                return (
-                  <>
-                    <ArchiveTableRow
-                      key={`${submissionTime}`}
-                      className="hover:opacity-80 cursor-pointer"
-                      onClick={() => {
-                        router.push(`/submission/${id}`);
-                      }}
-                    >
-                      <ArchiveTableDataCell>
-                        <SubmissionDate submissionTimestamp={submissionTime} />
-                      </ArchiveTableDataCell>
-                      <ArchiveTableDataCell>{artistName}</ArchiveTableDataCell>
-                      <ArchiveTableDataCell>
-                        <a
-                          rel="noreferrer"
-                          target="_blank"
-                          href={mediaURI}
-                          className="hover:opacity-50"
-                        >
-                          {mediaTitle}
-                        </a>
-                      </ArchiveTableDataCell>
-                      <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
-                      <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
-                      <ArchiveTableDataCell>
-                        <Username
-                          username={username}
-                          wallet={curatorWallet}
-                          linkToProfile
-                        />
-                      </ArchiveTableDataCell>
-                      <ArchiveTableDataCell>
-                        <RatingsMeter
-                          submissionId={id}
-                          submitterWallet={curatorWallet}
-                          initialCosigns={cosigns}
-                        />
-                      </ArchiveTableDataCell>
-                    </ArchiveTableRow>
-                    <tr className="h-4" />
-                  </>
-                );
-              })}
-            </tbody>
-          )}
-        </table>
-        {submissions.length === 0 && (
-          <div
-            className="w-full mt-4 flex-grow flex justify-center items-center"
-            style={{ color: "rgba(105, 105, 105, 1)" }}
+    <div className="flex flex-col h-full">
+      <table className="table-fixed w-full text-center mt-8">
+        <thead>
+          <tr
+            style={{
+              borderBottom: "1px solid white",
+              paddingBottom: "1rem",
+            }}
           >
-            <p className="text-lg italic">{"No Search Results"}</p>
-          </div>
+            <ArchiveTableHeader label="Date" />
+            <ArchiveTableHeader label="Artist" />
+            <ArchiveTableHeader label="Title" />
+            <ArchiveTableHeader label="Media Type" filterKey="mediaType" />
+            <ArchiveTableHeader label="Platform" filterKey="marketplace" />
+            <ArchiveTableHeader label="Curator" filterKey="curatorWallet" />
+            <ArchiveTableHeader label="Co-Signs" />
+          </tr>
+        </thead>
+
+        {submissions.length > 0 && (
+          <tbody>
+            <tr className="h-4" />
+            {submissions?.map((curation) => {
+              const {
+                id,
+                curatorWallet,
+                artistName,
+                mediaTitle,
+                mediaType,
+                mediaURI,
+                marketplace,
+                submissionTime,
+                cosigns,
+                username,
+              } = curation;
+
+              return (
+                <>
+                  <ArchiveTableRow
+                    key={`${submissionTime}`}
+                    className="hover:opacity-80 cursor-pointer"
+                    onClick={() => {
+                      router.push(`/submission/${id}`);
+                    }}
+                  >
+                    <ArchiveTableDataCell>
+                      <SubmissionDate submissionTimestamp={submissionTime} />
+                    </ArchiveTableDataCell>
+                    <ArchiveTableDataCell>{artistName}</ArchiveTableDataCell>
+                    <ArchiveTableDataCell>
+                      <a
+                        rel="noreferrer"
+                        target="_blank"
+                        href={mediaURI}
+                        className="hover:opacity-50"
+                      >
+                        {mediaTitle}
+                      </a>
+                    </ArchiveTableDataCell>
+                    <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
+                    <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
+                    <ArchiveTableDataCell>
+                      <Username
+                        username={username}
+                        wallet={curatorWallet}
+                        linkToProfile
+                      />
+                    </ArchiveTableDataCell>
+                    <ArchiveTableDataCell>
+                      <RatingsMeter
+                        submissionId={id}
+                        submitterWallet={curatorWallet}
+                        initialCosigns={cosigns}
+                      />
+                    </ArchiveTableDataCell>
+                  </ArchiveTableRow>
+                  <tr className="h-4" />
+                </>
+              );
+            })}
+          </tbody>
         )}
-      </div>
-    </ArchiveLayout>
+      </table>
+      {submissions.length === 0 && (
+        <div
+          className="w-full h-full mt-4 flex-grow flex justify-center items-center"
+          style={{ color: "rgba(105, 105, 105, 1)" }}
+        >
+          <p className="text-lg italic">{"No Search Results"}</p>
+        </div>
+      )}
+    </div>
   );
 }
 
