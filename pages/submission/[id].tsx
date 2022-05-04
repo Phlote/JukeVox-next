@@ -53,9 +53,7 @@ export default function SubmissionPage(props) {
         </div>
         <div className="h-8" />
         <TwitterShareButton
-          url={`${process.env.VERCEL_URL ?? "localhost:3000"}/submission/${
-            submission.id
-          }`}
+          url={`${process.env.NEXT_PUBLIC_VERCEL_URL}/submission/${submission.id}`}
           title={`Have you heard ${submission.mediaTitle}? It's a 💎`}
         >
           <TwitterIcon size={32} round />
