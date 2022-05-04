@@ -1,6 +1,6 @@
-import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import Script from "next/script";
 import React from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
@@ -20,13 +20,10 @@ export default function SubmissionPage(props) {
 
   return (
     <div className="w-80 flex flex-col">
-      <Head>
-        <script
-          async
-          src="https://platform.twitter.com/widgets.js"
-          charSet="utf-8"
-        ></script>
-      </Head>
+      <Script
+        strategy="beforeInteractive"
+        src="https://platform.twitter.com/widgets.js"
+      ></Script>
       <div className="w-full h-60 flex-none relative">
         <Image
           src={"/default_submission_image.jpeg"}
