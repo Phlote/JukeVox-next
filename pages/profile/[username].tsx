@@ -65,7 +65,13 @@ export default function Profile(props) {
 
                 return (
                   <>
-                    <ArchiveTableRow key={`${submissionTime}`}>
+                    <ArchiveTableRow
+                      key={`${submissionTime}`}
+                      className="hover:opacity-80 cursor-pointer"
+                      onClick={() => {
+                        router.push(`/submission/${id}`);
+                      }}
+                    >
                       <ArchiveTableDataCell>
                         <SubmissionDate submissionTimestamp={submissionTime} />
                       </ArchiveTableDataCell>

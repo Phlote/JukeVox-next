@@ -22,7 +22,10 @@ export default async function handler(
         { filters: submissionToElasticSearchDocument(filters) }
       );
 
-      if (res.results.length === 0) response.status(200).send({ results: [] });
+      if (res.results.length === 0) {
+        response.status(200).send([]);
+        return;
+      }
 
       const ids = res.results.map((document) =>
         parseInt(document.supabase_id.raw)

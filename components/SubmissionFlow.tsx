@@ -36,11 +36,11 @@ export const SubmissionFlow: React.FC = (props) => {
         throw "Not Authenticated";
       }
 
-      await submit(submission, account);
+      const result = (await submit(submission, account)) as Submission;
 
       setPage(1);
       queryClient.invalidateQueries("submissions");
-      await revalidate(profile?.data?.username);
+      await revalidate(profile?.data?.username, result.id);
     } catch (e) {
       toast.error(e);
       console.error(e);
