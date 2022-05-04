@@ -36,11 +36,6 @@ const NextWeb3App = ({ Component, pageProps }: AppPropsWithLayout) => {
         {/* TODO edit this png to be a square */}
         <link rel="icon" type="image/png" href="/favicon.png" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        <script
-          async
-          src="https://platform.twitter.com/widgets.js"
-          charSet="utf-8"
-        ></script>
       </Head>
       <QueryClientProvider client={queryClient}>
         <Web3ReactProvider getLibrary={getLibrary}>

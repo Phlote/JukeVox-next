@@ -1,3 +1,4 @@
+import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
@@ -19,6 +20,13 @@ export default function SubmissionPage(props) {
 
   return (
     <div className="w-80 flex flex-col">
+      <Head>
+        <script
+          async
+          src="https://platform.twitter.com/widgets.js"
+          charSet="utf-8"
+        ></script>
+      </Head>
       <div className="w-full h-60 flex-none relative">
         <Image
           src={"/default_submission_image.jpeg"}
@@ -99,6 +107,10 @@ export async function getStaticProps({ params }) {
     props: {
       submission: submissionsQuery.data[0] as Submission,
     },
+    // This is done because it seems a bit annoying to manually update a user's submission pages whenever they change the username
+    // but it's probably not so expensive, just feel a bit worried using unstable_revalidate so much at once
+    // TODO: revalidate all the user's submission pages
+    revalidate: 60,
   };
 }
 
