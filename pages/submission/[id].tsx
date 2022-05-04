@@ -61,7 +61,7 @@ export default function SubmissionPage(props) {
         <a
           href="https://twitter.com/share?ref_src=twsrc%5Etfw"
           className="twitter-share-button"
-          data-text={`Have you heard ${submission.mediaTitle}? It's a 💎`}
+          data-text={`Have you heard ${submission.mediaTitle}? It's a 💎\n`}
           data-show-count="false"
         >
           Tweet
