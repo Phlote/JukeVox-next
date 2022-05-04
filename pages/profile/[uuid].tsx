@@ -9,6 +9,7 @@ import {
 } from "../../components/Tables/archive";
 import { UserStatsBar } from "../../components/UserStatsBar";
 import { supabase } from "../../lib/supabase";
+import { Submission } from "../../types";
 import {
   getProfileForWallet,
   getSubmissionsWithFilter,
@@ -149,13 +150,19 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-  const profilesQuery = await supabase.from("profiles").select();
+  const submissionsQuery = await supabase.from("submissions").select();
 
-  if (profilesQuery.error) throw profilesQuery.error;
+  if (submissionsQuery.error) throw submissionsQuery.error;
 
-  const paths = profilesQuery.data.map(({ username }) => ({
+  const UUIDs = submissionsQuery.data.map((submission: Submission) => {
+    if (submission.username) return submission.username;
+    else return submission.curatorWallet;
+  });
+
+  // can be wallet or username
+  const paths = UUIDs.map((uuid) => ({
     params: {
-      username,
+      uuid,
     },
   }));
 
