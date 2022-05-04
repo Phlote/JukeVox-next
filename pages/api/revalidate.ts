@@ -28,19 +28,15 @@ export default async function handler(
       // update all the submission pages for that user
       await Promise.all(
         submissionsQuery.data.map(async ({ id }) => {
-          try {
-            console.log(`Revalidating: /submissions/${id}`);
-            await res.unstable_revalidate(`/submissions/${id}`);
-          } catch (e) {
-            console.error(`Failed to revalidate /submissions/${id}`, e);
-          }
+          console.log(`Revalidating: /submission/${id}`);
+          await res.unstable_revalidate(`/submission/${id}`);
         })
       );
     } else console.log("username not provided or was falsy");
 
     if (submissionId) {
-      console.log(`Revalidating: /submissions/${submissionId}`);
-      await res.unstable_revalidate(`/submissions/${submissionId}`);
+      console.log(`Revalidating: /submission/${submissionId}`);
+      await res.unstable_revalidate(`/submission/${submissionId}`);
     } else console.log("submissionId not provided or was falsy");
 
     return res.json({ revalidated: true });
