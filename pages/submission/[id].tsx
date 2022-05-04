@@ -21,8 +21,10 @@ export default function SubmissionPage(props) {
   return (
     <div className="w-80 flex flex-col">
       <Script
-        strategy="beforeInteractive"
+        strategy="lazyOnload"
+        async
         src="https://platform.twitter.com/widgets.js"
+        charSet="utf-8"
       ></Script>
       <div className="w-full h-60 flex-none relative">
         <Image
@@ -59,7 +61,7 @@ export default function SubmissionPage(props) {
         <a
           href="https://twitter.com/share?ref_src=twsrc%5Etfw"
           className="twitter-share-button"
-          data-text="Check out this track on @teamphlote"
+          data-text={`Have you heard ${submission.mediaTitle}? It's a 💎`}
           data-show-count="false"
         >
           Tweet
