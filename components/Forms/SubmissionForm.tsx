@@ -109,7 +109,7 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
           placeholder="Artist Wallet Address (Optional)"
         />
         {artistWallet.meta.touched && artistWallet.meta.error && (
-          <span className="text-red-600 ml-2">{artistWallet.meta.error}</span>
+          <span className="ml-2 text-red-600">{artistWallet.meta.error}</span>
         )}
       </HollowInputContainer>
       <HollowTagsInput {...tags.input} />

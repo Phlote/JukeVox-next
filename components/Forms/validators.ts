@@ -34,7 +34,7 @@ export const validateSubmission = (values: Submission) => {
 
   if (values.artistWallet) {
     if (!ethers.utils.isAddress(values.artistWallet)) {
-      errors.artistWallet = "Invalid Address";
+      errors.artistWallet = "Invalid ETH Address";
     }
   }
 
