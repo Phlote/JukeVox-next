@@ -16,7 +16,7 @@ import useENSName from "../../hooks/web3/useENSName";
 import { supabase } from "../../lib/supabase";
 import { Submission } from "../../types";
 import {
-  getProfileForWallet,
+  getProfileWithFilter,
   getSubmissionsWithFilter,
 } from "../../utils/supabase";
 
@@ -176,20 +176,11 @@ export async function getStaticProps({ params }) {
 
   const username = uuid;
 
-  const profilesQuery = await supabase
-    .from("profiles")
-    .select()
-    .match({ username });
-
-  if (profilesQuery.error) throw profilesQuery.error;
-  //TODO: this is a bit dumb, we should have more general querying for profiles
-  const { wallet } = profilesQuery.data[0];
-
   return {
     props: {
       // TODO: everyone is a curator when it's just their submissions
       submissions: await getSubmissionsWithFilter(null, { username }, true),
-      profile: await getProfileForWallet(wallet),
+      profile: await getProfileWithFilter({ username }),
     },
     revalidate: 60,
   };

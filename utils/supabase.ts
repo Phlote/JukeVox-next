@@ -28,11 +28,8 @@ export const getSubmissionsWithFilter = async (
   return sorted.map(cleanSubmission);
 };
 
-export const getProfileForWallet = async (wallet: string) => {
-  const profilesQuery = await supabase
-    .from("profiles")
-    .select()
-    .match({ wallet });
+export const getProfileWithFilter = async (filter: Partial<UserProfile>) => {
+  const profilesQuery = await supabase.from("profiles").select().match(filter);
 
   if (profilesQuery.error) throw profilesQuery.error;
 
@@ -46,10 +43,15 @@ export const getProfileForWallet = async (wallet: string) => {
 
   // get number of cosigns
 
+  const matchFilter = {} as Partial<Submission>;
+  //TODO should rename "wallet" to "curatorWallet"
+  if (filter.username) matchFilter.username = filter.username;
+  else if (filter.wallet) matchFilter.curatorWallet = filter.wallet;
+
   const submissionsQuery = await supabase
     .from("submissions")
     .select()
-    .match({ curatorWallet: wallet });
+    .match(matchFilter);
 
   if (submissionsQuery.error) throw submissionsQuery.error;
 

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getProfileForWallet } from "../../utils/supabase";
+import { getProfileWithFilter } from "../../utils/supabase";
 
 export default async function handler(
   request: NextApiRequest,
@@ -7,6 +7,6 @@ export default async function handler(
 ) {
   const { wallet } = request.query;
 
-  const profile = await getProfileForWallet(wallet as string);
+  const profile = await getProfileWithFilter({ wallet: wallet as string });
   response.status(200).send(profile);
 }

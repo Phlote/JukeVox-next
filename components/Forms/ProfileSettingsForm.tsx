@@ -4,7 +4,7 @@ import { useDropzone } from "react-dropzone";
 import { useField, useForm } from "react-final-form-hooks";
 import { useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import { getProfile } from "../../controllers/profiles";
+import { getProfileForWallet } from "../../controllers/profiles";
 import { revalidate } from "../../controllers/revalidate";
 import { supabase } from "../../lib/supabase";
 import {
@@ -233,7 +233,7 @@ export const useProfile = (wallet, options = {}) => {
     ["profile", wallet],
     async () => {
       if (!wallet) return null;
-      return getProfile(wallet);
+      return getProfileForWallet(wallet);
     },
     { refetchOnWindowFocus: false, keepPreviousData: true, ...options }
   );
