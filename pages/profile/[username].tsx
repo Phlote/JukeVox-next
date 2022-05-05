@@ -153,11 +153,14 @@ export async function getStaticPaths() {
 
   if (profilesQuery.error) throw profilesQuery.error;
 
-  const paths = profilesQuery.data.map(({ username }) => ({
-    params: {
-      username,
-    },
-  }));
+  // move quickly to having sub profiles
+  const paths = profilesQuery.data
+    .filter(({ username }) => !!username)
+    .map(({ username }) => ({
+      params: {
+        username,
+      },
+    }));
 
   return { paths, fallback: true };
 }

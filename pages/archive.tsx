@@ -11,6 +11,7 @@ import {
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
 import { useSubmissionSearch } from "../hooks/useSubmissions";
+import { gaEvent } from "../lib/ga";
 import { Submission } from "../types";
 
 function Archive(props) {
@@ -25,9 +26,16 @@ function Archive(props) {
     if (
       searchResults &&
       JSON.stringify(searchResults) !== JSON.stringify(submissions)
-    )
+    ) {
+      gaEvent({
+        action: "search",
+        params: {
+          search_term: searchTerm,
+        },
+      });
       setSubmissions(searchResults);
-  }, [searchResults, submissions]);
+    }
+  }, [searchResults, submissions, searchTerm]);
 
   return (
     <div className="flex flex-col h-full">
