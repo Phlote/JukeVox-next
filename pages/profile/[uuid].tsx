@@ -12,6 +12,7 @@ import {
 } from "../../components/Tables/archive";
 import { UserStatsBar } from "../../components/UserStatsBar";
 import { useIsCurator } from "../../hooks/useIsCurator";
+import useENSName from "../../hooks/web3/useENSName";
 import { supabase } from "../../lib/supabase";
 import { Submission } from "../../types";
 import {
@@ -27,6 +28,8 @@ export default function Profile(props) {
   const { account } = useWeb3React();
 
   const promptToMakeProfile = isCurator && uuid === account;
+
+  const ENSName = useENSName(uuid as string);
 
   if (router.isFallback) {
     //TODO better loading
@@ -45,7 +48,7 @@ export default function Profile(props) {
           )}
           {!profile && (
             <div className="flex flex-col items-center">
-              <h1>{`${uuid}'s Curations`}</h1>
+              <h1>{`${ENSName}'s Curations`}</h1>
               <div className="h-4" />
               {promptToMakeProfile && (
                 <Link href="/editprofile" passHref>
