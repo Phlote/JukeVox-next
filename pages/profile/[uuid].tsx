@@ -1,3 +1,6 @@
+import { useWeb3React } from "@web3-react/core";
+import { ethers } from "ethers";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import Layout, { ArchiveLayout } from "../../components/Layouts";
 import { RatingsMeter } from "../../components/RatingsMeter";
@@ -8,7 +11,10 @@ import {
   SubmissionDate,
 } from "../../components/Tables/archive";
 import { UserStatsBar } from "../../components/UserStatsBar";
+import { useIsCurator } from "../../hooks/useIsCurator";
+import useENSName from "../../hooks/web3/useENSName";
 import { supabase } from "../../lib/supabase";
+import { Submission } from "../../types";
 import {
   getProfileForWallet,
   getSubmissionsWithFilter,
@@ -17,6 +23,13 @@ import {
 export default function Profile(props) {
   const router = useRouter();
   const { submissions, profile } = props;
+  const uuid = router.query.uuid;
+  const isCurator = useIsCurator();
+  const { account } = useWeb3React();
+
+  const promptToMakeProfile = isCurator && uuid === account;
+
+  const ENSName = useENSName(uuid as string);
 
   if (router.isFallback) {
     //TODO better loading
@@ -26,8 +39,26 @@ export default function Profile(props) {
   return (
     <ArchiveLayout>
       <div className="flex flex-col">
-        <div className="flex">
-          <div className="flex-grow"></div> <UserStatsBar profile={profile} />
+        <div className="flex justify-center">
+          {profile && (
+            <>
+              <div className="flex-grow"></div>
+              <UserStatsBar profile={profile} />
+            </>
+          )}
+          {!profile && (
+            <div className="flex flex-col items-center">
+              <h1>{`${ENSName || uuid}'s Curations`}</h1>
+              <div className="h-4" />
+              {promptToMakeProfile && (
+                <Link href="/editprofile" passHref>
+                  <h1 className="italic underline cursor-pointer">
+                    {"Click here to set your profile"}
+                  </h1>
+                </Link>
+              )}
+            </div>
+          )}
         </div>
 
         <table className="table-fixed w-full text-center mt-8">
@@ -82,6 +113,7 @@ export default function Profile(props) {
                           target="_blank"
                           href={mediaURI}
                           className="underline"
+                          onClick={(e) => e.stopPropagation()}
                         >
                           {mediaTitle}
                         </a>
@@ -127,7 +159,22 @@ Profile.getLayout = function getLayout(page) {
 
 // params will contain the wallet for each generated page.
 export async function getStaticProps({ params }) {
-  const { username } = params;
+  const { uuid } = params;
+
+  if (ethers.utils.isAddress(uuid)) {
+    return {
+      props: {
+        submissions: await getSubmissionsWithFilter(
+          null,
+          { curatorWallet: uuid },
+          true
+        ),
+      },
+      revalidate: 60,
+    };
+  }
+
+  const username = uuid;
 
   const profilesQuery = await supabase
     .from("profiles")
@@ -135,7 +182,7 @@ export async function getStaticProps({ params }) {
     .match({ username });
 
   if (profilesQuery.error) throw profilesQuery.error;
-  // TODO this is a bit redundant, update the profiles table
+  //TODO: this is a bit dumb, we should have more general querying for profiles
   const { wallet } = profilesQuery.data[0];
 
   return {
@@ -149,18 +196,22 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-  const profilesQuery = await supabase.from("profiles").select();
+  const submissionsQuery = await supabase.from("submissions").select();
 
-  if (profilesQuery.error) throw profilesQuery.error;
+  if (submissionsQuery.error) throw submissionsQuery.error;
 
-  // move quickly to having sub profiles
-  const paths = profilesQuery.data
-    .filter(({ username }) => !!username)
-    .map(({ username }) => ({
-      params: {
-        username,
-      },
-    }));
+  // IDEA: should we have two pages for each user?
+  const UUIDs = submissionsQuery.data.map((submission: Submission) => {
+    if (submission.username) return submission.username;
+    else return submission.curatorWallet;
+  });
+
+  // can be wallet or username
+  const paths = UUIDs.map((uuid) => ({
+    params: {
+      uuid,
+    },
+  }));
 
   return { paths, fallback: true };
 }

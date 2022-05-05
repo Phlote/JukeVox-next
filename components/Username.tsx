@@ -26,10 +26,19 @@ export const Username: React.FC<Username> = (props) => {
 
   if (!content) throw "<Username/> is being used wrong";
 
-  if (linkToProfile && username) {
+  if (linkToProfile) {
     return (
-      <Link href={"/profile/[username]"} as={`/profile/${username}`} passHref>
-        <a className="hover:opacity-50 cursor-pointer">{content}</a>
+      <Link
+        href={"/profile/[uuid]"}
+        as={`/profile/${username ? username : wallet}`}
+        passHref
+      >
+        <a
+          onClick={(e) => e.stopPropagation()}
+          className="hover:opacity-50 cursor-pointer"
+        >
+          {content}
+        </a>
       </Link>
     );
   }
