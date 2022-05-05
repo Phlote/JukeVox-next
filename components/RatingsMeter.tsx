@@ -33,7 +33,8 @@ export const RatingsMeter: React.FC<{
     !cosigns.includes(account) &&
     submitterWallet.toLowerCase() !== account.toLowerCase();
 
-  const onCosign = async () => {
+  const onCosign = async (e) => {
+    e.stopPropagation();
     setCosigns([...cosigns, "pending"]);
     try {
       const authenticated = await verifyUser(account, library);
