@@ -48,7 +48,7 @@ export default function Profile(props) {
           )}
           {!profile && (
             <div className="flex flex-col items-center">
-              <h1>{`${ENSName}'s Curations`}</h1>
+              <h1>{`${ENSName || uuid}'s Curations`}</h1>
               <div className="h-4" />
               {promptToMakeProfile && (
                 <Link href="/editprofile" passHref>
@@ -113,6 +113,7 @@ export default function Profile(props) {
                           target="_blank"
                           href={mediaURI}
                           className="underline"
+                          onClick={(e) => e.stopPropagation()}
                         >
                           {mediaTitle}
                         </a>

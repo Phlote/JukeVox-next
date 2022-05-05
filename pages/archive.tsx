@@ -93,6 +93,7 @@ function Archive(props) {
                         target="_blank"
                         href={mediaURI}
                         className="hover:opacity-50"
+                        onClick={(e) => e.stopPropagation()}
                       >
                         {mediaTitle}
                       </a>
