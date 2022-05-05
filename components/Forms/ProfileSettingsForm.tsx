@@ -4,8 +4,10 @@ import { useDropzone } from "react-dropzone";
 import { useField, useForm } from "react-final-form-hooks";
 import { useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import { getProfileForWallet } from "../../controllers/profiles";
-import { revalidate } from "../../controllers/revalidate";
+import {
+  getProfileForWallet,
+  updateProfileAndRevalidate,
+} from "../../controllers/profiles";
 import { supabase } from "../../lib/supabase";
 import {
   HollowButton,
@@ -31,27 +33,8 @@ export const ProfileSettingsForm = ({ wallet }) => {
   const onSubmit = async (formData: Partial<UserProfile>) => {
     setSubmitting(true);
     try {
-      const { username, city, twitter } = formData;
-      const { data, error } = await supabase.from("profiles").upsert(
-        {
-          wallet,
-          username: username?.trim(),
-          city: city?.trim(),
-          twitter: twitter?.trim(),
-        },
-        { onConflict: "wallet" }
-      );
-      if (error) throw error;
-
-      const submissionsUpdate = await supabase
-        .from("submissions")
-        .update({ username })
-        .match({ curatorWallet: wallet });
-
-      if (submissionsUpdate.error) throw submissionsUpdate.error;
-
-      await queryClient.invalidateQueries(["profile", wallet]);
-      await revalidate(username);
+      await updateProfileAndRevalidate(wallet, formData);
+      await await queryClient.invalidateQueries(["profile", wallet]);
       toast.success("Submitted!");
     } catch (e) {
       toast.error(e);

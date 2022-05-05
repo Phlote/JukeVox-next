@@ -67,3 +67,26 @@ export const getProfileWithFilter = async (filter: Partial<UserProfile>) => {
     cosigns,
   } as UserProfile;
 };
+
+export const updateProfile = async (profileData: Partial<UserProfile>) => {
+  const { wallet, username, city, twitter } = profileData;
+  const { data, error } = await supabase.from("profiles").upsert(
+    {
+      wallet,
+      username: username?.trim(),
+      city: city?.trim(),
+      twitter: twitter?.trim(),
+    },
+    { onConflict: "wallet" }
+  );
+  if (error) throw error;
+
+  const submissionsUpdate = await supabase
+    .from("submissions")
+    .update({ username })
+    .match({ curatorWallet: wallet });
+
+  if (submissionsUpdate.error) throw submissionsUpdate.error;
+  console.log("updated profile: ", data[0]);
+  return data[0];
+};
