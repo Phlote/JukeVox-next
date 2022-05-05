@@ -1,4 +1,6 @@
+import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import Layout, { ArchiveLayout } from "../../components/Layouts";
 import { RatingsMeter } from "../../components/RatingsMeter";
@@ -9,6 +11,7 @@ import {
   SubmissionDate,
 } from "../../components/Tables/archive";
 import { UserStatsBar } from "../../components/UserStatsBar";
+import { useIsCurator } from "../../hooks/useIsCurator";
 import { supabase } from "../../lib/supabase";
 import { Submission } from "../../types";
 import {
@@ -19,6 +22,11 @@ import {
 export default function Profile(props) {
   const router = useRouter();
   const { submissions, profile } = props;
+  const uuid = router.query.uuid;
+  const isCurator = useIsCurator();
+  const { account } = useWeb3React();
+
+  const promptToMakeProfile = isCurator && uuid === account;
 
   if (router.isFallback) {
     //TODO better loading
@@ -28,9 +36,26 @@ export default function Profile(props) {
   return (
     <ArchiveLayout>
       <div className="flex flex-col">
-        <div className="flex">
-          <div className="flex-grow"></div>{" "}
-          {profile && <UserStatsBar profile={profile} />}
+        <div className="flex justify-center">
+          {profile && (
+            <>
+              <div className="flex-grow"></div>
+              <UserStatsBar profile={profile} />
+            </>
+          )}
+          {!profile && (
+            <div className="flex flex-col items-center">
+              <h1>{`${uuid}'s Curations`}</h1>
+              <div className="h-4" />
+              {promptToMakeProfile && (
+                <Link href="/editprofile" passHref>
+                  <h1 className="italic underline cursor-pointer">
+                    {"Click here to set your profile"}
+                  </h1>
+                </Link>
+              )}
+            </div>
+          )}
         </div>
 
         <table className="table-fixed w-full text-center mt-8">
