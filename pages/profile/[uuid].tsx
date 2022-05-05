@@ -1,3 +1,4 @@
+import { ethers } from "ethers";
 import { useRouter } from "next/router";
 import Layout, { ArchiveLayout } from "../../components/Layouts";
 import { RatingsMeter } from "../../components/RatingsMeter";
@@ -28,7 +29,8 @@ export default function Profile(props) {
     <ArchiveLayout>
       <div className="flex flex-col">
         <div className="flex">
-          <div className="flex-grow"></div> <UserStatsBar profile={profile} />
+          <div className="flex-grow"></div>{" "}
+          {profile && <UserStatsBar profile={profile} />}
         </div>
 
         <table className="table-fixed w-full text-center mt-8">
@@ -128,7 +130,22 @@ Profile.getLayout = function getLayout(page) {
 
 // params will contain the wallet for each generated page.
 export async function getStaticProps({ params }) {
-  const { username } = params;
+  const { uuid } = params;
+
+  if (ethers.utils.isAddress(uuid)) {
+    return {
+      props: {
+        submissions: await getSubmissionsWithFilter(
+          null,
+          { curatorWallet: uuid },
+          true
+        ),
+      },
+      revalidate: 60,
+    };
+  }
+
+  const username = uuid;
 
   const profilesQuery = await supabase
     .from("profiles")
@@ -136,7 +153,7 @@ export async function getStaticProps({ params }) {
     .match({ username });
 
   if (profilesQuery.error) throw profilesQuery.error;
-  // TODO this is a bit redundant, update the profiles table
+  //TODO: this is a bit dumb, we should have more general querying for profiles
   const { wallet } = profilesQuery.data[0];
 
   return {
@@ -154,6 +171,7 @@ export async function getStaticPaths() {
 
   if (submissionsQuery.error) throw submissionsQuery.error;
 
+  // IDEA: should we have two pages for each user?
   const UUIDs = submissionsQuery.data.map((submission: Submission) => {
     if (submission.username) return submission.username;
     else return submission.curatorWallet;

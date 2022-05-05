@@ -1,6 +1,6 @@
+import { TwitterIcon, TwitterShareButton } from "next-share";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import Script from "next/script";
 import React from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
@@ -20,12 +20,6 @@ export default function SubmissionPage(props) {
 
   return (
     <div className="w-80 flex flex-col">
-      <Script
-        strategy="lazyOnload"
-        async
-        src="https://platform.twitter.com/widgets.js"
-        charSet="utf-8"
-      ></Script>
       <div className="w-full h-60 flex-none relative">
         <Image
           src={"/default_submission_image.jpeg"}
@@ -58,14 +52,14 @@ export default function SubmissionPage(props) {
           </div>
         </div>
         <div className="h-8" />
-        <a
-          href="https://twitter.com/share?ref_src=twsrc%5Etfw"
-          className="twitter-share-button"
-          data-text={`Have you heard ${submission.mediaTitle}? It's a 💎\n`}
-          data-show-count="false"
+        <TwitterShareButton
+          url={`${
+            process.env.NEXT_PUBLIC_URL ?? process.env.NEXT_PUBLIC_VERCEL_URL
+          }/submission/${submission.id}`}
+          title={`Have you heard ${submission.mediaTitle}? It's a 💎`}
         >
-          Tweet
-        </a>
+          <TwitterIcon size={32} round />
+        </TwitterShareButton>
       </SubmissionCardDetails>
     </div>
   );
