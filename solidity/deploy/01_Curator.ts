@@ -9,7 +9,7 @@ const deployFunc: DeployFunction = async function (hre: HardhatRuntimeEnvironmen
   const { deployer, tokenOwner, treasury, curatorAdmin } = await hre.getNamedAccounts()
 
   //const [deployerSigner] = await hre.ethers.getSigners()
-  const PhloteVote = await hre.deployments.get(PhloteVoteArtifact)
+  const PhloteVote = await hre.deployments.get(PhloteVoteArtifact, )
   const deployArgs = [PhloteVote.address, treasury, curatorAdmin]
   const deploy = await hre.deployments.deploy(ARTIFACT, {
     log: true,
@@ -29,18 +29,12 @@ const deployFunc: DeployFunction = async function (hre: HardhatRuntimeEnvironmen
     },
   })
 
-  // FIXME: see the next FIXME...
-  const Curator = await hre.ethers.getContract(`${ARTIFACT}`)
-  //const Curator = await hre.ethers.getContract(`${ARTIFACT}_Implementation`)
+  const Curator = await hre.ethers.getContractAt(ARTIFACT, deploy.address)
   try {
     await Curator.initialize.apply(null, deployArgs)
   } catch (e) {
     await Curator.onUpgrade.apply(null, deployArgs)
   }
-
-  // FIXME: why is it _Implementation here?
-  const PhloteVoteContract = await hre.ethers.getContract(`${PhloteVoteArtifact}_Implementation`)
-  await PhloteVoteContract.transfer(deploy.address, (await PhloteVoteContract.balanceOf(deployer)))
 
   //console.log({address, implementation})
 }

@@ -1,22 +1,24 @@
-import { task } from "hardhat/config"
-
 import { config as dotenvConfig } from "dotenv"
 import { resolve } from "path"
 dotenvConfig({ path: resolve(__dirname, "./.env") })
 
-import type { NetworkUserConfig } from "hardhat/types"
+import type { NetworkUserConfig, HardhatConfig, HardhatUserConfig } from "hardhat/types"
 import type { HardhatPhloteConfig } from "./src"
 
-import "@typechain/hardhat"
+import "hardhat-deploy"
+import "@nomiclabs/hardhat-etherscan"
 import "@nomiclabs/hardhat-ethers"
 import "@nomiclabs/hardhat-waffle"
-//import "@openzeppelin/hardhat-upgrades"
-import "hardhat-deploy"
-//import "hardhat-deploy-ethers"
 import "@nomiclabs/hardhat-solhint"
-import "@nomiclabs/hardhat-etherscan"
+import "@typechain/hardhat"
+import "@typechain/ethers-v5"
+
+//import "@openzeppelin/hardhat-upgrades"
+//import "hardhat-deploy-ethers"
 import "hardhat-contract-sizer"
 import "hardhat-gas-reporter"
+
+import { task } from "hardhat/config"
 
 
 const chainIds = {
@@ -55,7 +57,7 @@ function createTestnetConfig(network: keyof typeof chainIds): NetworkUserConfig 
       mnemonic: MNEMONIC,
       path: "m/44'/60'/0'/0",
     },
-    chainId: chainIds[network],
+    chainId: chainIds[network] || -1,
     url,
   };
 }
@@ -64,6 +66,7 @@ function createTestnetConfig(network: keyof typeof chainIds): NetworkUserConfig 
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
 const config: HardhatPhloteConfig = {
+//const config: HardhatUserConfig = {
   defaultNetwork: DEFAULT_NETWORK,
 
   networks: {
