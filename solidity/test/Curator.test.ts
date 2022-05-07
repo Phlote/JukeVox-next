@@ -2,6 +2,8 @@ import { ethers, deployments, getChainId, getNamedAccounts } from "hardhat"
 import { use, expect } from "chai"
 import { solidity } from "ethereum-waffle"
 
+import type { ContractReceipt } from "ethers"
+
 import type { Curator } from "../typechain/Curator"
 import type { PhloteVote } from "../typechain/PhloteVote"
 
@@ -14,9 +16,12 @@ const { BigNumber } = ethers
 
 describe("Phlote.xyz: Curator.sol", async () => {
   let curator: Curator
+  let curatorAsAdmin: Curator
+  let curatorAsCurator: Curator
+  let curatorAsNonCurator: Curator
   let vote: PhloteVote
   let chainId: string
-  let deployer: string
+  let deployer: string, curatorAdmin: string, someCurator: string, nonCurator: string
 
   // quick fix to let gas reporter fetch data from gas station & coinmarketcap
   //before((done) => {
@@ -25,8 +30,10 @@ describe("Phlote.xyz: Curator.sol", async () => {
 
   it("Should deploy Curator.sol", async () => {
     await deployments.fixture([PhloteVoteArtifact, CuratorArtifact])
-    ;({ deployer } = await getNamedAccounts())
+    ;({ deployer, curatorAdmin, someCurator, nonCurator } = await getNamedAccounts())
     chainId = await getChainId()
+    curator = await ethers.getContract(CuratorArtifact, deployer)
+    curatorAsAdmin = await ethers.getContract(CuratorArtifact, deployer)
     curator = await ethers.getContract(CuratorArtifact, deployer)
     vote = await ethers.getContract(PhloteVoteArtifact, deployer)
   })
@@ -44,9 +51,20 @@ describe("Phlote.xyz: Curator.sol", async () => {
 
   it("Should allow anyone to submit for curation", async () => {
     // TODO
-    let tx = await curator.submit("ipfs://QmTz1aAoS6MXfHpGZpJ9YAGH5wrDsAteN8UHmkHMxVoNJk/1337.json")
-    await tx.wait()
+    let _ipfsURI = "ipfs://QmTz1aAoS6MXfHpGZpJ9YAGH5wrDsAteN8UHmkHMxVoNJk/1337.json"
+    let tx
+    await expect(tx = curator.submit(_ipfsURI))
+      .to
+      .emit(curator, 'Submit')
+    tx = (await (await tx).wait()) as ContractReceipt
     expect(tx.confirmations).to.be.gte(1)
+    type EventArg = string | undefined
+    let eventArgs: EventArg[3] = tx.events[1].args
+    const [submitter, ipfsURI, hotdrop] = eventArgs
+    expect(hotdrop).to.be.properAddress
+    expect(submitter).to.be.properAddress
+    expect(submitter).to.equal(deployer)
+    expect(ipfsURI).to.equal(_ipfsURI)
   })
 
   it("Should allow curators to cosign submissions", async () => {

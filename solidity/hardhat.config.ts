@@ -94,6 +94,12 @@ const config: HardhatPhloteConfig = {
     curatorAdmin: {
       default: 3,
     },
+    someCurator: {
+      default: 4,
+    },
+    nonCurator: {
+      default: 5,
+    },
   },
 
   solidity: {

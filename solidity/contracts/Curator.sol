@@ -49,6 +49,7 @@ contract Curator is Initializable, PausableUpgradeable, OwnableUpgradeable, Acce
 
     event Submit(
         address indexed submitter,
+        string ipfsURI,
         Hotdrop hotdrop
     );
 
@@ -131,6 +132,7 @@ contract Curator is Initializable, PausableUpgradeable, OwnableUpgradeable, Acce
         hotdrop.setURI(_ipfsURI);
         emit Submit(
             msg.sender,
+            _ipfsURI,
             hotdrop
         );
         return hotdrop;
