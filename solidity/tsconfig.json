@@ -15,10 +15,10 @@
   },
   "include": [
     "./hardhat.config.ts",
-    "./deploy",
-    "./scripts",
-    "./test",
-    "./src",
-    "./typechain"
+    "./deploy/*",
+    "./scripts/*",
+    "./test/*",
+    "./src/*",
+    "./typechain/*"
   ]
 }

@@ -128,8 +128,7 @@ contract Curator is Initializable, PausableUpgradeable, OwnableUpgradeable, Acce
         // there should be enough PhloteVote tokens in this contract to support
         // five cosigns for each submission.
         hotdrop = new Hotdrop();
-        hotdrop.initialize(_ipfsURI);
-        hotdrop.setApprovalForAll(address(this), true);
+        hotdrop.setURI(_ipfsURI);
         emit Submit(
             msg.sender,
             hotdrop

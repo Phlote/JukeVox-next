@@ -1,36 +1,33 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts-upgradeable/token/ERC1155/ERC1155Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC1155/extensions/ERC1155BurnableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC1155/extensions/ERC1155SupplyUpgradeable.sol";
+import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
+import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
+import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 
-import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
-
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/Address.sol";
 
 /// @custom:security-contact nohackplz@phlote.xyz
 contract Hotdrop is
-    Initializable,
-    ERC1155Upgradeable,
-    OwnableUpgradeable,
-    PausableUpgradeable,
-    ERC1155BurnableUpgradeable,
-    ERC1155SupplyUpgradeable
+    ERC1155,
+    Ownable,
+    Pausable,
+    ERC1155Burnable,
+    ERC1155Supply
 {
-    using SafeMathUpgradeable for uint256;
-    using StringsUpgradeable for uint256;
-    using CountersUpgradeable for CountersUpgradeable.Counter;
-    using SafeERC20Upgradeable for IERC20Upgradeable;
-    /*using SafeERC20Upgradeable for PhloteVote;*/
-    using AddressUpgradeable for address payable;
+    using SafeMath for uint256;
+    using Strings for uint256;
+    using Counters for Counters.Counter;
+    using SafeERC20 for IERC20;
+    /*using SafeERC20 for PhloteVote;*/
+    using Address for address payable;
 
     // types of NFTs in this contract
     /*uint256 public ID_SUBMISSION = 1;*/
@@ -55,20 +52,8 @@ contract Hotdrop is
 
     bool public curated = false;
 
-    /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor() public initializer { return; }
-
-    function initialize(string memory _uri) public initializer {
-        __ERC1155_init(_uri);
-        __Ownable_init();
-        __Pausable_init();
-        __ERC1155Burnable_init();
-        __ERC1155Supply_init();
-
-        submitter = msg.sender;
-
-        /*bytes memory mintData = abi.encodePacked(msg.sender);*/
-        /*_mint(owner(), ID_PHLOTE, 1, mintData);*/
+    constructor() ERC1155("https://ipfs.phlote.xyz/hotdrop/{id}.json") {
+        return;
     }
 
     function setURI(string memory newuri) public onlyOwner {
@@ -106,7 +91,7 @@ contract Hotdrop is
         uint256[] memory amounts,
         bytes memory data)
     internal whenNotPaused
-    override(ERC1155Upgradeable, ERC1155SupplyUpgradeable) {
+    override(ERC1155, ERC1155Supply) {
         super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
     }
 

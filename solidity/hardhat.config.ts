@@ -1,8 +1,6 @@
-import { config as dotenvConfig } from "dotenv"
-import { resolve } from "path"
-dotenvConfig({ path: resolve(__dirname, "./.env") })
+import "dotenv/config"
 
-import type { NetworkUserConfig, HardhatConfig, HardhatUserConfig } from "hardhat/types"
+import type { NetworkUserConfig } from "hardhat/types"
 import type { HardhatPhloteConfig } from "./src"
 
 import "hardhat-deploy"
