@@ -2,7 +2,6 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlEnumerableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
@@ -29,7 +28,7 @@ import "./Hotdrop.sol";
 /// @notice This contract's events should be indexed for use by front-ends.
 /// @dev Please check the tests for this contract when making changes!
 /// @custom:security-contact nohackplz@phlote.xyz
-contract Curator is Initializable, PausableUpgradeable, OwnableUpgradeable, AccessControlEnumerableUpgradeable {
+contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableUpgradeable {
     using SafeMathUpgradeable for uint256;
     using StringsUpgradeable for uint256;
     using CountersUpgradeable for CountersUpgradeable.Counter;
@@ -37,6 +36,8 @@ contract Curator is Initializable, PausableUpgradeable, OwnableUpgradeable, Acce
     using SafeERC20Upgradeable for IERC20;
     using SafeERC20Upgradeable for PhloteVote;
     using AddressUpgradeable for address payable;
+
+    address public admin;
 
     PhloteVote public vote;
     address public treasury;
@@ -65,24 +66,25 @@ contract Curator is Initializable, PausableUpgradeable, OwnableUpgradeable, Acce
     /// @dev The constructor function. It also calls the upgrade function.
     /// @param _vote Phlote's ERC20 DAO token.
     function initialize(PhloteVote _vote, address _treasury, address _curatorAdmin) public initializer {
+        __Pausable_init();
+        __AccessControlEnumerable_init();
+
+        admin = msg.sender;
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(CURATOR_ADMIN, msg.sender);
         _setRoleAdmin(CURATOR_ADMIN, CURATOR);
         _grantRole(CURATOR, msg.sender);
+        // hi
 
         _onUpgrade(_vote, _treasury, _curatorAdmin);
         /*if (vote.allowance(address(this)) < vote.MAX_SUPPLY()) {*/
             /*vote.approve(address(this), vote.MAX_SUPPLY());*/
         /*}*/
-
-        __Pausable_init();
-        __Ownable_init();
-        __AccessControlEnumerable_init();
     }
 
     /// @dev The upgrade function. To be called by the constructor as well.
     /// @param _vote Phlote's ERC20 DAO token.
-    function onUpgrade(PhloteVote _vote, address _treasury, address _curatorAdmin) external onlyOwner {
+    function onUpgrade(PhloteVote _vote, address _treasury, address _curatorAdmin) external onlyRole(DEFAULT_ADMIN_ROLE) {
         _onUpgrade(_vote, _treasury, _curatorAdmin);
     }
 
@@ -100,12 +102,12 @@ contract Curator is Initializable, PausableUpgradeable, OwnableUpgradeable, Acce
     }
 
     /// @dev To allow functionality via contract owner action.
-    function pause() public onlyOwner {
+    function pause() public onlyRole(DEFAULT_ADMIN_ROLE) {
         _pause();
     }
 
     /// @dev To disallow functionality via contract owner action.
-    function unpause() public onlyOwner {
+    function unpause() public onlyRole(DEFAULT_ADMIN_ROLE) {
         _unpause();
     }
 
@@ -141,7 +143,7 @@ contract Curator is Initializable, PausableUpgradeable, OwnableUpgradeable, Acce
     /// @dev Curate a Hotdrop NFT (un-curated) that was submitted to us.
     /// @param _hotdrop The address of the hotdrop to curate.
     function curate(Hotdrop _hotdrop) public onlyRole(CURATOR) {
-        uint256 cosigns = _hotdrop.phlote();
+        uint256 cosigns = _hotdrop.phlote(msg.sender);
         // send the community reward to the treasury
         uint256 communityReward = _hotdrop.COSIGN_COSTS(cosigns) - ((cosigns)*_hotdrop.COSIGN_REWARD());
         vote.transfer(treasury, communityReward);
@@ -151,28 +153,32 @@ contract Curator is Initializable, PausableUpgradeable, OwnableUpgradeable, Acce
         for (uint256 i = 0; i < cosigns - 1; i++) {
             vote.transfer(_hotdrop.cosigners(i), _hotdrop.COSIGN_REWARD());
         }
-        emit Phlote(msg.sender, _hotdrop, cosigns);
+        emit Phlote(
+            msg.sender,
+            _hotdrop,
+            cosigns
+        );
     }
 
     // admin withdraw {{{
     /// @dev The owner may withdraw all of the native funds.
-    function withdraw() external onlyOwner {
+    function withdraw() external onlyRole(DEFAULT_ADMIN_ROLE) {
         require(address(this).balance > 0, "need funds to withdraw");
-        payable(owner()).transfer(address(this).balance);
+        payable(msg.sender).transfer(address(this).balance);
     }
 
     /// @dev The owner may withdraw some of the native funds.
     /// @param _amount The balance of native currency to withdraw.
-    function withdraw(uint _amount) external onlyOwner {
+    function withdraw(uint _amount) external onlyRole(DEFAULT_ADMIN_ROLE) {
         require(address(this).balance > 0, "need funds to withdraw");
         require(_amount <= address(this).balance, "don't have that much");
-        payable(owner()).transfer(_amount);
+        payable(msg.sender).transfer(_amount);
     }
 
     /// @dev The owner may withdraw any ERC20 token.
     /// @param _token An ERC20 token of which we have a balance.
     /// @param _amount The balance of native currency to withdraw.
-    function withdraw(IERC20 _token, uint256 _amount) public onlyOwner {
+    function withdraw(IERC20 _token, uint256 _amount) public onlyRole(DEFAULT_ADMIN_ROLE) {
         uint256 tokenBalance = _token.balanceOf(address(this));
         require(tokenBalance > 0, "need balance to withdraw");
         require(_amount <= tokenBalance, "don't have that much");

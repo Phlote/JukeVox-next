@@ -9,7 +9,7 @@
       "double"
     ],
     "indentation": [
-      "error",
+      "warning",
       4
     ],
     "linebreak-style": [

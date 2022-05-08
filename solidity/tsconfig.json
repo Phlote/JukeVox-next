@@ -3,22 +3,37 @@
     "paths": {
       "$/*": ["./src/*"]
     },
+
     "target": "es2018",
     "module": "commonjs",
+
+    "resolveJsonModule": true,
+
     "strict": true,
+
     "esModuleInterop": true,
-    "moduleResolution": "node",
     "outDir": "dist",
     "noEmit": true,
     "composite": true,
-    "incremental": true
+    "incremental": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    "rootDirs": [
+      "./src",
+      "./test",
+      "./typechain"
+    ]
   },
+  "exclude": [
+    "dist"
+  ],
+  "files": ["./hardhat.config.ts"],
   "include": [
-    "./hardhat.config.ts",
-    "./deploy/*",
-    "./scripts/*",
-    "./test/*",
     "./src/*",
-    "./typechain/*"
+    "./scripts",
+    "./test",
+    "./deploy",
+    "./typechain"
   ]
 }

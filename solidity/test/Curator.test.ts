@@ -6,9 +6,11 @@ import type { ContractReceipt } from "ethers"
 
 import type { Curator } from "../typechain/Curator"
 import type { PhloteVote } from "../typechain/PhloteVote"
+import type { Hotdrop } from "../typechain/Hotdrop"
 
 import { ARTIFACT as PhloteVoteArtifact } from "../deploy/00_PhloteVote"
 import { ARTIFACT as CuratorArtifact } from "../deploy/01_Curator"
+import { beforeEach } from "mocha"
 
 use(solidity)
 
@@ -22,31 +24,37 @@ describe("Phlote.xyz: Curator.sol", async () => {
   let vote: PhloteVote
   let chainId: string
   let deployer: string, curatorAdmin: string, someCurator: string, nonCurator: string
+  let drop: Hotdrop
+
+  type EventArg = string | undefined
 
   // quick fix to let gas reporter fetch data from gas station & coinmarketcap
   //before((done) => {
     //setTimeout(done, 2000);
   //});
 
-  it("Should deploy Curator.sol", async () => {
+  beforeEach(async () => {
     await deployments.fixture([PhloteVoteArtifact, CuratorArtifact])
     ;({ deployer, curatorAdmin, someCurator, nonCurator } = await getNamedAccounts())
     chainId = await getChainId()
-    curator = await ethers.getContract(CuratorArtifact, deployer)
-    curatorAsAdmin = await ethers.getContract(CuratorArtifact, deployer)
-    curator = await ethers.getContract(CuratorArtifact, deployer)
+    curator             = await ethers.getContract(CuratorArtifact, deployer)
+    curatorAsAdmin      = await ethers.getContract(CuratorArtifact, curatorAdmin)
+    curatorAsCurator    = await ethers.getContract(CuratorArtifact, someCurator)
+    curatorAsNonCurator = await ethers.getContract(CuratorArtifact, nonCurator)
     vote = await ethers.getContract(PhloteVoteArtifact, deployer)
   })
 
-  it("Should transfer balanceOf(MAX_SUPPLY) Phlote Vote tokens from deployer to Curator", async () => {
-    const maxSupply = await vote.MAX_SUPPLY()
-    const deployerBalance = await vote.balanceOf(deployer)
-    expect(maxSupply).to.equal(deployerBalance)
+  it("Should deploy Curator.sol", async () => {
+    expect(curator.address).to.be.properAddress
+    expect(await curator.owner()).to.be.properAddress
+    expect(await curator.owner()).to.equal(deployer)
+  })
 
-    let tx = await vote.transfer(curator.address, await vote.balanceOf(deployer))
-    await tx.wait()
+  it("Should have transferred balanceOf(MAX_SUPPLY) Phlote Vote tokens from deployer to Curator", async () => {
+    const deployerBalance = await vote.balanceOf(deployer)
+    expect(deployerBalance).to.equal(0)
     const curatorBalance = await vote.balanceOf(curator.address)
-    expect(maxSupply).to.equal(curatorBalance)
+    expect(await vote.MAX_SUPPLY()).to.equal(curatorBalance)
   })
 
   it("Should allow anyone to submit for curation", async () => {
@@ -58,18 +66,52 @@ describe("Phlote.xyz: Curator.sol", async () => {
       .emit(curator, 'Submit')
     tx = (await (await tx).wait()) as ContractReceipt
     expect(tx.confirmations).to.be.gte(1)
-    type EventArg = string | undefined
-    let eventArgs: EventArg[3] = tx.events[1].args
+    if (tx.events === undefined || tx.events.length < 2) {
+      throw new Error("no event")
+    }
+    let eventArgs = tx.events[1].args as [EventArg, EventArg, EventArg]
     const [submitter, ipfsURI, hotdrop] = eventArgs
     expect(hotdrop).to.be.properAddress
+    drop = await ethers.getContractAt("Hotdrop", hotdrop as string)
     expect(submitter).to.be.properAddress
     expect(submitter).to.equal(deployer)
     expect(ipfsURI).to.equal(_ipfsURI)
   })
 
+  it("Should allow curatorAdmins to assign new curators", async () => {
+    // TODO
+    const curatorRoleAdmin = await curator.getRoleAdmin(await curator.CURATOR())
+    const hasCuratorAdminRole = await curator.hasRole(await curator.CURATOR_ADMIN(), curatorAdmin)
+    console.log({curatorAdmin, curatorRoleAdmin, hasCuratorAdminRole})
+    let tx
+    await expect(tx = curator.grantCuratorRole(someCurator))
+      .to
+      .emit(curator, 'RoleGranted')
+    tx = (await (await tx).wait()) as ContractReceipt
+    expect(tx.confirmations).to.be.gte(1)
+
+    const _curator = curatorAsAdmin
+    await expect(tx = _curator.grantCuratorRole(someCurator))
+      .to
+      .emit(_curator, 'RoleGranted')
+    tx = (await (await tx).wait()) as ContractReceipt
+    expect(tx.confirmations).to.be.gte(1)
+  })
+
   it("Should allow curators to cosign submissions", async () => {
     // TODO
-    expect(undefined).to.equal(null)
+    const _curator = curatorAsCurator
+    expect(drop).to.not.be.null
+    expect(drop).to.not.be.undefined
+    expect(drop.address).to.be.properAddress
+    const cosigns = await drop.cosigns()
+    let tx
+    await expect(tx = _curator.curate(drop.address))
+      .to
+      .emit(curator, 'Phlote')
+      .withArgs(someCurator, drop.address, cosigns.add(1))
+    tx = (await (await tx).wait()) as ContractReceipt
+    expect(tx.confirmations).to.be.gte(1)
   })
 
   it("Should DISallow NON-curators to cosign submissions", async () => {

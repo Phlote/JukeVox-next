@@ -60,10 +60,6 @@ contract Hotdrop is
         _setURI(newuri);
     }
 
-    function onUpgrade() public onlyOwner {
-        return;
-    }
-
     function pause() public onlyOwner {
         _pause();
     }
@@ -95,13 +91,13 @@ contract Hotdrop is
         super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
     }
 
-    function phlote() public onlyOwner returns (uint256) {
+    function phlote(address _cosigner) public onlyOwner returns (uint256) {
         curated = true;
         /*uint256 cosignGeneration = cosigns() + 1;*/
         /*bytes memory mintData = abi.encodePacked(cosignGeneration);*/
         /*_mint(msg.sender, cosignGeneration, NFTS_PER_COSIGN, mintData);*/
         bytes memory mintData = abi.encodePacked(totalSupply(ID_PHLOTE)+1);
-        _mint(msg.sender, ID_PHLOTE, 1, mintData);
+        _mint(_cosigner, ID_PHLOTE, 1, mintData);
         return totalSupply(ID_PHLOTE);
     }
 

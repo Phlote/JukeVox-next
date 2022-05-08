@@ -8,6 +8,6 @@
       "not-rely-on-time": "off",
       "no-unused-vars": "off",
       "max-len": "off",
-      "indent": ["warn", 2]
+      "indent": ["warn", 4]
     }
   }
