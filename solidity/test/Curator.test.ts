@@ -156,7 +156,6 @@ describe("Phlote.xyz: Curator.sol", async () => {
   })
 
   it("Should pay any previous cosigners Phlote Vote tokens on 'submission cosigned'", async () => {
-    // TODO
     const reward = await drop.COSIGN_REWARD()
     let balances
     const cosigners = [deployer, someCurator, curatorAdmin]
@@ -201,7 +200,43 @@ describe("Phlote.xyz: Curator.sol", async () => {
   })
 
   it("Should pay the community treasury Phlote Vote tokens on 'submission cosigned'", async () => {
-    // TODO
-    expect("TODO").to.equal("implement this test")
+    const _curator = curatorAsCurator
+    const reward = await drop.COSIGN_REWARD()
+    expect(reward).to.be.gt(0)
+    console.log("reward", reward.toString())
+    let cost, cosigns, daoReward
+
+    const treasury = await curator.treasury()
+    expect(treasury).to.be.properAddress
+
+    let initialBalance, balance
+
+    initialBalance = await vote.balanceOf(treasury)
+    let tx = await _curator.curate(drop.address)
+    await tx.wait()
+    balance = await vote.balanceOf(treasury)
+    cosigns = await drop.cosigns()
+    cost = await drop.COSIGN_COSTS(cosigns.sub(1))
+    daoReward = cost.sub(reward.mul(cosigns))
+    //console.log("1 init balance", initialBalance.toString())
+    //console.log("1 balance", balance.toString())
+    //console.log("1 cosigns", cosigns.toString())
+    //console.log("1 cost", cost.toString())
+    //console.log("1 daoReward", daoReward.toString())
+    expect(balance).to.equal(initialBalance.add(daoReward))
+
+    initialBalance = await vote.balanceOf(treasury)
+    tx = await _curator.curate(drop.address)
+    await tx.wait()
+    balance = await vote.balanceOf(treasury)
+    cosigns = await drop.cosigns()
+    cost = await drop.COSIGN_COSTS(cosigns.sub(1))
+    daoReward = cost.sub(reward.mul(cosigns))
+    //console.log("2 init balance", initialBalance.toString())
+    //console.log("2 balance", balance.toString())
+    //console.log("2 cosigns", cosigns.toString())
+    //console.log("2 cost", cost.toString())
+    //console.log("2 daoReward", daoReward.toString())
+    expect(balance).to.equal(initialBalance.add(daoReward))
   })
 })

@@ -145,7 +145,7 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
         uint256 cosigns = _hotdrop.phlote(msg.sender);
         console.log("cosigns", cosigns);
         // send the community reward to the treasury
-        uint256 communityReward = _hotdrop.COSIGN_COSTS(cosigns) - ((cosigns)*_hotdrop.COSIGN_REWARD());
+        uint256 communityReward = _hotdrop.COSIGN_COSTS(cosigns-1) - ((cosigns)*_hotdrop.COSIGN_REWARD());
         vote.transfer(treasury, communityReward);
         // send the cosign reward to the original submitter
         vote.transfer(_hotdrop.submitter(), _hotdrop.COSIGN_REWARD());
