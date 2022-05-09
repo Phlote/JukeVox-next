@@ -8,10 +8,10 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 
-import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import "@openzeppelin/contracts/interfaces/IERC1155.sol";
+
 import "@openzeppelin/contracts/interfaces/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
@@ -32,9 +32,8 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
     using SafeMathUpgradeable for uint256;
     using StringsUpgradeable for uint256;
     using CountersUpgradeable for CountersUpgradeable.Counter;
-    using SafeERC20Upgradeable for IERC20Upgradeable;
-    using SafeERC20Upgradeable for IERC20;
-    using SafeERC20Upgradeable for PhloteVote;
+    using SafeERC20 for IERC20;
+    using SafeERC20 for PhloteVote;
     using AddressUpgradeable for address payable;
 
     address public admin;
@@ -61,7 +60,7 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
     );
 
     /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor() public initializer { return; }
+    constructor() { return; }
 
     /// @dev The constructor function. It also calls the upgrade function.
     /// @param _vote Phlote's ERC20 DAO token.
@@ -72,7 +71,7 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
         admin = msg.sender;
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(CURATOR_ADMIN, msg.sender);
-        _setRoleAdmin(CURATOR_ADMIN, CURATOR);
+        _setRoleAdmin(CURATOR, CURATOR_ADMIN);
         _grantRole(CURATOR, msg.sender);
         // hi
 
@@ -130,7 +129,7 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
     function submit(string memory _ipfsURI) public returns (Hotdrop hotdrop) {
         // there should be enough PhloteVote tokens in this contract to support
         // five cosigns for each submission.
-        hotdrop = new Hotdrop();
+        hotdrop = new Hotdrop(msg.sender);
         hotdrop.setURI(_ipfsURI);
         emit Submit(
             msg.sender,
@@ -144,6 +143,7 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
     /// @param _hotdrop The address of the hotdrop to curate.
     function curate(Hotdrop _hotdrop) public onlyRole(CURATOR) {
         uint256 cosigns = _hotdrop.phlote(msg.sender);
+        console.log("cosigns", cosigns);
         // send the community reward to the treasury
         uint256 communityReward = _hotdrop.COSIGN_COSTS(cosigns) - ((cosigns)*_hotdrop.COSIGN_REWARD());
         vote.transfer(treasury, communityReward);
@@ -151,6 +151,7 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
         vote.transfer(_hotdrop.submitter(), _hotdrop.COSIGN_REWARD());
         // send cosign rewards to previous cosigners
         for (uint256 i = 0; i < cosigns - 1; i++) {
+            console.log("transfer to", i, _hotdrop.cosigners(i), _hotdrop.COSIGN_REWARD());
             vote.transfer(_hotdrop.cosigners(i), _hotdrop.COSIGN_REWARD());
         }
         emit Phlote(

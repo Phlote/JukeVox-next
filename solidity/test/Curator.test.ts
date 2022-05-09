@@ -16,6 +16,10 @@ use(solidity)
 
 const { BigNumber } = ethers
 
+
+// TODO: we need this:
+// https://ethereum-waffle.readthedocs.io/en/latest/fixtures.html?highlight=wallet#fixtures
+
 describe("Phlote.xyz: Curator.sol", async () => {
   let curator: Curator
   let curatorAsAdmin: Curator
@@ -33,7 +37,7 @@ describe("Phlote.xyz: Curator.sol", async () => {
     //setTimeout(done, 2000);
   //});
 
-  beforeEach(async () => {
+  before(async () => {
     await deployments.fixture([PhloteVoteArtifact, CuratorArtifact])
     ;({ deployer, curatorAdmin, someCurator, nonCurator } = await getNamedAccounts())
     chainId = await getChainId()
@@ -44,10 +48,13 @@ describe("Phlote.xyz: Curator.sol", async () => {
     vote = await ethers.getContract(PhloteVoteArtifact, deployer)
   })
 
+  beforeEach(async () => {
+  })
+
   it("Should deploy Curator.sol", async () => {
     expect(curator.address).to.be.properAddress
-    expect(await curator.owner()).to.be.properAddress
-    expect(await curator.owner()).to.equal(deployer)
+    expect(await curator.admin()).to.be.properAddress
+    expect(await curator.admin()).to.equal(deployer)
   })
 
   it("Should have transferred balanceOf(MAX_SUPPLY) Phlote Vote tokens from deployer to Curator", async () => {
@@ -80,20 +87,12 @@ describe("Phlote.xyz: Curator.sol", async () => {
 
   it("Should allow curatorAdmins to assign new curators", async () => {
     // TODO
-    const curatorRoleAdmin = await curator.getRoleAdmin(await curator.CURATOR())
-    const hasCuratorAdminRole = await curator.hasRole(await curator.CURATOR_ADMIN(), curatorAdmin)
-    console.log({curatorAdmin, curatorRoleAdmin, hasCuratorAdminRole})
     let tx
-    await expect(tx = curator.grantCuratorRole(someCurator))
-      .to
-      .emit(curator, 'RoleGranted')
-    tx = (await (await tx).wait()) as ContractReceipt
-    expect(tx.confirmations).to.be.gte(1)
-
     const _curator = curatorAsAdmin
     await expect(tx = _curator.grantCuratorRole(someCurator))
       .to
       .emit(_curator, 'RoleGranted')
+      .withArgs(await _curator.CURATOR(), someCurator, curatorAdmin)
     tx = (await (await tx).wait()) as ContractReceipt
     expect(tx.confirmations).to.be.gte(1)
   })
@@ -105,6 +104,7 @@ describe("Phlote.xyz: Curator.sol", async () => {
     expect(drop).to.not.be.undefined
     expect(drop.address).to.be.properAddress
     const cosigns = await drop.cosigns()
+
     let tx
     await expect(tx = _curator.curate(drop.address))
       .to
@@ -115,13 +115,35 @@ describe("Phlote.xyz: Curator.sol", async () => {
   })
 
   it("Should DISallow NON-curators to cosign submissions", async () => {
-    // TODO
-    expect(undefined).to.equal(null)
+    const _curator = curatorAsNonCurator
+    expect(drop).to.not.be.null
+    expect(drop).to.not.be.undefined
+    expect(drop.address).to.be.properAddress
+    let tx
+    await expect(tx = _curator.curate(drop.address))
+      .to.be.reverted
   })
 
   it("Should pay the submitter Phlote Vote tokens on 'submission cosigned'", async () => {
-    // TODO
-    expect(undefined).to.equal(null)
+    const _curator = curatorAsCurator
+    expect(drop).to.not.be.null
+    expect(drop).to.not.be.undefined
+    expect(drop.address).to.be.properAddress
+    const submitter = await drop.submitter()
+    expect(submitter).to.be.properAddress
+
+    const reward = await drop.COSIGN_REWARD()
+    const oldBalance = await vote.balanceOf(someCurator)
+
+    let tx
+    await expect(tx = _curator.curate(drop.address))
+      .to
+      .emit(_curator, 'Phlote')
+    tx = (await (await tx).wait()) as ContractReceipt
+    expect(tx.confirmations).to.be.gte(1)
+    const newBalance = await vote.balanceOf(someCurator)
+
+    expect(newBalance).to.equal(oldBalance.add(reward))
   })
 
   it("Should pay any previous cosigners Phlote Vote tokens on 'submission cosigned'", async () => {

@@ -10,15 +10,6 @@ const deployFunc: DeployFunction = async function (hre: HardhatRuntimeEnvironmen
     log: true,
     from: deployer,
   })
-
-  const PhloteVote = await ethers.getContractAt(ARTIFACT, deploy.address)
-  //const PhloteVote = await hre.ethers.getContract(`${ARTIFACT}`)
-
-  console.log("owner", await PhloteVote.owner())
-  console.log(
-    "deployer", deployer,
-    "balanceOf", (await PhloteVote.balanceOf(await PhloteVote.owner())).toString()
-  )
 }
 
 deployFunc.tags = [ARTIFACT]

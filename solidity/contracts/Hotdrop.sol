@@ -52,7 +52,12 @@ contract Hotdrop is
 
     bool public curated = false;
 
-    constructor() ERC1155("https://ipfs.phlote.xyz/hotdrop/{id}.json") {
+    constructor(
+        address _submitter
+    )
+        ERC1155("https://ipfs.phlote.xyz/hotdrop/{id}.json")
+    {
+        submitter = _submitter;
         return;
     }
 
@@ -97,7 +102,7 @@ contract Hotdrop is
         /*bytes memory mintData = abi.encodePacked(cosignGeneration);*/
         /*_mint(msg.sender, cosignGeneration, NFTS_PER_COSIGN, mintData);*/
         bytes memory mintData = abi.encodePacked(totalSupply(ID_PHLOTE)+1);
-        _mint(_cosigner, ID_PHLOTE, 1, mintData);
+        mint(_cosigner, ID_PHLOTE, 1, mintData);
         return totalSupply(ID_PHLOTE);
     }
 

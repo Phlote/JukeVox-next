@@ -139,8 +139,14 @@ const config: HardhatPhloteConfig = {
   gasReporter: {
     // INFO: https://www.npmjs.com/package/hardhat-gas-reporter
     currency: "USD",
-    gasPrice: 100,
-    // enabled: process.env.REPORT_GAS ? true : false,
+    coinmarketcap: process.env.COINMARKET_API_KEY,
+    showTimeSpent: true,
+    onlyCalledMethods: true,
+    excludeContracts: [
+      "ERC20Upgradeable",
+    ],
+    //gasPrice: 100,
+    //enabled: process.env.REPORT_GAS ? true : false,
   },
 
   typechain: {
