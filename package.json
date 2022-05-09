@@ -34,7 +34,7 @@
     "dayjs": "^1.11.0",
     "final-form": "^4.20.6",
     "jotai": "^1.5.3",
-    "next": "npm:12.1.6-canary.3",
+    "next": "^12.1.7-canary.3",
     "next-share": "^0.13.0",
     "node-fetch": "^3.2.3",
     "prop-types": "^15.8.1",
@@ -80,6 +80,5 @@
         "from": "styled-components"
       }
     }
-  },
-  "packageManager": "yarn@3.2.0"
+  }
 }
