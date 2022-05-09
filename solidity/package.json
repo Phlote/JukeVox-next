@@ -1,5 +1,13 @@
 {
   "name": "solidity",
+  "engines": {
+    "node": ">=16.0.0 <17"
+  },
+  "private": true,
+  "workspaces": [
+    ".",
+    "solidity"
+  ],
   "devDependencies": {
     "@ethersproject/abi": "^5.6.0",
     "@ethersproject/bytes": "^5.6.0",
