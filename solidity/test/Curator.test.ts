@@ -1,12 +1,11 @@
 import { ethers, deployments, getChainId, getNamedAccounts } from "hardhat"
 import { use, expect } from "chai"
-import { solidity } from "ethereum-waffle"
+import { solidity, deployContract, createFixtureLoader } from "ethereum-waffle"
 
+import { Wallet, Contract } from "ethers"
 import type { ContractReceipt } from "ethers"
 
-import type { Curator } from "../typechain/Curator"
-import type { PhloteVote } from "../typechain/PhloteVote"
-import type { Hotdrop } from "../typechain/Hotdrop"
+import { PhloteVote, Curator, Hotdrop } from "../typechain"
 
 import { ARTIFACT as PhloteVoteArtifact } from "../deploy/00_PhloteVote"
 import { ARTIFACT as CuratorArtifact } from "../deploy/01_Curator"
@@ -37,6 +36,17 @@ describe("Phlote.xyz: Curator.sol", async () => {
     //setTimeout(done, 2000);
   //});
 
+  async function newHotdrop(curatorContract: Curator, _ipfsURI: string) {
+    let tx
+    tx = await curatorContract.submit(_ipfsURI)
+    tx = await tx.wait() as ContractReceipt
+    if (tx.events === undefined || tx.events.length < 2) { throw new Error("no events") }
+    let eventArgs = tx.events[1].args as [EventArg, EventArg, EventArg]
+    const [_1, _2, hotdrop] = eventArgs
+    const _drop = await ethers.getContractAt("Hotdrop", hotdrop as string)
+    return _drop as Hotdrop
+  }
+
   before(async () => {
     await deployments.fixture([PhloteVoteArtifact, CuratorArtifact])
     ;({ deployer, curatorAdmin, someCurator, nonCurator } = await getNamedAccounts())
@@ -49,6 +59,13 @@ describe("Phlote.xyz: Curator.sol", async () => {
   })
 
   beforeEach(async () => {
+    let _ipfsURI = "ipfs://QmTz1aAoS6MXfHpGZpJ9YAGH5wrDsAteN8UHmkHMxVoNJk/1337.json"
+    const _nonCurator = (await getNamedAccounts()).nonCurator
+    const curatorAsNormie = await ethers.getContract(CuratorArtifact, _nonCurator)
+    drop = await newHotdrop(curatorAsNormie as Curator, _ipfsURI)
+    expect(drop).to.not.be.null
+    expect(drop).to.not.be.undefined
+    expect(drop.address).to.be.properAddress
   })
 
   it("Should deploy Curator.sol", async () => {
@@ -100,9 +117,6 @@ describe("Phlote.xyz: Curator.sol", async () => {
   it("Should allow curators to cosign submissions", async () => {
     // TODO
     const _curator = curatorAsCurator
-    expect(drop).to.not.be.null
-    expect(drop).to.not.be.undefined
-    expect(drop.address).to.be.properAddress
     const cosigns = await drop.cosigns()
 
     let tx
@@ -116,9 +130,6 @@ describe("Phlote.xyz: Curator.sol", async () => {
 
   it("Should DISallow NON-curators to cosign submissions", async () => {
     const _curator = curatorAsNonCurator
-    expect(drop).to.not.be.null
-    expect(drop).to.not.be.undefined
-    expect(drop.address).to.be.properAddress
     let tx
     await expect(tx = _curator.curate(drop.address))
       .to.be.reverted
@@ -126,14 +137,12 @@ describe("Phlote.xyz: Curator.sol", async () => {
 
   it("Should pay the submitter Phlote Vote tokens on 'submission cosigned'", async () => {
     const _curator = curatorAsCurator
-    expect(drop).to.not.be.null
-    expect(drop).to.not.be.undefined
-    expect(drop.address).to.be.properAddress
     const submitter = await drop.submitter()
     expect(submitter).to.be.properAddress
+    expect(submitter).to.equal(nonCurator)
 
     const reward = await drop.COSIGN_REWARD()
-    const oldBalance = await vote.balanceOf(someCurator)
+    const oldBalance = await vote.balanceOf(nonCurator)
 
     let tx
     await expect(tx = _curator.curate(drop.address))
@@ -141,8 +150,8 @@ describe("Phlote.xyz: Curator.sol", async () => {
       .emit(_curator, 'Phlote')
     tx = (await (await tx).wait()) as ContractReceipt
     expect(tx.confirmations).to.be.gte(1)
-    const newBalance = await vote.balanceOf(someCurator)
 
+    const newBalance = await vote.balanceOf(nonCurator)
     expect(newBalance).to.equal(oldBalance.add(reward))
   })
 
