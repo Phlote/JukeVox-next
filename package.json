@@ -10,7 +10,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "cd ./solidity; yarn build"
+    "postinstall": "cd ./solidity; yarn"
   },
   "dependencies": {
     "@elastic/app-search-node": "^8.1.0",
