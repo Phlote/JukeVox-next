@@ -157,11 +157,51 @@ describe("Phlote.xyz: Curator.sol", async () => {
 
   it("Should pay any previous cosigners Phlote Vote tokens on 'submission cosigned'", async () => {
     // TODO
-    expect(undefined).to.equal(null)
+    const reward = await drop.COSIGN_REWARD()
+    let balances
+    const cosigners = [deployer, someCurator, curatorAdmin]
+
+    let cosigns = await drop.cosigns()
+    expect(cosigns).to.equal(0)
+
+    let tx = await curator.curate(drop.address)
+    await tx.wait()
+    expect(tx.confirmations).to.be.gte(1)
+    cosigns = await drop.cosigns()
+    expect(cosigns).to.equal(1)
+
+    balances = await Promise.all(cosigners.map((x) => vote.balanceOf(x)))
+    expect(balances[0]).to.equal(reward.mul(0))
+    expect(balances[1]).to.equal(reward.mul(0))
+    expect(balances[2]).to.equal(reward.mul(0))
+
+    tx = await curatorAsCurator.curate(drop.address)
+    await tx.wait()
+    expect(tx.confirmations).to.be.gte(1)
+    cosigns = await drop.cosigns()
+    expect(cosigns).to.equal(2)
+
+    balances = await Promise.all(cosigners.map((x) => vote.balanceOf(x)))
+    expect(balances[0]).to.equal(reward.mul(1))
+    expect(balances[1]).to.equal(reward.mul(0))
+    expect(balances[2]).to.equal(reward.mul(0))
+
+    tx = await curatorAsAdmin.grantCuratorRole(curatorAdmin)
+    await tx.wait()
+    tx = await curatorAsAdmin.curate(drop.address)
+    await tx.wait()
+    expect(tx.confirmations).to.be.gte(1)
+    cosigns = await drop.cosigns()
+    expect(cosigns).to.equal(3)
+
+    balances = await Promise.all(cosigners.map((x) => vote.balanceOf(x)))
+    expect(balances[0]).to.equal(reward.mul(2))
+    expect(balances[1]).to.equal(reward.mul(1))
+    expect(balances[2]).to.equal(reward.mul(0))
   })
 
   it("Should pay the community treasury Phlote Vote tokens on 'submission cosigned'", async () => {
     // TODO
-    expect(undefined).to.equal(null)
+    expect("TODO").to.equal("implement this test")
   })
 })
