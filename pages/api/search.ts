@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { nodeElasticClient } from "../../lib/elastic-app-search";
 import { supabase } from "../../lib/supabase";
-import { Curation } from "../../types/curations";
-import { cleanSubmission, curationToElasticSearchDocument } from "../../utils";
+import { submissionToElasticSearchDocument } from "../../utils";
+import { getSubmissionsWithFilter } from "../../utils/supabase";
 
 const { ELASTIC_ENGINE_NAME } = process.env;
 
@@ -10,23 +10,22 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  const { searchTerm, filters } = request.body;
+  const { searchTerm, filters, isCurator } = request.body;
 
   try {
     let query = supabase.from("submissions").select();
-
-    if (filters) {
-      query = query.match(filters);
-    }
 
     if (searchTerm && searchTerm.length > 0) {
       const res = await nodeElasticClient.search(
         ELASTIC_ENGINE_NAME,
         searchTerm as string,
-        { filters: curationToElasticSearchDocument(filters) }
+        { filters: submissionToElasticSearchDocument(filters) }
       );
 
-      if (res.results.length === 0) response.status(200).send({ results: [] });
+      if (res.results.length === 0) {
+        response.status(200).send([]);
+        return;
+      }
 
       const ids = res.results.map((document) =>
         parseInt(document.supabase_id.raw)
@@ -35,19 +34,13 @@ export default async function handler(
       query = query.in("id", ids);
     }
 
-    const { data, error } = await query;
-    if (error) throw error;
+    const submissions = await getSubmissionsWithFilter(
+      query,
+      filters,
+      isCurator
+    );
 
-    const searchResults = data.sort((a: Curation, b: Curation) => {
-      return (
-        new Date(b.submissionTime).getTime() -
-        new Date(a.submissionTime).getTime()
-      );
-    });
-
-    const cleaned = searchResults.map(cleanSubmission);
-
-    response.status(200).send(cleaned);
+    response.status(200).send(submissions);
   } catch (e) {
     console.error(e);
     response.status(500).send(e);

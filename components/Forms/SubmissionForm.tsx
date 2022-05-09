@@ -9,13 +9,13 @@ import {
   HollowInputContainer,
 } from "../Hollow";
 import { HollowTagsInput } from "../Hollow/HollowTagsInput";
-import { validateCurationSubmission } from "./validators";
+import { validateSubmission } from "./validators";
 
-export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
+export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const { form, handleSubmit, valid } = useForm({
     onSubmit,
-    validate: validateCurationSubmission,
+    validate: validateSubmission,
   });
 
   const mediaURI = useField("mediaURI", form);
@@ -27,7 +27,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
   const tags = useField("tags", form);
 
   return (
-    <div className="grid grid-cols-1 gap-3">
+    <div className="grid grid-cols-1 gap-3 md:my-8">
       <HollowInputContainer type="form">
         <HollowInput {...mediaURI.input} type="text" placeholder="Link" />
         {mediaURI.meta.touched && mediaURI.meta.error && (
@@ -109,7 +109,7 @@ export const CurationSubmissionForm = ({ metamaskLoading, onSubmit }) => {
           placeholder="Artist Wallet Address (Optional)"
         />
         {artistWallet.meta.touched && artistWallet.meta.error && (
-          <span className="text-red-600 ml-2">{artistWallet.meta.error}</span>
+          <span className="ml-2 text-red-600">{artistWallet.meta.error}</span>
         )}
       </HollowInputContainer>
       <HollowTagsInput {...tags.input} />

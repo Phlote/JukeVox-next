@@ -1,7 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-
-export const PHOTE_VOTE_TOKEN_ADDRESS =
-  "0x31DA0475d29a452DA24Eb2ed0d41AD53E576b780";
+import { PHOTE_VOTE_TOKEN_ADDRESS } from "../../utils/constants";
 
 interface PolygonScanTokenBalanceResponse {
   status: string;
@@ -21,7 +19,6 @@ export default async function handler(
 
   const { result } = (await resp.json()) as PolygonScanTokenBalanceResponse;
   const isCurator = parseInt(result) > 0;
-
   response.status(200).json({
     isCurator,
   });

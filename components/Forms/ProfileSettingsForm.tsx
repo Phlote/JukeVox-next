@@ -5,6 +5,7 @@ import { useField, useForm } from "react-final-form-hooks";
 import { useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { getProfile } from "../../controllers/profiles";
+import { revalidate } from "../../controllers/revalidate";
 import { supabase } from "../../lib/supabase";
 import {
   HollowButton,
@@ -31,9 +32,15 @@ export const ProfileSettingsForm = ({ wallet }) => {
     setSubmitting(true);
     try {
       const { username, city, twitter } = formData;
-      const { data, error } = await supabase
-        .from("profiles")
-        .upsert({ wallet, username, city, twitter }, { onConflict: "wallet" });
+      const { data, error } = await supabase.from("profiles").upsert(
+        {
+          wallet,
+          username: username?.trim(),
+          city: city?.trim(),
+          twitter: twitter?.trim(),
+        },
+        { onConflict: "wallet" }
+      );
       if (error) throw error;
 
       const submissionsUpdate = await supabase
@@ -44,10 +51,10 @@ export const ProfileSettingsForm = ({ wallet }) => {
       if (submissionsUpdate.error) throw submissionsUpdate.error;
 
       await queryClient.invalidateQueries(["profile", wallet]);
-
+      await revalidate(username);
       toast.success("Submitted!");
     } catch (e) {
-      toast.error(e.message);
+      toast.error(e);
     } finally {
       setSubmitting(false);
     }
@@ -66,12 +73,17 @@ export const ProfileSettingsForm = ({ wallet }) => {
   const twitter = useField("twitter", form);
 
   return (
-    <div className="flex flex-row w-10/12">
-      <div className="w-1/2">
-        <ProfilePictureUpload wallet={wallet} />
+    // <div className="grid lg:grid-cols-2 grid-cols-1 w-10/12 md:gap-16 gap-8 h-full flex flex-grow">
+    <div className="grid lg:grid-cols-2 grid-cols-1 w-10/12 md:gap-16 gap-1 max-h-full flex flex-grow my-8">
+      <div className="flex justify-center items-center">
+        <ProfilePictureUpload
+          wallet={wallet}
+          initialImageURL={profile?.data?.profilePic}
+        />
       </div>
-      <div className="flex flex-col items-center w-1/2">
-        <div className="grid grid-cols-1 gap-4 w-full mr-auto my-auto relative">
+
+      <div className="flex flex-col items-center justify-center">
+        <div className="grid grid-cols-1 gap-4 lg:w-full w-3/4">
           <HollowInputContainer type="form">
             {username.meta.error && (
               <p className="absolute text-red-600 -top-10">
@@ -96,38 +108,73 @@ export const ProfileSettingsForm = ({ wallet }) => {
               <span className="text-red-600 ml-2">{twitter.meta.error}</span>
             )}
           </HollowInputContainer>
+          <div className="w-full flex justify-center items-center">
+            <HollowButtonContainer
+              className="lg:w-1/4  w-full"
+              onClick={handleSubmit}
+            >
+              <HollowButton disabled={submitting}>Submit</HollowButton>
+            </HollowButtonContainer>
+          </div>
         </div>
-        <HollowButtonContainer className="w-1/4" onClick={handleSubmit}>
-          <HollowButton disabled={submitting}>Submit</HollowButton>
-        </HollowButtonContainer>
       </div>
     </div>
   );
 };
 
-const ProfilePictureUpload = ({ wallet }) => {
+const ProfilePictureUpload = ({ wallet, initialImageURL }) => {
   const queryClient = useQueryClient();
   const path = `${wallet}/profile`;
-  const profile = useProfile(wallet);
+  const [imageURL, setImageURL] = React.useState<string>(initialImageURL);
+  const [updating, setUpdating] = React.useState<boolean>();
+
+  React.useEffect(() => {
+    if (initialImageURL && initialImageURL !== imageURL)
+      setImageURL(initialImageURL);
+  }, [initialImageURL, imageURL]);
 
   const onDrop = useCallback(
     async (acceptedFiles) => {
-      const { error } = await supabase.storage
-        .from("profile-pics")
-        .upload(path, acceptedFiles[0], {
-          cacheControl: "3600",
-          upsert: true,
-        });
+      setUpdating(true);
+      const updateTime = Date.now();
+      try {
+        const uploadProfilePic = await supabase.storage
+          .from("profile-pics")
+          .upload(path, acceptedFiles[0], {
+            upsert: true,
+          });
 
-      if (!error) {
-        queryClient.refetchQueries(["profile", wallet]);
-      } else {
-        console.error(error);
-        toast.error(error);
+        if (uploadProfilePic.error) throw uploadProfilePic.error;
+
+        const publicURLQuery = supabase.storage
+          .from("profile-pics")
+          .getPublicUrl(`${wallet}/profile`);
+
+        if (publicURLQuery.error) throw publicURLQuery.error;
+
+        setImageURL(`${publicURLQuery.publicURL}?cacheBust=${updateTime}`);
+
+        const profileUpsert = await supabase.from("profiles").upsert(
+          {
+            wallet,
+            profilePic: publicURLQuery.publicURL,
+            updateTime,
+          },
+          { onConflict: "wallet" }
+        );
+
+        if (profileUpsert.error) throw profileUpsert.error;
+        await queryClient.invalidateQueries(["profile", wallet]);
+      } catch (e) {
+        console.error(e);
+        toast.error(e);
+      } finally {
+        setUpdating(false);
       }
     },
     [path, queryClient, wallet]
   );
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: "image/jpeg,image/png",
@@ -136,38 +183,58 @@ const ProfilePictureUpload = ({ wallet }) => {
   const [isHovering, setIsHovering] = React.useState<boolean>();
   return (
     <div
-      className="w-80 h-80 border-2 border-white rounded-full flex justify-center items-center relative"
+      className="lg:w-80 lg:h-80 md:w-44 md:h-44 w-28 h-28 border-2 border-white rounded-full flex justify-center items-center text-center relative"
       {...getRootProps()}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
       <input {...getInputProps()} />
 
-      {isHovering && <p className="text-base italic">{"Upload new photo"}</p>}
+      <DropzoneText
+        isUpdating={updating}
+        isHovering={isHovering}
+        isDragActive={isDragActive}
+        profilePic={imageURL}
+      />
 
-      {isDragActive && <p className="text-base italic">{"Drop image here"}</p>}
-
-      {profile?.data?.profilePic && !isDragActive && (
+      {imageURL && !isDragActive && (
         <Image
-          className={`rounded-full ${isHovering && "opacity-25"}`}
-          src={profile?.data?.profilePic}
+          className={`rounded-full ${(isHovering || updating) && "opacity-25"}`}
+          src={imageURL}
           objectFit={"cover"}
           layout="fill"
           alt="profile picture"
           priority
         />
       )}
-
-      {!isHovering && !isDragActive && !profile?.data?.profilePic && (
-        <p className="text-base italic">{"Drop or select visual to upload"}</p>
-      )}
     </div>
   );
 };
 
-export const useProfile = (wallet) => {
-  return useQuery(["profile", wallet], async () => {
-    if (!wallet) return null;
-    return getProfile(wallet);
-  });
+const DropzoneText = ({ isUpdating, isHovering, isDragActive, profilePic }) => {
+  if (isUpdating) return <p className="text-base italic">{"Updating..."}</p>;
+
+  if (isHovering)
+    return <p className="text-base italic">{"Upload new photo"}</p>;
+
+  if (isDragActive)
+    return <p className="text-base italic">{"Drop image here"}</p>;
+
+  if (!isHovering && !isDragActive && !profilePic)
+    return (
+      <p className="text-base italic">{"Drop or select visual to upload"}</p>
+    );
+
+  return null;
+};
+
+export const useProfile = (wallet, options = {}) => {
+  return useQuery(
+    ["profile", wallet],
+    async () => {
+      if (!wallet) return null;
+      return getProfile(wallet);
+    },
+    { refetchOnWindowFocus: false, keepPreviousData: true, ...options }
+  );
 };

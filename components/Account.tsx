@@ -2,6 +2,7 @@ import { useWeb3React } from "@web3-react/core";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
+import { useIsCurator } from "../hooks/useIsCurator";
 import { useOnClickOut } from "../hooks/useOnClickOut";
 import useEagerConnect from "../hooks/web3/useEagerConnect";
 import Hamburger from "../public/hamburger.svg";
@@ -68,6 +69,8 @@ const AccountDropdown = (props) => {
     setDropdownOpen(!dropdownOpen);
   };
 
+  const isCuratorQuery = useIsCurator();
+
   const { dropdownOpen, setDropdownOpen } = props;
   return (
     <>
@@ -104,17 +107,22 @@ const AccountDropdown = (props) => {
                 width={24}
               />
             </div>
-            <div className="w-4" />
-            <div
-              onClick={() => {
-                router.push("/editprofile");
-                setDropdownOpen(false);
-              }}
-            >
-              <div className="cursor-pointer m-4 text-center text-xl hover:opacity-50 flex items-center">
-                Edit Profile
-              </div>
-            </div>
+            {isCuratorQuery?.data?.isCurator && (
+              <>
+                <div className="w-4" />
+                <div
+                  onClick={() => {
+                    router.push("/editprofile");
+                    setDropdownOpen(false);
+                  }}
+                >
+                  <div className="cursor-pointer m-4 text-center text-xl hover:opacity-50 flex items-center">
+                    Edit Profile
+                  </div>
+                </div>
+              </>
+            )}
+
             <div className="w-4" />
           </DropdownActions>
         </div>

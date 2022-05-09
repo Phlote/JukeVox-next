@@ -3,18 +3,18 @@ import { atom, useAtom } from "jotai";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import { indexSubmission } from "../controllers/elastic";
-import { supabase } from "../lib/supabase";
-import { Curation } from "../types/curations";
-import { nextApiRequest } from "../utils";
+import { revalidate } from "../controllers/revalidate";
+import { submit } from "../controllers/submissions";
+import { Submission } from "../types";
 import { verifyUser } from "../utils/web3";
-import { CurationSubmissionForm } from "./Forms/CurationSubmissionForm";
+import { useProfile } from "./Forms/ProfileSettingsForm";
+import { SubmissionForm } from "./Forms/SubmissionForm";
 import { HollowButton, HollowButtonContainer } from "./Hollow";
 
 const submissionFlowOpen = atom<boolean>(false);
 export const useSubmissionFlowOpen = () => useAtom(submissionFlowOpen);
 
-export const CurationSubmissionFlow: React.FC = (props) => {
+export const SubmissionFlow: React.FC = (props) => {
   const { account, library } = useWeb3React();
   const queryClient = useQueryClient();
 
@@ -26,8 +26,9 @@ export const CurationSubmissionFlow: React.FC = (props) => {
   }, [open]);
 
   const [loading, setLoading] = useState<boolean>(false);
+  const profile = useProfile(account);
 
-  const submitCuration = async (curation: Curation) => {
+  const onSubmit = async (submission: Submission) => {
     setLoading(true);
     try {
       const authenticated = await verifyUser(account, library);
@@ -35,22 +36,11 @@ export const CurationSubmissionFlow: React.FC = (props) => {
         throw "Not Authenticated";
       }
 
-      const { cid } = await nextApiRequest(
-        "store-submission-on-ipfs",
-        "POST",
-        curation
-      );
-
-      const { data, error } = await supabase
-        .from("submissions")
-        .insert([{ curatorWallet: account, cid, ...curation }]);
-
-      if (error) throw error;
-
-      await indexSubmission(data[0] as Curation);
+      const result = (await submit(submission, account)) as Submission;
 
       setPage(1);
       queryClient.invalidateQueries("submissions");
+      await revalidate(profile?.data?.username, result.id);
     } catch (e) {
       toast.error(e);
       console.error(e);
@@ -60,16 +50,13 @@ export const CurationSubmissionFlow: React.FC = (props) => {
   };
 
   return (
-    <div className="flex flex-col w-full sm:mx-8 justify-center py-16">
+    <div className="flex flex-col w-full sm:mx-8 justify-center sm:py-16 pt-4">
       <h1 className="font-extrabold	text-4xl underline underline-offset-16 text-center">
         Submit
       </h1>
       <div className="h-8" />
       {page === 0 && (
-        <CurationSubmissionForm
-          metamaskLoading={loading}
-          onSubmit={submitCuration}
-        />
+        <SubmissionForm metamaskLoading={loading} onSubmit={onSubmit} />
       )}
       {page === 1 && (
         <div className="flex flex-col items-center text-sm mt-8 gap-8">

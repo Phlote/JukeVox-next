@@ -2,11 +2,13 @@ import { Web3ReactProvider } from "@web3-react/core";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import Head from "next/head";
-import { ReactElement, ReactNode } from "react";
+import { useRouter } from "next/router";
+import React, { ReactElement, ReactNode, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import "tailwindcss/tailwind.css";
+import { gaPageview } from "../lib/ga";
 import "../styles/globals.css";
 import getLibrary from "../utils/getLibrary";
 
@@ -21,6 +23,23 @@ type AppPropsWithLayout = AppProps & {
 };
 
 const NextWeb3App = ({ Component, pageProps }: AppPropsWithLayout) => {
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      gaPageview(url);
+    };
+    //When the component is mounted, subscribe to router changes
+    //and log those page views
+    router.events.on("routeChangeComplete", handleRouteChange);
+
+    // If the component is unmounted, unsubscribe
+    // from the event with the `off` method
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+    };
+  }, [router.events]);
+
   if (process.env.NEXT_PUBLIC_MAINTENANCE) {
     return <div>Down for maintenance. Try again later!</div>;
   }

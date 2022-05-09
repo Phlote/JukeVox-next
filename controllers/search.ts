@@ -1,19 +1,15 @@
-import { toast } from "react-toastify";
-import { Curation } from "../types/curations";
+import { Submission } from "../types";
 import { nextApiRequest } from "../utils";
 
 export const searchSubmissions = async (
   searchTerm: string,
-  filters: Partial<Curation>
-): Promise<Curation[]> => {
-  try {
-    const results = await nextApiRequest("search", "POST", {
-      searchTerm,
-      filters,
-    });
-    return results as Curation[];
-  } catch (e) {
-    console.error(e);
-    toast.error(e);
-  }
+  filters: Partial<Submission>,
+  isCurator: boolean
+): Promise<Submission[]> => {
+  const results = await nextApiRequest("search", "POST", {
+    searchTerm,
+    filters,
+    isCurator,
+  });
+  return results as Submission[];
 };

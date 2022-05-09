@@ -20,6 +20,7 @@ export default function useEagerConnect() {
             });
         });
       } else if (cachedConnector === CachedConnector.WalletConnect) {
+        console.log("retried for some reason");
         activate(WalletConnect, undefined, true).catch(() => {
           setTried(true);
         });

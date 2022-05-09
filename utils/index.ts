@@ -1,5 +1,4 @@
-import { toast } from "react-toastify";
-import { Curation, CurationElasticSearchDocument } from "../types/curations";
+import { Submission, SubmissionElasticSearchDocument } from "../types";
 
 export function nextApiRequest(
   path: string,
@@ -12,15 +11,14 @@ export function nextApiRequest(
       "Content-Type": "application/json",
     },
     body: data ? JSON.stringify(data) : undefined,
-  })
-    .then((response) => response.json())
-    .catch((e) => {
-      console.error(e);
-      toast.error(e);
-    });
+  }).then((response) => {
+    if (!response.ok) throw `Error calling /api/${path}`;
+
+    return response.json();
+  });
 }
 
-export const curationToElasticSearchDocument = (curation: Curation) => {
+export const submissionToElasticSearchDocument = (submission: Submission) => {
   const {
     id,
     mediaType,
@@ -32,7 +30,7 @@ export const curationToElasticSearchDocument = (curation: Curation) => {
     marketplace,
     tags,
     submissionTime,
-  } = curation;
+  } = submission;
   return {
     supabase_id: id,
     media_type: mediaType,
@@ -44,10 +42,10 @@ export const curationToElasticSearchDocument = (curation: Curation) => {
     marketplace,
     tags,
     submission_time: submissionTime,
-  } as CurationElasticSearchDocument;
+  } as SubmissionElasticSearchDocument;
 };
 
-export const cleanSubmission = (submission: Curation) => {
+export const cleanSubmission = (submission: Submission) => {
   const cleaned = { ...submission };
   if (submission.mediaURI.includes("opensea")) {
     cleaned.marketplace = "OpenSea";

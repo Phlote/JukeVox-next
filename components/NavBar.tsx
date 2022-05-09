@@ -5,31 +5,16 @@ import tw from "twin.macro";
 import { useIsCurator } from "../hooks/useIsCurator";
 import Close from "../public/close.svg";
 import Account from "./Account";
-import { useSubmissionFlowOpen } from "./CurationSubmissionFlow";
+import { useSubmissionFlowOpen } from "./SubmissionFlow";
+import { useProfile } from "./Forms/ProfileSettingsForm";
 import { HollowButtonContainer, HollowInputContainer } from "./Hollow";
 import { SearchBar } from "./SearchBar";
 
-const NavBarMobileWeb = () => {
+export const NavBarMobileWeb = () => {
   const [, setOpen] = useSubmissionFlowOpen();
-  const router = useRouter();
-  const { active, account } = useWeb3React();
-  const isCurator = useIsCurator();
+  const { active } = useWeb3React();
   return (
-    <div className="w-screen flex flex-row absolute bottom-0 bg-phlote-container divide-x">
-      {/* {active && (
-        <MobileNavBarElementContainer>
-          <Link href="/archive" passHref>
-            Index
-          </Link>
-        </MobileNavBarElementContainer>
-      )}*/}
-      {/* {active && account && isCurator && (
-        <MobileNavBarElementContainer>
-          <Link href={`/profile?wallet=${account}`} passHref>
-            My Profile
-          </Link>
-        </MobileNavBarElementContainer>
-      )} */}
+    <div className="w-screen flex flex-row flex-none bg-phlote-container divide-x ">
       {active && (
         <MobileNavBarElementContainer
           className="focus:opacity-25"
@@ -50,11 +35,13 @@ const NavBarMobileWeb = () => {
 
 const MobileNavBarElementContainer = tw.button`h-full w-full py-8 text-center `;
 
-const NavBarDesktop = (props) => {
+export const NavBarDesktop = (props) => {
   const [, setOpen] = useSubmissionFlowOpen();
   const router = useRouter();
   const { active, account } = useWeb3React();
-  const isCurator = useIsCurator();
+  const profileQuery = useProfile(account);
+  const isCuratorQuery = useIsCurator();
+
   return (
     <div className="py-4 flex-none w-screen px-12">
       <div className="relative flex flex-row gap-4" style={{ height: 70 }}>
@@ -71,15 +58,21 @@ const NavBarDesktop = (props) => {
             </Link>
           </NavBarElementContainer>
         )}
-        {active && account && isCurator && (
-          <NavBarElementContainer>
-            <Link href={`/profile?wallet=${account}`} passHref>
-              <HollowButtonContainer className="flex justify-center items-center ">
-                My Profile
-              </HollowButtonContainer>
-            </Link>
-          </NavBarElementContainer>
-        )}
+        {active &&
+          profileQuery?.data?.username &&
+          isCuratorQuery?.data?.isCurator && (
+            <NavBarElementContainer>
+              <Link
+                href={"/profile/[username]"}
+                as={`/profile/${profileQuery.data.username}`}
+                passHref
+              >
+                <HollowButtonContainer className="flex justify-center items-center ">
+                  My Profile
+                </HollowButtonContainer>
+              </Link>
+            </NavBarElementContainer>
+          )}
         {router.pathname == "/archive" && <SearchBar />}
 
         {active && (
@@ -104,19 +97,6 @@ const NavBarDesktop = (props) => {
         </NavBarElementContainer>
       </div>
     </div>
-  );
-};
-
-export const NavBar = () => {
-  return (
-    <>
-      <div className="hidden sm:flex">
-        <NavBarDesktop />
-      </div>
-      <div className="sm:hidden ">
-        <NavBarMobileWeb />
-      </div>
-    </>
   );
 };
 

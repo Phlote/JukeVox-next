@@ -9,6 +9,7 @@ interface ModalProps {
   children: React.ReactNode;
   width?: string;
   height?: string;
+  border?: boolean;
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -20,7 +21,7 @@ export const Modal: React.FC<ModalProps> = ({
 }) => {
   return (
     <div
-      className="flex w-screen h-screen absolute z-20 justify-center items-center"
+      className={`flex w-screen h-screen absolute z-20 justify-center items-center`}
       style={!open ? { display: "none" } : undefined}
     >
       {open && (
@@ -65,6 +66,7 @@ const ModalContainer = styled.div`
   width: ${(props) => (props.width ? props.width : "60rem")};
   height: ${(props) => (props.height ? props.height : "32rem")};
   border-radius: 100px;
+  border: 2px solid white;
   @supports (backdrop-filter: none) {
     background: linear-gradient(
         85.96deg,
@@ -75,5 +77,6 @@ const ModalContainer = styled.div`
       rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(37.5367px);
     box-shadow: inset 0px -2.50245px 1.25122px rgba(255, 255, 255, 0.1);
+    border: none;
   }
 `;

@@ -1,7 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { supabase } from "../../lib/supabase";
-import { Curation } from "../../types/curations";
-import { cleanSubmission } from "../../utils";
+import { getSubmissionsWithFilter } from "../../utils/supabase";
 
 export default async function handler(
   request: NextApiRequest,
@@ -9,23 +7,7 @@ export default async function handler(
 ) {
   const { filters } = request.body;
 
-  let selectStatement = supabase.from("submissions").select();
+  const submissions = await getSubmissionsWithFilter(null, filters);
 
-  for (const key in filters as Curation) {
-    selectStatement = selectStatement.eq(key, filters[key]);
-  }
-
-  const { data, error } = await selectStatement;
-  if (error) throw error;
-
-  const sorted = data.sort((a: Curation, b: Curation) => {
-    return (
-      new Date(b.submissionTime).getTime() -
-      new Date(a.submissionTime).getTime()
-    );
-  });
-
-  const cleaned = sorted.map(cleanSubmission);
-
-  response.status(200).json(cleaned);
+  response.status(200).json(submissions);
 }
