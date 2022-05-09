@@ -48,10 +48,8 @@
     "size": "hardhat size-contracts --no-compile",
     "postinstall": "yarn build",
     "test": "yarn compile:lite && hardhat --network localhost test --no-compile",
-    "deploy-notupgradeable:rinkeby": "hardhat run scripts/deploy.js --network rinkeby",
-    "deploy:rinkeby": "hardhat run scripts/deploy-upgradeable.js --network rinkeby",
-    "upgrade:rinkeby": "hardhat run scripts/upgrade.js --network rinkeby",
-    "verify:rinkeby": "hardhat verify --network rinkeby --constructor-args"
+    "verify:mumbai": "hardhat verify --network mumbai --constructor-args",
+    "deploy:mumbai": "hardhat --network mumbai deploy"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.6.0",

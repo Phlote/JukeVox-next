@@ -1,22 +1,22 @@
-import "dotenv/config"
-
-import type { NetworkUserConfig } from "hardhat/types"
-import type { HardhatPhloteConfig } from "./src"
-
-import "hardhat-deploy"
-import "@nomiclabs/hardhat-etherscan"
 import "@nomiclabs/hardhat-ethers"
-import "@nomiclabs/hardhat-waffle"
+import "@nomiclabs/hardhat-etherscan"
 import "@nomiclabs/hardhat-solhint"
-import "@typechain/hardhat"
+import "@nomiclabs/hardhat-waffle"
 import "@typechain/ethers-v5"
-
+import "@typechain/hardhat"
+import "dotenv/config"
 //import "@openzeppelin/hardhat-upgrades"
 //import "hardhat-deploy-ethers"
 import "hardhat-contract-sizer"
+import "hardhat-deploy"
 import "hardhat-gas-reporter"
-
 import { task } from "hardhat/config"
+import type { NetworkUserConfig } from "hardhat/types"
+import type { HardhatPhloteConfig } from "./src"
+
+
+
+
 
 
 const chainIds = {
@@ -47,7 +47,7 @@ task("accounts", "Prints the list of accounts", async (_, hre) => {
 });
 
 function createTestnetConfig(network: keyof typeof chainIds): NetworkUserConfig {
-  const url: string = `https://${network}.infura.io/v3/${INFURA_API_KEY}`;
+  const url: string = `https://${network === "mumbai" && "polygon-"}${network}.infura.io/v3/${INFURA_API_KEY}`;
   return {
     accounts: {
       count: 10,
@@ -79,6 +79,8 @@ const config: HardhatPhloteConfig = {
     kovan:   createTestnetConfig("kovan"),
     rinkeby: createTestnetConfig("rinkeby"),
     ropsten: createTestnetConfig("ropsten"),
+    mumbai: createTestnetConfig("mumbai")
+
   },
 
   namedAccounts: {
