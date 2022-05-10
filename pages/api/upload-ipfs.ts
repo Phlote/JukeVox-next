@@ -1,6 +1,6 @@
 import pinataSDK from "@pinata/sdk";
 import { NextApiRequest, NextApiResponse } from "next";
-import { Submission } from "../../types";
+import { CurationNFTMetadata, Submission } from "../../types";
 
 const { PINATA_API_KEY, PINATA_SECRET_API_KEY } = process.env;
 
@@ -58,7 +58,7 @@ const storeSubmissionOnIPFS = async (submission: Submission) => {
         value: tags,
       },
     },
-  };
+  } as CurationNFTMetadata;
   const pin = await pinata.pinJSONToIPFS(erc1155Metadata);
   console.log("Pinned here: ", pin);
   return pin;

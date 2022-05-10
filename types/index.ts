@@ -41,7 +41,7 @@ export interface CurationNFTMetadata {
     mediaType: MediaType;
     artistName: string;
     artistWallet: string;
-    curatorWallet: string;
+    submitterWallet: string;
     mediaTitle: string;
     mediaURI: string;
     marketplace: string;

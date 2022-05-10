@@ -44,6 +44,8 @@ export const SubmissionFlow: React.FC = (props) => {
       const result = await uploadToIPFS(submission, account);
       // mint an NFT
       const txn = await curator.submit(result.uri);
+      console.log(txn);
+      // stick in elastic index
     } catch (e) {
       toast.error(e);
       console.error(e);
