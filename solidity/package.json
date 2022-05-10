@@ -1,38 +1,58 @@
 {
-  "name": "hardhat-project",
+  "name": "solidity",
+  "engines": {
+    "node": ">=16.0.0 <17"
+  },
+  "private": true,
+  "workspaces": [
+    ".",
+    "solidity"
+  ],
   "devDependencies": {
-    "@nomiclabs/hardhat-ethers": "^2.0.5",
+    "@ethersproject/abi": "^5.6.0",
+    "@ethersproject/bytes": "^5.6.0",
+    "@ethersproject/hardware-wallets": "^5.0.14",
+    "@ethersproject/providers": "^5.5.3",
+    "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers@^v0.3.0-beta.13",
     "@nomiclabs/hardhat-etherscan": "^3.0.3",
     "@nomiclabs/hardhat-solhint": "^2.0.0",
     "@nomiclabs/hardhat-waffle": "^2.0.3",
-    "@openzeppelin/hardhat-upgrades": "^1.15.0",
     "@typechain/ethers-v5": "^9.0.0",
     "@typechain/hardhat": "^5.0.0",
+    "@types/chai": "^4.3.0",
+    "@types/dotenv": "^8.2.0",
+    "@types/mocha": "^9.1.0",
+    "@types/node": "^17.0.23",
     "chai": "^4.3.6",
-    "ethereum-waffle": "^3.4.0",
-    "ethers": "^5.5.4",
-    "hardhat": "^2.8.3",
+    "dotenv-extended": "^2.9.0",
+    "ethereum-waffle": "^3.4.4",
+    "ethers": "^5.0.0",
+    "hardhat": "^2.9.3",
     "hardhat-contract-sizer": "^2.5.1",
+    "hardhat-deploy": "^0.11.4",
+    "hardhat-gas-reporter": "^1.0.8",
+    "hardhat-shorthand": "^1.0.0",
+    "lodash": "^4.17.15",
     "solhint": "^3.3.7",
-    "typechain": "^7.0.1"
+    "ts-node": "^10.7.0",
+    "typechain": "^7.0.1",
+    "typescript": "^4.6.3"
   },
   "scripts": {
-    "build": "npm run lint && npm run compile && npm run size",
-    "compile": "hardhat compile",
+    "build": "yarn lint && yarn compile && yarn compile:typechain && yarn run size",
+    "chain": "hardhat node --network hardhat --no-deploy",
+    "compile": "env TS_NODE_TRANSPILE_ONLY=1 hardhat compile --no-typechain",
+    "compile:lite": "env TS_NODE_TRANSPILE_ONLY=1 hardhat compile --no-size-contracts --no-typechain",
+    "compile:typechain": "env TS_NODE_TRANSPILE_ONLY=1 hardhat typechain",
     "lint": "hardhat check",
     "size": "hardhat size-contracts --no-compile",
-    "postinstall": "npm run build",
-    "deploy-notupgradeable:rinkeby": "hardhat run scripts/deploy.js --network rinkeby",
-    "deploy:rinkeby": "hardhat run scripts/deploy-upgradeable.js --network rinkeby",
-    "upgrade:rinkeby": "hardhat run scripts/upgrade.js --network rinkeby",
-    "verify:rinkeby": "hardhat verify --network rinkeby --constructor-args",
-    "migrate-submissions": "hardhat run scripts/migrate-submissions.js --network rinkeby",
-    "migrate-cosigns": "hardhat run scripts/migrate-cosigns.js --network rinkeby"
+    "postinstall": "yarn build",
+    "test": "yarn compile:lite && hardhat --network localhost test --no-compile",
+    "verify:mumbai": "hardhat verify --network mumbai --constructor-args",
+    "deploy:mumbai": "hardhat --network mumbai deploy"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.5.0",
-    "@openzeppelin/contracts-upgradeable": "^4.5.1",
-    "@supabase/supabase-js": "^1.33.3",
-    "dotenv": "^16.0.0"
+    "@openzeppelin/contracts": "^4.6.0",
+    "@openzeppelin/contracts-upgradeable": "^4.6.0"
   }
 }
