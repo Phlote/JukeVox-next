@@ -7,6 +7,7 @@ export const Injected = new InjectedConnector({
     SupportedChainId.MAINNET,
     SupportedChainId.RINKEBY,
     SupportedChainId.POLYGON,
+    SupportedChainId.POLYGON_MUMBAI,
   ],
 });
 
@@ -15,12 +16,14 @@ export const WalletConnect = new WalletConnectConnector({
     // SupportedChainId.MAINNET,
     SupportedChainId.RINKEBY,
     SupportedChainId.POLYGON,
+    SupportedChainId.POLYGON_MUMBAI,
   ],
   bridge: "https://bridge.walletconnect.org",
   rpc: {
     // [SupportedChainId.MAINNET]: `https://eth-mainnet.alchemyapi.io/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_MAINNET}`,
-    [SupportedChainId.POLYGON]: `https://polygon-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_POLYGON}`,
-    [SupportedChainId.RINKEBY]: `https://eth-rinkeby.alchemyapi.io/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_RINKEBY}`,
+    [SupportedChainId.POLYGON]: `https://polygon-mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`,
+    [SupportedChainId.POLYGON_MUMBAI]: `https://polygon-mumbai.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`,
+    [SupportedChainId.RINKEBY]: `https://rinkeby.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`,
   },
   qrcode: true,
 });
