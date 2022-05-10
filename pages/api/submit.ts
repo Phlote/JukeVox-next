@@ -16,7 +16,7 @@ export default async function handler(
 
   try {
     const submissionWithSubmitterInfo = {
-      curatorWallet: wallet,
+      submitterWallet: wallet,
       ...submission,
     };
 
@@ -63,7 +63,7 @@ const storeSubmissionOnIPFS = async (submission: Submission) => {
     mediaType,
     artistName,
     artistWallet,
-    curatorWallet,
+    submitterWallet,
     mediaTitle,
     mediaURI,
     marketplace,
@@ -78,7 +78,7 @@ const storeSubmissionOnIPFS = async (submission: Submission) => {
       mediaType,
       artistName,
       artistWallet,
-      curatorWallet,
+      submitterWallet,
       mediaTitle,
       mediaURI,
       marketplace,

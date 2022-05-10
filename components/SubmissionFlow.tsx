@@ -3,10 +3,9 @@ import { atom, useAtom } from "jotai";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import { revalidate } from "../controllers/revalidate";
-import { submit } from "../controllers/submissions";
+import { uploadToIPFS } from "../controllers/submissions";
+import { useCurator } from "../hooks/web3/useCurator";
 import { Submission } from "../types";
-import { verifyUser } from "../utils/web3";
 import { useProfile } from "./Forms/ProfileSettingsForm";
 import { SubmissionForm } from "./Forms/SubmissionForm";
 import { HollowButton, HollowButtonContainer } from "./Hollow";
@@ -17,6 +16,7 @@ export const useSubmissionFlowOpen = () => useAtom(submissionFlowOpen);
 export const SubmissionFlow: React.FC = (props) => {
   const { account, library } = useWeb3React();
   const queryClient = useQueryClient();
+  const curator = useCurator();
 
   const [page, setPage] = useState<number>(0);
 
@@ -31,16 +31,19 @@ export const SubmissionFlow: React.FC = (props) => {
   const onSubmit = async (submission: Submission) => {
     setLoading(true);
     try {
-      const authenticated = await verifyUser(account, library);
-      if (!authenticated) {
-        throw "Not Authenticated";
-      }
+      // const authenticated = await verifyUser(account, library);
+      // if (!authenticated) {
+      //   throw "Not Authenticated";
+      // }
+      // const result = (await submit(submission, account)) as Submission;
+      // setPage(1);
+      // queryClient.invalidateQueries("submissions");
+      // await revalidate(profile?.data?.username, result.id);
 
-      const result = (await submit(submission, account)) as Submission;
-
-      setPage(1);
-      queryClient.invalidateQueries("submissions");
-      await revalidate(profile?.data?.username, result.id);
+      // upload to IPFS
+      const result = await uploadToIPFS(submission, account);
+      // mint an NFT
+      const txn = await curator.submit(result.uri);
     } catch (e) {
       toast.error(e);
       console.error(e);
