@@ -7,6 +7,6 @@ const { NEXT_PUBLIC_CURATOR_CONTRACT_ADDRESS } = process.env;
 export const useCurator = () => {
   return useContract<Curator>(
     NEXT_PUBLIC_CURATOR_CONTRACT_ADDRESS,
-    CURATOR_ABI
+    CURATOR_ABI.abi
   );
 };

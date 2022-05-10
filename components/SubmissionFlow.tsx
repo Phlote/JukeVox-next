@@ -1,5 +1,6 @@
 import { useWeb3React } from "@web3-react/core";
 import { atom, useAtom } from "jotai";
+import Image from "next/image";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
@@ -27,6 +28,7 @@ export const SubmissionFlow: React.FC = (props) => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const profile = useProfile(account);
+  const [txnHash, setTxnHash] = useState<string>();
 
   const onSubmit = async (submission: Submission) => {
     setLoading(true);
@@ -44,8 +46,12 @@ export const SubmissionFlow: React.FC = (props) => {
       const result = await uploadToIPFS(submission, account);
       // mint an NFT
       const txn = await curator.submit(result.uri);
+      setTxnHash(txn.hash);
       console.log(txn);
-      // stick in elastic index
+      // We don't need to submit to elastic because we get it for free from graphql!
+
+      // revalidate page for transaction hash
+      setPage(1);
     } catch (e) {
       toast.error(e);
       console.error(e);
@@ -66,17 +72,17 @@ export const SubmissionFlow: React.FC = (props) => {
       {page === 1 && (
         <div className="flex flex-col items-center text-sm mt-8 gap-8">
           <p>Congratulations! Your submission has been added</p>
-          {/* <a
+          <a
             className="underline flex"
             rel="noreferrer"
             target="_blank"
-            href={`https://rinkeby.etherscan.io/tx/${txnHash}`}
+            href={`https://mumbai.polygonscan.com/tx/${txnHash}`}
           >
             View Transaction
             <div className="w-1" />
             <Image src="/arrow.svg" alt={"link"} height={12} width={12} />
           </a>
-          <div className="h-4" />
+          {/* <div className="h-4" />
           <a
             className="underline flex"
             rel="noreferrer"

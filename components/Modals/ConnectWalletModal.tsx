@@ -55,7 +55,7 @@ export const ConnectWalletModal = () => {
             {isUnsupportedChainId && (
               <p className="text-red-500">
                 {
-                  "Your wallet is connected to the wrong network, please connect it to Polygon"
+                  "Your wallet is connected to the wrong network, please connect it to Mumbai"
                 }
               </p>
             )}
