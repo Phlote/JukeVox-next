@@ -1,3 +1,4 @@
+import { gql } from "@apollo/client";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import Link from "next/link";
@@ -13,8 +14,8 @@ import {
 import { UserStatsBar } from "../../components/UserStatsBar";
 import { useIsCurator } from "../../hooks/useIsCurator";
 import useENSName from "../../hooks/web3/useENSName";
+import { client } from "../../lib/apollo";
 import { supabase } from "../../lib/supabase";
-import { Submission } from "../../types";
 import {
   getProfileForWallet,
   getSubmissionsWithFilter,
@@ -195,21 +196,42 @@ export async function getStaticProps({ params }) {
   };
 }
 
+// export async function getStaticPaths() {
+//   const submissionsQuery = await supabase.from("submissions").select();
+
+//   if (submissionsQuery.error) throw submissionsQuery.error;
+
+//   // IDEA: should we have two pages for each user?
+//   const UUIDs = submissionsQuery.data.map((submission: Submission) => {
+//     if (submission.username) return submission.username;
+//     else return submission.curatorWallet;
+//   });
+
+//   // can be wallet or username
+//   const paths = UUIDs.map((uuid) => ({
+//     params: {
+//       uuid,
+//     },
+//   }));
+
+//   return { paths, fallback: true };
+// }
+
 export async function getStaticPaths() {
-  const submissionsQuery = await supabase.from("submissions").select();
-
-  if (submissionsQuery.error) throw submissionsQuery.error;
-
-  // IDEA: should we have two pages for each user?
-  const UUIDs = submissionsQuery.data.map((submission: Submission) => {
-    if (submission.username) return submission.username;
-    else return submission.curatorWallet;
+  const res = await client.query({
+    query: gql`
+      query GetAllWallets {
+        submissions {
+          submitterWallet
+        }
+      }
+    `,
   });
 
   // can be wallet or username
-  const paths = UUIDs.map((uuid) => ({
+  const paths = res.map((submitterWallet) => ({
     params: {
-      uuid,
+      submitterWallet,
     },
   }));
 
