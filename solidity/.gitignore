@@ -1,3 +1,8 @@
 /contracts/deps
-/types
-.yarn
+/typechain
+/node_modules
+/artifacts
+/cache
+/.openzeppelin
+/deployments/localhost
+/deployments/hardhat
