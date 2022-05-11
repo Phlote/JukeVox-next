@@ -18,9 +18,7 @@ export default async function handler(
 
     const pin = await storeSubmissionOnIPFS(submissionWithSubmitterInfo);
 
-    response
-      .status(200)
-      .send({ uri: `https://gateway.pinata.cloud/ipfs/${pin.IpfsHash}` });
+    response.status(200).send({ uri: `ipfs://${pin.IpfsHash}` });
   } catch (e) {
     console.error(e);
     response.status(500).send(e);
