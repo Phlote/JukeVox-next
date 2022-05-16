@@ -51,12 +51,13 @@ const storeSubmissionOnIPFS = async (submission: Submission) => {
       mediaTitle,
       mediaURI,
       marketplace,
-      tags: {
-        name: "tags",
-        value: tags,
-      },
     },
   } as CurationNFTMetadata;
+
+  if (tags) {
+    erc1155Metadata.properties.tags = { name: "tags", value: tags };
+  }
+
   const pin = await pinata.pinJSONToIPFS(erc1155Metadata);
   console.log("Pinned here: ", pin);
   return pin;
