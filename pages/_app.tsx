@@ -9,7 +9,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import "tailwindcss/tailwind.css";
-import { initializeApollo } from "../lib/apollo";
+import { useApollo } from "../lib/apollo";
 import { gaPageview } from "../lib/ga";
 import "../styles/globals.css";
 import getLibrary from "../utils/getLibrary";
@@ -42,13 +42,13 @@ const NextWeb3App = ({ Component, pageProps }: AppPropsWithLayout) => {
     };
   }, [router.events]);
 
+  const apolloClient = useApollo(pageProps.initialApolloState);
+
   if (process.env.NEXT_PUBLIC_MAINTENANCE) {
     return <div>Down for maintenance. Try again later!</div>;
   }
 
   const getLayout = Component.getLayout ?? ((page) => page);
-
-  const client = initializeApollo();
 
   return (
     <>
@@ -62,7 +62,7 @@ const NextWeb3App = ({ Component, pageProps }: AppPropsWithLayout) => {
       </Head>
       <QueryClientProvider client={queryClient}>
         <Web3ReactProvider getLibrary={getLibrary}>
-          <ApolloProvider client={client}>
+          <ApolloProvider client={apolloClient}>
             {getLayout(<Component {...pageProps} />)}
             <ToastContainer
               position="top-right"
