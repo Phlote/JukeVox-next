@@ -9,7 +9,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import "tailwindcss/tailwind.css";
-import { client } from "../lib/apollo";
+import { initializeApollo } from "../lib/apollo";
 import { gaPageview } from "../lib/ga";
 import "../styles/globals.css";
 import getLibrary from "../utils/getLibrary";
@@ -47,6 +47,8 @@ const NextWeb3App = ({ Component, pageProps }: AppPropsWithLayout) => {
   }
 
   const getLayout = Component.getLayout ?? ((page) => page);
+
+  const client = initializeApollo();
 
   return (
     <>

@@ -159,30 +159,34 @@ Profile.getLayout = function getLayout(page) {
 
 // params will contain the wallet for each generated page.
 export async function getStaticProps({ params }) {
-  const { userIdenitifier } = params;
+  const { userIdentifier } = params;
   const apolloClient = initializeApollo();
 
-  const getSubmissionsByWallet = async (wallet): Promise<Submission[]> =>
-    await apolloClient.query({
+  const getSubmissionsByWallet = async (wallet) => {
+    const res = await apolloClient.query({
       query: gql`
-        {
-          submissions(submitterWallet: wallet) {
+        query GetSubmissionsByWallet($wallet: String) {
+          submissions(where: { submitterWallet: $wallet }) {
             id
             timestamp
-            submitterWallet
             artistName
             mediaTitle
             mediaType
             mediaURI
             marketplace
             cosigns
+            submitterWallet
           }
         }
       `,
+      variables: { wallet },
     });
 
-  if (ethers.utils.isAddress(userIdenitifier)) {
-    const wallet = userIdenitifier;
+    return res.data.submissions;
+  };
+
+  if (ethers.utils.isAddress(userIdentifier)) {
+    const wallet = userIdentifier;
 
     return {
       props: {
@@ -192,7 +196,7 @@ export async function getStaticProps({ params }) {
     };
   }
 
-  const username = userIdenitifier;
+  const username = userIdentifier;
 
   const profilesQuery = await supabase
     .from("profiles")
@@ -200,7 +204,6 @@ export async function getStaticProps({ params }) {
     .match({ username });
 
   if (profilesQuery.error) throw profilesQuery.error;
-  //TODO: this is a bit dumb, we should have more general querying for profiles
   const { wallet } = profilesQuery.data[0];
 
   return {
@@ -215,10 +218,9 @@ export async function getStaticProps({ params }) {
 
 export async function getStaticPaths() {
   const apolloClient = initializeApollo();
-
   const res = await apolloClient.query({
     query: gql`
-      query GetAllWallets {
+      query GetWallets {
         submissions {
           submitterWallet
         }
@@ -226,20 +228,21 @@ export async function getStaticPaths() {
     `,
   });
 
-  // if we have a username for this individual, the page should use this instead of the wallet
+  // if we have a username for this wallet, the page should use this instead of the wallet
   const userIdentifiers = await Promise.all(
-    res.map(async (submitterWallet) => {
+    res.data.submissions.map(async ({ submitterWallet }) => {
       const profilesQuery = await supabase
         .from("profiles")
         .select()
         .match({ wallet: submitterWallet });
 
-      if (!profilesQuery.data.length) return submitterWallet;
-      else return (profilesQuery.data[0] as UserProfile).username;
+      if (profilesQuery.error) console.error(profilesQuery.error);
+      if (profilesQuery.data[0] && profilesQuery.data[0].username)
+        return (profilesQuery.data[0] as UserProfile).username;
+
+      return submitterWallet;
     })
   );
-
-  console.log("user identifiers", userIdentifiers);
 
   // can be wallet or username
   const paths = userIdentifiers.map((userIdentifier: string) => ({

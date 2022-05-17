@@ -88,7 +88,11 @@ const submissionTimeToDate = (timeStamp: BigNumber | number | string) => {
     time = timeStamp.toNumber();
   }
 
-  const submissionDate = dayjs(time as number | string);
+  if (typeof timeStamp === "string") {
+    time = parseInt(timeStamp);
+  }
+
+  const submissionDate = dayjs((time as number) * 1000);
   if (!submissionDate.isValid()) throw "Invalid Date String";
 
   return submissionDate.format("YYYY-MM-DD");
