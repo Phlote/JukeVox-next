@@ -3,6 +3,7 @@ import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { UserProfile } from "../../components/Forms/ProfileSettingsForm";
 import Layout, { ArchiveLayout } from "../../components/Layouts";
 import { RatingsMeter } from "../../components/RatingsMeter";
 import {
@@ -14,23 +15,21 @@ import {
 import { UserStatsBar } from "../../components/UserStatsBar";
 import { useIsCurator } from "../../hooks/useIsCurator";
 import useENSName from "../../hooks/web3/useENSName";
-import { client } from "../../lib/apollo";
+import { initializeApollo } from "../../lib/apollo";
 import { supabase } from "../../lib/supabase";
-import {
-  getProfileForWallet,
-  getSubmissionsWithFilter,
-} from "../../utils/supabase";
+import { Submission } from "../../types";
+import { getProfileForWallet } from "../../utils/supabase";
 
 export default function Profile(props) {
   const router = useRouter();
   const { submissions, profile } = props;
-  const uuid = router.query.uuid;
+  const userIdentifier = router.query.userIdentifier;
   const isCurator = useIsCurator();
   const { account } = useWeb3React();
 
-  const promptToMakeProfile = isCurator && uuid === account;
+  const promptToMakeProfile = isCurator && userIdentifier === account;
 
-  const ENSName = useENSName(uuid as string);
+  const ENSName = useENSName(userIdentifier as string);
 
   if (router.isFallback) {
     //TODO better loading
@@ -49,7 +48,7 @@ export default function Profile(props) {
           )}
           {!profile && (
             <div className="flex flex-col items-center">
-              <h1>{`${ENSName || uuid}'s Curations`}</h1>
+              <h1>{`${ENSName || userIdentifier}'s Curations`}</h1>
               <div className="h-4" />
               {promptToMakeProfile && (
                 <Link href="/editprofile" passHref>
@@ -82,30 +81,30 @@ export default function Profile(props) {
           {submissions?.length > 0 && (
             <tbody>
               <tr className="h-4" />
-              {submissions?.map((submission) => {
+              {submissions?.map((submission: Submission) => {
                 const {
                   id,
-                  curatorWallet,
+                  timestamp,
+                  submitterWallet,
                   artistName,
                   mediaTitle,
                   mediaType,
                   mediaURI,
                   marketplace,
-                  submissionTime,
                   cosigns,
                 } = submission;
 
                 return (
                   <>
                     <ArchiveTableRow
-                      key={`${submissionTime}`}
+                      key={`${timestamp}`}
                       className="hover:opacity-80 cursor-pointer"
                       onClick={() => {
                         router.push(`/submission/${id}`);
                       }}
                     >
                       <ArchiveTableDataCell>
-                        <SubmissionDate submissionTimestamp={submissionTime} />
+                        <SubmissionDate submissionTimestamp={timestamp} />
                       </ArchiveTableDataCell>
                       <ArchiveTableDataCell>{artistName}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>
@@ -126,7 +125,7 @@ export default function Profile(props) {
                         <RatingsMeter
                           initialCosigns={cosigns}
                           submissionId={id}
-                          submitterWallet={curatorWallet}
+                          submitterWallet={submitterWallet}
                         />
                       </ArchiveTableDataCell>
                     </ArchiveTableRow>
@@ -160,22 +159,40 @@ Profile.getLayout = function getLayout(page) {
 
 // params will contain the wallet for each generated page.
 export async function getStaticProps({ params }) {
-  const { uuid } = params;
+  const { userIdenitifier } = params;
+  const apolloClient = initializeApollo();
 
-  if (ethers.utils.isAddress(uuid)) {
+  const getSubmissionsByWallet = async (wallet): Promise<Submission[]> =>
+    await apolloClient.query({
+      query: gql`
+        {
+          submissions(submitterWallet: wallet) {
+            id
+            timestamp
+            submitterWallet
+            artistName
+            mediaTitle
+            mediaType
+            mediaURI
+            marketplace
+            cosigns
+          }
+        }
+      `,
+    });
+
+  if (ethers.utils.isAddress(userIdenitifier)) {
+    const wallet = userIdenitifier;
+
     return {
       props: {
-        submissions: await getSubmissionsWithFilter(
-          null,
-          { curatorWallet: uuid },
-          true
-        ),
+        submissions: await getSubmissionsByWallet(wallet),
       },
       revalidate: 60,
     };
   }
 
-  const username = uuid;
+  const username = userIdenitifier;
 
   const profilesQuery = await supabase
     .from("profiles")
@@ -189,36 +206,17 @@ export async function getStaticProps({ params }) {
   return {
     props: {
       // TODO: everyone is a curator when it's just their submissions
-      submissions: await getSubmissionsWithFilter(null, { username }, true),
+      submissions: await getSubmissionsByWallet(wallet),
       profile: await getProfileForWallet(wallet),
     },
     revalidate: 60,
   };
 }
 
-// export async function getStaticPaths() {
-//   const submissionsQuery = await supabase.from("submissions").select();
-
-//   if (submissionsQuery.error) throw submissionsQuery.error;
-
-//   // IDEA: should we have two pages for each user?
-//   const UUIDs = submissionsQuery.data.map((submission: Submission) => {
-//     if (submission.username) return submission.username;
-//     else return submission.curatorWallet;
-//   });
-
-//   // can be wallet or username
-//   const paths = UUIDs.map((uuid) => ({
-//     params: {
-//       uuid,
-//     },
-//   }));
-
-//   return { paths, fallback: true };
-// }
-
 export async function getStaticPaths() {
-  const res = await client.query({
+  const apolloClient = initializeApollo();
+
+  const res = await apolloClient.query({
     query: gql`
       query GetAllWallets {
         submissions {
@@ -228,10 +226,25 @@ export async function getStaticPaths() {
     `,
   });
 
+  // if we have a username for this individual, the page should use this instead of the wallet
+  const userIdentifiers = await Promise.all(
+    res.map(async (submitterWallet) => {
+      const profilesQuery = await supabase
+        .from("profiles")
+        .select()
+        .match({ wallet: submitterWallet });
+
+      if (!profilesQuery.data.length) return submitterWallet;
+      else return (profilesQuery.data[0] as UserProfile).username;
+    })
+  );
+
+  console.log("user identifiers", userIdentifiers);
+
   // can be wallet or username
-  const paths = res.map((submitterWallet) => ({
+  const paths = userIdentifiers.map((userIdentifier: string) => ({
     params: {
-      submitterWallet,
+      userIdentifier,
     },
   }));
 

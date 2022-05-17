@@ -63,28 +63,28 @@ function Archive(props) {
             {submissions?.map((curation) => {
               const {
                 id,
-                curatorWallet,
+                timestamp,
+                submitterWallet,
                 artistName,
                 mediaTitle,
                 mediaType,
                 mediaURI,
                 marketplace,
-                submissionTime,
+
                 cosigns,
-                username,
               } = curation;
 
               return (
                 <>
                   <ArchiveTableRow
-                    key={`${submissionTime}`}
+                    key={`${timestamp}`}
                     className="hover:opacity-80 cursor-pointer"
                     onClick={() => {
                       router.push(`/submission/${id}`);
                     }}
                   >
                     <ArchiveTableDataCell>
-                      <SubmissionDate submissionTimestamp={submissionTime} />
+                      <SubmissionDate submissionTimestamp={timestamp} />
                     </ArchiveTableDataCell>
                     <ArchiveTableDataCell>{artistName}</ArchiveTableDataCell>
                     <ArchiveTableDataCell>
@@ -102,15 +102,15 @@ function Archive(props) {
                     <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
                     <ArchiveTableDataCell>
                       <Username
-                        username={username}
-                        wallet={curatorWallet}
+                        // username={username}
+                        wallet={submitterWallet}
                         linkToProfile
                       />
                     </ArchiveTableDataCell>
                     <ArchiveTableDataCell>
                       <RatingsMeter
                         submissionId={id}
-                        submitterWallet={curatorWallet}
+                        submitterWallet={submitterWallet}
                         initialCosigns={cosigns}
                       />
                     </ArchiveTableDataCell>

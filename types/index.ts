@@ -3,10 +3,12 @@ export interface UserNonce {
   nonce: number;
 }
 
+//TODO include the subgraph project in this repo, use types as it is in graphql
 type MediaType = "Audio" | "Text" | "Video" | "Visual Art";
 export interface Submission {
   id: number;
-  submissionTime: string;
+  address: string;
+  timestamp: number;
   mediaType: MediaType;
   artistName: string;
   artistWallet: string;
@@ -16,7 +18,6 @@ export interface Submission {
   marketplace: string;
   tags?: string[];
   cosigns?: string[];
-  username: string;
 }
 
 export interface SubmissionElasticSearchDocument {
