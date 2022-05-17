@@ -14,5 +14,8 @@ export const submit = async (submission: Submission, wallet: string) => {
 };
 
 export const uploadToIPFS = async (submission: Submission, wallet: string) => {
-  return await nextApiRequest("upload-ipfs", "POST", { submission, wallet });
+  return await nextApiRequest("upload-ipfs", "POST", {
+    submission,
+    wallet,
+  });
 };

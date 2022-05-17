@@ -44,11 +44,11 @@ export const SubmissionFlow: React.FC = (props) => {
 
       // upload to IPFS
       const result = await uploadToIPFS(submission, account);
+      console.log("CID: ", result);
       // mint an NFT
       const txn = await curator.submit(result.uri);
       setTxnHash(txn.hash);
       console.log(txn);
-      // We don't need to submit to elastic because we get it for free from graphql!
 
       // revalidate page for transaction hash
       setPage(1);

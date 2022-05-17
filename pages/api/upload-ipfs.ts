@@ -1,8 +1,6 @@
-import pinataSDK from "@pinata/sdk";
+import { create } from "ipfs-http-client";
 import { NextApiRequest, NextApiResponse } from "next";
 import { CurationNFTMetadata, Submission } from "../../types";
-
-const { PINATA_API_KEY, PINATA_SECRET_API_KEY } = process.env;
 
 export default async function handler(
   request: NextApiRequest,
@@ -18,7 +16,7 @@ export default async function handler(
 
     const pin = await storeSubmissionOnIPFS(submissionWithSubmitterInfo);
 
-    response.status(200).send({ uri: `ipfs://${pin.IpfsHash}` });
+    response.status(200).send({ uri: `ipfs://${pin}` });
   } catch (e) {
     console.error(e);
     response.status(500).send(e);
@@ -26,8 +24,9 @@ export default async function handler(
 }
 
 const storeSubmissionOnIPFS = async (submission: Submission) => {
-  const pinata = pinataSDK(PINATA_API_KEY, PINATA_SECRET_API_KEY);
+  const client = create(process.env.IPSS_NODE_URL ?? "http://127.0.0.1:5001");
 
+  // call Core API methods
   const {
     mediaType,
     artistName,
@@ -58,7 +57,9 @@ const storeSubmissionOnIPFS = async (submission: Submission) => {
     erc1155Metadata.properties.tags = { name: "tags", value: tags };
   }
 
-  const pin = await pinata.pinJSONToIPFS(erc1155Metadata);
-  console.log("Pinned here: ", pin);
-  return pin;
+  const { cid } = await client.add(
+    Buffer.from(JSON.stringify(erc1155Metadata))
+  );
+  console.log("Pinned here: ", cid);
+  return cid;
 };
