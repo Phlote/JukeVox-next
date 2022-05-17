@@ -9,8 +9,8 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import "tailwindcss/tailwind.css";
-import { useApollo } from "../lib/apollo";
 import { gaPageview } from "../lib/ga";
+import { useApollo } from "../lib/graphql/apollo";
 import "../styles/globals.css";
 import getLibrary from "../utils/getLibrary";
 

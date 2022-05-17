@@ -1,4 +1,3 @@
-import { gql } from "@apollo/client";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import Link from "next/link";
@@ -15,7 +14,11 @@ import {
 import { UserStatsBar } from "../../components/UserStatsBar";
 import { useIsCurator } from "../../hooks/useIsCurator";
 import useENSName from "../../hooks/web3/useENSName";
-import { initializeApollo } from "../../lib/apollo";
+import { initializeApollo } from "../../lib/graphql/apollo";
+import {
+  GET_ALL_WALLETS,
+  GET_SUBMISSIONS_BY_WALLET,
+} from "../../lib/graphql/submissions";
 import { supabase } from "../../lib/supabase";
 import { Submission } from "../../types";
 import { getProfileForWallet } from "../../utils/supabase";
@@ -164,21 +167,7 @@ export async function getStaticProps({ params }) {
 
   const getSubmissionsByWallet = async (wallet) => {
     const res = await apolloClient.query({
-      query: gql`
-        query GetSubmissionsByWallet($wallet: String) {
-          submissions(where: { submitterWallet: $wallet }) {
-            id
-            timestamp
-            artistName
-            mediaTitle
-            mediaType
-            mediaURI
-            marketplace
-            cosigns
-            submitterWallet
-          }
-        }
-      `,
+      query: GET_SUBMISSIONS_BY_WALLET,
       variables: { wallet },
     });
 
@@ -219,13 +208,7 @@ export async function getStaticProps({ params }) {
 export async function getStaticPaths() {
   const apolloClient = initializeApollo();
   const res = await apolloClient.query({
-    query: gql`
-      query GetWallets {
-        submissions {
-          submitterWallet
-        }
-      }
-    `,
+    query: GET_ALL_WALLETS,
   });
 
   // if we have a username for this wallet, the page should use this instead of the wallet
