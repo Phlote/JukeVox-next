@@ -7,8 +7,14 @@ import styled from "styled-components";
 import tw from "twin.macro";
 import Layout from "../../components/Layouts";
 import { Username } from "../../components/Username";
-import { Submission } from "../../lib/graphql/generated";
-import { supabase } from "../../lib/supabase";
+import { initializeApollo } from "../../lib/graphql/apollo";
+import {
+  GetAllSubmissionIDsDocument,
+  GetAllSubmissionIDsQuery,
+  GetSubmissionByIdDocument,
+  GetSubmissionByIdQuery,
+  Submission,
+} from "../../lib/graphql/generated";
 
 export default function SubmissionPage(props) {
   const { submission } = props as { submission: Submission };
@@ -89,17 +95,15 @@ SubmissionPage.getLayout = function getLayout(page) {
 
 export async function getStaticProps({ params }) {
   const { id } = params;
-
-  const submissionsQuery = await supabase
-    .from("submissions")
-    .select()
-    .match({ id });
-
-  if (submissionsQuery.error) throw submissionsQuery.error;
+  const apolloClient = initializeApollo();
+  const res = await apolloClient.query<GetSubmissionByIdQuery>({
+    query: GetSubmissionByIdDocument,
+    variables: { id },
+  });
 
   return {
     props: {
-      submission: submissionsQuery.data[0] as Submission,
+      submission: res.data.submissions[0],
     },
     // just in case
     revalidate: 3600,
@@ -107,13 +111,14 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-  const submissionsQuery = await supabase.from("submissions").select();
+  const apolloClient = initializeApollo();
+  const res = await apolloClient.query<GetAllSubmissionIDsQuery>({
+    query: GetAllSubmissionIDsDocument,
+  });
 
-  if (submissionsQuery.error) throw submissionsQuery.error;
-
-  const paths = submissionsQuery.data.map(({ id }) => ({
+  const paths = res.data.submissions.map(({ id }) => ({
     params: {
-      id: id.toString(),
+      id,
     },
   }));
 
