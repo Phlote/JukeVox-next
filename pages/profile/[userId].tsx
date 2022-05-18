@@ -20,9 +20,9 @@ import {
   GetAllWalletsQuery,
   GetSubmissionsByWalletDocument,
   GetSubmissionsByWalletQuery,
+  Submission,
 } from "../../lib/graphql/generated";
 import { supabase } from "../../lib/supabase";
-import { Submission } from "../../types";
 import { getProfileForWallet } from "../../utils/supabase";
 
 export default function Profile(props) {
@@ -130,7 +130,9 @@ export default function Profile(props) {
                         <RatingsMeter
                           initialCosigns={cosigns}
                           submissionId={id}
-                          submitterWallet={submitterWallet}
+                          submitterWallet={ethers.utils.hexlify(
+                            submitterWallet
+                          )}
                         />
                       </ArchiveTableDataCell>
                     </ArchiveTableRow>

@@ -29,7 +29,7 @@ export const Username: React.FC<Username> = (props) => {
   if (linkToProfile) {
     return (
       <Link
-        href={"/profile/[userIdentifier]"}
+        href={"/profile/[userId]"}
         as={`/profile/${username ? username : wallet}`}
         passHref
       >

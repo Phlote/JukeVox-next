@@ -1,3 +1,4 @@
+import { ethers } from "ethers";
 import { TwitterIcon, TwitterShareButton } from "next-share";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -6,8 +7,8 @@ import styled from "styled-components";
 import tw from "twin.macro";
 import Layout from "../../components/Layouts";
 import { Username } from "../../components/Username";
+import { Submission } from "../../lib/graphql/generated";
 import { supabase } from "../../lib/supabase";
-import { Submission } from "../../types";
 
 export default function SubmissionPage(props) {
   const { submission } = props as { submission: Submission };
@@ -45,8 +46,8 @@ export default function SubmissionPage(props) {
             <h2 className="text-base opacity-60"> Curator</h2>
             <div className="h-2" />
             <Username
-              username={submission.username}
-              wallet={submission.curatorWallet}
+              // username={submission.username}
+              wallet={ethers.utils.hexlify(submission.submitterWallet)}
               linkToProfile
             />
           </div>

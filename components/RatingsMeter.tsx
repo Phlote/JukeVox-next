@@ -4,15 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { toast } from "react-toastify";
-import { cosign } from "../controllers/cosigns";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { verifyUser } from "../utils/web3";
 import { useProfile } from "./Forms/ProfileSettingsForm";
 
 export const RatingsMeter: React.FC<{
-  submissionId: number;
+  submissionId: string;
   submitterWallet: string;
-  initialCosigns: string[];
+  initialCosigns: Uint8Array[];
 }> = (props) => {
   const { submissionId, submitterWallet, initialCosigns } = props;
 
@@ -21,7 +20,9 @@ export const RatingsMeter: React.FC<{
 
   React.useEffect(() => {
     if (initialCosigns) {
-      setCosigns(initialCosigns);
+      setCosigns(
+        initialCosigns.map((address) => ethers.utils.hexlify(address))
+      );
     }
   }, [initialCosigns]);
 
@@ -41,8 +42,9 @@ export const RatingsMeter: React.FC<{
       if (!authenticated) {
         throw "Authentication failed";
       }
-      const newCosigns = await cosign(submissionId, account);
-      if (newCosigns) setCosigns(newCosigns);
+      // TODO: move to using contract soon
+      // const newCosigns = await cosign(submissionId, account);
+      // if (newCosigns) setCosigns(newCosigns);
     } catch (e) {
       console.error(e);
       toast.error(e.message);
