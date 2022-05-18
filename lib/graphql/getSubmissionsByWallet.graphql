@@ -1,0 +1,13 @@
+query GetSubmissionsByWallet($wallet: Bytes) {
+  submissions(where: { submitterWallet: $wallet }) {
+    id
+    timestamp
+    artistName
+    mediaTitle
+    mediaTypeGET
+    mediaURI
+    marketplace
+    cosigns
+    submitterWallet
+  }
+}
