@@ -4,7 +4,7 @@ query GetSubmissionsByWallet($wallet: Bytes) {
     timestamp
     artistName
     mediaTitle
-    mediaTypeGET
+    mediaType
     mediaURI
     marketplace
     cosigns
