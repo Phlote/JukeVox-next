@@ -16,9 +16,9 @@ import { useIsCurator } from "../../hooks/useIsCurator";
 import useENSName from "../../hooks/web3/useENSName";
 import { initializeApollo } from "../../lib/graphql/apollo";
 import {
-  GET_ALL_WALLETS,
-  GET_SUBMISSIONS_BY_WALLET,
-} from "../../lib/graphql/submissions";
+  GetAllWalletsDocument,
+  GetAllWalletsQuery,
+} from "../../lib/graphql/generated";
 import { supabase } from "../../lib/supabase";
 import { Submission } from "../../types";
 import { getProfileForWallet } from "../../utils/supabase";
@@ -207,8 +207,8 @@ export async function getStaticProps({ params }) {
 
 export async function getStaticPaths() {
   const apolloClient = initializeApollo();
-  const res = await apolloClient.query({
-    query: GET_ALL_WALLETS,
+  const res = await apolloClient.query<GetAllWalletsQuery>({
+    query: GetAllWalletsDocument,
   });
 
   // if we have a username for this wallet, the page should use this instead of the wallet
