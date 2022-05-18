@@ -6,3 +6,8 @@ generates:
       - typescript
       - typescript-operations
       - typed-document-node
+    config:
+      scalars:
+        Bytes: Uint8Array
+        BigInt: number
+        BigDecimal: number

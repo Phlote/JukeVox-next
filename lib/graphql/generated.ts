@@ -11,9 +11,9 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  BigDecimal: any;
-  BigInt: any;
-  Bytes: any;
+  BigDecimal: number;
+  BigInt: number;
+  Bytes: Uint8Array;
 };
 
 /** The block at which the query should be executed. */
@@ -325,14 +325,14 @@ export enum _SubgraphErrorPolicy_ {
 export type GetAllWalletsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllWalletsQuery = { __typename?: 'Query', submissions: Array<{ __typename?: 'Submission', submitterWallet: any }> };
+export type GetAllWalletsQuery = { __typename?: 'Query', submissions: Array<{ __typename?: 'Submission', submitterWallet: Uint8Array }> };
 
 export type GetSubmissionsByWalletQueryVariables = Exact<{
   wallet?: InputMaybe<Scalars['Bytes']>;
 }>;
 
 
-export type GetSubmissionsByWalletQuery = { __typename?: 'Query', submissions: Array<{ __typename?: 'Submission', id: string, timestamp: any, artistName: string, mediaTitle: string, mediaType: string, mediaURI: string, marketplace: string, cosigns?: Array<any> | null, submitterWallet: any }> };
+export type GetSubmissionsByWalletQuery = { __typename?: 'Query', submissions: Array<{ __typename?: 'Submission', id: string, timestamp: number, artistName: string, mediaTitle: string, mediaType: string, mediaURI: string, marketplace: string, cosigns?: Array<Uint8Array> | null, submitterWallet: Uint8Array }> };
 
 
 export const GetAllWalletsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllWallets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submitterWallet"}}]}}]}}]} as unknown as DocumentNode<GetAllWalletsQuery, GetAllWalletsQueryVariables>;
