@@ -1,5 +1,6 @@
+import { useQuery } from "@apollo/client";
+import { ethers } from "ethers";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import Layout, { ArchiveLayout } from "../components/Layouts";
 import { RatingsMeter } from "../components/RatingsMeter";
 import { useSearchTerm } from "../components/SearchBar";
@@ -10,32 +11,42 @@ import {
   SubmissionDate,
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
-import { useSubmissionSearch } from "../hooks/useSubmissions";
-import { gaEvent } from "../lib/ga";
-import { Submission } from "../types";
+import { SubmissionsSearchDocument } from "../lib/graphql/generated";
 
 function Archive(props) {
   // we can do this because the prop is unchanging
   const [searchTerm] = useSearchTerm();
-  const searchResults = useSubmissionSearch(searchTerm);
-  const [submissions, setSubmissions] = useState<Submission[]>([]);
+
+  // const searchResults = useSubmissionSearch(searchTerm);
+  // We can probably have an apollo use query here
+  // have to pass in filters as well
+  // worry about pagination in a later PR and the search query params in a later PR
+  const { data } = useQuery(SubmissionsSearchDocument, {
+    variables: { searchTerm: searchTerm + ":*" },
+  });
+  console.log(data);
+  const submissions = data?.submissionsSearch;
+
+  // const [submissions, setSubmissions] = useState<Submission[]>([]);
+
   const router = useRouter();
 
   // subject to change based on user's search query
-  useEffect(() => {
-    if (
-      searchResults &&
-      JSON.stringify(searchResults) !== JSON.stringify(submissions)
-    ) {
-      gaEvent({
-        action: "search",
-        params: {
-          search_term: searchTerm,
-        },
-      });
-      setSubmissions(searchResults);
-    }
-  }, [searchResults, submissions, searchTerm]);
+
+  // useEffect(() => {
+  //   if (
+  //     searchResults &&
+  //     JSON.stringify(searchResults) !== JSON.stringify(submissions)
+  //   ) {
+  //     gaEvent({
+  //       action: "search",
+  //       params: {
+  //         search_term: searchTerm,
+  //       },
+  //     });
+  //     setSubmissions(searchResults);
+  //   }
+  // }, [searchResults, submissions, searchTerm]);
 
   return (
     <div className="flex flex-col h-full">
@@ -57,7 +68,7 @@ function Archive(props) {
           </tr>
         </thead>
 
-        {submissions.length > 0 && (
+        {submissions?.length > 0 && (
           <tbody>
             <tr className="h-4" />
             {submissions?.map((curation) => {
@@ -103,14 +114,14 @@ function Archive(props) {
                     <ArchiveTableDataCell>
                       <Username
                         // username={username}
-                        wallet={submitterWallet}
+                        wallet={ethers.utils.hexlify(submitterWallet)}
                         linkToProfile
                       />
                     </ArchiveTableDataCell>
                     <ArchiveTableDataCell>
                       <RatingsMeter
                         submissionId={id}
-                        submitterWallet={submitterWallet}
+                        submitterWallet={ethers.utils.hexlify(submitterWallet)}
                         initialCosigns={cosigns}
                       />
                     </ArchiveTableDataCell>
@@ -122,7 +133,7 @@ function Archive(props) {
           </tbody>
         )}
       </table>
-      {submissions.length === 0 && (
+      {submissions?.length === 0 && (
         <div
           className="w-full h-full mt-4 flex-grow flex justify-center items-center"
           style={{ color: "rgba(105, 105, 105, 1)" }}

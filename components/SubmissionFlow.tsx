@@ -6,7 +6,7 @@ import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { uploadToIPFS } from "../controllers/submissions";
 import { useCurator } from "../hooks/web3/useCurator";
-import { Submission } from "../types";
+import { Submission } from "../lib/graphql/generated";
 import { useProfile } from "./Forms/ProfileSettingsForm";
 import { SubmissionForm } from "./Forms/SubmissionForm";
 import { HollowButton, HollowButtonContainer } from "./Hollow";
@@ -44,7 +44,7 @@ export const SubmissionFlow: React.FC = (props) => {
 
       // upload to IPFS
       const result = await uploadToIPFS(submission, account);
-      console.log("CID: ", result);
+      if (!result.uri) throw "IPFS URI was falsy";
       // mint an NFT
       const txn = await curator.submit(result.uri);
       setTxnHash(txn.hash);

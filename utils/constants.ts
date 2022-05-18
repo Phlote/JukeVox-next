@@ -16,6 +16,7 @@ export enum SupportedChainId {
 
   POLYGON = 137,
   POLYGON_MUMBAI = 80001,
+  HARDHAT = 31337,
 }
 
 export const CHAIN_IDS_TO_NAMES = {
@@ -30,6 +31,7 @@ export const CHAIN_IDS_TO_NAMES = {
   // [SupportedChainId.ARBITRUM_RINKEBY]: "arbitrum_rinkeby",
   // [SupportedChainId.OPTIMISM]: "optimism",
   // [SupportedChainId.OPTIMISTIC_KOVAN]: "optimistic_kovan",
+  [SupportedChainId.HARDHAT]: "hardhat",
 };
 
 export const NETWORKS = {
