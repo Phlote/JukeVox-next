@@ -2,12 +2,10 @@ import { useWeb3React } from "@web3-react/core";
 import { atom, useAtom } from "jotai";
 import Image from "next/image";
 import React, { useState } from "react";
-import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import { uploadToIPFS } from "../controllers/submissions";
+import { uploadToIPFS } from "../controllers/ipfs";
 import { useCurator } from "../hooks/web3/useCurator";
 import { Submission } from "../lib/graphql/generated";
-import { useProfile } from "./Forms/ProfileSettingsForm";
 import { SubmissionForm } from "./Forms/SubmissionForm";
 import { HollowButton, HollowButtonContainer } from "./Hollow";
 
@@ -15,8 +13,7 @@ const submissionFlowOpen = atom<boolean>(false);
 export const useSubmissionFlowOpen = () => useAtom(submissionFlowOpen);
 
 export const SubmissionFlow: React.FC = (props) => {
-  const { account, library } = useWeb3React();
-  const queryClient = useQueryClient();
+  const { account } = useWeb3React();
   const curator = useCurator();
 
   const [page, setPage] = useState<number>(0);
@@ -27,7 +24,6 @@ export const SubmissionFlow: React.FC = (props) => {
   }, [open]);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const profile = useProfile(account);
   const [txnHash, setTxnHash] = useState<string>();
 
   const onSubmit = async (submission: Submission) => {

@@ -5,18 +5,20 @@ import Link from "next/link";
 import React from "react";
 import { toast } from "react-toastify";
 import { useIsCurator } from "../hooks/useIsCurator";
+import { useCurator } from "../hooks/web3/useCurator";
 import { verifyUser } from "../utils/web3";
 import { useProfile } from "./Forms/ProfileSettingsForm";
 
 export const RatingsMeter: React.FC<{
-  submissionId: string;
+  submissionAddress: string;
   submitterWallet: string;
   initialCosigns: Uint8Array[];
 }> = (props) => {
-  const { submissionId, submitterWallet, initialCosigns } = props;
+  const { submissionAddress, submitterWallet, initialCosigns } = props;
 
   const { account, library } = useWeb3React();
   const [cosigns, setCosigns] = React.useState<string[]>([]);
+  const curator = useCurator();
 
   React.useEffect(() => {
     if (initialCosigns) {
@@ -45,6 +47,7 @@ export const RatingsMeter: React.FC<{
       // TODO: move to using contract soon
       // const newCosigns = await cosign(submissionId, account);
       // if (newCosigns) setCosigns(newCosigns);
+      await curator.curate(submissionAddress);
     } catch (e) {
       console.error(e);
       toast.error(e.message);
@@ -60,7 +63,7 @@ export const RatingsMeter: React.FC<{
           if (idx > cosigns.length - 1) {
             return (
               <button
-                key={`${submissionId}-cosign-${idx}`}
+                key={`${submissionAddress}-cosign-${idx}`}
                 onClick={onCosign}
                 className={`h-6 w-6 relative ${
                   canCosign ? "hover:opacity-25 cursor-pointer" : undefined
@@ -75,18 +78,7 @@ export const RatingsMeter: React.FC<{
               </button>
             );
           } else {
-            if (cosigns[idx] === "pending") {
-              return (
-                <div
-                  className="h-6 w-6 opacity-25 relative"
-                  key={`${submissionId}-cosign-${idx}`}
-                >
-                  <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
-                </div>
-              );
-            } else {
-              return <Cosign wallet={cosigns[idx]} />;
-            }
+            return <Cosign wallet={cosigns[idx]} />;
           }
         })}
     </div>
@@ -105,7 +97,7 @@ const Cosign: React.FC<Cosign> = (props) => {
 
   const profileQuery = useProfile(wallet);
 
-  if (profileQuery?.isLoading) {
+  if (profileQuery?.isLoading || wallet === "pending") {
     return (
       <div className="h-6 w-6 relative opacity-25">
         <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
@@ -120,7 +112,7 @@ const Cosign: React.FC<Cosign> = (props) => {
   )
     return (
       <Link
-        href={"/profile/[username]"}
+        href={"/profile/[userId]"}
         as={`/profile/${profileQuery.data.username}`}
         passHref
       >

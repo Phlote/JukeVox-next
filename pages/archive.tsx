@@ -119,7 +119,7 @@ function Archive(props) {
                     </ArchiveTableDataCell>
                     <ArchiveTableDataCell>
                       <RatingsMeter
-                        submissionId={id}
+                        submissionAddress={id}
                         submitterWallet={ethers.utils.hexlify(submitterWallet)}
                         initialCosigns={cosigns}
                       />
