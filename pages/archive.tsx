@@ -11,7 +11,21 @@ import {
   SubmissionDate,
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
-import { SubmissionsSearchDocument } from "../lib/graphql/generated";
+import { initializeApollo } from "../lib/graphql/apollo";
+import {
+  GetAllSubmissionsDocument,
+  GetAllSubmissionsQuery,
+  SubmissionsSearchDocument,
+} from "../lib/graphql/generated";
+
+const useSearchResults = (searchTerm) => {
+  const searchQuery = useQuery(SubmissionsSearchDocument, {
+    variables: { searchTerm: searchTerm + ":*" },
+    skip: !searchTerm || searchTerm === "",
+  });
+
+  return searchQuery?.data?.submissionsSearch;
+};
 
 function Archive(props) {
   // we can do this because the prop is unchanging
@@ -21,11 +35,6 @@ function Archive(props) {
   // We can probably have an apollo use query here
   // have to pass in filters as well
   // worry about pagination in a later PR and the search query params in a later PR
-  const { data } = useQuery(SubmissionsSearchDocument, {
-    variables: { searchTerm: searchTerm + ":*" },
-  });
-  console.log(data);
-  const submissions = data?.submissionsSearch;
 
   // const [submissions, setSubmissions] = useState<Submission[]>([]);
 
@@ -47,6 +56,11 @@ function Archive(props) {
   //     setSubmissions(searchResults);
   //   }
   // }, [searchResults, submissions, searchTerm]);
+
+  const searchResults = useSearchResults(searchTerm);
+
+  const submissions =
+    !searchTerm || searchTerm === "" ? props.allSubmissions : searchResults;
 
   return (
     <div className="flex flex-col h-full">
@@ -153,13 +167,18 @@ Archive.getLayout = function getLayout(page) {
   );
 };
 
-// export async function getStaticProps({ params }) {
-//   return {
-//     props: {
-//       allSubmissions: await getSubmissionsWithFilter(),
-//     },
-//     revalidate: 60,
-//   };
-// }
+export async function getStaticProps({ params }) {
+  const apolloClient = initializeApollo();
+  const res = await apolloClient.query<GetAllSubmissionsQuery>({
+    query: GetAllSubmissionsDocument,
+  });
+  return {
+    props: {
+      allSubmissions: res.data.submissions,
+    },
+
+    revalidate: 60,
+  };
+}
 
 export default Archive;

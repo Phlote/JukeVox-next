@@ -91,7 +91,7 @@ export type Submission = {
   mediaType: Scalars['String'];
   mediaURI: Scalars['String'];
   submitterWallet: Scalars['Bytes'];
-  tags?: Maybe<Array<Scalars['String']>>;
+  tags?: Maybe<Scalars['String']>;
   timestamp: Scalars['BigInt'];
 };
 
@@ -228,12 +228,26 @@ export type Submission_Filter = {
   submitterWallet_not?: InputMaybe<Scalars['Bytes']>;
   submitterWallet_not_contains?: InputMaybe<Scalars['Bytes']>;
   submitterWallet_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-  tags_contains?: InputMaybe<Array<Scalars['String']>>;
-  tags_contains_nocase?: InputMaybe<Array<Scalars['String']>>;
-  tags_not?: InputMaybe<Array<Scalars['String']>>;
-  tags_not_contains?: InputMaybe<Array<Scalars['String']>>;
-  tags_not_contains_nocase?: InputMaybe<Array<Scalars['String']>>;
+  tags?: InputMaybe<Scalars['String']>;
+  tags_contains?: InputMaybe<Scalars['String']>;
+  tags_contains_nocase?: InputMaybe<Scalars['String']>;
+  tags_ends_with?: InputMaybe<Scalars['String']>;
+  tags_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  tags_gt?: InputMaybe<Scalars['String']>;
+  tags_gte?: InputMaybe<Scalars['String']>;
+  tags_in?: InputMaybe<Array<Scalars['String']>>;
+  tags_lt?: InputMaybe<Scalars['String']>;
+  tags_lte?: InputMaybe<Scalars['String']>;
+  tags_not?: InputMaybe<Scalars['String']>;
+  tags_not_contains?: InputMaybe<Scalars['String']>;
+  tags_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  tags_not_ends_with?: InputMaybe<Scalars['String']>;
+  tags_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  tags_not_in?: InputMaybe<Array<Scalars['String']>>;
+  tags_not_starts_with?: InputMaybe<Scalars['String']>;
+  tags_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  tags_starts_with?: InputMaybe<Scalars['String']>;
+  tags_starts_with_nocase?: InputMaybe<Scalars['String']>;
   timestamp?: InputMaybe<Scalars['BigInt']>;
   timestamp_gt?: InputMaybe<Scalars['BigInt']>;
   timestamp_gte?: InputMaybe<Scalars['BigInt']>;
@@ -327,6 +341,11 @@ export type GetAllSubmissionIDsQueryVariables = Exact<{ [key: string]: never; }>
 
 export type GetAllSubmissionIDsQuery = { __typename?: 'Query', submissions: Array<{ __typename?: 'Submission', id: string }> };
 
+export type GetAllSubmissionsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllSubmissionsQuery = { __typename?: 'Query', submissions: Array<{ __typename?: 'Submission', id: string, timestamp: number, artistName: string, mediaTitle: string, mediaType: string, mediaURI: string, marketplace: string, cosigns?: Array<Uint8Array> | null, submitterWallet: Uint8Array }> };
+
 export type GetAllWalletsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -346,6 +365,8 @@ export type GetSubmissionsByWalletQueryVariables = Exact<{
 
 export type GetSubmissionsByWalletQuery = { __typename?: 'Query', submissions: Array<{ __typename?: 'Submission', id: string, timestamp: number, artistName: string, mediaTitle: string, mediaType: string, mediaURI: string, marketplace: string, cosigns?: Array<Uint8Array> | null, submitterWallet: Uint8Array }> };
 
+export type SubmissionArchiveFieldsFragment = { __typename?: 'Submission', id: string, timestamp: number, artistName: string, mediaTitle: string, mediaType: string, mediaURI: string, marketplace: string, cosigns?: Array<Uint8Array> | null, submitterWallet: Uint8Array };
+
 export type SubmissionsSearchQueryVariables = Exact<{
   searchTerm: Scalars['String'];
 }>;
@@ -353,9 +374,10 @@ export type SubmissionsSearchQueryVariables = Exact<{
 
 export type SubmissionsSearchQuery = { __typename?: 'Query', submissionsSearch: Array<{ __typename?: 'Submission', id: string, timestamp: number, artistName: string, mediaTitle: string, mediaType: string, mediaURI: string, marketplace: string, cosigns?: Array<Uint8Array> | null, submitterWallet: Uint8Array }> };
 
-
+export const SubmissionArchiveFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SubmissionArchiveFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Submission"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"artistName"}},{"kind":"Field","name":{"kind":"Name","value":"mediaTitle"}},{"kind":"Field","name":{"kind":"Name","value":"mediaType"}},{"kind":"Field","name":{"kind":"Name","value":"mediaURI"}},{"kind":"Field","name":{"kind":"Name","value":"marketplace"}},{"kind":"Field","name":{"kind":"Name","value":"cosigns"}},{"kind":"Field","name":{"kind":"Name","value":"submitterWallet"}}]}}]} as unknown as DocumentNode<SubmissionArchiveFieldsFragment, unknown>;
 export const GetAllSubmissionIDsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllSubmissionIDs"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<GetAllSubmissionIDsQuery, GetAllSubmissionIDsQueryVariables>;
+export const GetAllSubmissionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllSubmissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SubmissionArchiveFields"}}]}}]}},...SubmissionArchiveFieldsFragmentDoc.definitions]} as unknown as DocumentNode<GetAllSubmissionsQuery, GetAllSubmissionsQueryVariables>;
 export const GetAllWalletsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllWallets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submitterWallet"}}]}}]}}]} as unknown as DocumentNode<GetAllWalletsQuery, GetAllWalletsQueryVariables>;
-export const GetSubmissionByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSubmissionById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"artistName"}},{"kind":"Field","name":{"kind":"Name","value":"mediaTitle"}},{"kind":"Field","name":{"kind":"Name","value":"mediaType"}},{"kind":"Field","name":{"kind":"Name","value":"mediaURI"}},{"kind":"Field","name":{"kind":"Name","value":"marketplace"}},{"kind":"Field","name":{"kind":"Name","value":"cosigns"}},{"kind":"Field","name":{"kind":"Name","value":"submitterWallet"}}]}}]}}]} as unknown as DocumentNode<GetSubmissionByIdQuery, GetSubmissionByIdQueryVariables>;
-export const GetSubmissionsByWalletDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSubmissionsByWallet"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"wallet"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Bytes"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"submitterWallet"},"value":{"kind":"Variable","name":{"kind":"Name","value":"wallet"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"artistName"}},{"kind":"Field","name":{"kind":"Name","value":"mediaTitle"}},{"kind":"Field","name":{"kind":"Name","value":"mediaType"}},{"kind":"Field","name":{"kind":"Name","value":"mediaURI"}},{"kind":"Field","name":{"kind":"Name","value":"marketplace"}},{"kind":"Field","name":{"kind":"Name","value":"cosigns"}},{"kind":"Field","name":{"kind":"Name","value":"submitterWallet"}}]}}]}}]} as unknown as DocumentNode<GetSubmissionsByWalletQuery, GetSubmissionsByWalletQueryVariables>;
-export const SubmissionsSearchDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SubmissionsSearch"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"searchTerm"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissionsSearch"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"text"},"value":{"kind":"Variable","name":{"kind":"Name","value":"searchTerm"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"artistName"}},{"kind":"Field","name":{"kind":"Name","value":"mediaTitle"}},{"kind":"Field","name":{"kind":"Name","value":"mediaType"}},{"kind":"Field","name":{"kind":"Name","value":"mediaURI"}},{"kind":"Field","name":{"kind":"Name","value":"marketplace"}},{"kind":"Field","name":{"kind":"Name","value":"cosigns"}},{"kind":"Field","name":{"kind":"Name","value":"submitterWallet"}}]}}]}}]} as unknown as DocumentNode<SubmissionsSearchQuery, SubmissionsSearchQueryVariables>;
+export const GetSubmissionByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSubmissionById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SubmissionArchiveFields"}}]}}]}},...SubmissionArchiveFieldsFragmentDoc.definitions]} as unknown as DocumentNode<GetSubmissionByIdQuery, GetSubmissionByIdQueryVariables>;
+export const GetSubmissionsByWalletDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSubmissionsByWallet"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"wallet"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Bytes"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"submitterWallet"},"value":{"kind":"Variable","name":{"kind":"Name","value":"wallet"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SubmissionArchiveFields"}}]}}]}},...SubmissionArchiveFieldsFragmentDoc.definitions]} as unknown as DocumentNode<GetSubmissionsByWalletQuery, GetSubmissionsByWalletQueryVariables>;
+export const SubmissionsSearchDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SubmissionsSearch"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"searchTerm"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissionsSearch"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"text"},"value":{"kind":"Variable","name":{"kind":"Name","value":"searchTerm"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SubmissionArchiveFields"}}]}}]}},...SubmissionArchiveFieldsFragmentDoc.definitions]} as unknown as DocumentNode<SubmissionsSearchQuery, SubmissionsSearchQueryVariables>;

@@ -1,13 +1,5 @@
 query GetSubmissionById($id: ID) {
   submissions(where: { id: $id }) {
-    id
-    timestamp
-    artistName
-    mediaTitle
-    mediaType
-    mediaURI
-    marketplace
-    cosigns
-    submitterWallet
+    ...SubmissionArchiveFields
   }
 }

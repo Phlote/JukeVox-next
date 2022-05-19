@@ -1,0 +1,11 @@
+fragment SubmissionArchiveFields on Submission {
+  id
+  timestamp
+  artistName
+  mediaTitle
+  mediaType
+  mediaURI
+  marketplace
+  cosigns
+  submitterWallet
+}
