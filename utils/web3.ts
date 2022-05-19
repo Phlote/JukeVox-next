@@ -66,7 +66,6 @@ export const changeNetwork = async (
 
 // determines if the holder of an address actually holds the wallet
 export const verifyUser = async (address: string, library) => {
-  //TODO: should have a controller so we have better typing here
   if (!ethers.utils.isAddress(address)) throw "Not an address";
   const user = (await nextApiRequest(
     `auth?address=${address}`,

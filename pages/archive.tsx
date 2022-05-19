@@ -82,7 +82,6 @@ function Archive(props) {
                 mediaType,
                 mediaURI,
                 marketplace,
-
                 cosigns,
               } = curation;
 
@@ -114,7 +113,6 @@ function Archive(props) {
                     <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
                     <ArchiveTableDataCell>
                       <Username
-                        // username={username}
                         wallet={ethers.utils.hexlify(submitterWallet)}
                         linkToProfile
                       />
