@@ -6,7 +6,6 @@ import React from "react";
 import { toast } from "react-toastify";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { useCurator } from "../hooks/web3/useCurator";
-import { verifyUser } from "../utils/web3";
 import { useProfile } from "./Forms/ProfileSettingsForm";
 
 export const RatingsMeter: React.FC<{
@@ -40,14 +39,7 @@ export const RatingsMeter: React.FC<{
     e.stopPropagation();
     setCosigns([...cosigns, "pending"]);
     try {
-      const authenticated = await verifyUser(account, library);
-      if (!authenticated) {
-        throw "Authentication failed";
-      }
-      // TODO: move to using contract soon
-      // const newCosigns = await cosign(submissionId, account);
-      // if (newCosigns) setCosigns(newCosigns);
-      await curator.curate(submissionAddress);
+      const txn = await curator.curate(submissionAddress);
     } catch (e) {
       console.error(e);
       toast.error(e.message);
@@ -91,7 +83,7 @@ interface Cosign {
 
 const Cosign: React.FC<Cosign> = (props) => {
   const { wallet } = props;
-  if (!ethers.utils.isAddress(wallet)) {
+  if (!ethers.utils.isAddress(wallet) && wallet !== "pending") {
     throw "Not a valid wallet";
   }
 
