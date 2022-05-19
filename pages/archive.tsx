@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { ethers } from "ethers";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import Layout, { ArchiveLayout } from "../components/Layouts";
 import { RatingsMeter } from "../components/RatingsMeter";
 import { useSearchTerm } from "../components/SearchBar";
@@ -11,6 +12,7 @@ import {
   SubmissionDate,
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
+import { gaEvent } from "../lib/ga";
 import { initializeApollo } from "../lib/graphql/apollo";
 import {
   GetAllSubmissionsDocument,
@@ -28,39 +30,24 @@ const useSearchResults = (searchTerm) => {
 };
 
 function Archive(props) {
-  // we can do this because the prop is unchanging
+  const { allSubmissions } = props;
   const [searchTerm] = useSearchTerm();
-
-  // const searchResults = useSubmissionSearch(searchTerm);
-  // We can probably have an apollo use query here
-  // have to pass in filters as well
-  // worry about pagination in a later PR and the search query params in a later PR
-
-  // const [submissions, setSubmissions] = useState<Submission[]>([]);
 
   const router = useRouter();
 
-  // subject to change based on user's search query
-
-  // useEffect(() => {
-  //   if (
-  //     searchResults &&
-  //     JSON.stringify(searchResults) !== JSON.stringify(submissions)
-  //   ) {
-  //     gaEvent({
-  //       action: "search",
-  //       params: {
-  //         search_term: searchTerm,
-  //       },
-  //     });
-  //     setSubmissions(searchResults);
-  //   }
-  // }, [searchResults, submissions, searchTerm]);
+  useEffect(() => {
+    gaEvent({
+      action: "search",
+      params: {
+        search_term: searchTerm,
+      },
+    });
+  }, [searchTerm]);
 
   const searchResults = useSearchResults(searchTerm);
 
   const submissions =
-    !searchTerm || searchTerm === "" ? props.allSubmissions : searchResults;
+    !searchTerm || searchTerm === "" ? allSubmissions : searchResults;
 
   return (
     <div className="flex flex-col h-full">
