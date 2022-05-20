@@ -1,5 +1,5 @@
-query GetCuratorRoleForWallet($id: ID) {
-  curatorRoles(where: { id: $id }) {
+query GetCuratorRoleForWallet($id: ID!) {
+  curatorRole(id: $id) {
     id
     isCurator
   }

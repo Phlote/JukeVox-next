@@ -45,7 +45,7 @@ function Admin() {
 
   return (
     <div className="flex flex-col">
-      {(isCuratorAdmin.data || isGodAdmin) && (
+      {(isCuratorAdmin || isGodAdmin) && (
         <>
           <h1> Welcome Curator Admin! Grant a wallet the curator role here</h1>
           <input
