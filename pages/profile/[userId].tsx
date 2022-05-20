@@ -129,7 +129,7 @@ export default function Profile(props) {
                       <ArchiveTableDataCell>
                         <RatingsMeter
                           initialCosigns={cosigns}
-                          submissionId={id}
+                          submissionAddress={id}
                           submitterWallet={ethers.utils.hexlify(
                             submitterWallet
                           )}

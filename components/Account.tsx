@@ -69,7 +69,7 @@ const AccountDropdown = (props) => {
     setDropdownOpen(!dropdownOpen);
   };
 
-  const isCuratorQuery = useIsCurator();
+  const isCurator = useIsCurator();
 
   const { dropdownOpen, setDropdownOpen } = props;
   return (
@@ -107,7 +107,7 @@ const AccountDropdown = (props) => {
                 width={24}
               />
             </div>
-            {isCuratorQuery?.data?.isCurator && (
+            {isCurator && (
               <>
                 <div className="w-4" />
                 <div
