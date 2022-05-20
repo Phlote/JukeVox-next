@@ -1,0 +1,6 @@
+query GetCuratorAdminRoleForWallet($id: ID) {
+  curatorAdminRoles(where: { id: $id }) {
+    id
+    isCuratorAdmin
+  }
+}

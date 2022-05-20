@@ -1,7 +1,7 @@
-import type { HardhatRuntimeEnvironment } from "hardhat/types"
 import type { DeployFunction } from "$/hardhat-deploy"
-
+import type { HardhatRuntimeEnvironment } from "hardhat/types"
 import { ARTIFACT as PhloteVoteArtifact } from "./00_PhloteVote"
+
 
 export const ARTIFACT = "Curator"
 
@@ -11,6 +11,7 @@ const deployFunc: DeployFunction = async function (hre: HardhatRuntimeEnvironmen
   //const [deployerSigner] = await hre.ethers.getSigners()
   const PhloteVote = await hre.deployments.get(PhloteVoteArtifact, )
   const deployArgs = [PhloteVote.address, treasury, curatorAdmin]
+  
   let deploy
   const { catchUnknownSigner } = hre.deployments
   deploy = await hre.deployments.deploy(ARTIFACT, {

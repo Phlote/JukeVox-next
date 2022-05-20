@@ -32,6 +32,58 @@ export type Block_Height = {
   number_gte?: InputMaybe<Scalars['Int']>;
 };
 
+export type CuratorAdminRole = {
+  __typename?: 'CuratorAdminRole';
+  id: Scalars['ID'];
+  isCuratorAdmin?: Maybe<Scalars['Boolean']>;
+};
+
+export type CuratorAdminRole_Filter = {
+  id?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  isCuratorAdmin?: InputMaybe<Scalars['Boolean']>;
+  isCuratorAdmin_in?: InputMaybe<Array<Scalars['Boolean']>>;
+  isCuratorAdmin_not?: InputMaybe<Scalars['Boolean']>;
+  isCuratorAdmin_not_in?: InputMaybe<Array<Scalars['Boolean']>>;
+};
+
+export enum CuratorAdminRole_OrderBy {
+  Id = 'id',
+  IsCuratorAdmin = 'isCuratorAdmin'
+}
+
+export type CuratorRole = {
+  __typename?: 'CuratorRole';
+  id: Scalars['ID'];
+  isCurator?: Maybe<Scalars['Boolean']>;
+};
+
+export type CuratorRole_Filter = {
+  id?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  isCurator?: InputMaybe<Scalars['Boolean']>;
+  isCurator_in?: InputMaybe<Array<Scalars['Boolean']>>;
+  isCurator_not?: InputMaybe<Scalars['Boolean']>;
+  isCurator_not_in?: InputMaybe<Array<Scalars['Boolean']>>;
+};
+
+export enum CuratorRole_OrderBy {
+  Id = 'id',
+  IsCurator = 'isCurator'
+}
+
 /** Defines the order direction, either ascending or descending */
 export enum OrderDirection {
   Asc = 'asc',
@@ -42,6 +94,10 @@ export type Query = {
   __typename?: 'Query';
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
+  curatorAdminRole?: Maybe<CuratorAdminRole>;
+  curatorAdminRoles: Array<CuratorAdminRole>;
+  curatorRole?: Maybe<CuratorRole>;
+  curatorRoles: Array<CuratorRole>;
   submission?: Maybe<Submission>;
   submissions: Array<Submission>;
   submissionsSearch: Array<Submission>;
@@ -50,6 +106,42 @@ export type Query = {
 
 export type Query_MetaArgs = {
   block?: InputMaybe<Block_Height>;
+};
+
+
+export type QueryCuratorAdminRoleArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryCuratorAdminRolesArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<CuratorAdminRole_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<CuratorAdminRole_Filter>;
+};
+
+
+export type QueryCuratorRoleArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryCuratorRolesArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<CuratorRole_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<CuratorRole_Filter>;
 };
 
 
@@ -81,7 +173,6 @@ export type QuerySubmissionsSearchArgs = {
 
 export type Submission = {
   __typename?: 'Submission';
-  address: Scalars['Bytes'];
   artistName: Scalars['String'];
   artistWallet?: Maybe<Scalars['Bytes']>;
   cosigns?: Maybe<Array<Scalars['Bytes']>>;
@@ -96,12 +187,6 @@ export type Submission = {
 };
 
 export type Submission_Filter = {
-  address?: InputMaybe<Scalars['Bytes']>;
-  address_contains?: InputMaybe<Scalars['Bytes']>;
-  address_in?: InputMaybe<Array<Scalars['Bytes']>>;
-  address_not?: InputMaybe<Scalars['Bytes']>;
-  address_not_contains?: InputMaybe<Scalars['Bytes']>;
-  address_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   artistName?: InputMaybe<Scalars['String']>;
   artistName_contains?: InputMaybe<Scalars['String']>;
   artistName_contains_nocase?: InputMaybe<Scalars['String']>;
@@ -259,7 +344,6 @@ export type Submission_Filter = {
 };
 
 export enum Submission_OrderBy {
-  Address = 'address',
   ArtistName = 'artistName',
   ArtistWallet = 'artistWallet',
   Cosigns = 'cosigns',
@@ -277,6 +361,10 @@ export type Subscription = {
   __typename?: 'Subscription';
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
+  curatorAdminRole?: Maybe<CuratorAdminRole>;
+  curatorAdminRoles: Array<CuratorAdminRole>;
+  curatorRole?: Maybe<CuratorRole>;
+  curatorRoles: Array<CuratorRole>;
   submission?: Maybe<Submission>;
   submissions: Array<Submission>;
 };
@@ -284,6 +372,42 @@ export type Subscription = {
 
 export type Subscription_MetaArgs = {
   block?: InputMaybe<Block_Height>;
+};
+
+
+export type SubscriptionCuratorAdminRoleArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionCuratorAdminRolesArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<CuratorAdminRole_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<CuratorAdminRole_Filter>;
+};
+
+
+export type SubscriptionCuratorRoleArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionCuratorRolesArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<CuratorRole_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<CuratorRole_Filter>;
 };
 
 
@@ -351,6 +475,20 @@ export type GetAllWalletsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetAllWalletsQuery = { __typename?: 'Query', submissions: Array<{ __typename?: 'Submission', submitterWallet: Uint8Array }> };
 
+export type GetCuratorAdminRoleForWalletQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type GetCuratorAdminRoleForWalletQuery = { __typename?: 'Query', curatorAdminRoles: Array<{ __typename?: 'CuratorAdminRole', id: string, isCuratorAdmin?: boolean | null }> };
+
+export type GetCuratorRoleForWalletQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type GetCuratorRoleForWalletQuery = { __typename?: 'Query', curatorRoles: Array<{ __typename?: 'CuratorRole', id: string, isCurator?: boolean | null }> };
+
 export type GetSubmissionByIdQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
 }>;
@@ -378,6 +516,8 @@ export const SubmissionArchiveFieldsFragmentDoc = {"kind":"Document","definition
 export const GetAllSubmissionIDsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllSubmissionIDs"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<GetAllSubmissionIDsQuery, GetAllSubmissionIDsQueryVariables>;
 export const GetAllSubmissionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllSubmissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SubmissionArchiveFields"}}]}}]}},...SubmissionArchiveFieldsFragmentDoc.definitions]} as unknown as DocumentNode<GetAllSubmissionsQuery, GetAllSubmissionsQueryVariables>;
 export const GetAllWalletsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllWallets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submitterWallet"}}]}}]}}]} as unknown as DocumentNode<GetAllWalletsQuery, GetAllWalletsQueryVariables>;
+export const GetCuratorAdminRoleForWalletDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCuratorAdminRoleForWallet"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"curatorAdminRoles"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"isCuratorAdmin"}}]}}]}}]} as unknown as DocumentNode<GetCuratorAdminRoleForWalletQuery, GetCuratorAdminRoleForWalletQueryVariables>;
+export const GetCuratorRoleForWalletDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCuratorRoleForWallet"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"curatorRoles"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"isCurator"}}]}}]}}]} as unknown as DocumentNode<GetCuratorRoleForWalletQuery, GetCuratorRoleForWalletQueryVariables>;
 export const GetSubmissionByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSubmissionById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SubmissionArchiveFields"}}]}}]}},...SubmissionArchiveFieldsFragmentDoc.definitions]} as unknown as DocumentNode<GetSubmissionByIdQuery, GetSubmissionByIdQueryVariables>;
 export const GetSubmissionsByWalletDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSubmissionsByWallet"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"wallet"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Bytes"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"submitterWallet"},"value":{"kind":"Variable","name":{"kind":"Name","value":"wallet"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SubmissionArchiveFields"}}]}}]}},...SubmissionArchiveFieldsFragmentDoc.definitions]} as unknown as DocumentNode<GetSubmissionsByWalletQuery, GetSubmissionsByWalletQueryVariables>;
 export const SubmissionsSearchDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SubmissionsSearch"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"searchTerm"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissionsSearch"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"text"},"value":{"kind":"Variable","name":{"kind":"Name","value":"searchTerm"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SubmissionArchiveFields"}}]}}]}},...SubmissionArchiveFieldsFragmentDoc.definitions]} as unknown as DocumentNode<SubmissionsSearchQuery, SubmissionsSearchQueryVariables>;

@@ -10,6 +10,7 @@ function Home() {
   const [, setOpen] = useSubmissionFlowOpen();
 
   const { account } = useWeb3React();
+
   const [, setConnectWalletOpen] = useConnectWalletModalOpen();
 
   return (
@@ -18,14 +19,16 @@ function Home() {
         <h1 className="text-6xl">Phlote</h1>
         <div className="h-16"></div>
         <p>
-          Share music you love. Build reputation as a tastemaker. Join Team Phlote.
+          Share music you love. Build reputation as a tastemaker. Join Team
+          Phlote.
         </p>
       </div>
 
       <div className="hidden sm:block w-full">
         <div className="relative w-full flex justify-center">
           <h1 className="absolute w-full bottom-32 text-center text-2xl">
-            Share music you love. Build reputation as a tastemaker. Join Team Phlote.{" "}
+            Share music you love. Build reputation as a tastemaker. Join Team
+            Phlote.{" "}
           </h1>
           {/* <SearchBar placeholder="Search our archive" /> */}
           <div className="w-80 h-16 cursor-pointer hover:opacity-75 shadow-sm">
