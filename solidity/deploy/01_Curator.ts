@@ -9,9 +9,8 @@ const deployFunc: DeployFunction = async function (hre: HardhatRuntimeEnvironmen
   const { deployer, tokenOwner, treasury, curatorAdmin } = await hre.getNamedAccounts()
 
   //const [deployerSigner] = await hre.ethers.getSigners()
-  const PhloteVote = await hre.deployments.get(PhloteVoteArtifact, )
+  const PhloteVote = await hre.deployments.get(PhloteVoteArtifact)
   const deployArgs = [PhloteVote.address, treasury, curatorAdmin]
-  
   let deploy
   const { catchUnknownSigner } = hre.deployments
   deploy = await hre.deployments.deploy(ARTIFACT, {
@@ -34,7 +33,7 @@ const deployFunc: DeployFunction = async function (hre: HardhatRuntimeEnvironmen
 
   const curator = await hre.ethers.getContractAt(ARTIFACT, deploy.address)
   const vote = await hre.ethers.getContract(PhloteVoteArtifact, deployer)
-  const ownerBalance = await vote.balanceOf(await vote.owner())
+  const ownerBalance = await vote.balanceOf(deployer)
   let transferTx = await vote.transfer(curator.address, ownerBalance)
   await transferTx.wait()
 }
