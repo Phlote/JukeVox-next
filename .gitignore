@@ -47,6 +47,9 @@ coverage.json
 #Hardhat files
 /solidity/cache
 
+/solidity/typechain
+
+
 
 # INFO: https://stackoverflow.com/a/67198084/672346
 # ------- yarn -------
