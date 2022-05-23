@@ -37,13 +37,13 @@ contract Hotdrop is
 
     address public submitter;
 
-    uint256 public COSIGN_REWARD = 15 wei;
+    uint256 public COSIGN_REWARD = 15 ether;
     uint256[5] public COSIGN_COSTS = [
-        50 wei,
-        60 wei,
-        70 wei,
-        80 wei,
-        90 wei
+        50 ether,
+        60 ether,
+        70 ether,
+        80 ether,
+        90 ether
     ];
 
     address[5] public cosigners;

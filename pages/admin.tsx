@@ -18,6 +18,16 @@ function Admin() {
   const isCuratorAdmin = useIsCuratorAdmin();
   console.log("isCuratorAdmin: ", isCuratorAdmin);
 
+  // React.useEffect(() => {
+  //   if (curator) {
+  //     curator.initialize(
+  //       "0x0adBb4F1C9b692aD9a2A50F7FaF5b898D0fcfCf3",
+  //       "0xd248F2a4829D9C1B78eBA6D1e52703dA5599D65f",
+  //       "0x7d1f0b6556f19132e545717C6422e8AB004A5B7c"
+  //     );
+  //   }
+  // }, [curator]);
+
   const [txn, setTxn] = React.useState<ContractTransaction>();
 
   const addNewCurator = async (wallet: string) => {
