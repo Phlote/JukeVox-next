@@ -37,7 +37,7 @@ const deployFunc: DeployFunction = async function (hre: HardhatRuntimeEnvironmen
   const ownerBalance = await vote.balanceOf(deployer)
   console.log(ownerBalance);
   console.log(await vote.MAX_SUPPLY())
-  let transferTx = await vote.transfer(ARTIFACT, await vote.MAX_SUPPLY())
+  let transferTx = await vote.transfer(deploy.address, await vote.MAX_SUPPLY())
   await transferTx.wait()
 }
 
