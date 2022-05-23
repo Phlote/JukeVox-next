@@ -159,7 +159,7 @@ export async function getStaticProps({ params }) {
   });
   return {
     props: {
-      allSubmissions: res.data.submissions,
+      cosignedSubmissions: res.data.submissions,
     },
 
     revalidate: 60,
