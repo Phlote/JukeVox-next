@@ -103,7 +103,7 @@ export async function getStaticProps({ params }) {
 
   return {
     props: {
-      submission: res.data.submissions[0],
+      submission: res.data.submission,
     },
     // just in case
     revalidate: 3600,

@@ -15,8 +15,8 @@ import { Username } from "../components/Username";
 import { gaEvent } from "../lib/ga";
 import { initializeApollo } from "../lib/graphql/apollo";
 import {
-  GetAllSubmissionsDocument,
-  GetAllSubmissionsQuery,
+  GetSubmissionsDocument,
+  GetSubmissionsQuery,
   SubmissionsSearchDocument,
 } from "../lib/graphql/generated";
 
@@ -32,6 +32,7 @@ const useSearchResults = (searchTerm) => {
 function Archive(props) {
   const { allSubmissions } = props;
   const [searchTerm] = useSearchTerm();
+  console.log("submissions: ", allSubmissions);
 
   const router = useRouter();
 
@@ -154,12 +155,12 @@ Archive.getLayout = function getLayout(page) {
 
 export async function getStaticProps({ params }) {
   const apolloClient = initializeApollo();
-  const res = await apolloClient.query<GetAllSubmissionsQuery>({
-    query: GetAllSubmissionsDocument,
+  const res = await apolloClient.query<GetSubmissionsQuery>({
+    query: GetSubmissionsDocument,
   });
   return {
     props: {
-      cosignedSubmissions: res.data.submissions,
+      allSubmissions: res.data.submissions,
     },
 
     revalidate: 60,

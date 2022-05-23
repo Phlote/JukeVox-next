@@ -1,5 +1,0 @@
-query GetCosignedSubmissions {
-  submissions(where: { cosigns_not: null }) {
-    ...SubmissionArchiveFields
-  }
-}

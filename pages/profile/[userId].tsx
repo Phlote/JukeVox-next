@@ -18,8 +18,8 @@ import { initializeApollo } from "../../lib/graphql/apollo";
 import {
   GetAllWalletsDocument,
   GetAllWalletsQuery,
-  GetSubmissionsByWalletDocument,
-  GetSubmissionsByWalletQuery,
+  GetSubmissionsDocument,
+  GetSubmissionsQuery,
   Submission,
 } from "../../lib/graphql/generated";
 import { supabase } from "../../lib/supabase";
@@ -170,9 +170,9 @@ export async function getStaticProps({ params }) {
   const apolloClient = initializeApollo();
 
   const getSubmissionsByWallet = async (wallet: string) => {
-    const res = await apolloClient.query<GetSubmissionsByWalletQuery>({
-      query: GetSubmissionsByWalletDocument,
-      variables: { wallet },
+    const res = await apolloClient.query<GetSubmissionsQuery>({
+      query: GetSubmissionsDocument,
+      variables: { filter: { submitterWallet: wallet } },
     });
 
     return res.data.submissions;

@@ -1,0 +1,5 @@
+query GetSubmissions($filter: Submission_filter) {
+  submissions(where: $filter) {
+    ...SubmissionArchiveFields
+  }
+}

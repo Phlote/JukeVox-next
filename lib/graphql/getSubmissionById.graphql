@@ -1,5 +1,5 @@
-query GetSubmissionById($id: ID) {
-  submissions(where: { id: $id }) {
+query GetSubmissionById($id: ID!) {
+  submission(id: $id) {
     ...SubmissionArchiveFields
   }
 }

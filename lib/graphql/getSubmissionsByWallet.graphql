@@ -1,5 +1,0 @@
-query GetSubmissionsByWallet($wallet: Bytes) {
-  submissions(where: { submitterWallet: $wallet }) {
-    ...SubmissionArchiveFields
-  }
-}
