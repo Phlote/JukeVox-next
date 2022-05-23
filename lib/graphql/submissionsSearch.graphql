@@ -1,5 +1,6 @@
 query SubmissionsSearch($searchTerm: String!) {
   submissionsSearch(text: $searchTerm) {
-    ...SubmissionArchiveFields
+    # ...SubmissionArchiveFields
+    id
   }
 }

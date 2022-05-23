@@ -1,7 +1,7 @@
-import { useQuery } from "@apollo/client";
 import { ethers } from "ethers";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { useQuery } from "react-query";
 import Layout, { ArchiveLayout } from "../components/Layouts";
 import { RatingsMeter } from "../components/RatingsMeter";
 import { useSearchTerm } from "../components/SearchBar";
@@ -12,27 +12,70 @@ import {
   SubmissionDate,
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
+import { useSearchFilters } from "../hooks/useSubmissions";
 import { gaEvent } from "../lib/ga";
 import { initializeApollo } from "../lib/graphql/apollo";
 import {
   GetSubmissionsDocument,
   GetSubmissionsQuery,
   SubmissionsSearchDocument,
+  SubmissionsSearchQuery,
+  Submission_Filter,
 } from "../lib/graphql/generated";
 
-const useSearchResults = (searchTerm) => {
-  const searchQuery = useQuery(SubmissionsSearchDocument, {
-    variables: { searchTerm: searchTerm + ":*" },
-    skip: !searchTerm || searchTerm === "",
-  });
+// Test cases:
+// no search term or filter
+// search term only
+// filter only
+// both search term and filter
+const useSubmissionSearch = (
+  searchTerm: string,
+  filters: Submission_Filter
+) => {
+  const apolloClient = initializeApollo();
 
-  return searchQuery?.data?.submissionsSearch;
+  const searchResults = useQuery(
+    ["search", searchTerm, filters?.toString()],
+    async () => {
+      let IDs = [];
+      if (searchTerm) {
+        console.log(searchTerm);
+        const searchQuery = await apolloClient.query<SubmissionsSearchQuery>({
+          query: SubmissionsSearchDocument,
+          variables: { searchTerm: searchTerm + ":*" },
+        });
+
+        IDs = searchQuery.data.submissionsSearch.map(({ id }) => id);
+      }
+
+      console.log("IDs", IDs);
+
+      const filter = { ...filters };
+      if (!!IDs.length) filter.id_in = IDs;
+
+      const filterQuery = await apolloClient.query<GetSubmissionsQuery>({
+        query: GetSubmissionsDocument,
+        variables: { filter: filter },
+      });
+
+      return filterQuery.data.submissions;
+    },
+
+    {
+      keepPreviousData: true,
+      enabled:
+        (!!searchTerm && searchTerm !== "") || !!Object.keys(filters).length,
+    }
+  );
+
+  console.log(searchResults.data);
+
+  return searchResults.data;
 };
 
 function Archive(props) {
   const { allSubmissions } = props;
   const [searchTerm] = useSearchTerm();
-  console.log("submissions: ", allSubmissions);
 
   const router = useRouter();
 
@@ -45,10 +88,11 @@ function Archive(props) {
     });
   }, [searchTerm]);
 
-  const searchResults = useSearchResults(searchTerm);
-
-  const submissions =
-    !searchTerm || searchTerm === "" ? allSubmissions : searchResults;
+  const [filters] = useSearchFilters();
+  const searchResults = useSubmissionSearch(searchTerm, filters);
+  const showSearchResults =
+    (!!searchTerm && searchTerm !== "") || !!Object.keys(filters).length;
+  const submissions = showSearchResults ? searchResults : allSubmissions;
 
   return (
     <div className="flex flex-col h-full">
