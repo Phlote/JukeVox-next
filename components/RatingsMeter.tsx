@@ -6,6 +6,7 @@ import React from "react";
 import { toast } from "react-toastify";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { useCurator } from "../hooks/web3/useCurator";
+import { usePhloteVote } from "../hooks/web3/usePhloteVote";
 import { useProfile } from "./Forms/ProfileSettingsForm";
 
 export const RatingsMeter: React.FC<{
@@ -18,6 +19,7 @@ export const RatingsMeter: React.FC<{
   const { account, library } = useWeb3React();
   const [cosigns, setCosigns] = React.useState<string[]>([]);
   const curator = useCurator();
+  const phloteVote = usePhloteVote();
 
   React.useEffect(() => {
     if (initialCosigns) {
@@ -39,6 +41,7 @@ export const RatingsMeter: React.FC<{
     e.stopPropagation();
     setCosigns([...cosigns, "pending"]);
     try {
+      // await phloteVote.approve(curator.address, 5000);
       const txn = await curator.curate(submissionAddress);
     } catch (e) {
       console.error(e);
