@@ -20,7 +20,6 @@ import {
   GetSubmissionsQuery,
   SubmissionsSearchDocument,
   SubmissionsSearchQuery,
-  Submission_Filter,
 } from "../lib/graphql/generated";
 
 // Test cases:
@@ -28,18 +27,16 @@ import {
 // search term only
 // filter only
 // both search term and filter
-const useSubmissionSearch = (
-  searchTerm: string,
-  filters: Submission_Filter
-) => {
+const useSubmissionSearch = () => {
   const apolloClient = initializeApollo();
+  const [searchTerm] = useSearchTerm();
+  const [filters] = useSearchFilters();
 
   const searchResults = useQuery(
-    ["search", searchTerm, filters?.toString()],
+    ["search", searchTerm, filters],
     async () => {
       let IDs = [];
       if (searchTerm) {
-        console.log(searchTerm);
         const searchQuery = await apolloClient.query<SubmissionsSearchQuery>({
           query: SubmissionsSearchDocument,
           variables: { searchTerm: searchTerm + ":*" },
@@ -53,7 +50,7 @@ const useSubmissionSearch = (
 
       const filterQuery = await apolloClient.query<GetSubmissionsQuery>({
         query: GetSubmissionsDocument,
-        variables: { filter: filter },
+        variables: { filter },
       });
 
       return filterQuery.data.submissions;
@@ -66,15 +63,6 @@ const useSubmissionSearch = (
     }
   );
 
-  return searchResults.data;
-};
-
-function Archive(props) {
-  const { allSubmissions } = props;
-  const [searchTerm] = useSearchTerm();
-
-  const router = useRouter();
-
   useEffect(() => {
     gaEvent({
       action: "search",
@@ -84,11 +72,20 @@ function Archive(props) {
     });
   }, [searchTerm]);
 
-  const [filters] = useSearchFilters();
-  const searchResults = useSubmissionSearch(searchTerm, filters);
   const showSearchResults =
     (!!searchTerm && searchTerm !== "") || !!Object.keys(filters).length;
-  const submissions = showSearchResults ? searchResults : allSubmissions;
+
+  return showSearchResults ? searchResults.data : null;
+};
+
+function Archive(props) {
+  const { allSubmissions } = props;
+
+  const router = useRouter();
+
+  const searchResults = useSubmissionSearch();
+
+  const submissions = searchResults ? searchResults : allSubmissions;
 
   return (
     <div className="flex flex-col h-full">

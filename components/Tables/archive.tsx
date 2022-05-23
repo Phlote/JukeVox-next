@@ -1,4 +1,3 @@
-import { useQuery } from "@apollo/client";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import { BigNumber, ethers } from "ethers";
@@ -7,10 +6,12 @@ import React from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 import { useOnClickOut } from "../../hooks/useOnClickOut";
-import { useSearchFilters } from "../../hooks/useSubmissions";
-import { GetSubmissionsDocument } from "../../lib/graphql/generated";
+import {
+  useSearchFilters,
+  useSubmissionsWithFilter,
+} from "../../hooks/useSubmissions";
 import { DropdownChecklist } from "../Dropdowns/DropdownChecklist";
-import { ShortenedWallet } from "../ShortenedWallet";
+import { Username } from "../Username";
 
 export const ArchiveTableHeader = (props) => {
   const [dropdownOpen, setDropdownOpen] = React.useState<boolean>(false);
@@ -74,7 +75,7 @@ export const ArchiveFilterLabel: React.FC<{ filter: string }> = ({
   filter,
 }) => {
   const isAddress = ethers.utils.isAddress(filter);
-  if (isAddress) return <ShortenedWallet wallet={filter} />;
+  if (isAddress) return <Username wallet={filter} />;
   else return <span>{filter}</span>;
 };
 
@@ -108,10 +109,9 @@ export const ArchiveDropdown: React.FC<{
   //TODO: grey out fields that are usually present but not in current results (this is a maybe)
   const { filterKey, close } = props;
 
-  const submissionsQuery = useQuery(GetSubmissionsDocument);
-  const submissions = submissionsQuery?.data?.submissions;
-
   const [filters, setFilters] = useSearchFilters();
+
+  const submissions = useSubmissionsWithFilter();
 
   const updateFilter = (val) => {
     setFilters((current) => {
