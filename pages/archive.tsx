@@ -24,7 +24,7 @@ import {
 } from "../lib/graphql/generated";
 
 // Test cases:
-// no search term or filter
+// no search term or filter p
 // search term only
 // filter only
 // both search term and filter
@@ -48,8 +48,6 @@ const useSubmissionSearch = (
         IDs = searchQuery.data.submissionsSearch.map(({ id }) => id);
       }
 
-      console.log("IDs", IDs);
-
       const filter = { ...filters };
       if (!!IDs.length) filter.id_in = IDs;
 
@@ -67,8 +65,6 @@ const useSubmissionSearch = (
         (!!searchTerm && searchTerm !== "") || !!Object.keys(filters).length,
     }
   );
-
-  console.log(searchResults.data);
 
   return searchResults.data;
 };
@@ -109,7 +105,7 @@ function Archive(props) {
             <ArchiveTableHeader label="Title" />
             <ArchiveTableHeader label="Media Type" filterKey="mediaType" />
             <ArchiveTableHeader label="Platform" filterKey="marketplace" />
-            <ArchiveTableHeader label="Curator" filterKey="curatorWallet" />
+            <ArchiveTableHeader label="Curator" filterKey="submitterWallet" />
             <ArchiveTableHeader label="Co-Signs" />
           </tr>
         </thead>
