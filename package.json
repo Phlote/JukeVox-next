@@ -1,7 +1,10 @@
 {
-  "name": "next-web3-boilerplate",
+  "name": "phlote-curation-engine",
   "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "solidity"
+  ],
   "engines": {
     "node": ">=16.0.0 <17"
   },
@@ -9,18 +12,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "postinstall": "cd ./solidity; yarn"
+    "lint": "next lint"
   },
   "dependencies": {
     "@elastic/app-search-node": "^8.1.0",
     "@ethersproject/abi": "^5.6.0",
-    "@ethersproject/bignumber": "^5.5.0",
     "@ethersproject/bytes": "^5.6.0",
-    "@ethersproject/contracts": "^5.5.0",
+    "@ethersproject/hardware-wallets": "^5.0.14",
     "@ethersproject/providers": "^5.5.3",
-    "@ethersproject/units": "^5.5.0",
-    "@ethersproject/wallet": "^5.5.0",
     "@metamask/detect-provider": "^1.2.0",
     "@metamask/onboarding": "^1.0.1",
     "@pinata/sdk": "^1.1.23",
@@ -55,7 +54,6 @@
     "@babel/core": "^7.17.7",
     "@metamask/types": "^1.0.0",
     "@typechain/ethers-v5": "^8.0.5",
-    "@types/fuzzy-search": "^2.1.2",
     "@types/node": "^17.0.21",
     "@types/react": "^17.0.38",
     "@web3-react/types": "^6.0.7",
