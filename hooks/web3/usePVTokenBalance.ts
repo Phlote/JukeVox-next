@@ -11,7 +11,7 @@ function getTokenBalance(contract: PhloteVote) {
   };
 }
 
-export default function useTokenBalance(
+export default function usePVTokenBalance(
   address: string,
   tokenAddress: string,
   suspense = false
