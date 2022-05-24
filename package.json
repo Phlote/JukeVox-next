@@ -5,9 +5,6 @@
   "workspaces": [
     "solidity"
   ],
-  "engines": {
-    "node": ">=16.0.0 <17"
-  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
