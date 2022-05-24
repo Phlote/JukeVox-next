@@ -1,4 +1,4 @@
-import { create } from "ipfs-http-client";
+import { create, Options } from "ipfs-http-client";
 import { NextApiRequest, NextApiResponse } from "next";
 import { CurationNFTMetadata } from "../../types";
 
@@ -24,11 +24,10 @@ export default async function handler(
 }
 
 const storeSubmissionOnIPFS = async (submission) => {
-  const client = create({
-    host: process.env.IPFS_NODE_URL,
-  });
+  const { IPFS_NODE_URL } = process.env;
 
-  // call Core API methods
+  const client = create((IPFS_NODE_URL ?? "localhost") as Options);
+
   const {
     mediaType,
     artistName,
