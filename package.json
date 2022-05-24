@@ -11,7 +11,7 @@
     "start": "next start",
     "lint": "next lint",
     "postinstall": "cd ./solidity; yarn",
-    "generate": "graphql-codegen"
+    "generate": "graphql-codegen -r dotenv/config"
   },
   "dependencies": {
     "@apollo/client": "^3.6.2",

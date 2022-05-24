@@ -16,12 +16,12 @@ function Admin() {
 
   const isGodAdmin = useIsGodAdmin(account);
   const isCuratorAdmin = useIsCuratorAdmin();
-  console.log("isCuratorAdmin: ", isCuratorAdmin);
+  // console.log("isCuratorAdmin: ", isCuratorAdmin);
 
   // React.useEffect(() => {
   //   if (curator) {
   //     curator.initialize(
-  //       "0x0adBb4F1C9b692aD9a2A50F7FaF5b898D0fcfCf3",
+  //       "0x1F1fAA78793Ae021a70c500585051BfDedFd5bec",
   //       "0xd248F2a4829D9C1B78eBA6D1e52703dA5599D65f",
   //       "0x7d1f0b6556f19132e545717C6422e8AB004A5B7c"
   //     );
@@ -54,12 +54,12 @@ function Admin() {
   }, [txn]);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       {(isCuratorAdmin || isGodAdmin) && (
         <>
           <h1> Welcome Curator Admin! Grant a wallet the curator role here</h1>
           <input
-            className="w-64 text-black"
+            className="w-128 text-black"
             onChange={(e) => setNewCuratorWallet(e.target.value)}
           />
           <div className="h-4"> </div>
@@ -78,7 +78,7 @@ function Admin() {
         <>
           <h1> Hello god admin! You can add new curator admins here: </h1>
           <input
-            className="w-64 text-black"
+            className="w-128 text-black"
             onChange={(e) => setNewCuratorAdminWallet(e.target.value)}
           />
           <div className="h-4"> </div>

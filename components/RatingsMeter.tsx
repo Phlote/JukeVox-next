@@ -6,7 +6,6 @@ import React from "react";
 import { toast } from "react-toastify";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { useCurator } from "../hooks/web3/useCurator";
-import { usePhloteVote } from "../hooks/web3/usePhloteVote";
 import { useProfile } from "./Forms/ProfileSettingsForm";
 
 export const RatingsMeter: React.FC<{
@@ -16,10 +15,9 @@ export const RatingsMeter: React.FC<{
 }> = (props) => {
   const { submissionAddress, submitterWallet, initialCosigns } = props;
 
-  const { account, library } = useWeb3React();
+  const { account } = useWeb3React();
   const [cosigns, setCosigns] = React.useState<string[]>([]);
   const curator = useCurator();
-  const phloteVote = usePhloteVote();
 
   React.useEffect(() => {
     if (initialCosigns) {
@@ -41,7 +39,6 @@ export const RatingsMeter: React.FC<{
     e.stopPropagation();
     setCosigns([...cosigns, "pending"]);
     try {
-      // await phloteVote.approve(curator.address, 5000);
       const txn = await curator.curate(submissionAddress);
     } catch (e) {
       console.error(e);
@@ -92,7 +89,7 @@ const Cosign: React.FC<Cosign> = (props) => {
 
   const profileQuery = useProfile(wallet);
 
-  if (profileQuery?.isLoading || wallet === "pending") {
+  if (wallet === "pending") {
     return (
       <div className="h-6 w-6 relative opacity-25">
         <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
@@ -122,7 +119,7 @@ const Cosign: React.FC<Cosign> = (props) => {
       </Link>
     );
 
-  // This is really an error state
+  // No profile data
   return (
     <div className="h-6 w-6 relative">
       <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
