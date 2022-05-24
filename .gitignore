@@ -61,11 +61,11 @@ coverage.json
 !.yarn/versions
 
 
-./solidity/.yarn/*
-!./solidity/.yarn/plugins
-!./solidity/.yarn/releases
-!./solidity/.yarn/sdks
-!./solidity/.yarn/versions
+/solidity/.yarn/*
+!/solidity/.yarn/plugins
+!/solidity/.yarn/releases
+!/solidity/.yarn/sdks
+!/solidity/.yarn/versions
 ## --> ADD if using zero-install, otherwise do NOT:
 #!.yarn/cache
 ## --> ELSE ADD if NOT using yarn's zero-install:
