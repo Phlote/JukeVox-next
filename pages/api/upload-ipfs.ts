@@ -1,6 +1,6 @@
 import { create } from "ipfs-http-client";
 import { NextApiRequest, NextApiResponse } from "next";
-import { CurationNFTMetadata, Submission } from "../../types";
+import { CurationNFTMetadata } from "../../types";
 
 export default async function handler(
   request: NextApiRequest,
@@ -23,8 +23,11 @@ export default async function handler(
   }
 }
 
-const storeSubmissionOnIPFS = async (submission: Submission) => {
-  const client = create(process.env.IPSS_NODE_URL ?? "http://127.0.0.1:5001");
+const storeSubmissionOnIPFS = async (submission) => {
+  const client = create({
+    host: process.env.IPFS_NODE_URL ?? "http://127.0.0.1",
+    port: 5001,
+  });
 
   // call Core API methods
   const {

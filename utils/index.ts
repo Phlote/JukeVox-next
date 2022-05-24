@@ -1,4 +1,4 @@
-import { Submission, SubmissionElasticSearchDocument } from "../types";
+import { Submission } from "../lib/graphql/generated";
 
 export function nextApiRequest(
   path: string,
@@ -17,33 +17,6 @@ export function nextApiRequest(
     return response.json();
   });
 }
-
-export const submissionToElasticSearchDocument = (submission: Submission) => {
-  const {
-    id,
-    mediaType,
-    artistName,
-    artistWallet,
-    curatorWallet,
-    mediaTitle,
-    mediaURI,
-    marketplace,
-    tags,
-    submissionTime,
-  } = submission;
-  return {
-    supabase_id: id,
-    media_type: mediaType,
-    artist_name: artistName,
-    artist_wallet: artistWallet,
-    curator_wallet: curatorWallet,
-    media_title: mediaTitle,
-    media_uri: mediaURI,
-    marketplace,
-    tags,
-    submission_time: submissionTime,
-  } as SubmissionElasticSearchDocument;
-};
 
 export const cleanSubmission = (submission: Submission) => {
   const cleaned = { ...submission };

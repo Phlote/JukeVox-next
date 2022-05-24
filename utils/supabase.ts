@@ -1,32 +1,10 @@
-import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
-import { cleanSubmission } from ".";
 import { UserProfile } from "../components/Forms/ProfileSettingsForm";
+import { initializeApollo } from "../lib/graphql/apollo";
+import {
+  GetSubmissionsDocument,
+  GetSubmissionsQuery,
+} from "../lib/graphql/generated";
 import { supabase } from "../lib/supabase";
-import { Submission } from "../types";
-
-export const getSubmissionsWithFilter = async (
-  selectStatement: PostgrestFilterBuilder<any> = null,
-  filters: Partial<Submission> = null,
-  isCurator: boolean = false
-) => {
-  if (!selectStatement) selectStatement = supabase.from("submissions").select();
-
-  if (!isCurator) selectStatement = selectStatement.not("cosigns", "is", null);
-
-  if (filters) selectStatement = selectStatement.match(filters);
-
-  const { data, error } = await selectStatement;
-  if (error) throw error;
-
-  const sorted = data.sort((a: Submission, b: Submission) => {
-    return (
-      new Date(b.submissionTime).getTime() -
-      new Date(a.submissionTime).getTime()
-    );
-  });
-
-  return sorted.map(cleanSubmission);
-};
 
 export const getProfileForWallet = async (wallet: string) => {
   const profilesQuery = await supabase
@@ -45,16 +23,13 @@ export const getProfileForWallet = async (wallet: string) => {
     profileMeta.profilePic = `${profileMeta.profilePic}?cacheBust=${profileMeta.updateTime}`;
 
   // get number of cosigns
+  const apolloClient = initializeApollo();
+  const res = await apolloClient.query<GetSubmissionsQuery>({
+    query: GetSubmissionsDocument,
+    variables: { filter: { submitterWallet: wallet } },
+  });
 
-  const submissionsQuery = await supabase
-    .from("submissions")
-    .select()
-    .match({ curatorWallet: wallet });
-
-  if (submissionsQuery.error) throw submissionsQuery.error;
-
-  const submissions = submissionsQuery.data as Submission[];
-  const cosigns = submissions.reduce(
+  const cosigns = res.data.submissions.reduce(
     (acc, curr) => acc + (curr?.cosigns?.length ?? 0),
     0
   );
