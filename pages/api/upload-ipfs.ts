@@ -25,8 +25,7 @@ export default async function handler(
 
 const storeSubmissionOnIPFS = async (submission) => {
   const client = create({
-    host: process.env.IPFS_NODE_URL ?? "http://127.0.0.1",
-    port: 5001,
+    host: process.env.IPFS_NODE_URL,
   });
 
   // call Core API methods
