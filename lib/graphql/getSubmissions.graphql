@@ -1,5 +1,5 @@
 query GetSubmissions($filter: Submission_filter) {
-  submissions(where: $filter) {
+  submissions(orderBy: timestamp, orderDirection: desc, where: $filter) {
     ...SubmissionArchiveFields
   }
 }

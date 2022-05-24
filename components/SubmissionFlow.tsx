@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { uploadToIPFS } from "../controllers/ipfs";
 import { useCurator } from "../hooks/web3/useCurator";
 import { Submission } from "../lib/graphql/generated";
+import { useProfile } from "./Forms/ProfileSettingsForm";
 import { SubmissionForm } from "./Forms/SubmissionForm";
 import { HollowButton, HollowButtonContainer } from "./Hollow";
 
@@ -17,14 +18,18 @@ export const SubmissionFlow: React.FC = (props) => {
   const curator = useCurator();
 
   const [page, setPage] = useState<number>(0);
-
-  const [open] = useSubmissionFlowOpen();
-  React.useEffect(() => {
-    if (!open) setPage(0);
-  }, [open]);
+  const profile = useProfile(account);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [txnHash, setTxnHash] = useState<string>();
+
+  const [open] = useSubmissionFlowOpen();
+  React.useEffect(() => {
+    if (!open) {
+      setPage(0);
+      setTxnHash(null);
+    }
+  }, [open]);
 
   const onSubmit = async (submission: Submission) => {
     setLoading(true);
@@ -43,10 +48,9 @@ export const SubmissionFlow: React.FC = (props) => {
       if (!result.uri) throw "IPFS URI was falsy";
       // mint an NFT
       const txn = await curator.submit(result.uri);
-      setTxnHash(txn.hash);
       console.log(txn);
+      setTxnHash(txn.hash);
 
-      // revalidate page for transaction hash
       setPage(1);
     } catch (e) {
       toast.error(e);

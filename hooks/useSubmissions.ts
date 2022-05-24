@@ -8,9 +8,7 @@ import {
 const searchFiltersAtom = atom<Submission_Filter>({});
 export const useSearchFilters = () => useAtom(searchFiltersAtom);
 
-export const useSubmissionsWithFilter = () => {
-  const [filter] = useSearchFilters();
-
+export const useSubmissionsWithFilter = (filter?) => {
   const submissionsQuery = useQuery(GetSubmissionsDocument, {
     variables: { filter },
   });

@@ -111,7 +111,7 @@ export const ArchiveDropdown: React.FC<{
 
   const [filters, setFilters] = useSearchFilters();
 
-  const submissions = useSubmissionsWithFilter();
+  const submissions = useSubmissionsWithFilter(filters);
 
   const updateFilter = (val) => {
     setFilters((current) => {
