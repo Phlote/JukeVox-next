@@ -21,7 +21,7 @@ function Admin() {
   // React.useEffect(() => {
   //   if (curator) {
   //     curator.initialize(
-  //       "0x1F1fAA78793Ae021a70c500585051BfDedFd5bec",
+  //       "0x143254e945AcF364bF2e27fB4e46F6B8511B2dFb",
   //       "0xd248F2a4829D9C1B78eBA6D1e52703dA5599D65f",
   //       "0x7d1f0b6556f19132e545717C6422e8AB004A5B7c"
   //     );
