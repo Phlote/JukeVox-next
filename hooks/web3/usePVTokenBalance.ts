@@ -1,9 +1,9 @@
 import useSWR from "swr";
-import type { ERC20 } from "../../solidity/typechain";
+import type { PhloteVote } from "../../solidity/typechain";
 import useKeepSWRDataLiveAsBlocksArrive from "./useKeepSWRDataLiveAsBlocksArrive";
-import useTokenContract from "./useTokenContract";
+import { usePhloteVote } from "./usePhloteVote";
 
-function getTokenBalance(contract: ERC20) {
+function getTokenBalance(contract: PhloteVote) {
   return async (_: string, address: string) => {
     const balance = await contract.balanceOf(address);
 
@@ -16,7 +16,7 @@ export default function useTokenBalance(
   tokenAddress: string,
   suspense = false
 ) {
-  const contract = useTokenContract(tokenAddress);
+  const contract = usePhloteVote();
 
   const shouldFetch =
     typeof address === "string" &&
