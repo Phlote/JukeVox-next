@@ -11,6 +11,7 @@
     "generate": "graphql-codegen -r dotenv/config"
   },
   "dependencies": {
+    "@ethersproject/contracts": "5.6.0",
     "@apollo/client": "^3.6.2",
     "@elastic/app-search-node": "^8.1.0",
     "@graphql-codegen/typed-document-node": "^2.2.11",
