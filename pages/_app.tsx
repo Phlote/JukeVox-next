@@ -66,7 +66,7 @@ const NextWeb3App = ({ Component, pageProps }: AppPropsWithLayout) => {
             {getLayout(<Component {...pageProps} />)}
             <ToastContainer
               position="top-right"
-              autoClose={5000}
+              autoClose={15000}
               hideProgressBar={false}
               newestOnTop={false}
               closeOnClick
