@@ -27,6 +27,7 @@ import { getProfileForWallet } from "../../utils/supabase";
 
 export default function Profile(props) {
   const router = useRouter();
+  //TODO: should handle case where user has submitted and is on their profile page
   const { submissions, profile } = props;
   const userId = router.query.userId;
   const isCurator = useIsCurator();
@@ -173,6 +174,7 @@ export async function getStaticProps({ params }) {
     const res = await apolloClient.query<GetSubmissionsQuery>({
       query: GetSubmissionsDocument,
       variables: { filter: { submitterWallet: wallet } },
+      fetchPolicy: "network-only",
     });
 
     return res.data.submissions;

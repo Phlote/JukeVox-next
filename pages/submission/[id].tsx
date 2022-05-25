@@ -94,11 +94,11 @@ SubmissionPage.getLayout = function getLayout(page) {
 };
 
 export async function getStaticProps({ params }) {
-  const { id } = params;
+  const { id } = params as { id: string };
   const apolloClient = initializeApollo();
   const res = await apolloClient.query<GetSubmissionByIdQuery>({
     query: GetSubmissionByIdDocument,
-    variables: { id },
+    variables: { id: id.toLowerCase() },
   });
 
   return {
@@ -106,7 +106,7 @@ export async function getStaticProps({ params }) {
       submission: res.data.submission,
     },
     // just in case
-    revalidate: 3600,
+    revalidate: 60,
   };
 }
 

@@ -6,10 +6,7 @@ import React from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 import { useOnClickOut } from "../../hooks/useOnClickOut";
-import {
-  useSearchFilters,
-  useSubmissionsWithFilter,
-} from "../../hooks/useSubmissions";
+import { useSearchFilters, useSubmissions } from "../../hooks/useSubmissions";
 import { DropdownChecklist } from "../Dropdowns/DropdownChecklist";
 import { Username } from "../Username";
 
@@ -111,7 +108,7 @@ export const ArchiveDropdown: React.FC<{
 
   const [filters, setFilters] = useSearchFilters();
 
-  const submissions = useSubmissionsWithFilter(filters);
+  const submissions = useSubmissions(filters);
 
   const updateFilter = (val) => {
     setFilters((current) => {

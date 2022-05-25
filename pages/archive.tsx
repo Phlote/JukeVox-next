@@ -1,12 +1,8 @@
-import { Web3Provider } from "@ethersproject/providers";
-import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { useQuery } from "react-query";
+import React, { useState } from "react";
 import Layout, { ArchiveLayout } from "../components/Layouts";
 import { RatingsMeter } from "../components/RatingsMeter";
-import { useSearchTerm } from "../components/SearchBar";
 import {
   ArchiveTableDataCell,
   ArchiveTableHeader,
@@ -14,82 +10,42 @@ import {
   SubmissionDate,
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
-import { useSearchFilters } from "../hooks/useSubmissions";
-import { gaEvent } from "../lib/ga";
+import { useSubmissions, useSubmissionSearch } from "../hooks/useSubmissions";
 import { initializeApollo } from "../lib/graphql/apollo";
 import {
   GetSubmissionsDocument,
   GetSubmissionsQuery,
-  SubmissionsSearchDocument,
-  SubmissionsSearchQuery,
+  Submission,
 } from "../lib/graphql/generated";
 
-// Test cases:
-// no search term or filter p
-// search term only
-// filter only
-// both search term and filter
-const useSubmissionSearch = () => {
-  const apolloClient = initializeApollo();
-  const [searchTerm] = useSearchTerm();
-  const [filters] = useSearchFilters();
-
-  const searchResults = useQuery(
-    ["submission-search", searchTerm, filters],
-    async () => {
-      let IDs = [];
-      if (searchTerm) {
-        const searchQuery = await apolloClient.query<SubmissionsSearchQuery>({
-          query: SubmissionsSearchDocument,
-          variables: { searchTerm: searchTerm + ":*" },
-        });
-
-        IDs = searchQuery.data.submissionsSearch.map(({ id }) => id);
-      }
-
-      const filter = { ...filters };
-      if (!!IDs.length) filter.id_in = IDs;
-
-      const filterQuery = await apolloClient.query<GetSubmissionsQuery>({
-        query: GetSubmissionsDocument,
-        variables: { filter },
-      });
-
-      return filterQuery.data.submissions;
-    },
-
-    {
-      keepPreviousData: true,
-      enabled:
-        (!!searchTerm && searchTerm !== "") || !!Object.keys(filters).length,
-    }
-  );
-
-  useEffect(() => {
-    gaEvent({
-      action: "search",
-      params: {
-        search_term: searchTerm,
-      },
-    });
-  }, [searchTerm]);
-
-  const showSearchResults =
-    (!!searchTerm && searchTerm !== "") || !!Object.keys(filters).length;
-
-  return showSearchResults ? searchResults.data : null;
-};
-
 function Archive(props) {
-  const { allSubmissions } = props;
+  const { initialSubmissions } = props;
 
-  const { library } = useWeb3React<Web3Provider>();
+  const [submissions, setSubmissions] =
+    useState<Submission[]>(initialSubmissions);
+
+  const queryedSubmissions = useSubmissions();
 
   const router = useRouter();
-
   const searchResults = useSubmissionSearch();
 
-  const submissions = searchResults ? searchResults : allSubmissions;
+  React.useEffect(() => {
+    // if search is active, use those
+    if (searchResults) {
+      console.log("using search results");
+      setSubmissions(searchResults);
+    }
+    // else we should revert to all submissions
+    else if (queryedSubmissions) {
+      console.log("using all submissions");
+      setSubmissions(queryedSubmissions);
+    }
+    // if we have nothing for some reason, display initial
+    else {
+      console.log("using initial submissions from static gen");
+      setSubmissions(initialSubmissions);
+    }
+  }, [searchResults, initialSubmissions, queryedSubmissions]);
 
   return (
     <div className="flex flex-col h-full">
@@ -201,7 +157,7 @@ export async function getStaticProps({ params }) {
   });
   return {
     props: {
-      allSubmissions: res.data.submissions,
+      initialSubmissions: res.data.submissions,
     },
 
     revalidate: 60,
