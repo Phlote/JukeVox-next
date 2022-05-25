@@ -11,7 +11,7 @@ import {
 import { HollowTagsInput } from "../Hollow/HollowTagsInput";
 import { validateSubmission } from "./validators";
 
-export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
+export const SubmissionForm = ({ loadingMessage, onSubmit }) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const { form, handleSubmit, valid } = useForm({
     onSubmit,
@@ -117,10 +117,10 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
         <HollowButtonContainer onClick={handleSubmit}>
           <HollowButton
             className="w-16"
-            disabled={metamaskLoading || !valid}
-            style={metamaskLoading ? { width: "16rem" } : undefined}
+            disabled={loadingMessage || !valid}
+            style={loadingMessage ? { width: "16rem" } : undefined}
           >
-            {metamaskLoading ? "Waiting for Wallet..." : "Mint"}
+            {loadingMessage ?? "Mint"}
           </HollowButton>
           <Image src="/favicon.svg" height={16} width={16} alt={"Gem"} />
         </HollowButtonContainer>

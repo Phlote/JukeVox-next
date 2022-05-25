@@ -1,3 +1,5 @@
+import { Web3Provider } from "@ethersproject/providers";
+import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -33,7 +35,7 @@ const useSubmissionSearch = () => {
   const [filters] = useSearchFilters();
 
   const searchResults = useQuery(
-    ["search", searchTerm, filters],
+    ["submission-search", searchTerm, filters],
     async () => {
       let IDs = [];
       if (searchTerm) {
@@ -80,6 +82,8 @@ const useSubmissionSearch = () => {
 
 function Archive(props) {
   const { allSubmissions } = props;
+
+  const { library } = useWeb3React<Web3Provider>();
 
   const router = useRouter();
 
