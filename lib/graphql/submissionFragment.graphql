@@ -1,5 +1,6 @@
 fragment SubmissionArchiveFields on Submission {
   id
+  txnHash
   timestamp
   artistName
   mediaTitle

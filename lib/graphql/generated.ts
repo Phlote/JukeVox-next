@@ -182,6 +182,7 @@ export type Submission = {
   submitterWallet: Scalars['Bytes'];
   tags?: Maybe<Scalars['String']>;
   timestamp: Scalars['BigInt'];
+  txnHash: Scalars['Bytes'];
 };
 
 export type Submission_Filter = {
@@ -341,6 +342,12 @@ export type Submission_Filter = {
   timestamp_lte?: InputMaybe<Scalars['BigInt']>;
   timestamp_not?: InputMaybe<Scalars['BigInt']>;
   timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  txnHash?: InputMaybe<Scalars['Bytes']>;
+  txnHash_contains?: InputMaybe<Scalars['Bytes']>;
+  txnHash_in?: InputMaybe<Array<Scalars['Bytes']>>;
+  txnHash_not?: InputMaybe<Scalars['Bytes']>;
+  txnHash_not_contains?: InputMaybe<Scalars['Bytes']>;
+  txnHash_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
 };
 
 export enum Submission_OrderBy {
@@ -354,7 +361,8 @@ export enum Submission_OrderBy {
   MediaUri = 'mediaURI',
   SubmitterWallet = 'submitterWallet',
   Tags = 'tags',
-  Timestamp = 'timestamp'
+  Timestamp = 'timestamp',
+  TxnHash = 'txnHash'
 }
 
 export type Subscription = {
@@ -496,16 +504,16 @@ export type GetSubmissionByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetSubmissionByIdQuery = { __typename?: 'Query', submission?: { __typename?: 'Submission', id: string, timestamp: number, artistName: string, mediaTitle: string, mediaType: string, mediaURI: string, marketplace: string, cosigns?: Array<Uint8Array> | null, submitterWallet: Uint8Array } | null };
+export type GetSubmissionByIdQuery = { __typename?: 'Query', submission?: { __typename?: 'Submission', id: string, txnHash: Uint8Array, timestamp: number, artistName: string, mediaTitle: string, mediaType: string, mediaURI: string, marketplace: string, cosigns?: Array<Uint8Array> | null, submitterWallet: Uint8Array } | null };
 
 export type GetSubmissionsQueryVariables = Exact<{
   filter?: InputMaybe<Submission_Filter>;
 }>;
 
 
-export type GetSubmissionsQuery = { __typename?: 'Query', submissions: Array<{ __typename?: 'Submission', id: string, timestamp: number, artistName: string, mediaTitle: string, mediaType: string, mediaURI: string, marketplace: string, cosigns?: Array<Uint8Array> | null, submitterWallet: Uint8Array }> };
+export type GetSubmissionsQuery = { __typename?: 'Query', submissions: Array<{ __typename?: 'Submission', id: string, txnHash: Uint8Array, timestamp: number, artistName: string, mediaTitle: string, mediaType: string, mediaURI: string, marketplace: string, cosigns?: Array<Uint8Array> | null, submitterWallet: Uint8Array }> };
 
-export type SubmissionArchiveFieldsFragment = { __typename?: 'Submission', id: string, timestamp: number, artistName: string, mediaTitle: string, mediaType: string, mediaURI: string, marketplace: string, cosigns?: Array<Uint8Array> | null, submitterWallet: Uint8Array };
+export type SubmissionArchiveFieldsFragment = { __typename?: 'Submission', id: string, txnHash: Uint8Array, timestamp: number, artistName: string, mediaTitle: string, mediaType: string, mediaURI: string, marketplace: string, cosigns?: Array<Uint8Array> | null, submitterWallet: Uint8Array };
 
 export type SubmissionsSearchQueryVariables = Exact<{
   searchTerm: Scalars['String'];
@@ -514,7 +522,7 @@ export type SubmissionsSearchQueryVariables = Exact<{
 
 export type SubmissionsSearchQuery = { __typename?: 'Query', submissionsSearch: Array<{ __typename?: 'Submission', id: string }> };
 
-export const SubmissionArchiveFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SubmissionArchiveFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Submission"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"artistName"}},{"kind":"Field","name":{"kind":"Name","value":"mediaTitle"}},{"kind":"Field","name":{"kind":"Name","value":"mediaType"}},{"kind":"Field","name":{"kind":"Name","value":"mediaURI"}},{"kind":"Field","name":{"kind":"Name","value":"marketplace"}},{"kind":"Field","name":{"kind":"Name","value":"cosigns"}},{"kind":"Field","name":{"kind":"Name","value":"submitterWallet"}}]}}]} as unknown as DocumentNode<SubmissionArchiveFieldsFragment, unknown>;
+export const SubmissionArchiveFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SubmissionArchiveFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Submission"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"txnHash"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"artistName"}},{"kind":"Field","name":{"kind":"Name","value":"mediaTitle"}},{"kind":"Field","name":{"kind":"Name","value":"mediaType"}},{"kind":"Field","name":{"kind":"Name","value":"mediaURI"}},{"kind":"Field","name":{"kind":"Name","value":"marketplace"}},{"kind":"Field","name":{"kind":"Name","value":"cosigns"}},{"kind":"Field","name":{"kind":"Name","value":"submitterWallet"}}]}}]} as unknown as DocumentNode<SubmissionArchiveFieldsFragment, unknown>;
 export const GetAllSubmissionIDsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllSubmissionIDs"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<GetAllSubmissionIDsQuery, GetAllSubmissionIDsQueryVariables>;
 export const GetAllWalletsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllWallets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submitterWallet"}}]}}]}}]} as unknown as DocumentNode<GetAllWalletsQuery, GetAllWalletsQueryVariables>;
 export const GetCosignsForSubmissionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCosignsForSubmission"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submission"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cosigns"}}]}}]}}]} as unknown as DocumentNode<GetCosignsForSubmissionQuery, GetCosignsForSubmissionQueryVariables>;

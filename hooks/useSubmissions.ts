@@ -7,6 +7,7 @@ import { initializeApollo } from "../lib/graphql/apollo";
 import {
   GetSubmissionsDocument,
   GetSubmissionsQuery,
+  Submission,
   SubmissionsSearchDocument,
   SubmissionsSearchQuery,
   Submission_Filter,
@@ -15,7 +16,7 @@ import {
 const searchFiltersAtom = atom<Submission_Filter>({});
 export const useSearchFilters = () => useAtom(searchFiltersAtom);
 
-export const useSubmissions = (filter?) => {
+export const useSubmissions = (filter?): Submission[] => {
   const apolloClient = initializeApollo();
 
   // can we refetch infinitely until we get the correct number?
@@ -36,7 +37,7 @@ export const useSubmissions = (filter?) => {
 // search term only
 // filter only
 // both search term and filter
-export const useSubmissionSearch = () => {
+export const useSubmissionSearch = (): Submission[] => {
   const apolloClient = initializeApollo();
   const [searchTerm] = useSearchTerm();
   const [filters] = useSearchFilters();
