@@ -1,14 +1,21 @@
 import { useWeb3React } from "@web3-react/core";
 import { ContractTransaction, ethers } from "ethers";
 import React from "react";
+import { useQuery, useQueryClient } from "react-query";
 import "react-toastify/dist/ReactToastify.css";
 import Layout from "../components/Layouts";
 import { useIsCuratorAdmin } from "../hooks/useIsCurator";
 import { useCurator } from "../hooks/web3/useCurator";
+import { initializeApollo } from "../lib/graphql/apollo";
+import {
+  GetCuratorsDocument,
+  GetCuratorsQuery,
+} from "../lib/graphql/generated";
 
 function Admin() {
   const { account } = useWeb3React();
   const curator = useCurator();
+  const queryClient = useQueryClient();
 
   const [newCuratorWallet, setNewCuratorWallet] = React.useState<string>();
   const [newCuratorAdminWallet, setNewCuratorAdminWallet] =
@@ -16,17 +23,7 @@ function Admin() {
 
   const isGodAdmin = useIsGodAdmin(account);
   const isCuratorAdmin = useIsCuratorAdmin();
-  // console.log("isCuratorAdmin: ", isCuratorAdmin);
-
-  // React.useEffect(() => {
-  //   if (curator) {
-  //     curator.initialize(
-  //       "0x143254e945AcF364bF2e27fB4e46F6B8511B2dFb",
-  //       "0xd248F2a4829D9C1B78eBA6D1e52703dA5599D65f",
-  //       "0x7d1f0b6556f19132e545717C6422e8AB004A5B7c"
-  //     );
-  //   }
-  // }, [curator]);
+  const curators = useGetCurators();
 
   const [txn, setTxn] = React.useState<ContractTransaction>();
 
@@ -37,6 +34,19 @@ function Admin() {
     }
     const txn = await curator.grantCuratorRole(wallet);
     setTxn(txn);
+    txn.wait();
+    queryClient.invalidateQueries("curators");
+  };
+
+  const revokeCuratorRole = async (wallet: string) => {
+    if (!ethers.utils.isAddress(wallet)) {
+      alert("Not a valid wallet, check again");
+      return;
+    }
+    const txn = await curator.revokeCuratorRole(wallet);
+    setTxn(txn);
+    txn.wait();
+    queryClient.invalidateQueries("curators");
   };
 
   const addNewCuratorAdmin = async (wallet: string) => {
@@ -50,7 +60,7 @@ function Admin() {
   };
 
   React.useEffect(() => {
-    if (txn) alert(txn);
+    if (txn) alert(JSON.stringify(txn));
   }, [txn]);
 
   return (
@@ -69,6 +79,26 @@ function Admin() {
           >
             Grant Curator Role
           </button>
+          <div className="h-16" />
+          {curators?.data?.length && (
+            <div>
+              <h1>Here are the current curators:</h1>
+              <ol className="list-disc">
+                {curators.data.map((address) => (
+                  <li className="my-4 flex" key={`curator-${address}`}>
+                    {address}
+                    <div className="w-4"></div>
+                    <button
+                      className="w-64 bg-red-700 border"
+                      onClick={() => revokeCuratorRole(address)}
+                    >
+                      Revoke
+                    </button>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
         </>
       )}
 
@@ -107,6 +137,17 @@ const useIsGodAdmin = (wallet) => {
   }, [wallet, curator]);
 
   return isGodAdmin;
+};
+
+const useGetCurators = () => {
+  const client = initializeApollo();
+  return useQuery(["curators"], async () => {
+    const res = await client.query<GetCuratorsQuery>({
+      query: GetCuratorsDocument,
+    });
+
+    return res.data.curatorRoles.map(({ id }) => id);
+  });
 };
 
 Admin.getLayout = function getLayout(page) {
