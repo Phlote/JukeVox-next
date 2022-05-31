@@ -8,6 +8,7 @@ import {
   GetSubmissionsDocument,
   GetSubmissionsQuery,
   Submission,
+  SubmissionArchiveFieldsFragment,
   SubmissionsSearchDocument,
   SubmissionsSearchQuery,
   Submission_Filter,
@@ -16,7 +17,7 @@ import {
 const searchFiltersAtom = atom<Submission_Filter>({});
 export const useSearchFilters = () => useAtom(searchFiltersAtom);
 
-export const useSubmissions = (filter?): Submission[] => {
+export const useSubmissions = (filter?): SubmissionArchiveFieldsFragment[] => {
   const apolloClient = initializeApollo();
 
   const submissionsQuery = useQuery(["submissions", filter], async () => {
