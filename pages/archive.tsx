@@ -63,7 +63,7 @@ function Archive(props) {
             <ArchiveTableHeader label="Media Type" filterKey="mediaType" />
             <ArchiveTableHeader label="Platform" filterKey="marketplace" />
             <ArchiveTableHeader label="Curator" filterKey="submitterWallet" />
-            <ArchiveTableHeader label="Co-Signs" />
+            <ArchiveTableHeader label="Co-Signs" filterKey="noOfCosigns" />
           </tr>
         </thead>
 

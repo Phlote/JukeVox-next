@@ -167,6 +167,7 @@ export type Submission = {
   mediaTitle: Scalars['String'];
   mediaType: Scalars['String'];
   mediaURI: Scalars['String'];
+  noOfCosigns: Scalars['Int'];
   submitterWallet: Scalars['Bytes'];
   tags?: Maybe<Scalars['String']>;
   timestamp: Scalars['BigInt'];
@@ -296,6 +297,14 @@ export type Submission_Filter = {
   mediaURI_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
   mediaURI_starts_with?: InputMaybe<Scalars['String']>;
   mediaURI_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  noOfCosigns?: InputMaybe<Scalars['Int']>;
+  noOfCosigns_gt?: InputMaybe<Scalars['Int']>;
+  noOfCosigns_gte?: InputMaybe<Scalars['Int']>;
+  noOfCosigns_in?: InputMaybe<Array<Scalars['Int']>>;
+  noOfCosigns_lt?: InputMaybe<Scalars['Int']>;
+  noOfCosigns_lte?: InputMaybe<Scalars['Int']>;
+  noOfCosigns_not?: InputMaybe<Scalars['Int']>;
+  noOfCosigns_not_in?: InputMaybe<Array<Scalars['Int']>>;
   submitterWallet?: InputMaybe<Scalars['Bytes']>;
   submitterWallet_contains?: InputMaybe<Scalars['Bytes']>;
   submitterWallet_in?: InputMaybe<Array<Scalars['Bytes']>>;
@@ -347,6 +356,7 @@ export enum Submission_OrderBy {
   MediaTitle = 'mediaTitle',
   MediaType = 'mediaType',
   MediaUri = 'mediaURI',
+  NoOfCosigns = 'noOfCosigns',
   SubmitterWallet = 'submitterWallet',
   Tags = 'tags',
   Timestamp = 'timestamp',

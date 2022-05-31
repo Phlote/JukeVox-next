@@ -19,7 +19,6 @@ export const useSearchFilters = () => useAtom(searchFiltersAtom);
 export const useSubmissions = (filter?): Submission[] => {
   const apolloClient = initializeApollo();
 
-  // can we refetch infinitely until we get the correct number?
   const submissionsQuery = useQuery(["submissions", filter], async () => {
     const res = await apolloClient.query<GetSubmissionsQuery>({
       query: GetSubmissionsDocument,
