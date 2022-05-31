@@ -1,6 +1,5 @@
 query GetCuratorAdminRoleForWallet($id: ID!) {
   curatorAdminRole(id: $id) {
     id
-    isCuratorAdmin
   }
 }

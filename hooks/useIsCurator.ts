@@ -35,8 +35,7 @@ export const useIsCurator = () => {
     variables: { id: account?.toLowerCase() },
     skip: !account,
   });
-
-  return !!data?.curatorRole?.isCurator;
+  return !!data?.curatorRole;
 };
 
 //can add curators
@@ -51,5 +50,5 @@ export const useIsCuratorAdmin = () => {
     }
   );
 
-  return !!data?.curatorAdminRole?.isCuratorAdmin;
+  return !!data?.curatorAdminRole;
 };

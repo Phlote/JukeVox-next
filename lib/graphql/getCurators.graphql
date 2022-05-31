@@ -1,5 +1,5 @@
 query GetCurators {
-  curatorRoles(where: { isCurator: true }) {
+  curatorRoles {
     id
   }
 }

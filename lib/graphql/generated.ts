@@ -29,7 +29,6 @@ export type Block_Height = {
 export type CuratorAdminRole = {
   __typename?: 'CuratorAdminRole';
   id: Scalars['ID'];
-  isCuratorAdmin?: Maybe<Scalars['Boolean']>;
 };
 
 export type CuratorAdminRole_Filter = {
@@ -43,21 +42,15 @@ export type CuratorAdminRole_Filter = {
   id_lte?: InputMaybe<Scalars['ID']>;
   id_not?: InputMaybe<Scalars['ID']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
-  isCuratorAdmin?: InputMaybe<Scalars['Boolean']>;
-  isCuratorAdmin_in?: InputMaybe<Array<Scalars['Boolean']>>;
-  isCuratorAdmin_not?: InputMaybe<Scalars['Boolean']>;
-  isCuratorAdmin_not_in?: InputMaybe<Array<Scalars['Boolean']>>;
 };
 
 export enum CuratorAdminRole_OrderBy {
-  Id = 'id',
-  IsCuratorAdmin = 'isCuratorAdmin'
+  Id = 'id'
 }
 
 export type CuratorRole = {
   __typename?: 'CuratorRole';
   id: Scalars['ID'];
-  isCurator?: Maybe<Scalars['Boolean']>;
 };
 
 export type CuratorRole_Filter = {
@@ -71,15 +64,10 @@ export type CuratorRole_Filter = {
   id_lte?: InputMaybe<Scalars['ID']>;
   id_not?: InputMaybe<Scalars['ID']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
-  isCurator?: InputMaybe<Scalars['Boolean']>;
-  isCurator_in?: InputMaybe<Array<Scalars['Boolean']>>;
-  isCurator_not?: InputMaybe<Scalars['Boolean']>;
-  isCurator_not_in?: InputMaybe<Array<Scalars['Boolean']>>;
 };
 
 export enum CuratorRole_OrderBy {
-  Id = 'id',
-  IsCurator = 'isCurator'
+  Id = 'id'
 }
 
 /** Defines the order direction, either ascending or descending */
@@ -490,14 +478,14 @@ export type GetCuratorAdminRoleForWalletQueryVariables = Exact<{
 }>;
 
 
-export type GetCuratorAdminRoleForWalletQuery = { __typename?: 'Query', curatorAdminRole?: { __typename?: 'CuratorAdminRole', id: string, isCuratorAdmin?: boolean | null } | null };
+export type GetCuratorAdminRoleForWalletQuery = { __typename?: 'Query', curatorAdminRole?: { __typename?: 'CuratorAdminRole', id: string } | null };
 
 export type GetCuratorRoleForWalletQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type GetCuratorRoleForWalletQuery = { __typename?: 'Query', curatorRole?: { __typename?: 'CuratorRole', id: string, isCurator?: boolean | null } | null };
+export type GetCuratorRoleForWalletQuery = { __typename?: 'Query', curatorRole?: { __typename?: 'CuratorRole', id: string } | null };
 
 export type GetCuratorsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -531,9 +519,9 @@ export const SubmissionArchiveFieldsFragmentDoc = {"kind":"Document","definition
 export const GetAllSubmissionIDsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllSubmissionIDs"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<GetAllSubmissionIDsQuery, GetAllSubmissionIDsQueryVariables>;
 export const GetAllWalletsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllWallets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submitterWallet"}}]}}]}}]} as unknown as DocumentNode<GetAllWalletsQuery, GetAllWalletsQueryVariables>;
 export const GetCosignsForSubmissionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCosignsForSubmission"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submission"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cosigns"}}]}}]}}]} as unknown as DocumentNode<GetCosignsForSubmissionQuery, GetCosignsForSubmissionQueryVariables>;
-export const GetCuratorAdminRoleForWalletDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCuratorAdminRoleForWallet"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"curatorAdminRole"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"isCuratorAdmin"}}]}}]}}]} as unknown as DocumentNode<GetCuratorAdminRoleForWalletQuery, GetCuratorAdminRoleForWalletQueryVariables>;
-export const GetCuratorRoleForWalletDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCuratorRoleForWallet"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"curatorRole"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"isCurator"}}]}}]}}]} as unknown as DocumentNode<GetCuratorRoleForWalletQuery, GetCuratorRoleForWalletQueryVariables>;
-export const GetCuratorsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCurators"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"curatorRoles"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"isCurator"},"value":{"kind":"BooleanValue","value":true}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<GetCuratorsQuery, GetCuratorsQueryVariables>;
+export const GetCuratorAdminRoleForWalletDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCuratorAdminRoleForWallet"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"curatorAdminRole"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<GetCuratorAdminRoleForWalletQuery, GetCuratorAdminRoleForWalletQueryVariables>;
+export const GetCuratorRoleForWalletDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCuratorRoleForWallet"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"curatorRole"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<GetCuratorRoleForWalletQuery, GetCuratorRoleForWalletQueryVariables>;
+export const GetCuratorsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCurators"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"curatorRoles"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<GetCuratorsQuery, GetCuratorsQueryVariables>;
 export const GetSubmissionByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSubmissionById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submission"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SubmissionArchiveFields"}}]}}]}},...SubmissionArchiveFieldsFragmentDoc.definitions]} as unknown as DocumentNode<GetSubmissionByIdQuery, GetSubmissionByIdQueryVariables>;
 export const GetSubmissionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSubmissions"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Submission_filter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"timestamp"}},{"kind":"Argument","name":{"kind":"Name","value":"orderDirection"},"value":{"kind":"EnumValue","value":"desc"}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SubmissionArchiveFields"}}]}}]}},...SubmissionArchiveFieldsFragmentDoc.definitions]} as unknown as DocumentNode<GetSubmissionsQuery, GetSubmissionsQueryVariables>;
 export const SubmissionsSearchDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SubmissionsSearch"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"searchTerm"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissionsSearch"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"text"},"value":{"kind":"Variable","name":{"kind":"Name","value":"searchTerm"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<SubmissionsSearchQuery, SubmissionsSearchQueryVariables>;
