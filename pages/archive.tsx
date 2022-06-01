@@ -1,3 +1,4 @@
+import debounce from "lodash.debounce";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Layout, { ArchiveLayout } from "../components/Layouts";
@@ -14,7 +15,6 @@ import { useSearchFilters, useSubmissionSearch } from "../hooks/useSubmissions";
 import { Submission } from "../types";
 
 function Archive({ query }) {
-  // we can do this because the prop is unchanging
   const [searchBarContent, setSearchBarContent] = useSearchTerm();
   const [selectedFilters, setFilters] = useSearchFilters();
 
@@ -24,29 +24,37 @@ function Archive({ query }) {
   const router = useRouter();
   // set state variables on initial render
   useEffect(() => {
-    console.log("initial");
-    if (query?.searchTerm) setSearchBarContent(query.searchTerm);
+    if (query?.search) setSearchBarContent(query.search);
     if (query?.filters) {
+      console.log(query.filters);
       setFilters(JSON.parse(query.filters));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 
   // this will happen when the user changes things
-  useEffect(() => {
-    if (router)
-      router.push(
-        {
-          pathname: "/archive",
-          query: {
-            searchTerm: encodeURI(searchBarContent),
-            filters: encodeURI(JSON.stringify(selectedFilters)),
-          },
-        },
-        undefined,
-        { shallow: true }
-      );
 
+  const updateQueryParams = debounce(
+    async (searchTerm: string, filters: Partial<Submission>) => {
+      console.log("debounced query");
+      if (router)
+        await router.push(
+          {
+            pathname: "/archive",
+            query: {
+              search: encodeURI(searchTerm),
+              filters: encodeURI(JSON.stringify(filters)),
+            },
+          },
+          undefined,
+          { shallow: true }
+        );
+    },
+    500
+  );
+
+  useEffect(() => {
+    updateQueryParams(searchBarContent, selectedFilters);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchBarContent, selectedFilters]);
 
