@@ -10,16 +10,41 @@ import {
   SubmissionDate,
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
-import { useSubmissionSearch } from "../hooks/useSubmissions";
-import { gaEvent } from "../lib/ga";
+import { useSearchFilters, useSubmissionSearch } from "../hooks/useSubmissions";
 import { Submission } from "../types";
 
-function Archive(props) {
+function Archive({ query }) {
   // we can do this because the prop is unchanging
-  const [searchTerm] = useSearchTerm();
-  const searchResults = useSubmissionSearch(searchTerm);
+  const [searchBarContent, setSearchBarContent] = useSearchTerm();
+  const [selectedFilters, setFilters] = useSearchFilters();
+
+  const searchResults = useSubmissionSearch(searchBarContent);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
+
   const router = useRouter();
+  // set state variables on initial render
+  useEffect(() => {
+    console.log("initial");
+    if (query?.searchTerm) setSearchBarContent(query.searchTerm);
+    if (query?.filters) {
+      setFilters(JSON.parse(query.filters));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
+
+  // this will happen when the user changes things
+  useEffect(() => {
+    console.log("update router");
+    if (router)
+      router.push({
+        pathname: "/archive",
+        query: {
+          searchTerm: encodeURI(searchBarContent),
+          filters: encodeURI(JSON.stringify(selectedFilters)),
+        },
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchBarContent, selectedFilters]);
 
   // subject to change based on user's search query
   useEffect(() => {
@@ -27,15 +52,15 @@ function Archive(props) {
       searchResults &&
       JSON.stringify(searchResults) !== JSON.stringify(submissions)
     ) {
-      gaEvent({
-        action: "search",
-        params: {
-          search_term: searchTerm,
-        },
-      });
+      // gaEvent({
+      //   action: "search",
+      //   params: {
+      //     search_term: searchTerm,
+      //   },
+      // });
       setSubmissions(searchResults);
     }
-  }, [searchResults, submissions, searchTerm]);
+  }, [searchResults, submissions]);
 
   return (
     <div className="flex flex-col h-full">
@@ -141,14 +166,5 @@ Archive.getLayout = function getLayout(page) {
     </Layout>
   );
 };
-
-// export async function getStaticProps({ params }) {
-//   return {
-//     props: {
-//       allSubmissions: await getSubmissionsWithFilter(),
-//     },
-//     revalidate: 60,
-//   };
-// }
 
 export default Archive;
