@@ -1,4 +1,5 @@
 import { atom, useAtom } from "jotai";
+import debounce from "lodash.debounce";
 import { useEffect } from "react";
 import { useInfiniteQuery, useQuery } from "react-query";
 import { useSearchTerm } from "../components/SearchBar";
@@ -18,13 +19,20 @@ export const useSearchFilters = () => useAtom(searchFiltersAtom);
 export const useTrackSearchQueries = () => {
   const [searchTerm] = useSearchTerm();
 
+  const debouncedGAEmit = debounce(
+    (query: string) =>
+      gaEvent({
+        action: "search",
+        params: {
+          search_term: query,
+        },
+      }),
+    500
+  );
+
   useEffect(() => {
-    gaEvent({
-      action: "search",
-      params: {
-        search_term: searchTerm,
-      },
-    });
+    debounce(debouncedGAEmit);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
 };
 

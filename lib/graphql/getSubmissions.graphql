@@ -1,6 +1,6 @@
 query GetSubmissions($filter: Submission_filter, $skip: Int) {
   submissions(
-    first: 10
+    first: 20
     orderBy: timestamp
     orderDirection: desc
     where: $filter

@@ -10,6 +10,7 @@ import {
   SubmissionDate,
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
+import { useOnScrollToBottom } from "../hooks/useOnScrollToBottom";
 import {
   useSubmissionSearch,
   useTrackSearchQueries,
@@ -23,8 +24,14 @@ function Archive(props) {
   useTrackSearchQueries();
   const router = useRouter();
 
+  const scrollRef = useOnScrollToBottom(
+    submissions.fetchNextPage,
+    submissions.hasNextPage,
+    1000
+  );
+
   return (
-    <div className="flex flex-col h-full">
+    <div ref={scrollRef} className="flex flex-col h-full">
       <table className="table-fixed w-full text-center mt-8">
         <thead>
           <tr
@@ -44,7 +51,7 @@ function Archive(props) {
         </thead>
 
         {submissions.data?.pages.length > 0 && (
-          <tbody>
+          <tbody ref={scrollRef}>
             <tr className="h-4" />
             {submissions?.data?.pages.map((group, i) => (
               <React.Fragment key={i}>
@@ -115,13 +122,7 @@ function Archive(props) {
           </tbody>
         )}
       </table>
-      <button className="py-8" onClick={() => submissions.fetchNextPage()}>
-        {submissions.isFetchingNextPage
-          ? "Loading more..."
-          : submissions.hasNextPage
-          ? "Load More"
-          : "Nothing more to load"}
-      </button>
+
       {noResults && (
         <div
           className="w-full h-full mt-4 flex-grow flex justify-center items-center"

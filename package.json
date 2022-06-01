@@ -11,9 +11,9 @@
     "generate": "graphql-codegen -r dotenv/config"
   },
   "dependencies": {
-    "@ethersproject/contracts": "5.6.0",
     "@apollo/client": "^3.6.2",
     "@elastic/app-search-node": "^8.1.0",
+    "@ethersproject/contracts": "5.6.0",
     "@graphql-codegen/typed-document-node": "^2.2.11",
     "@graphql-codegen/typescript": "^2.4.11",
     "@graphql-codegen/typescript-operations": "^2.4.0",
@@ -31,6 +31,7 @@
     "graphql": "^16.5.0",
     "ipfs-http-client": "^56.0.3",
     "jotai": "^1.5.3",
+    "lodash.debounce": "^4.0.8",
     "next": "^12.1.7-canary.3",
     "next-share": "^0.13.0",
     "node-fetch": "^3.2.3",
@@ -52,6 +53,7 @@
     "@babel/core": "^7.17.7",
     "@graphql-codegen/cli": "^2.6.2",
     "@metamask/types": "^1.0.0",
+    "@types/lodash.debounce": "^4.0.7",
     "@types/node": "^17.0.21",
     "@types/react": "^17.0.38",
     "@web3-react/types": "^6.0.7",
