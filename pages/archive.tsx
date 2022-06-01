@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React from "react";
 import Layout, { ArchiveLayout } from "../components/Layouts";
 import { RatingsMeter } from "../components/RatingsMeter";
 import {
@@ -10,42 +10,18 @@ import {
   SubmissionDate,
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
-import { useSubmissionsInfiniteQuery } from "../hooks/useSubmissions";
-import { initializeApollo } from "../lib/graphql/apollo";
 import {
-  GetSubmissionsDocument,
-  GetSubmissionsQuery,
-  SubmissionArchiveFieldsFragment,
-} from "../lib/graphql/generated";
+  useSubmissionSearch,
+  useTrackSearchQueries,
+} from "../hooks/useSubmissions";
 
 function Archive(props) {
-  const { initialSubmissions } = props;
-
-  const [submissions, setSubmissions] =
-    useState<SubmissionArchiveFieldsFragment[]>(initialSubmissions);
-
-  const submissionsQuery = useSubmissionsInfiniteQuery();
-
+  const submissions = useSubmissionSearch();
+  const noResults =
+    submissions.data?.pages[0].submissions.length === 0 &&
+    !submissions.isLoading;
+  useTrackSearchQueries();
   const router = useRouter();
-  // const searchResults = useSubmissionSearch();
-
-  // React.useEffect(() => {
-  // if search is active, use those
-  // if (searchResults) {
-  //   console.log("using search results");
-  //   setSubmissions(searchResults);
-  // }
-  // else we should revert to all submissions
-  // if (queryedSubmissions) {
-  //   console.log("using all submissions");
-  //   setSubmissions(queryedSubmissions);
-  // }
-  // if we have nothing for some reason, display initial
-  //   else {
-  //     console.log("using initial submissions from static gen");
-  //     setSubmissions(initialSubmissions);
-  //   }
-  // }, [searchResults, initialSubmissions, queryedSubmissions]);
 
   return (
     <div className="flex flex-col h-full">
@@ -67,10 +43,10 @@ function Archive(props) {
           </tr>
         </thead>
 
-        {submissionsQuery.data?.pages.length > 0 && (
+        {submissions.data?.pages.length > 0 && (
           <tbody>
             <tr className="h-4" />
-            {submissionsQuery?.data?.pages.map((group, i) => (
+            {submissions?.data?.pages.map((group, i) => (
               <React.Fragment key={i}>
                 {group.submissions.map((submission) => {
                   const {
@@ -139,14 +115,14 @@ function Archive(props) {
           </tbody>
         )}
       </table>
-      <button className="py-8" onClick={() => submissionsQuery.fetchNextPage()}>
-        {submissionsQuery.isFetchingNextPage
+      <button className="py-8" onClick={() => submissions.fetchNextPage()}>
+        {submissions.isFetchingNextPage
           ? "Loading more..."
-          : submissionsQuery.hasNextPage
+          : submissions.hasNextPage
           ? "Load More"
           : "Nothing more to load"}
       </button>
-      {submissions?.length === 0 && (
+      {noResults && (
         <div
           className="w-full h-full mt-4 flex-grow flex justify-center items-center"
           style={{ color: "rgba(105, 105, 105, 1)" }}
@@ -166,18 +142,18 @@ Archive.getLayout = function getLayout(page) {
   );
 };
 
-export async function getStaticProps({ params }) {
-  const apolloClient = initializeApollo();
-  const res = await apolloClient.query<GetSubmissionsQuery>({
-    query: GetSubmissionsDocument,
-  });
-  return {
-    props: {
-      initialSubmissions: res.data.submissions,
-    },
+// export async function getStaticProps({ params }) {
+//   const apolloClient = initializeApollo();
+//   const res = await apolloClient.query<GetSubmissionsQuery>({
+//     query: GetSubmissionsDocument,
+//   });
+//   return {
+//     props: {
+//       initialSubmissions: res.data.submissions,
+//     },
 
-    revalidate: 60,
-  };
-}
+//     revalidate: 60,
+//   };
+// }
 
 export default Archive;

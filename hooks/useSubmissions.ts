@@ -1,11 +1,12 @@
 import { atom, useAtom } from "jotai";
+import { useEffect } from "react";
 import { useInfiniteQuery, useQuery } from "react-query";
 import { useSearchTerm } from "../components/SearchBar";
+import { gaEvent } from "../lib/ga";
 import { initializeApollo } from "../lib/graphql/apollo";
 import {
   GetSubmissionsDocument,
   GetSubmissionsQuery,
-  SubmissionArchiveFieldsFragment,
   SubmissionsSearchDocument,
   SubmissionsSearchQuery,
   Submission_Filter,
@@ -14,46 +15,17 @@ import {
 const searchFiltersAtom = atom<Submission_Filter>({});
 export const useSearchFilters = () => useAtom(searchFiltersAtom);
 
-export const useSubmissions = (
-  filter?: Submission_Filter
-): SubmissionArchiveFieldsFragment[] => {
-  const apolloClient = initializeApollo();
+export const useTrackSearchQueries = () => {
+  const [searchTerm] = useSearchTerm();
 
-  // can we refetch infinitely until we get the correct number?
-  const submissionsQuery = useQuery(["submissions", filter], async () => {
-    const res = await apolloClient.query<GetSubmissionsQuery>({
-      query: GetSubmissionsDocument,
-      variables: { filter },
-      fetchPolicy: "network-only",
+  useEffect(() => {
+    gaEvent({
+      action: "search",
+      params: {
+        search_term: searchTerm,
+      },
     });
-    return res.data.submissions;
-  });
-
-  return submissionsQuery.data;
-};
-
-export const useSubmissionsInfiniteQuery = (filter?: Submission_Filter) => {
-  const apolloClient = initializeApollo();
-  const fetchSubmissions = async ({ pageParam = 0 }) => {
-    const res = await apolloClient.query<GetSubmissionsQuery>({
-      query: GetSubmissionsDocument,
-      variables: { filter, skip: pageParam },
-      fetchPolicy: "network-only",
-    });
-
-    return {
-      submissions: res.data.submissions,
-      nextPage: res.data.submissions.length
-        ? pageParam + res.data.submissions.length
-        : undefined,
-    };
-  };
-  // can we refetch infinitely until we get the correct number?
-  return useInfiniteQuery(["submissions-infinite", filter], fetchSubmissions, {
-    getNextPageParam: (lastPage, pages) => {
-      return lastPage.nextPage;
-    },
-  });
+  }, [searchTerm]);
 };
 
 // Test cases:
@@ -63,11 +35,11 @@ export const useSubmissionsInfiniteQuery = (filter?: Submission_Filter) => {
 // both search term and filter
 export const useSubmissionSearch = () => {
   const apolloClient = initializeApollo();
-  const [searchTerm] = useSearchTerm();
   const [filters] = useSearchFilters();
+  const [searchTerm] = useSearchTerm();
 
   const searchResults = useQuery(
-    ["submission-search", searchTerm],
+    ["submission-search-ids", searchTerm],
     async () => {
       const searchQuery = await apolloClient.query<SubmissionsSearchQuery>({
         query: SubmissionsSearchDocument,
@@ -102,7 +74,7 @@ export const useSubmissionSearch = () => {
   };
 
   return useInfiniteQuery(
-    ["submissions-search-infinite", filters, searchResults],
+    ["submissions-search", filters, searchResults],
     fetchSubmissionsForSearch,
     {
       getNextPageParam: (lastPage, pages) => {
@@ -110,18 +82,4 @@ export const useSubmissionSearch = () => {
       },
     }
   );
-
-  // useEffect(() => {
-  //   gaEvent({
-  //     action: "search",
-  //     params: {
-  //       search_term: searchTerm,
-  //     },
-  //   });
-  // }, [searchTerm]);
-
-  // const showSearchResults =
-  //   (!!searchTerm && searchTerm !== "") || !!Object.keys(filters).length;
-
-  // return showSearchResults ? searchResults.data : null;
 };
