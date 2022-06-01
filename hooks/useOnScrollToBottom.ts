@@ -22,12 +22,9 @@ export const useOnScrollToBottom = (
 
   React.useEffect(() => {
     const scrollArea = scrollAreaRef.current;
-    if (enabled) {
-      console.log("setting");
-      scrollArea?.addEventListener("wheel", debouncedOnScroll);
-    } else {
-      scrollArea?.removeEventListener("wheel", debouncedOnScroll);
-    }
+    if (enabled) scrollArea?.addEventListener("wheel", debouncedOnScroll);
+    else scrollArea?.removeEventListener("wheel", debouncedOnScroll);
+
     return () => {
       scrollArea?.removeEventListener("wheel", debouncedOnScroll);
     };
