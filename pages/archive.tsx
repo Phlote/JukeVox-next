@@ -1,3 +1,4 @@
+// import throttle from "lodash.throttle";
 import debounce from "lodash.debounce";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -36,6 +37,7 @@ function Archive({ query }) {
 
   const updateQueryParams = debounce(
     async (router, searchTerm: string, filters: Partial<Submission>) => {
+      console.log("debounced");
       await router.push(
         {
           pathname: "/archive",
@@ -48,7 +50,8 @@ function Archive({ query }) {
         { shallow: true }
       );
     },
-    500
+    500,
+    { leading: true }
   );
 
   useEffect(() => {

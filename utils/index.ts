@@ -13,7 +13,6 @@ export function nextApiRequest(
     body: data ? JSON.stringify(data) : undefined,
   }).then((response) => {
     if (!response.ok) throw `Error calling /api/${path}`;
-
     return response.json();
   });
 }
