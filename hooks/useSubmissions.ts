@@ -1,6 +1,6 @@
 import { atom, useAtom } from "jotai";
 import { useEffect } from "react";
-import { useQuery } from "react-query";
+import { useInfiniteQuery, useQuery } from "react-query";
 import { useSearchTerm } from "../components/SearchBar";
 import { gaEvent } from "../lib/ga";
 import { initializeApollo } from "../lib/graphql/apollo";
@@ -8,6 +8,7 @@ import {
   GetSubmissionsDocument,
   GetSubmissionsQuery,
   Submission,
+  SubmissionArchiveFieldsFragment,
   SubmissionsSearchDocument,
   SubmissionsSearchQuery,
   Submission_Filter,
@@ -16,7 +17,9 @@ import {
 const searchFiltersAtom = atom<Submission_Filter>({});
 export const useSearchFilters = () => useAtom(searchFiltersAtom);
 
-export const useSubmissions = (filter?): Submission[] => {
+export const useSubmissions = (
+  filter?: Submission_Filter
+): SubmissionArchiveFieldsFragment[] => {
   const apolloClient = initializeApollo();
 
   // can we refetch infinitely until we get the correct number?
@@ -30,6 +33,31 @@ export const useSubmissions = (filter?): Submission[] => {
   });
 
   return submissionsQuery.data;
+};
+
+export const useSubmissionsInfiniteQuery = (filter?: Submission_Filter) => {
+  const apolloClient = initializeApollo();
+  const fetchSubmissions = async ({ pageParam = 0 }) => {
+    console.log("page param: ", pageParam);
+    const res = await apolloClient.query<GetSubmissionsQuery>({
+      query: GetSubmissionsDocument,
+      variables: { filter, skip: pageParam },
+      fetchPolicy: "network-only",
+    });
+
+    return {
+      submissions: res.data.submissions,
+      nextPage: res.data.submissions.length
+        ? pageParam + res.data.submissions.length
+        : undefined,
+    };
+  };
+  // can we refetch infinitely until we get the correct number?
+  return useInfiniteQuery(["submissions-infinite", filter], fetchSubmissions, {
+    getNextPageParam: (lastPage, pages) => {
+      return lastPage.nextPage;
+    },
+  });
 };
 
 // Test cases:
