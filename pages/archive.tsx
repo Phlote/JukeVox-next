@@ -43,6 +43,7 @@ function Archive({ query }) {
           filters: encodeURI(JSON.stringify(selectedFilters)),
         },
       });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchBarContent, selectedFilters]);
 
@@ -52,12 +53,6 @@ function Archive({ query }) {
       searchResults &&
       JSON.stringify(searchResults) !== JSON.stringify(submissions)
     ) {
-      // gaEvent({
-      //   action: "search",
-      //   params: {
-      //     search_term: searchTerm,
-      //   },
-      // });
       setSubmissions(searchResults);
     }
   }, [searchResults, submissions]);
