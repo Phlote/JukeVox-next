@@ -35,26 +35,24 @@ function Archive({ query }) {
   // this will happen when the user changes things
 
   const updateQueryParams = debounce(
-    async (searchTerm: string, filters: Partial<Submission>) => {
-      console.log("debounced query");
-      if (router)
-        await router.push(
-          {
-            pathname: "/archive",
-            query: {
-              search: encodeURI(searchTerm),
-              filters: encodeURI(JSON.stringify(filters)),
-            },
+    async (router, searchTerm: string, filters: Partial<Submission>) => {
+      await router.push(
+        {
+          pathname: "/archive",
+          query: {
+            search: encodeURI(searchTerm),
+            filters: encodeURI(JSON.stringify(filters)),
           },
-          undefined,
-          { shallow: true }
-        );
+        },
+        undefined,
+        { shallow: true }
+      );
     },
     500
   );
 
   useEffect(() => {
-    updateQueryParams(searchBarContent, selectedFilters);
+    if (router) updateQueryParams(router, searchBarContent, selectedFilters);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchBarContent, selectedFilters]);
 
