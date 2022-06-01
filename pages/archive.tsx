@@ -34,15 +34,18 @@ function Archive({ query }) {
 
   // this will happen when the user changes things
   useEffect(() => {
-    console.log("update router");
     if (router)
-      router.push({
-        pathname: "/archive",
-        query: {
-          searchTerm: encodeURI(searchBarContent),
-          filters: encodeURI(JSON.stringify(selectedFilters)),
+      router.push(
+        {
+          pathname: "/archive",
+          query: {
+            searchTerm: encodeURI(searchBarContent),
+            filters: encodeURI(JSON.stringify(selectedFilters)),
+          },
         },
-      });
+        undefined,
+        { shallow: true }
+      );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchBarContent, selectedFilters]);
