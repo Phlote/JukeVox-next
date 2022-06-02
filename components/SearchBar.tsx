@@ -37,7 +37,7 @@ export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedOnChange = useCallback(debounce(onChange, 300), []);
+  const debouncedOnChange = useCallback(debounce(onChange, 50), []);
 
   return (
     <div className="w-80 h-16" style={{ lineHeight: "0.5rem" }}>
