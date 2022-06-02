@@ -1,3 +1,4 @@
+import debounce from "lodash.debounce";
 import { Submission, SubmissionElasticSearchDocument } from "../types";
 
 export function nextApiRequest(
@@ -70,3 +71,15 @@ export const cleanSubmission = (submission: Submission) => {
 
   return cleaned;
 };
+
+export function asyncDebounce(func, wait) {
+  const debounced = debounce((resolve, reject, args) => {
+    func(...args)
+      .then(resolve)
+      .catch(reject);
+  }, wait);
+  return (...args) =>
+    new Promise((resolve, reject) => {
+      debounced(resolve, reject, args);
+    });
+}

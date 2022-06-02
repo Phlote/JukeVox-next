@@ -1,5 +1,4 @@
 // import throttle from "lodash.throttle";
-import debounce from "lodash.debounce";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Layout, { ArchiveLayout } from "../components/Layouts";
@@ -14,6 +13,7 @@ import {
 import { Username } from "../components/Username";
 import { useSearchFilters, useSubmissionSearch } from "../hooks/useSubmissions";
 import { Submission } from "../types";
+import { asyncDebounce } from "../utils";
 
 function Archive({ query }) {
   const [searchBarContent, setSearchBarContent] = useSearchTerm();
@@ -35,7 +35,7 @@ function Archive({ query }) {
 
   // this will happen when the user changes things
 
-  const updateQueryParams = debounce(
+  const updateQueryParams = asyncDebounce(
     async (router, searchTerm: string, filters: Partial<Submission>) => {
       console.log("debounced");
       await router.push(
@@ -50,8 +50,7 @@ function Archive({ query }) {
         { shallow: true }
       );
     },
-    500,
-    { leading: true }
+    1000
   );
 
   useEffect(() => {
