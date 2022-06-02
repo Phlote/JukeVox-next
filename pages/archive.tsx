@@ -8,7 +8,7 @@ import {
   ArchiveTableDataCell,
   ArchiveTableHeader,
   ArchiveTableRow,
-  SubmissionDate
+  SubmissionDate,
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
 import { useSearchFilters, useSubmissionSearch } from "../hooks/useSubmissions";
@@ -24,28 +24,34 @@ function Archive({ query }) {
   const router = useRouter();
   // set state variables on initial render
   useEffect(() => {
-    if (query?.search) setSearchBarContent(query.search);
-    if (query?.filters) {
-      console.log(query.filters);
-      setFilters(JSON.parse(query.filters));
+    console.log("query: ", query);
+    if (query) {
+      const { search, filters } = router.query;
+      if (search) setSearchBarContent(search as string);
+      if (filters) {
+        setFilters(JSON.parse(decodeURI(filters as string)));
+      }
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 
-  const updateQueryParams = React.useCallback(async (router, searchTerm: string, filters: Partial<Submission>) => {
-    await router.push(
-      {
-        pathname: "/archive",
-        query: {
-          search: encodeURI(searchTerm),
-          filters: encodeURI(JSON.stringify(filters)),
+  const updateQueryParams = React.useCallback(
+    async (router, searchTerm: string, filters: Partial<Submission>) => {
+      await router.push(
+        {
+          pathname: "/archive",
+          query: {
+            search: searchTerm ? encodeURI(searchTerm) : undefined,
+            filters: filters ? encodeURI(JSON.stringify(filters)) : undefined,
+          },
         },
-      },
-      undefined,
-      { shallow: true }
-    );
-  }, []);
-  
+        undefined,
+        { shallow: true }
+      );
+    },
+    []
+  );
 
   useEffect(() => {
     if (router) updateQueryParams(router, searchBarContent, selectedFilters);
@@ -165,6 +171,10 @@ Archive.getLayout = function getLayout(page) {
       <ArchiveLayout>{page}</ArchiveLayout>
     </Layout>
   );
+};
+
+Archive.getInitialProps = async ({ query }) => {
+  return { query };
 };
 
 export default Archive;
