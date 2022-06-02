@@ -142,13 +142,4 @@ Archive.getLayout = function getLayout(page) {
   );
 };
 
-// export async function getStaticProps({ params }) {
-//   return {
-//     props: {
-//       allSubmissions: await getSubmissionsWithFilter(),
-//     },
-//     revalidate: 60,
-//   };
-// }
-
 export default Archive;
