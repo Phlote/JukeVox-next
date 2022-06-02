@@ -26,14 +26,12 @@ export const useSubmissionSearch = (searchTerm = "") => {
 
   const { data } = useQuery(
     ["search", searchTerm, filters, isCuratorQuery?.data?.isCurator],
-    async () => {
-      console.log("search:", searchTerm);
-      return await searchSubmissions(
+    async () =>
+      await searchSubmissions(
         searchTerm,
         filters,
         isCuratorQuery?.data?.isCurator
-      );
-    },
+      ),
     { keepPreviousData: true, enabled: isCuratorQuery?.isSuccess }
   );
 
