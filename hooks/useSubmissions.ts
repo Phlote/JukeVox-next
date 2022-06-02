@@ -39,5 +39,5 @@ export const useSubmissionSearch = (searchTerm = "") => {
     { keepPreviousData: true, enabled: isCuratorQuery?.isSuccess }
   );
 
-  return data ?? [];
+  return (data ?? []) as Submission[];
 };
