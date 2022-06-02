@@ -24,10 +24,9 @@ function Archive({ query }) {
   const router = useRouter();
   // set state variables on initial render
   useEffect(() => {
-    console.log("query: ", query);
     if (query) {
       const { search, filters } = router.query;
-      if (search) setSearchBarContent(search as string);
+      if (search) setSearchBarContent(decodeURI(search as string));
       if (filters) {
         setFilters(JSON.parse(decodeURI(filters as string)));
       }
