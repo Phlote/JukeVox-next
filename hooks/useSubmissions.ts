@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 import { searchSubmissions } from "../controllers/search";
 import { getSubmissions } from "../controllers/submissions";
 import { Submission } from "../types";
+import { asyncDebounce } from "../utils";
 import { useIsCurator } from "./useIsCurator";
 
 export const useSubmissions = (
@@ -26,8 +27,15 @@ export const useSubmissionSearch = (searchTerm = "") => {
 
   const { data } = useQuery(
     ["search", searchTerm, filters, isCuratorQuery?.data?.isCurator],
-    async () =>
-      searchSubmissions(searchTerm, filters, isCuratorQuery?.data?.isCurator),
+    asyncDebounce(
+      async () =>
+        await searchSubmissions(
+          searchTerm,
+          filters,
+          isCuratorQuery?.data?.isCurator
+        ),
+      500
+    ),
     { keepPreviousData: true, enabled: isCuratorQuery?.isSuccess }
   );
 
