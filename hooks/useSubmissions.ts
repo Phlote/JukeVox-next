@@ -27,9 +27,14 @@ export const useSubmissionSearch = (searchTerm = "") => {
   const { data } = useQuery(
     ["search", searchTerm, filters, isCuratorQuery?.data?.isCurator],
     async () =>
-      searchSubmissions(searchTerm, filters, isCuratorQuery?.data?.isCurator),
+      await searchSubmissions(
+        searchTerm,
+        filters,
+        isCuratorQuery?.data?.isCurator
+      ),
+
     { keepPreviousData: true, enabled: isCuratorQuery?.isSuccess }
   );
 
-  return data ?? [];
+  return (data ?? []) as Submission[];
 };

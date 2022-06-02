@@ -1,6 +1,6 @@
 // import throttle from "lodash.throttle";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout, { ArchiveLayout } from "../components/Layouts";
 import { RatingsMeter } from "../components/RatingsMeter";
 import { useSearchTerm } from "../components/SearchBar";
@@ -8,12 +8,11 @@ import {
   ArchiveTableDataCell,
   ArchiveTableHeader,
   ArchiveTableRow,
-  SubmissionDate,
+  SubmissionDate
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
 import { useSearchFilters, useSubmissionSearch } from "../hooks/useSubmissions";
 import { Submission } from "../types";
-import { asyncDebounce } from "../utils";
 
 function Archive({ query }) {
   const [searchBarContent, setSearchBarContent] = useSearchTerm();
@@ -33,25 +32,20 @@ function Archive({ query }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 
-  // this will happen when the user changes things
-
-  const updateQueryParams = asyncDebounce(
-    async (router, searchTerm: string, filters: Partial<Submission>) => {
-      console.log("debounced");
-      await router.push(
-        {
-          pathname: "/archive",
-          query: {
-            search: encodeURI(searchTerm),
-            filters: encodeURI(JSON.stringify(filters)),
-          },
+  const updateQueryParams = React.useCallback(async (router, searchTerm: string, filters: Partial<Submission>) => {
+    await router.push(
+      {
+        pathname: "/archive",
+        query: {
+          search: encodeURI(searchTerm),
+          filters: encodeURI(JSON.stringify(filters)),
         },
-        undefined,
-        { shallow: true }
-      );
-    },
-    1000
-  );
+      },
+      undefined,
+      { shallow: true }
+    );
+  }, []);
+  
 
   useEffect(() => {
     if (router) updateQueryParams(router, searchBarContent, selectedFilters);
