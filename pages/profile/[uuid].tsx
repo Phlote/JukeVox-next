@@ -164,11 +164,9 @@ export async function getStaticProps({ params }) {
   if (ethers.utils.isAddress(uuid)) {
     return {
       props: {
-        submissions: await getSubmissionsWithFilter(
-          null,
-          { curatorWallet: uuid },
-          true
-        ),
+        submissions: await getSubmissionsWithFilter(null, {
+          curatorWallet: uuid,
+        }),
       },
       revalidate: 60,
     };
@@ -187,8 +185,7 @@ export async function getStaticProps({ params }) {
 
   return {
     props: {
-      // TODO: everyone is a curator when it's just their submissions
-      submissions: await getSubmissionsWithFilter(null, { username }, true),
+      submissions: await getSubmissionsWithFilter(null, { username }),
       profile: await getProfileForWallet(wallet),
     },
     revalidate: 60,

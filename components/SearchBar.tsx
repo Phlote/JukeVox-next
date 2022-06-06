@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";
 import { useKeyPress } from "../hooks/useKeyPress";
+import { gaEvent } from "../lib/ga";
 import { HollowInput, HollowInputContainer } from "./Hollow";
 import { useConnectWalletModalOpen } from "./Modals/ConnectWalletModal";
 
@@ -33,6 +34,12 @@ export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
 
   const onChange = (e) => {
     const { value } = e.target;
+    gaEvent({
+      action: "search",
+      params: {
+        search_term: value,
+      },
+    });
     setSearchTerm(value);
   };
 

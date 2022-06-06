@@ -6,12 +6,9 @@ import { Submission } from "../types";
 
 export const getSubmissionsWithFilter = async (
   selectStatement: PostgrestFilterBuilder<any> = null,
-  filters: Partial<Submission> = null,
-  isCurator: boolean = false
+  filters: Partial<Submission> = null
 ) => {
   if (!selectStatement) selectStatement = supabase.from("submissions").select();
-
-  if (!isCurator) selectStatement = selectStatement.not("cosigns", "is", null);
 
   if (filters) selectStatement = selectStatement.match(filters);
 

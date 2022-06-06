@@ -10,7 +10,7 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  const { searchTerm, filters, isCurator } = request.body;
+  const { searchTerm, filters } = request.body;
 
   try {
     let query = supabase.from("submissions").select();
@@ -34,11 +34,7 @@ export default async function handler(
       query = query.in("id", ids);
     }
 
-    const submissions = await getSubmissionsWithFilter(
-      query,
-      filters,
-      isCurator
-    );
+    const submissions = await getSubmissionsWithFilter(query, filters);
 
     response.status(200).send(submissions);
   } catch (e) {
