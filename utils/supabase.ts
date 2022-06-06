@@ -60,7 +60,7 @@ export const getProfileForWallet = async (wallet: string) => {
   } as UserProfile;
 };
 
-export const PAGE_SIZE = 50;
+export const PAGE_SIZE = 10;
 
 export const getPagination = (page, size = PAGE_SIZE) => {
   const limit = size ? +size : 3;

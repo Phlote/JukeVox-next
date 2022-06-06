@@ -23,7 +23,7 @@ export default async function handler(
       );
 
       if (res.results.length === 0) {
-        response.status(200).send([]);
+        response.status(200).send({ submissions: [] });
         return;
       }
 
@@ -37,7 +37,7 @@ export default async function handler(
     const submissions = await getSubmissionsWithFilter(query, filters, page);
 
     response.status(200).send({
-      submissions,
+      submissions: submissions,
       nextPage: submissions.length < PAGE_SIZE ? undefined : page + 1,
     });
   } catch (e) {
