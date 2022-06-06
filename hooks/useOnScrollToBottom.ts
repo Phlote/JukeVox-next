@@ -4,25 +4,26 @@ import React from "react";
 export const useOnScrollToBottom = (
   onBottom: () => Promise<any>,
   enabled = true,
-  buffer = 25
+  buffer = 100
 ) => {
   const scrollAreaRef = React.useRef(null);
 
   const onScroll = async (ref) => {
     if (!ref.current) return;
     const { scrollHeight, scrollTop, clientHeight } = ref.current;
-    console.log("onScroll triggered");
-    // See if scroll is close enough to bottom to warrant loading more. 100px default buffer added
-    console.log("scroll Height: ", scrollHeight);
-    console.log("scrollTop: ", scrollTop);
-    console.log("clientHeight: ", clientHeight);
-    if (scrollHeight - Math.abs(scrollTop) < clientHeight + buffer) {
-      console.log("calling OnBottom");
+    console.log("scrollheight:", scrollHeight);
+    console.log("scrollTop:", scrollTop);
+    console.log("clientHeight:", clientHeight);
+    if (Math.abs(scrollHeight - scrollTop) < clientHeight + buffer) {
+      console.log("get more");
       await onBottom();
     }
   };
 
-  const throttledOnScroll = throttle(() => onScroll(scrollAreaRef), 1000);
+  const throttledOnScroll = throttle(() => onScroll(scrollAreaRef), 500, {
+    trailing: true,
+    leading: true,
+  });
 
   React.useEffect(() => {
     const scrollArea = scrollAreaRef.current;

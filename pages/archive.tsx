@@ -21,15 +21,15 @@ function Archive(props) {
   const submissions = useSubmissionSearch();
   const noResults =
     !submissions.isLoading &&
+    !submissions.isFetching &&
     submissions.data?.pages[0].submissions.length === 0;
 
   useTrackSearchQueries();
 
-  console.log("has next: ", submissions.hasNextPage);
   const scrollRef = useOnScrollToBottom(
     submissions.fetchNextPage,
-    false
-    // 1000
+    submissions.hasNextPage,
+    3000
   );
 
   return (
@@ -117,6 +117,7 @@ function Archive(props) {
               })}
             </React.Fragment>
           ))}
+          {!submissions.hasNextPage && <tr className="h-32" />}
         </tbody>
       </table>
       {submissions.isFetching && (
