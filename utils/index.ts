@@ -31,6 +31,7 @@ export const submissionToElasticSearchDocument = (submission: Submission) => {
     marketplace,
     tags,
     submissionTime,
+    username,
   } = submission;
   return {
     supabase_id: id,
@@ -43,6 +44,7 @@ export const submissionToElasticSearchDocument = (submission: Submission) => {
     marketplace,
     tags,
     submission_time: submissionTime,
+    username,
   } as SubmissionElasticSearchDocument;
 };
 

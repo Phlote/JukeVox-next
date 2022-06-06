@@ -5,10 +5,10 @@ import tw from "twin.macro";
 import { useIsCurator } from "../hooks/useIsCurator";
 import Close from "../public/close.svg";
 import Account from "./Account";
-import { useSubmissionFlowOpen } from "./SubmissionFlow";
 import { useProfile } from "./Forms/ProfileSettingsForm";
 import { HollowButtonContainer, HollowInputContainer } from "./Hollow";
 import { SearchBar } from "./SearchBar";
+import { useSubmissionFlowOpen } from "./SubmissionFlow";
 
 export const NavBarMobileWeb = () => {
   const [, setOpen] = useSubmissionFlowOpen();
@@ -58,21 +58,19 @@ export const NavBarDesktop = (props) => {
             </Link>
           </NavBarElementContainer>
         )}
-        {active &&
-          profileQuery?.data?.username &&
-          isCuratorQuery?.data?.isCurator && (
-            <NavBarElementContainer>
-              <Link
-                href={"/profile/[username]"}
-                as={`/profile/${profileQuery.data.username}`}
-                passHref
-              >
-                <HollowButtonContainer className="flex justify-center items-center ">
-                  My Profile
-                </HollowButtonContainer>
-              </Link>
-            </NavBarElementContainer>
-          )}
+        {active && (
+          <NavBarElementContainer>
+            <Link
+              href={"/profile/[uuid]"}
+              as={`/profile/${profileQuery?.data?.username ?? account}`}
+              passHref
+            >
+              <HollowButtonContainer className="flex justify-center items-center ">
+                My Profile
+              </HollowButtonContainer>
+            </Link>
+          </NavBarElementContainer>
+        )}
         {router.pathname == "/archive" && <SearchBar />}
 
         {active && (

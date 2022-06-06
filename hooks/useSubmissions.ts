@@ -1,9 +1,11 @@
 import { atom, useAtom } from "jotai";
-import { useQuery } from "react-query";
+import { useCallback, useEffect } from "react";
+import { useInfiniteQuery, useQuery } from "react-query";
+import { useSearchTerm } from "../components/SearchBar";
 import { searchSubmissions } from "../controllers/search";
 import { getSubmissions } from "../controllers/submissions";
+import { gaEvent } from "../lib/ga";
 import { Submission } from "../types";
-import { useIsCurator } from "./useIsCurator";
 
 export const useSubmissions = (
   filters: Partial<Submission> = {},
@@ -20,21 +22,40 @@ export const useSubmissions = (
 const searchFiltersAtom = atom<Partial<Submission>>({});
 export const useSearchFilters = () => useAtom(searchFiltersAtom);
 
-export const useSubmissionSearch = (searchTerm = "") => {
+export const useTrackSearchQueries = () => {
+  const [searchTerm] = useSearchTerm();
+
+  useEffect(() => {
+    gaEvent({
+      action: "search",
+      params: {
+        search_term: searchTerm,
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm]);
+};
+
+export const useSubmissionSearch = () => {
   const [filters] = useSearchFilters();
-  const isCuratorQuery = useIsCurator();
+  const [searchTerm] = useSearchTerm();
 
-  const { data } = useQuery(
-    ["search", searchTerm, filters, isCuratorQuery?.data?.isCurator],
-    async () =>
-      await searchSubmissions(
-        searchTerm,
-        filters,
-        isCuratorQuery?.data?.isCurator
-      ),
-
-    { keepPreviousData: true, enabled: isCuratorQuery?.isSuccess }
+  const fetchSubmissions = useCallback(
+    async ({ pageParam = 0 }) => {
+      return await searchSubmissions(searchTerm, filters, pageParam);
+    },
+    [searchTerm, filters]
   );
 
-  return (data ?? []) as Submission[];
+  return useInfiniteQuery(
+    ["submissions-search", filters, searchTerm],
+    fetchSubmissions,
+    {
+      getNextPageParam: (lastPage, pages) => {
+        return lastPage.nextPage;
+      },
+      refetchOnWindowFocus: false,
+      keepPreviousData: true,
+    }
+  );
 };

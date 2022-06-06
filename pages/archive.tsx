@@ -1,8 +1,7 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import React from "react";
 import Layout, { ArchiveLayout } from "../components/Layouts";
 import { RatingsMeter } from "../components/RatingsMeter";
-import { useSearchTerm } from "../components/SearchBar";
 import {
   ArchiveTableDataCell,
   ArchiveTableHeader,
@@ -10,43 +9,40 @@ import {
   SubmissionDate,
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
-import { useSubmissionSearch } from "../hooks/useSubmissions";
-import { gaEvent } from "../lib/ga";
-import { Submission } from "../types";
+import { useOnScrollToBottom } from "../hooks/useOnScrollToBottom";
+import {
+  useSubmissionSearch,
+  useTrackSearchQueries,
+} from "../hooks/useSubmissions";
 
 function Archive(props) {
-  // we can do this because the prop is unchanging
-  const [searchTerm] = useSearchTerm();
-  const searchResults = useSubmissionSearch(searchTerm);
-  const [submissions, setSubmissions] = useState<Submission[]>([]);
   const router = useRouter();
 
-  // subject to change based on user's search query
-  useEffect(() => {
-    if (
-      searchResults &&
-      JSON.stringify(searchResults) !== JSON.stringify(submissions)
-    ) {
-      gaEvent({
-        action: "search",
-        params: {
-          search_term: searchTerm,
-        },
-      });
-      setSubmissions(searchResults);
-    }
-  }, [searchResults, submissions, searchTerm]);
+  const submissions = useSubmissionSearch();
+  const noResults =
+    !submissions.isLoading &&
+    !submissions.isFetching &&
+    submissions.data?.pages[0].submissions.length === 0;
+
+  useTrackSearchQueries();
+
+  const scrollRef = useOnScrollToBottom(
+    submissions.fetchNextPage,
+    submissions.hasNextPage,
+    1000
+  );
 
   return (
-    <div className="flex flex-col h-full">
-      <table className="table-fixed w-full text-center mt-8">
-        <thead>
-          <tr
-            style={{
-              borderBottom: "1px solid white",
-              paddingBottom: "1rem",
-            }}
-          >
+    <div ref={scrollRef} className="flex flex-col h-full overflow-y-scroll">
+      <table className="table-fixed w-full text-center mt-8 ">
+        <thead
+          className="sticky top-0 z-10 bg-black"
+          style={{
+            borderBottom: "1px solid white",
+            paddingBottom: "1rem",
+          }}
+        >
+          <tr>
             <ArchiveTableHeader label="Date" />
             <ArchiveTableHeader label="Artist" />
             <ArchiveTableHeader label="Title" />
@@ -57,74 +53,81 @@ function Archive(props) {
           </tr>
         </thead>
 
-        {submissions.length > 0 && (
-          <tbody>
-            <tr className="h-4" />
-            {submissions?.map((curation) => {
-              const {
-                id,
-                curatorWallet,
-                artistName,
-                mediaTitle,
-                mediaType,
-                mediaURI,
-                marketplace,
-                submissionTime,
-                cosigns,
-                username,
-              } = curation;
+        <tbody>
+          <tr className="h-4" />
+          {submissions?.data?.pages.map((group, i) => (
+            <React.Fragment key={i}>
+              {group?.submissions?.map((submission) => {
+                const {
+                  id,
+                  submissionTime,
+                  curatorWallet,
+                  artistName,
+                  mediaTitle,
+                  mediaType,
+                  mediaURI,
+                  marketplace,
+                  cosigns,
+                  username,
+                } = submission;
 
-              return (
-                <>
-                  <ArchiveTableRow
-                    key={`${submissionTime}`}
-                    className="hover:opacity-80 cursor-pointer"
-                    onClick={() => {
-                      router.push(`/submission/${id}`);
-                    }}
-                  >
-                    <ArchiveTableDataCell>
-                      <SubmissionDate submissionTimestamp={submissionTime} />
-                    </ArchiveTableDataCell>
-                    <ArchiveTableDataCell>{artistName}</ArchiveTableDataCell>
-                    <ArchiveTableDataCell>
-                      <a
-                        rel="noreferrer"
-                        target="_blank"
-                        href={mediaURI}
-                        className="hover:opacity-50"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        {mediaTitle}
-                      </a>
-                    </ArchiveTableDataCell>
-                    <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
-                    <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
-                    <ArchiveTableDataCell>
-                      <Username
-                        username={username}
-                        wallet={curatorWallet}
-                        linkToProfile
-                      />
-                    </ArchiveTableDataCell>
-                    <ArchiveTableDataCell>
-                      <RatingsMeter
-                        submissionId={id}
-                        submitterWallet={curatorWallet}
-                        initialCosigns={cosigns}
-                      />
-                    </ArchiveTableDataCell>
-                  </ArchiveTableRow>
-                  <tr className="h-4" />
-                </>
-              );
-            })}
-          </tbody>
-        )}
+                return (
+                  <React.Fragment key={id}>
+                    <ArchiveTableRow
+                      className="hover:opacity-80 cursor-pointer"
+                      onClick={() => {
+                        router.push(`/submission/${id}`);
+                      }}
+                    >
+                      <ArchiveTableDataCell>
+                        <SubmissionDate submissionTimestamp={submissionTime} />
+                      </ArchiveTableDataCell>
+                      <ArchiveTableDataCell>{artistName}</ArchiveTableDataCell>
+                      <ArchiveTableDataCell>
+                        <a
+                          rel="noreferrer"
+                          target="_blank"
+                          href={mediaURI}
+                          className="hover:opacity-50"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {mediaTitle}
+                        </a>
+                      </ArchiveTableDataCell>
+                      <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
+                      <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
+                      <ArchiveTableDataCell>
+                        <Username
+                          username={username}
+                          wallet={curatorWallet}
+                          linkToProfile
+                        />
+                      </ArchiveTableDataCell>
+                      <ArchiveTableDataCell>
+                        <RatingsMeter
+                          submissionId={id}
+                          submitterWallet={curatorWallet}
+                          initialCosigns={cosigns}
+                        />
+                      </ArchiveTableDataCell>
+                    </ArchiveTableRow>
+                    <tr className="h-4" />
+                  </React.Fragment>
+                );
+              })}
+            </React.Fragment>
+          ))}
+          {!submissions.hasNextPage && <tr className="h-32 "></tr>}
+        </tbody>
       </table>
-      {submissions.length === 0 && (
+      {submissions.isFetching && (
+        <div className="w-full h-full flex-grow flex justify-center items-center">
+          <p className="text-lg italic text-white">{"Fetching..."}</p>
+        </div>
+      )}
+      {noResults && (
         <div
-          className="w-full h-full mt-4 flex-grow flex justify-center items-center"
+          className="w-full h-full flex-grow flex justify-center items-center"
           style={{ color: "rgba(105, 105, 105, 1)" }}
         >
           <p className="text-lg italic">{"No Search Results"}</p>
