@@ -20,7 +20,7 @@ export const useOnScrollToBottom = (
     }
   };
 
-  const throttledOnScroll = throttle(() => onScroll(scrollAreaRef), 500, {
+  const throttledOnScroll = throttle(() => onScroll(scrollAreaRef), 1000, {
     trailing: true,
     leading: true,
   });

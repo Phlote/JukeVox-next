@@ -55,7 +55,7 @@ export const useSubmissionSearch = () => {
         return lastPage.nextPage;
       },
       refetchOnWindowFocus: false,
-      // keepPreviousData: true,
+      keepPreviousData: true,
     }
   );
 };

@@ -22,6 +22,15 @@ export const ArchiveTableHeader = (props) => {
 
   const isActiveFilter = !!filters[filterKey];
 
+  const submissionsQuery = useSubmissionSearch();
+  const submissions = submissionsQuery.data?.pages?.flatMap(
+    (group) => group?.submissions
+  );
+
+  const options = Array.from(
+    new Set(submissions?.map((submission) => submission[filterKey]))
+  ) as string[];
+
   return (
     <th>
       <div className="w-full flex justify-center">
@@ -41,7 +50,7 @@ export const ArchiveTableHeader = (props) => {
           ) : (
             label
           )}
-          {filterKey && (
+          {filterKey && options.length > 0 && (
             <>
               <div className="w-2" />
 
@@ -61,6 +70,7 @@ export const ArchiveTableHeader = (props) => {
                   label={label}
                   filterKey={filterKey}
                   close={() => setDropdownOpen(false)}
+                  options={options}
                 />
               )}
             </>
@@ -101,13 +111,11 @@ export const ArchiveDropdown: React.FC<{
   label: string;
   filterKey: string;
   close: () => void;
+  options: string[];
 }> = (props) => {
   //TODO: grey out fields that are usually present but not in current results (this is a maybe)
-  const { filterKey, close } = props;
-  const submissionsQuery = useSubmissionSearch();
-  const submissions = submissionsQuery.data.pages.flatMap(
-    (group) => group.submissions
-  );
+  const { filterKey, close, options } = props;
+
   const [filters, setFilters] = useSearchFilters();
 
   const updateFilter = (val) => {
@@ -119,9 +127,6 @@ export const ArchiveDropdown: React.FC<{
       return updated;
     });
   };
-  const options = Array.from(
-    new Set(submissions?.map((submission) => submission[filterKey]))
-  ) as string[];
 
   return (
     <div

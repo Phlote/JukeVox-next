@@ -29,7 +29,7 @@ function Archive(props) {
   const scrollRef = useOnScrollToBottom(
     submissions.fetchNextPage,
     submissions.hasNextPage,
-    3000
+    1000
   );
 
   return (
@@ -117,15 +117,12 @@ function Archive(props) {
               })}
             </React.Fragment>
           ))}
-          {!submissions.hasNextPage && <tr className="h-32" />}
+          {!submissions.hasNextPage && <tr className="h-32 "></tr>}
         </tbody>
       </table>
       {submissions.isFetching && (
-        <div
-          className="w-full flex-grow flex justify-center"
-          style={{ color: "white" }}
-        >
-          <p className="text-lg italic mt-4 mb-8">{"Fetching..."}</p>
+        <div className="w-full h-full flex-grow flex justify-center items-center">
+          <p className="text-lg italic text-white">{"Fetching..."}</p>
         </div>
       )}
       {noResults && (
