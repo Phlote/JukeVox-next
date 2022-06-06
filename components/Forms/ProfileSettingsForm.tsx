@@ -33,7 +33,6 @@ export const ProfileSettingsForm = ({ wallet }) => {
     setSubmitting(true);
     try {
       const { username, city, twitter, email } = formData;
-      console.log(formData);
       const { data, error } = await supabase.from("profiles").upsert(
         {
           wallet,
