@@ -25,22 +25,24 @@ function Archive(props) {
 
   useTrackSearchQueries();
 
+  console.log("has next: ", submissions.hasNextPage);
   const scrollRef = useOnScrollToBottom(
     submissions.fetchNextPage,
-    submissions.hasNextPage,
-    1000
+    false
+    // 1000
   );
 
   return (
-    <div ref={scrollRef} className="flex flex-col h-full">
-      <table className="table-fixed w-full text-center mt-8">
-        <thead>
-          <tr
-            style={{
-              borderBottom: "1px solid white",
-              paddingBottom: "1rem",
-            }}
-          >
+    <div ref={scrollRef} className="flex flex-col h-full overflow-y-scroll">
+      <table className="table-fixed w-full text-center mt-8 ">
+        <thead
+          className="sticky top-0 z-10 bg-black"
+          style={{
+            borderBottom: "1px solid white",
+            paddingBottom: "1rem",
+          }}
+        >
+          <tr>
             <ArchiveTableHeader label="Date" />
             <ArchiveTableHeader label="Artist" />
             <ArchiveTableHeader label="Title" />

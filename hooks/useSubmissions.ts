@@ -40,16 +40,6 @@ export const useSubmissionSearch = () => {
   const [filters] = useSearchFilters();
   const [searchTerm] = useSearchTerm();
 
-  // return useQuery(
-  //   ["search", searchTerm, filters],
-  //   async () => await searchSubmissions(searchTerm, filters),
-
-  //   {
-  //     keepPreviousData: true,
-  //     refetchOnWindowFocus: false,
-  //   }
-  // );
-
   const fetchSubmissions = useCallback(
     async ({ pageParam = 0 }) => {
       return await searchSubmissions(searchTerm, filters, pageParam);
@@ -65,7 +55,7 @@ export const useSubmissionSearch = () => {
         return lastPage.nextPage;
       },
       refetchOnWindowFocus: false,
-      // keepPreviousData: true
+      keepPreviousData: true,
     }
   );
 };
