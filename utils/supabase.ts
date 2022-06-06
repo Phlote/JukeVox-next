@@ -1,5 +1,4 @@
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
-import { cleanSubmission } from ".";
 import { UserProfile } from "../components/Forms/ProfileSettingsForm";
 import { supabase } from "../lib/supabase";
 import { Submission } from "../types";
@@ -7,25 +6,21 @@ import { Submission } from "../types";
 export const getSubmissionsWithFilter = async (
   selectStatement: PostgrestFilterBuilder<any> = null,
   filters: Partial<Submission> = null,
-  isCurator: boolean = false
+  page: number = 1
 ) => {
+  const { from, to } = getPagination(page);
   if (!selectStatement) selectStatement = supabase.from("submissions").select();
 
-  if (!isCurator) selectStatement = selectStatement.not("cosigns", "is", null);
-
   if (filters) selectStatement = selectStatement.match(filters);
+
+  selectStatement.order("submissionTime", { ascending: false }).range(from, to);
 
   const { data, error } = await selectStatement;
   if (error) throw error;
 
-  const sorted = data.sort((a: Submission, b: Submission) => {
-    return (
-      new Date(b.submissionTime).getTime() -
-      new Date(a.submissionTime).getTime()
-    );
-  });
-
-  return sorted.map(cleanSubmission);
+  //TODO: is this too slow?
+  return data;
+  // return data.map(cleanSubmission);
 };
 
 export const getProfileForWallet = async (wallet: string) => {
@@ -63,4 +58,14 @@ export const getProfileForWallet = async (wallet: string) => {
     ...profileMeta,
     cosigns,
   } as UserProfile;
+};
+
+export const PAGE_SIZE = 50;
+
+export const getPagination = (page, size = PAGE_SIZE) => {
+  const limit = size ? +size : 3;
+  const from = page ? page * limit : 0;
+  const to = page ? from + size - 1 : size - 1;
+
+  return { from, to };
 };

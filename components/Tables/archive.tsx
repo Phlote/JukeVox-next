@@ -6,9 +6,12 @@ import React from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 import { useOnClickOut } from "../../hooks/useOnClickOut";
-import { useSearchFilters, useSubmissions } from "../../hooks/useSubmissions";
+import {
+  useSearchFilters,
+  useSubmissionSearch,
+} from "../../hooks/useSubmissions";
 import { DropdownChecklist } from "../Dropdowns/DropdownChecklist";
-import { ShortenedWallet } from "../ShortenedWallet";
+import { Username } from "../Username";
 
 export const ArchiveTableHeader = (props) => {
   const [dropdownOpen, setDropdownOpen] = React.useState<boolean>(false);
@@ -18,6 +21,15 @@ export const ArchiveTableHeader = (props) => {
   const [filters] = useSearchFilters();
 
   const isActiveFilter = !!filters[filterKey];
+
+  const submissionsQuery = useSubmissionSearch();
+  const submissions = submissionsQuery.data?.pages?.flatMap(
+    (group) => group?.submissions
+  );
+
+  const options = Array.from(
+    new Set(submissions?.map((submission) => submission[filterKey]))
+  ) as string[];
 
   return (
     <th>
@@ -38,7 +50,7 @@ export const ArchiveTableHeader = (props) => {
           ) : (
             label
           )}
-          {filterKey && (
+          {filterKey && options.length > 0 && (
             <>
               <div className="w-2" />
 
@@ -58,6 +70,7 @@ export const ArchiveTableHeader = (props) => {
                   label={label}
                   filterKey={filterKey}
                   close={() => setDropdownOpen(false)}
+                  options={options}
                 />
               )}
             </>
@@ -72,7 +85,7 @@ export const ArchiveFilterLabel: React.FC<{ filter: string }> = ({
   filter,
 }) => {
   const isAddress = ethers.utils.isAddress(filter);
-  if (isAddress) return <ShortenedWallet wallet={filter} />;
+  if (isAddress) return <Username wallet={filter} />;
   else return <span>{filter}</span>;
 };
 
@@ -98,10 +111,11 @@ export const ArchiveDropdown: React.FC<{
   label: string;
   filterKey: string;
   close: () => void;
+  options: string[];
 }> = (props) => {
   //TODO: grey out fields that are usually present but not in current results (this is a maybe)
-  const { filterKey, close } = props;
-  const submissions = useSubmissions();
+  const { filterKey, close, options } = props;
+
   const [filters, setFilters] = useSearchFilters();
 
   const updateFilter = (val) => {
@@ -113,9 +127,6 @@ export const ArchiveDropdown: React.FC<{
       return updated;
     });
   };
-  const options = Array.from(
-    new Set(submissions?.map((submission) => submission[filterKey]))
-  ) as string[];
 
   return (
     <div

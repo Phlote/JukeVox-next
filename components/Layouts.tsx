@@ -88,7 +88,7 @@ export const ArchiveLayout: React.FC<ArchiveLayoutProps> = ({
 }) => {
   return (
     <div
-      className="container flex justify-center mx-auto flex-grow pb-8 overflow-y-auto"
+      className="container flex justify-center mx-auto h-full pb-8"
       style={center ? { alignItems: "center", flexGrow: 1 } : undefined}
     >
       <div className="mx-4">{children}</div>

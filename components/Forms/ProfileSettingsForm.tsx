@@ -17,6 +17,7 @@ import { validateProfileSettings } from "./validators";
 
 export interface UserProfile {
   wallet: string; // user has already connected wallet, so this is not a form field
+  email: string;
   username: string;
   city: string;
   twitter: string;
@@ -31,10 +32,11 @@ export const ProfileSettingsForm = ({ wallet }) => {
   const onSubmit = async (formData: Partial<UserProfile>) => {
     setSubmitting(true);
     try {
-      const { username, city, twitter } = formData;
+      const { username, city, twitter, email } = formData;
       const { data, error } = await supabase.from("profiles").upsert(
         {
           wallet,
+          email: email?.trim(),
           username: username?.trim(),
           city: city?.trim(),
           twitter: twitter?.trim(),
@@ -71,6 +73,7 @@ export const ProfileSettingsForm = ({ wallet }) => {
   const username = useField("username", form);
   const city = useField("city", form);
   const twitter = useField("twitter", form);
+  const email = useField("email", form);
 
   return (
     // <div className="grid lg:grid-cols-2 grid-cols-1 w-10/12 md:gap-16 gap-8 h-full flex flex-grow">
@@ -106,6 +109,12 @@ export const ProfileSettingsForm = ({ wallet }) => {
             <HollowInput {...twitter.input} type="text" placeholder="Twitter" />
             {twitter.meta.error && (
               <span className="text-red-600 ml-2">{twitter.meta.error}</span>
+            )}
+          </HollowInputContainer>
+          <HollowInputContainer type="form">
+            <HollowInput {...email.input} type="text" placeholder="Email" />
+            {email.meta.error && (
+              <span className="text-red-600 ml-2">{email.meta.error}</span>
             )}
           </HollowInputContainer>
           <div className="w-full flex justify-center items-center">
