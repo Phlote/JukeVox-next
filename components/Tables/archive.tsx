@@ -6,7 +6,10 @@ import React from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 import { useOnClickOut } from "../../hooks/useOnClickOut";
-import { useSearchFilters, useSubmissions } from "../../hooks/useSubmissions";
+import {
+  useSearchFilters,
+  useSubmissionSearch,
+} from "../../hooks/useSubmissions";
 import { DropdownChecklist } from "../Dropdowns/DropdownChecklist";
 import { ShortenedWallet } from "../ShortenedWallet";
 
@@ -101,7 +104,10 @@ export const ArchiveDropdown: React.FC<{
 }> = (props) => {
   //TODO: grey out fields that are usually present but not in current results (this is a maybe)
   const { filterKey, close } = props;
-  const submissions = useSubmissions();
+  const submissionsQuery = useSubmissionSearch();
+  const submissions = submissionsQuery.data.pages.flatMap(
+    (group) => group.submissions
+  );
   const [filters, setFilters] = useSearchFilters();
 
   const updateFilter = (val) => {
