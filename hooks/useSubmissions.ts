@@ -28,6 +28,10 @@ export const useSubmissionSearch = (searchTerm = "") => {
     ["search", searchTerm, filters, isCuratorQuery?.data?.isCurator],
     async () => await searchSubmissions(searchTerm, filters),
 
-    { keepPreviousData: true, enabled: isCuratorQuery?.isSuccess }
+    {
+      keepPreviousData: true,
+      enabled: isCuratorQuery?.isSuccess,
+      refetchOnWindowFocus: true,
+    }
   );
 };

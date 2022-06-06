@@ -22,10 +22,10 @@ function Archive(props) {
 
   // subject to change based on user's search query
   useEffect(() => {
-    if (searchResults.data && !searchResults.isLoading) {
+    if (searchResults.data && !searchResults.isFetching) {
       setSubmissions(searchResults.data);
     }
-  }, [searchResults.data, searchResults.isLoading, submissions, searchTerm]);
+  }, [searchResults.data, searchResults.isFetching, submissions, searchTerm]);
 
   return (
     <div className="flex flex-col h-full">
@@ -47,7 +47,7 @@ function Archive(props) {
           </tr>
         </thead>
 
-        {submissions.length > 0 && !searchResults.isLoading && (
+        {submissions.length > 0 && (
           <tbody>
             <tr className="h-4" />
             {submissions?.map((curation) => {
@@ -112,15 +112,15 @@ function Archive(props) {
           </tbody>
         )}
       </table>
-      {searchResults.isLoading && (
+      {searchResults.isFetching && (
         <div
-          className="w-full h-full mt-4 flex-grow flex justify-center items-center"
+          className="w-full flex-grow mt-4 flex justify-center"
           style={{ color: "white" }}
         >
-          <p className="text-lg italic">{"Loading..."}</p>
+          <p className="text-lg italic">{"Fetching..."}</p>
         </div>
       )}
-      {submissions.length === 0 && !searchResults.isLoading && (
+      {submissions.length === 0 && !searchResults.isFetching && (
         <div
           className="w-full h-full mt-4 flex-grow flex justify-center items-center"
           style={{ color: "rgba(105, 105, 105, 1)" }}
