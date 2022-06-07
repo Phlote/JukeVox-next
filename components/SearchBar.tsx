@@ -55,14 +55,6 @@ export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
           disabled={!active}
           placeholder={active ? placeholder : "Connect your wallet to search"}
         />
-        {/* {searchTerm && (
-          <div
-            className="w-4 h-4 cursor-pointer  flex items-center justify-center"
-            onClick={() => setSearchTerm("")}
-          >
-            <Close fill="white" />
-          </div>
-        )} */}
       </HollowInputContainer>
     </div>
   );
