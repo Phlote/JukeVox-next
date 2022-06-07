@@ -33,11 +33,11 @@ export const ArchiveTableHeader = (props) => {
 
   return (
     <th>
-      <div className="w-full flex justify-center">
+      <div className="w-full flex justify-center py-4">
         <div
           ref={ref}
           className={classNames(
-            "flex items-center justify-center mb-4 relative px-1",
+            "flex items-center justify-center  relative px-1",
             {
               "rounded-full": isActiveFilter,
               "border-2": isActiveFilter,

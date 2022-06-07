@@ -1,21 +1,15 @@
 import { useWeb3React } from "@web3-react/core";
-import { atom, SetStateAction, useAtom } from "jotai";
+import { atom, useAtom } from "jotai";
 import debounce from "lodash.debounce";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useCallback } from "react";
 import { useKeyPress } from "../hooks/useKeyPress";
 import { HollowInput, HollowInputContainer } from "./Hollow";
 import { useConnectWalletModalOpen } from "./Modals/ConnectWalletModal";
 
 const searchTermAtom = atom<string>("");
-export const useSearchTerm = () => {
-  const [searchTerm, setSearchTerm] = useAtom(searchTermAtom);
-  return [searchTerm, debounce(setSearchTerm, 500)] as [
-    string,
-    (update?: SetStateAction<string>) => void
-  ];
-};
+export const useSearchTerm = () => useAtom(searchTermAtom);
 
 interface SearchBar {
   placeholder?: string;
@@ -43,6 +37,7 @@ export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedOnChange = useCallback(debounce(onChange, 300), []);
 
   return (
     <div className="w-80 h-16" style={{ lineHeight: "0.5rem" }}>
@@ -55,8 +50,9 @@ export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
         <Image height={30} width={30} src="/search.svg" alt="search" />
         <HollowInput
           ref={inputRef}
-          value={searchTerm}
-          onChange={onChange}
+          type="search"
+          // value={searchTerm}
+          onChange={debouncedOnChange}
           disabled={!active}
           placeholder={active ? placeholder : "Connect your wallet to search"}
         />

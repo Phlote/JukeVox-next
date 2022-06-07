@@ -20,7 +20,7 @@ import {
 import { Submission } from "../types";
 
 function Archive({ query }) {
-  const [searchBarContent, setSearchBarContent] = useSearchTerm();
+  const [searchBarContent, setSearchBar] = useSearchTerm();
   const [selectedFilters, setFilters] = useSearchFilters();
 
   const router = useRouter();
@@ -28,7 +28,7 @@ function Archive({ query }) {
   useEffect(() => {
     if (query) {
       const { search, filters } = router.query;
-      if (search) setSearchBarContent(decodeURI(search as string));
+      if (search) setSearchBar(decodeURI(search as string));
       if (filters) {
         setFilters(JSON.parse(decodeURI(filters as string)));
       }
@@ -76,14 +76,14 @@ function Archive({ query }) {
   return (
     <div ref={scrollRef} className="flex flex-col h-full overflow-y-scroll">
       <table className="table-fixed w-full text-center mt-8 ">
-        <thead
-          className="sticky top-0 z-10 bg-black"
-          style={{
-            borderBottom: "1px solid white",
-            paddingBottom: "1rem",
-          }}
-        >
-          <tr>
+        <thead>
+          <tr
+            className="sticky top-0 bg-black z-10"
+            style={{
+              borderBottom: "1px solid white",
+              paddingBottom: "1rem",
+            }}
+          >
             <ArchiveTableHeader label="Date" />
             <ArchiveTableHeader label="Artist" />
             <ArchiveTableHeader label="Title" />
