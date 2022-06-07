@@ -8,7 +8,7 @@ import { useSubmissionFlowOpen } from "../components/SubmissionFlow";
 
 function Home() {
   const [, setOpen] = useSubmissionFlowOpen();
-
+  // something trivial
   const { account } = useWeb3React();
   const [, setConnectWalletOpen] = useConnectWalletModalOpen();
 
