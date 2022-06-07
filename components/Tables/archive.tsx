@@ -130,8 +130,8 @@ export const ArchiveDropdown: React.FC<{
 
   return (
     <div
-      className="absolute z-10 h-64 w-64 mb-4 top-10 overflow-y-scroll p-2 bg-phlote-dropdown opacity-90"
-      style={{ backgroundColor: "" }}
+      className="absolute z-10 h-64 w-64 mb-4 top-10 overflow-y-scroll p-2 bg-black"
+      style={{ backgroundColor: "rgba(0, 0, 0, 0.90)" }}
     >
       <DropdownChecklist
         value={filters[filterKey]}

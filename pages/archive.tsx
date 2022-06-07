@@ -78,10 +78,11 @@ function Archive({ query }) {
       <table className="table-fixed w-full text-center mt-8 ">
         <thead>
           <tr
-            className="sticky top-0 bg-phlote-button z-10"
+            className="sticky top-0  z-10"
             style={{
               borderBottom: "1px solid white",
               paddingBottom: "1rem",
+              backgroundColor: "rgba(0, 0, 0, 0.75)",
             }}
           >
             <ArchiveTableHeader label="Date" />

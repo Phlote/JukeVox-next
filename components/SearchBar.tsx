@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";
 import { useKeyPress } from "../hooks/useKeyPress";
+import Close from "../public/close.svg";
 import { HollowInput, HollowInputContainer } from "./Hollow";
 import { useConnectWalletModalOpen } from "./Modals/ConnectWalletModal";
 
@@ -50,12 +51,19 @@ export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
         <Image height={30} width={30} src="/search.svg" alt="search" />
         <HollowInput
           ref={inputRef}
-          type="search"
-          // value={searchTerm}
+          value={searchTerm}
           onChange={debouncedOnChange}
           disabled={!active}
           placeholder={active ? placeholder : "Connect your wallet to search"}
         />
+        {searchTerm && (
+          <div
+            className="w-4 h-4 cursor-pointer  flex items-center justify-center"
+            onClick={() => setSearchTerm("")}
+          >
+            <Close fill="white" />
+          </div>
+        )}
       </HollowInputContainer>
     </div>
   );
