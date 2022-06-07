@@ -36,7 +36,6 @@ function Archive(props) {
     <div ref={scrollRef} className="flex flex-col h-full overflow-y-scroll">
       <table className="table-fixed w-full text-center mt-8 ">
         <thead
-          className="sticky top-0 z-10 bg-black"
           style={{
             borderBottom: "1px solid white",
             paddingBottom: "1rem",
