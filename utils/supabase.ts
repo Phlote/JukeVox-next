@@ -1,4 +1,5 @@
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
+import { cleanSubmission } from ".";
 import { UserProfile } from "../components/Forms/ProfileSettingsForm";
 import { supabase } from "../lib/supabase";
 import { Submission } from "../types";
@@ -18,9 +19,7 @@ export const getSubmissionsWithFilter = async (
   const { data, error } = await selectStatement;
   if (error) throw error;
 
-  //TODO: is this too slow?
-  return data;
-  // return data.map(cleanSubmission);
+  return data.map(cleanSubmission);
 };
 
 export const getProfileForWallet = async (wallet: string) => {
