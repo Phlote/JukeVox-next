@@ -80,7 +80,7 @@ const Comment = ({
 
   async function handleDelete() {
     const { data } = await supabase
-      .from("posts")
+      .from("comments")
       .update({
         isDeleted: true,
         content: "[Deleted]",
@@ -92,7 +92,7 @@ const Comment = ({
 
   async function handleApprove() {
     const { data } = await supabase
-      .from("posts")
+      .from("comments")
       .update({
         isApproved: true,
       })
@@ -102,7 +102,7 @@ const Comment = ({
 
   async function handleDeny() {
     const { data } = await supabase
-      .from("posts")
+      .from("comments")
       .update({
         isPublished: false,
         isApproved: false,

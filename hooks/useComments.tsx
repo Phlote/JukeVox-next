@@ -5,7 +5,7 @@ import useSWR, { useSWRInfinite } from "swr";
 import { UserProfile } from "../components/Forms/ProfileSettingsForm";
 import { supabase } from "../lib/supabase";
 
-const PAGE_SIZE = 0;
+const PAGE_SIZE = 10;
 
 export interface CommentType {
   id: number;
@@ -127,7 +127,7 @@ export const CommentsContextProvider = (
   });
 
   const { data: rootComment, mutate: mutateRootComment } = useSWR(
-    ["posts", postId, account],
+    ["comments", postId, account],
     async (_, postId, _user) =>
       supabase
         .from("comments_thread_with_user_vote")

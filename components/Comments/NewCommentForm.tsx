@@ -111,7 +111,6 @@ const NewCommentForm = ({
         highlight: true,
         live: false,
         createdAt: new Date().toISOString(),
-        id: null,
         title: null,
         isPublished: false,
         votes: 0,
@@ -125,7 +124,7 @@ const NewCommentForm = ({
       return newData;
     }, false);
 
-    const { data, error } = await supabase.from("posts").insert([post]);
+    const { data, error } = await supabase.from("comments").insert([post]);
 
     if (error) {
       console.log(error);
