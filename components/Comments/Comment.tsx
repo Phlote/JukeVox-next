@@ -2,8 +2,8 @@ import cn from "classnames";
 import dayjs from "dayjs";
 import { useEffect, useRef, useState } from "react";
 import { CommentType } from "../../hooks/useComments";
+import ExpandComment from "../../icons/ExpandComment";
 import { supabase } from "../../lib/supabase";
-import Close from "../../public/close.svg";
 import Avatar from "./Avatar";
 import NewCommentForm from "./NewCommentForm";
 import VoteButtons from "./VoteButtons";
@@ -183,7 +183,7 @@ const Comment = ({
             }
             aria-label={`Expand comment by ${comment.author}`}
           >
-            <Close fill="white" className="rotate-45 h-4 w-4" />
+            <ExpandComment className="w-4 h-4 text-gray-500" />
           </button>
         )}
         <div className="row-start-1 col-start-2 self-center">
@@ -211,7 +211,7 @@ const Comment = ({
               <button
                 className="text-xs flex flex-row items-center text-gray-600 dark:text-gray-400 focus-ring border-none ml-5 leading-none"
                 onClick={handlePin}
-                aria-label={`Pin comment by ${comment.author?.full_name}`}
+                aria-label={`Pin comment by ${comment.author?.username}`}
               >
                 Pin comment
               </button>

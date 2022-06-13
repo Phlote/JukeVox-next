@@ -22,8 +22,10 @@ export default function SubmissionPage(props) {
 
   return (
     <CommentsContextProvider postId={submission.id}>
-      <div className="flex w-3/4 gap-16">
-        <div className="w-1/3 flex flex-col">
+      {/* <div> */}
+
+      <div className="min-w-full h-min-screen transition-all overflow-y-scroll">
+        <div className="flex flex-col w-80">
           <div className="w-full h-60 flex-none relative">
             <Image
               src={"/default_submission_image.jpeg"}
@@ -67,10 +69,11 @@ export default function SubmissionPage(props) {
             </TwitterShareButton>
           </SubmissionCardDetails>
         </div>
-        <div className="w-2/3 mx-auto flex-grow">
+        <div className="max-w-prose mx-auto flex-grow">
           <CommentSection />
         </div>
       </div>
+      {/* </div> */}
     </CommentsContextProvider>
   );
 }
@@ -89,11 +92,12 @@ const SubmissionCardDetails = styled.div`
 SubmissionPage.getLayout = function getLayout(page) {
   return (
     <Layout>
-      <div className="container flex justify-center mx-auto items-center flex-grow">
+      <div className="container flex justify-center mx-auto h-full w-full">
         {page}
       </div>
     </Layout>
   );
+  // return <div>{page}</div>;
 };
 
 export async function getStaticProps({ params }) {

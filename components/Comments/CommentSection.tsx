@@ -24,11 +24,11 @@ const CommentSection = ({ initialData = null }: Props): JSX.Element => {
     <>
       <div className="flex-none flex flex-row items-center justify-between py-3 sm:py-4 px-3 sm:px-6 order-first">
         <h2 className="text-xl font-semibold dark:text-gray-100">
-          Responses {count && <span>({count})</span>}
+          Comments {count && <span>({count})</span>}
         </h2>
       </div>
 
-      <div className="flex border-t border-gray-200 dark:border-gray-600 px-3 sm:px-6">
+      <div className="flex border-t border-gray-200 dark:border-gray-600 px-3 sm:px-6 py-2">
         <NewCommentForm />
       </div>
 

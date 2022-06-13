@@ -1,4 +1,5 @@
 import cn from "classnames";
+import Image from "next/image";
 import React from "react";
 import { UserProfile } from "../Forms/ProfileSettingsForm";
 
@@ -41,13 +42,13 @@ const Avatar = ({
 
   if (profile?.profilePic) {
     return (
-      <img
+      <Image
         src={profile.profilePic}
         className={cn(
           "rounded-full border border-white shadow-sm object-cover",
           className
         )}
-        alt={profile?.full_name}
+        alt={profile?.username}
         width={28}
         height={28}
       />
