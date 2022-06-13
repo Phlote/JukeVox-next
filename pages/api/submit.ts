@@ -1,4 +1,5 @@
 import pinataSDK from "@pinata/sdk";
+import cuid from "cuid";
 import { NextApiRequest, NextApiResponse } from "next";
 import { nodeElasticClient } from "../../lib/elastic-app-search";
 import { supabase } from "../../lib/supabase";
@@ -30,15 +31,24 @@ export default async function handler(
       submissionWithSubmitterInfo.username = username;
     }
 
-    // could store in IPFS here
-
     const submissionsInsert = await supabase
       .from("submissions")
       .insert([submissionWithSubmitterInfo]);
 
     if (submissionsInsert.error) throw submissionsInsert.error;
 
-    await indexSubmission(submissionsInsert.data[0] as Submission);
+    const submissionRes = submissionsInsert.data[0] as Submission;
+
+    await supabase.from("comments").insert([
+      {
+        id: submissionRes.id,
+        slug: `submission-root-${cuid.slug()}`,
+        authorId: submissionRes.curatorWallet,
+        isApproved: true,
+      },
+    ]);
+
+    await indexSubmission(submissionRes);
 
     response.status(200).send(submissionWithSubmitterInfo);
   } catch (e) {

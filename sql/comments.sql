@@ -15,7 +15,7 @@ create table comments (
     live boolean default true null,
     "isPinned" boolean default false not null,
     "isDeleted" boolean default false not null,
-    "isApproved" boolean default false not null,
+    "isApproved" boolean default true not null,
 
     primary key (id),
     unique (slug)
