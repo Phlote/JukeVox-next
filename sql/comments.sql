@@ -10,7 +10,7 @@ create table comments (
     title text null,
     content text null,
     "isPublished" boolean default false not null,
-    "authorId" text not null references profiles (wallet),
+    "authorId" text not null 
     "parentId" bigint null references comments (id),
     live boolean default true null,
     "isPinned" boolean default false not null,
@@ -63,7 +63,7 @@ create view comment_with_author as
         to_jsonb(u) as author
     from
         comments c
-        inner join profiles u on c."authorId" = u.wallet;
+        left join profiles u on c."authorId" = u.wallet;
 
 create view comments_linear_view as
     select

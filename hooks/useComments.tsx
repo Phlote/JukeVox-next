@@ -115,6 +115,8 @@ export const CommentsContextProvider = (
   const [sortingBehavior, setSortingBehavior] =
     useState<SortingBehavior>("pathVotesRecent");
 
+  console.log(postId);
+
   const {
     data: count,
     mutate: mutateGlobalCount,
@@ -231,6 +233,7 @@ export const CommentsContextProvider = (
       }) as CommentType[])
     : [];
   const isLoadingInitialData = !data && !error;
+  console.log("isLoadingInitialData: ", isLoadingInitialData);
   const isLoadingMore =
     isLoadingInitialData ||
     !!(size > 0 && data && typeof data[size - 1] === "undefined");
