@@ -174,7 +174,7 @@ const NewCommentForm = ({
               className="focus-ring"
               aria-label="View profile information"
             >
-              <Avatar profile={profile.data} />
+              <Avatar wallet={account} />
               {/* <Smile className="w-7 h-7 text-gray-500 hover:text-gray-800 transition" /> */}
             </button>
           )}

@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
-import Avatar from "./Avatar";
 
 const NewUserModal = (): JSX.Element => {
   const { user, profile, refresh } = useUser();
@@ -166,11 +165,11 @@ const NewUserModal = (): JSX.Element => {
                         <label className="block mb-2">
                           <div className="mb-1 text-left">Your avatar:</div>
                           <div className="flex">
-                            <Avatar
+                            {/* <Avatar
                               profile={profile}
                               firstLetter={"L"}
                               className="w-8 h-8 text-sm"
-                            />
+                            /> */}
                             <input
                               type="file"
                               className="ml-2 focus-ring border border-gray-300 rounded-md px-2 py-1 font-medium text-sm"

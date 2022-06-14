@@ -1,21 +1,22 @@
 import cn from "classnames";
 import Image from "next/image";
 import React from "react";
-import { UserProfile } from "../Forms/ProfileSettingsForm";
+import { useProfile } from "../Forms/ProfileSettingsForm";
 
 interface Props {
-  profile?: UserProfile | null;
+  wallet: string;
   className?: string | { [key: string]: any };
   isDeleted?: boolean;
   firstLetter?: string;
 }
 
 const Avatar = ({
-  profile,
+  wallet,
   className = "w-7 h-7 text-sm",
   isDeleted,
   firstLetter,
 }: Props): JSX.Element => {
+  const profile = useProfile(wallet);
   if (isDeleted) {
     return (
       <div
@@ -40,22 +41,22 @@ const Avatar = ({
     );
   }
 
-  if (profile?.profilePic) {
+  if (profile?.data?.profilePic) {
     return (
       <Image
-        src={profile.profilePic}
+        src={profile?.data?.profilePic}
         className={cn(
           "rounded-full border border-white shadow-sm object-cover",
           className
         )}
-        alt={profile?.username}
+        alt={profile?.data?.username}
         width={28}
         height={28}
       />
     );
   }
 
-  if (profile?.username) {
+  if (profile?.data?.username) {
     return (
       <div
         className={cn(
@@ -63,7 +64,7 @@ const Avatar = ({
           className
         )}
       >
-        {profile?.username?.[0]}
+        {profile?.data?.username?.[0]}
       </div>
     );
   }

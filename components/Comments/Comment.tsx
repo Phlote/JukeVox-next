@@ -153,7 +153,7 @@ const Comment = ({
         {!hidden ? (
           <>
             <div className="grid row-start-1 col-start-1 place-items-center focus-ring">
-              <Avatar profile={comment.author} isDeleted={comment.isDeleted} />
+              <Avatar wallet={comment.authorId} isDeleted={comment.isDeleted} />
             </div>
             <div className="row-start-2 row-end-5 col-start-1 col-end-2 row-span-auto flex justify-center my-1 px-1">
               <button
