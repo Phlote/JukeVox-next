@@ -18,14 +18,14 @@ function Home() {
         <h1 className="text-6xl">Phlote</h1>
         <div className="h-16"></div>
         <p>
-          Be the first to mint your favorite artist on chain. Earn status as a tastemaker. Join Phlote DAO.
+          Every Tuesday we drop artist submissions that receive 5 co-signs on Zora. All minting fees paid by Phlote DAO.
         </p>
       </div>
 
       <div className="hidden sm:block w-full">
         <div className="relative w-full flex justify-center">
           <h1 className="absolute w-full bottom-32 text-center text-2xl">
-            Be the first to mint your favorite artist on chain. Earn status as a tastemaker. Join Phlote DAO.{" "}
+            Every Tuesday we drop artist submissions that receive 5 co-signs on Zora. All minting fees paid by Phlote DAO.{" "}
           </h1>
           {/* <SearchBar placeholder="Search our archive" /> */}
           <div className="w-80 h-16 cursor-pointer hover:opacity-75 shadow-sm">
