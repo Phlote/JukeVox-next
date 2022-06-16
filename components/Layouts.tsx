@@ -8,7 +8,7 @@ export default function Layout({ children }) {
   return (
     <div className="absolute inset-0">
       <div className="flex flex-col">
-        <BackgroundWithBlurs />
+        {/* <BackgroundWithBlurs /> */}
         <div className="hidden sm:block">
           <SubmitSidenav />
         </div>
@@ -19,7 +19,7 @@ export default function Layout({ children }) {
         <div className="hidden sm:block">
           <NavBarDesktop />
         </div>
-        <div className="sm:mt-32">{children}</div>
+        {children}
 
         <div className="sm:hidden ">
           <NavBarMobileWeb />
@@ -89,7 +89,7 @@ export const ArchiveLayout: React.FC<ArchiveLayoutProps> = ({
 }) => {
   return (
     <div
-      className="container flex justify-center mx-auto h-full pb-8"
+      className="container flex justify-center mx-auto h-full pb-8 mt-32"
       style={center ? { alignItems: "center", flexGrow: 1 } : undefined}
     >
       <div className="mx-4">{children}</div>

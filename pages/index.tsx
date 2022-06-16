@@ -24,12 +24,12 @@ function Home() {
       </div>
 
       <div className="hidden sm:block w-full">
-        <div className="relative w-full flex justify-center">
-          <h1 className="absolute w-full bottom-32 text-center text-2xl">
+        <div className=" w-full flex flex-col justify-center items-center">
+          <h1 className="text-center text-2xl">
             Be the first to mint your favorite artist on chain. Earn status as a
             tastemaker. Join Phlote DAO.{" "}
           </h1>
-          {/* <SearchBar placeholder="Search our archive" /> */}
+          <div className="h-16" />
           <div className="w-80 h-16 cursor-pointer hover:opacity-75 shadow-sm">
             <HollowInputContainer
               style={{ justifyContent: "center", border: "1px solid white" }}
