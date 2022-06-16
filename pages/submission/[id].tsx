@@ -1,3 +1,4 @@
+import { useWeb3React } from "@web3-react/core";
 import { TwitterIcon, TwitterShareButton } from "next-share";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -8,17 +9,23 @@ import CommentSection from "../../components/Comments/CommentSection";
 import Layout from "../../components/Layouts";
 import { Username } from "../../components/Username";
 import { CommentsContextProvider } from "../../hooks/useComments";
+import { useIsCurator } from "../../hooks/useIsCurator";
 import { supabase } from "../../lib/supabase";
 import { Submission } from "../../types";
 
 export default function SubmissionPage(props) {
   const { submission } = props as { submission: Submission };
   const router = useRouter();
+  const isCurator = useIsCurator();
+  const { account } = useWeb3React();
 
   if (router.isFallback) {
     //TODO better loading
     return <div>Loading...</div>;
   }
+
+  const canComment =
+    isCurator?.data?.isCurator || submission.curatorWallet === account;
 
   return (
     <CommentsContextProvider commentId={submission.id}>
@@ -72,9 +79,11 @@ export default function SubmissionPage(props) {
             </SubmissionCardDetails>
           </div>
         </div>
-        <div className="max-w-prose mx-auto flex-grow">
-          <CommentSection />
-        </div>
+        {canComment && (
+          <div className="max-w-prose mx-auto flex-grow">
+            <CommentSection />
+          </div>
+        )}
       </div>
     </CommentsContextProvider>
   );
