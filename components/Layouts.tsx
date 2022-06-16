@@ -7,23 +7,21 @@ import { SubmitSidenav } from "./SideNav";
 export default function Layout({ children }) {
   return (
     <div className="absolute inset-0">
-      <div className="flex flex-col">
-        {/* <BackgroundWithBlurs /> */}
-        <div className="hidden sm:block">
-          <SubmitSidenav />
-        </div>
-        <div className="sm:hidden block">
-          <MobileSubmissionModal />
-        </div>
-        <ConnectWalletModal />
-        <div className="hidden sm:block">
-          <NavBarDesktop />
-        </div>
-        {children}
+      {/* <BackgroundWithBlurs /> */}
+      <div className="hidden sm:block">
+        <SubmitSidenav />
+      </div>
+      <div className="sm:hidden block">
+        <MobileSubmissionModal />
+      </div>
+      <ConnectWalletModal />
+      <div className="hidden sm:block">
+        <NavBarDesktop />
+      </div>
+      {children}
 
-        <div className="sm:hidden ">
-          <NavBarMobileWeb />
-        </div>
+      <div className="sm:hidden ">
+        <NavBarMobileWeb />
       </div>
     </div>
   );

@@ -94,7 +94,7 @@ const SubmissionCardDetails = styled.div`
 SubmissionPage.getLayout = function getLayout(page) {
   return (
     <Layout>
-      <div className="container flex justify-center mx-auto h-full w-full overflow-y-scroll">
+      <div className="container flex justify-center mx-auto h-full w-full">
         {page}
       </div>
     </Layout>

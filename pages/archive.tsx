@@ -9,7 +9,7 @@ import {
   SubmissionDate,
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
-import { useOnScrollToBottom } from "../hooks/useOnScrollToBottom";
+import { useOnScrollToBottomWindow } from "../hooks/useOnScrollToBottomWindow";
 import {
   useSubmissionSearch,
   useTrackSearchQueries,
@@ -26,14 +26,10 @@ function Archive(props) {
 
   useTrackSearchQueries();
 
-  const scrollRef = useOnScrollToBottom(
-    submissions.fetchNextPage,
-    submissions.hasNextPage,
-    1000
-  );
+  useOnScrollToBottomWindow(submissions.fetchNextPage, submissions.hasNextPage);
 
   return (
-    <div ref={scrollRef} className="flex flex-col h-full overflow-y-scroll">
+    <div className="flex flex-col h-full">
       <table className="table-fixed w-full text-center mt-8 ">
         <thead
           style={{
