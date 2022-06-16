@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
-import Layout
+import Layout, { ArchiveLayout } from "../components/Layouts";
 import { RatingsMeter } from "../components/RatingsMeter";
 import {
   ArchiveTableDataCell,
