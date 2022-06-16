@@ -10,7 +10,7 @@ create table comments (
     title text null,
     content text null,
     "isPublished" boolean default false not null,
-    "authorId" text not null 
+    "authorId" text not null, 
     "parentId" bigint null references comments (id),
     live boolean default true null,
     "isPinned" boolean default false not null,
