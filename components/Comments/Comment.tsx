@@ -7,7 +7,6 @@ import ExpandComment from "../../icons/ExpandComment";
 import { supabase } from "../../lib/supabase";
 import Avatar from "./Avatar";
 import NewCommentForm from "./NewCommentForm";
-import VoteButtons from "./VoteButtons";
 
 const MAX_LINES = 10;
 const LINE_HEIGHT = 24; // in px
@@ -249,7 +248,7 @@ const Comment = ({
           )}
           {!comment.isDeleted && canComment && (
             <div className="grid grid-flow-col auto-cols-min gap-x-3 transform -translate-x-1.5">
-              <VoteButtons comment={comment} />
+              {/* <VoteButtons comment={comment} /> */}
               <button
                 className="text-xs flex items-center text-gray-600 dark:text-gray-400 focus-ring border-none"
                 onClick={() => setShowReplyForm(!showReplyForm)}

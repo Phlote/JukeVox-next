@@ -24,7 +24,7 @@ create table comments (
 -- Create a table for votes
 create table votes (
     "commentId" bigint not null references comments (id),
-    "userId" text not null references profiles (wallet),
+    "userId" text not null,
     "value" int not null,
 
     primary key ("commentId", "userId"),
