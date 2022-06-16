@@ -1,6 +1,7 @@
 import cn from "classnames";
 import dayjs from "dayjs";
 import { useEffect, useRef, useState } from "react";
+import { useCanComment } from "../../hooks/useCanComment";
 import { CommentType } from "../../hooks/useComments";
 import ExpandComment from "../../icons/ExpandComment";
 import { supabase } from "../../lib/supabase";
@@ -56,6 +57,7 @@ const Comment = ({
   const [isOverflow, setIsOverflow] = useState(false);
   const [showReplyForm, setShowReplyForm] = useState(false);
   const contentRef = useRef<HTMLDivElement | null>(null);
+  const canComment = useCanComment();
   const isAdmin = false;
   // const { mutateComments } = useComments();
   // const { data: isAdmin } = useSWR(
@@ -245,7 +247,7 @@ const Comment = ({
               )}
             </button>
           )}
-          {!comment.isDeleted && (
+          {!comment.isDeleted && canComment && (
             <div className="grid grid-flow-col auto-cols-min gap-x-3 transform -translate-x-1.5">
               <VoteButtons comment={comment} />
               <button

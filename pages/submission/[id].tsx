@@ -24,9 +24,6 @@ export default function SubmissionPage(props) {
     return <div>Loading...</div>;
   }
 
-  const canComment =
-    isCurator?.data?.isCurator || submission.curatorWallet === account;
-
   return (
     <CommentsContextProvider commentId={submission.id}>
       <div className="min-w-full mt-32">
@@ -79,11 +76,9 @@ export default function SubmissionPage(props) {
             </SubmissionCardDetails>
           </div>
         </div>
-        {canComment && (
-          <div className="max-w-prose mx-auto flex-grow">
-            <CommentSection />
-          </div>
-        )}
+        <div className="max-w-prose mx-auto flex-grow">
+          <CommentSection />
+        </div>
       </div>
     </CommentsContextProvider>
   );

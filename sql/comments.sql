@@ -209,7 +209,7 @@ create or replace view comments_thread_with_user_vote as
         title,
         content,
         "isPublished",
-        "authorId",
+        authorId,
         "parentId",
         live,
         "isPinned",
@@ -231,7 +231,7 @@ create or replace view comments_thread_with_user_vote as
                 from
                     votes v
                 where
-                    v."commentId" = id
+                     v."commentId" = id
             ),
             0
         ) as "userVoteValue"
