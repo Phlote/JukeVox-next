@@ -27,7 +27,7 @@ create table votes (
     "userId" text not null references profiles (wallet),
     "value" int not null,
 
-    primary key ("commentId"),
+    primary key ("commentId", "userId"),
     constraint vote_quantity check (value <= 1 and value >= -1)
 );
 

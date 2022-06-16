@@ -7,7 +7,7 @@ import { SubmitSidenav } from "./SideNav";
 export default function Layout({ children }) {
   return (
     <div className="absolute inset-0">
-      <div className="h-screen flex flex-col w-full overflow-y-hidden overflow-x-hidden relative">
+      <div className="flex flex-col">
         <BackgroundWithBlurs />
         <div className="hidden sm:block">
           <SubmitSidenav />
@@ -16,10 +16,11 @@ export default function Layout({ children }) {
           <MobileSubmissionModal />
         </div>
         <ConnectWalletModal />
-        <div className="hidden sm:flex">
+        <div className="hidden sm:block">
           <NavBarDesktop />
         </div>
-        {children}
+        <div className="sm:mt-32">{children}</div>
+
         <div className="sm:hidden ">
           <NavBarMobileWeb />
         </div>
@@ -30,7 +31,7 @@ export default function Layout({ children }) {
 
 export const BackgroundWithBlurs = () => {
   return (
-    <div className="-z-10 max-h-full max-w-full">
+    <div className="-z-50 max-h-full max-w-full">
       <Blob1 />
       <Ellipse1 />
       <Ellipse2 />

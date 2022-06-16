@@ -22,9 +22,7 @@ export default function SubmissionPage(props) {
 
   return (
     <CommentsContextProvider commentId={submission.id}>
-      {/* <div> */}
-
-      <div className="min-w-full h-min-screen transition-all overflow-y-scroll">
+      <div className="min-w-full">
         <div className="flex justify-center min-w-full mb-8">
           <div className="flex flex-col w-80">
             <div className="w-full h-60 flex-none relative">
@@ -78,7 +76,6 @@ export default function SubmissionPage(props) {
           <CommentSection />
         </div>
       </div>
-      {/* </div> */}
     </CommentsContextProvider>
   );
 }
@@ -97,7 +94,7 @@ const SubmissionCardDetails = styled.div`
 SubmissionPage.getLayout = function getLayout(page) {
   return (
     <Layout>
-      <div className="container flex justify-center mx-auto h-full w-full">
+      <div className="container flex justify-center mx-auto h-full w-full overflow-y-scroll">
         {page}
       </div>
     </Layout>
