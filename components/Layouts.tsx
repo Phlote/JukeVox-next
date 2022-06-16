@@ -7,7 +7,7 @@ import { SubmitSidenav } from "./SideNav";
 export default function Layout({ children }) {
   return (
     <div className="absolute inset-0">
-      {/* <BackgroundWithBlurs /> */}
+      <BackgroundWithBlurs />
       <div className="hidden sm:block">
         <SubmitSidenav />
       </div>
@@ -29,7 +29,7 @@ export default function Layout({ children }) {
 
 export const BackgroundWithBlurs = () => {
   return (
-    <div className="-z-50 max-h-full max-w-full">
+    <div className="-z-50 fixed h-screen w-screen left-0 right-0">
       <Blob1 />
       <Ellipse1 />
       <Ellipse2 />
