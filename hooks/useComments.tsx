@@ -47,7 +47,7 @@ export type SortingBehavior =
   | "pathMostRecent";
 
 interface CommentsContextInterface {
-  postId: number | null;
+  commentId: number | null;
   account: string | null;
   rootComment: CommentType | null | undefined;
   comments: CommentType[];
@@ -72,7 +72,7 @@ interface CommentsContextInterface {
 }
 
 const CommentsContext = createContext<CommentsContextInterface>({
-  postId: null,
+  commentId: null,
   account: null,
   rootComment: null,
   comments: [],
@@ -101,7 +101,7 @@ const CommentsContext = createContext<CommentsContextInterface>({
 });
 
 interface CommentsContextProviderProps {
-  postId: number | null;
+  commentId: number | null;
   [propName: string]: any;
 }
 
@@ -110,7 +110,7 @@ const postgresArray = (arr: any[]): string => `{${arr.join(",")}}`;
 export const CommentsContextProvider = (
   props: CommentsContextProviderProps
 ): JSX.Element => {
-  const { postId } = props;
+  const { commentId } = props;
   const { account } = useWeb3React();
   const [sortingBehavior, setSortingBehavior] =
     useState<SortingBehavior>("pathVotesRecent");
@@ -119,7 +119,7 @@ export const CommentsContextProvider = (
     data: count,
     mutate: mutateGlobalCount,
     error: commentsError,
-  } = useSWR<number | null, any>(`globalCount_${postId}`, {
+  } = useSWR<number | null, any>(`globalCount_${commentId}`, {
     initialData: null,
     fetcher: () => null,
     revalidateOnFocus: false,
@@ -127,12 +127,12 @@ export const CommentsContextProvider = (
   });
 
   const { data: rootComment, mutate: mutateRootComment } = useSWR(
-    ["comments", postId, account],
-    async (_, postId, _user) =>
+    ["comments", commentId, account],
+    async (_, commentId, _user) =>
       supabase
         .from("comments_thread_with_user_vote")
         .select("*")
-        .eq("id", postId)
+        .eq("id", commentId)
         .then(({ data, error }) => {
           if (error) {
             console.log(error);
@@ -148,16 +148,16 @@ export const CommentsContextProvider = (
   const getKey = (
     pageIndex: number,
     previousPageData: CommentType[],
-    postId: number | null,
+    commentId: number | null,
     sortingBehavior: SortingBehavior,
     account: string | null
   ): [string, string, SortingBehavior, string | null] | null => {
-    if (!postId) return null;
+    if (!commentId) return null;
     if (previousPageData && !previousPageData.length) return null;
     if (pageIndex === 0) {
       return [
         "comments_thread_with_user_vote",
-        postgresArray([postId]),
+        postgresArray([commentId]),
         sortingBehavior,
         account,
       ];
@@ -181,13 +181,13 @@ export const CommentsContextProvider = (
     mutate: mutateComments,
   } = useSWRInfinite(
     (pageIndex, previousPageData) =>
-      getKey(pageIndex, previousPageData, postId, sortingBehavior, account), // Include user to revalidate when auth changes
+      getKey(pageIndex, previousPageData, commentId, sortingBehavior, account), // Include user to revalidate when auth changes
     async (_name, path, sortingBehavior, _user) => {
       return (
         supabase
           .from("comments_thread_with_user_vote")
           .select("*", { count: "exact" })
-          .contains("path", [postId])
+          .contains("path", [commentId])
           // .lt('depth', MAX_DEPTH)
           .gt(sortingBehavior, path)
           .order(sortingBehavior as any)
@@ -213,7 +213,7 @@ export const CommentsContextProvider = (
   const flattenedComments: CommentType[] = data ? data.flat() : [];
 
   const rootParentIds = flattenedComments
-    .filter((comment: CommentType) => comment.parentId === postId)
+    .filter((comment: CommentType) => comment.parentId === commentId)
     .map((comment: CommentType) => comment.parentId)
     .reduce(
       (accumulator, currentValue) => ({
@@ -246,12 +246,12 @@ export const CommentsContextProvider = (
   }
 
   const value = {
-    postId,
+    commentId,
     account,
     comments,
     rootComment,
     commentsError,
-    rootId: postId,
+    rootId: commentId,
     count,
     remainingCount,
     error,

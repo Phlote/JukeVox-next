@@ -21,7 +21,7 @@ export default function SubmissionPage(props) {
   }
 
   return (
-    <CommentsContextProvider postId={submission.id}>
+    <CommentsContextProvider commentId={submission.id}>
       {/* <div> */}
 
       <div className="min-w-full h-min-screen transition-all overflow-y-scroll">

@@ -9,14 +9,14 @@ import { supabase } from "../../lib/supabase";
 type StatusType = "upvoted" | "unvoted" | "downvoted";
 
 export async function invokeVote(
-  postId: number,
+  commentId: number,
   userId: string,
   value: number
 ): Promise<any> {
   return supabase
     .from("votes")
-    .upsert([{ postId, userId, value }], {
-      onConflict: "postId, userId",
+    .upsert([{ commentId, userId, value }], {
+      onConflict: "commentId, userId",
     })
     .then(({ data, error }) => {
       if (error) {
@@ -30,7 +30,7 @@ export async function invokeVote(
 
 export const mutateVotes = (
   mutate: any,
-  postId: number,
+  commentId: number,
   incrementBy: number,
   userVoteValue: number
 ): Promise<any> =>
@@ -38,7 +38,7 @@ export const mutateVotes = (
     (pages: CommentType[][]) =>
       pages.map((comments) =>
         comments.map((comment) => {
-          if (comment.id === postId) {
+          if (comment.id === commentId) {
             const newComment = {
               ...comment,
               votes: comment.votes + incrementBy,
