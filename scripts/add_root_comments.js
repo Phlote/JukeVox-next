@@ -42,32 +42,32 @@ exports.__esModule = true;
 var supabase_js_1 = require("@supabase/supabase-js");
 var cuid_1 = __importDefault(require("cuid"));
 var addRootComments = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, supabase, submissions, s, comments;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+    var _a, NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, supabase, submissions, comments, _b, data, error;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
             case 0:
                 _a = process.env, NEXT_PUBLIC_SUPABASE_URL = _a.NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY = _a.NEXT_PUBLIC_SUPABASE_ANON_KEY;
                 supabase = (0, supabase_js_1.createClient)(NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY);
                 return [4 /*yield*/, supabase.from("submissions").select()];
             case 1:
-                submissions = _b.sent();
+                submissions = _c.sent();
                 if (submissions.error) {
                     console.error("error getting submissions");
                     return [2 /*return*/];
                 }
-                for (s in submissions.data) {
-                }
                 comments = submissions.data.map(function (s) {
                     return {
-                        id: s.id,
+                        threadId: s.id,
                         slug: "submission-root-".concat(cuid_1["default"].slug()),
                         authorId: s.curatorWallet,
                         isApproved: true
                     };
                 });
+                console.log(comments);
                 return [4 /*yield*/, supabase.from("comments").insert(comments)];
             case 2:
-                _b.sent();
+                _b = _c.sent(), data = _b.data, error = _b.error;
+                console.error(error);
                 return [2 /*return*/];
         }
     });

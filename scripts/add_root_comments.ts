@@ -17,19 +17,19 @@ const addRootComments = async () => {
     return;
   }
 
-  for (let s in submissions.data as Submission[]) {
-  }
-
   const comments = submissions.data.map((s: Submission) => {
     return {
-      id: s.id,
+      threadId: s.id,
       slug: `submission-root-${cuid.slug()}`,
       authorId: s.curatorWallet,
       isApproved: true,
     };
   });
 
-  await supabase.from("comments").insert(comments);
+  console.log(comments);
+
+  const { data, error } = await supabase.from("comments").insert(comments);
+  console.error(error);
 };
 
 addRootComments();

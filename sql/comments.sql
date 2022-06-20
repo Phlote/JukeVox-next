@@ -5,6 +5,7 @@ drop table if exists comments cascade;
 create table comments (
     id bigserial not null,
     slug text not null unique,
+    threadId bigint not null references submissions (id),
     "createdAt" timestamp with time zone default now() not null,
     "updatedAt" timestamp with time zone default now() null,
     title text null,
@@ -209,7 +210,7 @@ create or replace view comments_thread_with_user_vote as
         title,
         content,
         "isPublished",
-        authorId,
+        "authorId",
         "parentId",
         live,
         "isPinned",

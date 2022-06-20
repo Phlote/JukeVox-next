@@ -25,7 +25,7 @@ export default function SubmissionPage(props) {
   }
 
   return (
-    <CommentsContextProvider commentId={submission.id}>
+    <CommentsContextProvider threadId={submission.id}>
       <div className="min-w-full mt-32">
         <div className="flex justify-center min-w-full mb-8">
           <div className="flex flex-col w-80">

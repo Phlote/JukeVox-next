@@ -1,6 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import { arrayToTree } from "performant-array-to-tree";
 import { createContext, useContext, useState } from "react";
+import { useQuery } from "react-query";
 import useSWR, { useSWRInfinite } from "swr";
 import { UserProfile } from "../components/Forms/ProfileSettingsForm";
 import { supabase } from "../lib/supabase";
@@ -101,7 +102,7 @@ const CommentsContext = createContext<CommentsContextInterface>({
 });
 
 interface CommentsContextProviderProps {
-  commentId: number | null;
+  threadId: number | null;
   [propName: string]: any;
 }
 
@@ -110,10 +111,32 @@ const postgresArray = (arr: any[]): string => `{${arr.join(",")}}`;
 export const CommentsContextProvider = (
   props: CommentsContextProviderProps
 ): JSX.Element => {
-  const { commentId } = props;
+  const { threadId } = props;
   const { account } = useWeb3React();
   const [sortingBehavior, setSortingBehavior] =
     useState<SortingBehavior>("pathVotesRecent");
+
+  // get root comment Id
+  const getRootCommentId = useQuery(
+    ["comment-id-from-thread-id", threadId],
+    async () =>
+      supabase
+        .from("comments")
+        .select("*")
+        .eq("threadId", threadId)
+        .then(({ data, error }) => {
+          if (error) {
+            console.log(error);
+            throw error;
+          }
+
+          if (!data?.[0]) return null;
+
+          return data[0] as unknown as CommentType;
+        })
+  );
+
+  const commentId = getRootCommentId?.data?.id;
 
   const {
     data: count,

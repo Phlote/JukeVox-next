@@ -118,7 +118,7 @@ const NewCommentForm = ({
         downvotes: 0,
         userVoteValue: 0,
       } as unknown as CommentType;
-
+      console.log("optimistic: ", optimisticResponse);
       const newData = [optimisticResponse, ...pages];
 
       return newData;
@@ -145,6 +145,8 @@ const NewCommentForm = ({
         const filteredResponses = staleResponses.filter(
           (response) => response.slug !== newResponse.slug
         );
+
+        console.log("new response: ", newResponse);
 
         const newData = [[newResponse], ...filteredResponses];
 
