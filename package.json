@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@apollo/client": "^3.6.2",
-    "@elastic/app-search-node": "^8.1.0",
     "@ethersproject/contracts": "5.6.0",
     "@graphql-codegen/typed-document-node": "^2.2.11",
     "@graphql-codegen/typescript": "^2.4.11",
@@ -51,6 +50,7 @@
     "utf-8-validate": "^5.0.9"
   },
   "devDependencies": {
+    "@ethersproject/contracts": "5.6.0",
     "@babel/core": "^7.17.7",
     "@graphql-codegen/cli": "^2.6.2",
     "@metamask/types": "^1.0.0",
