@@ -112,7 +112,11 @@ export const RatingsMeter: React.FC<{
               </button>
             );
           } else {
-            return <Cosign wallet={cosigns[idx]} />;
+            return (
+              <div className="relative h-6 w-6">
+                <Cosign wallet={cosigns[idx]} />
+              </div>
+            );
           }
         })}
     </div>

@@ -167,6 +167,7 @@ export type Submission = {
   mediaTitle: Scalars['String'];
   mediaType: Scalars['String'];
   mediaURI: Scalars['String'];
+  noOfCosigns: Scalars['Int'];
   submitterWallet: Scalars['Bytes'];
   tags?: Maybe<Scalars['String']>;
   timestamp: Scalars['BigInt'];
@@ -296,6 +297,14 @@ export type Submission_Filter = {
   mediaURI_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
   mediaURI_starts_with?: InputMaybe<Scalars['String']>;
   mediaURI_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  noOfCosigns?: InputMaybe<Scalars['Int']>;
+  noOfCosigns_gt?: InputMaybe<Scalars['Int']>;
+  noOfCosigns_gte?: InputMaybe<Scalars['Int']>;
+  noOfCosigns_in?: InputMaybe<Array<Scalars['Int']>>;
+  noOfCosigns_lt?: InputMaybe<Scalars['Int']>;
+  noOfCosigns_lte?: InputMaybe<Scalars['Int']>;
+  noOfCosigns_not?: InputMaybe<Scalars['Int']>;
+  noOfCosigns_not_in?: InputMaybe<Array<Scalars['Int']>>;
   submitterWallet?: InputMaybe<Scalars['Bytes']>;
   submitterWallet_contains?: InputMaybe<Scalars['Bytes']>;
   submitterWallet_in?: InputMaybe<Array<Scalars['Bytes']>>;
@@ -347,6 +356,7 @@ export enum Submission_OrderBy {
   MediaTitle = 'mediaTitle',
   MediaType = 'mediaType',
   MediaUri = 'mediaURI',
+  NoOfCosigns = 'noOfCosigns',
   SubmitterWallet = 'submitterWallet',
   Tags = 'tags',
   Timestamp = 'timestamp',
@@ -501,6 +511,7 @@ export type GetSubmissionByIdQuery = { __typename?: 'Query', submission?: { __ty
 
 export type GetSubmissionsQueryVariables = Exact<{
   filter?: InputMaybe<Submission_Filter>;
+  skip?: InputMaybe<Scalars['Int']>;
 }>;
 
 
@@ -523,5 +534,5 @@ export const GetCuratorAdminRoleForWalletDocument = {"kind":"Document","definiti
 export const GetCuratorRoleForWalletDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCuratorRoleForWallet"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"curatorRole"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<GetCuratorRoleForWalletQuery, GetCuratorRoleForWalletQueryVariables>;
 export const GetCuratorsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCurators"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"curatorRoles"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<GetCuratorsQuery, GetCuratorsQueryVariables>;
 export const GetSubmissionByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSubmissionById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submission"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SubmissionArchiveFields"}}]}}]}},...SubmissionArchiveFieldsFragmentDoc.definitions]} as unknown as DocumentNode<GetSubmissionByIdQuery, GetSubmissionByIdQueryVariables>;
-export const GetSubmissionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSubmissions"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Submission_filter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"timestamp"}},{"kind":"Argument","name":{"kind":"Name","value":"orderDirection"},"value":{"kind":"EnumValue","value":"desc"}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SubmissionArchiveFields"}}]}}]}},...SubmissionArchiveFieldsFragmentDoc.definitions]} as unknown as DocumentNode<GetSubmissionsQuery, GetSubmissionsQueryVariables>;
+export const GetSubmissionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSubmissions"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Submission_filter"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"skip"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"20"}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"timestamp"}},{"kind":"Argument","name":{"kind":"Name","value":"orderDirection"},"value":{"kind":"EnumValue","value":"desc"}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}},{"kind":"Argument","name":{"kind":"Name","value":"skip"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SubmissionArchiveFields"}}]}}]}},...SubmissionArchiveFieldsFragmentDoc.definitions]} as unknown as DocumentNode<GetSubmissionsQuery, GetSubmissionsQueryVariables>;
 export const SubmissionsSearchDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SubmissionsSearch"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"searchTerm"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submissionsSearch"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"text"},"value":{"kind":"Variable","name":{"kind":"Name","value":"searchTerm"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<SubmissionsSearchQuery, SubmissionsSearchQueryVariables>;

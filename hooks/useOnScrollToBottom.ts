@@ -11,9 +11,7 @@ export const useOnScrollToBottom = (
   const onScroll = async (ref) => {
     if (!ref.current) return;
     const { scrollHeight, scrollTop, clientHeight } = ref.current;
-    console.log("scrollheight:", scrollHeight);
-    console.log("scrollTop:", scrollTop);
-    console.log("clientHeight:", clientHeight);
+
     if (Math.abs(scrollHeight - scrollTop) < clientHeight + buffer) {
       console.log("get more");
       await onBottom();

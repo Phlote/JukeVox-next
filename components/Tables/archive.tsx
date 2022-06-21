@@ -8,7 +8,6 @@ import tw from "twin.macro";
 import { useOnClickOut } from "../../hooks/useOnClickOut";
 import {
   useSearchFilters,
-  useSubmissions,
   useSubmissionSearch,
 } from "../../hooks/useSubmissions";
 import { DropdownChecklist } from "../Dropdowns/DropdownChecklist";
@@ -123,7 +122,10 @@ export const ArchiveDropdown: React.FC<{
 
   const [filters, setFilters] = useSearchFilters();
 
-  const submissions = useSubmissions(filters);
+  const submissionsQuery = useSubmissionSearch();
+  const submissions = submissionsQuery.data.pages.flatMap(
+    (group) => group.submissions
+  );
 
   const updateFilter = (val) => {
     setFilters((current) => {

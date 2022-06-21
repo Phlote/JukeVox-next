@@ -1,13 +1,13 @@
 import { atom, useAtom } from "jotai";
+import debounce from "lodash.debounce";
 import { useEffect } from "react";
-import { useQuery } from "react-query";
+import { useInfiniteQuery, useQuery } from "react-query";
 import { useSearchTerm } from "../components/SearchBar";
 import { gaEvent } from "../lib/ga";
 import { initializeApollo } from "../lib/graphql/apollo";
 import {
   GetSubmissionsDocument,
   GetSubmissionsQuery,
-  Submission,
   SubmissionsSearchDocument,
   SubmissionsSearchQuery,
   Submission_Filter,
@@ -16,20 +16,24 @@ import {
 const searchFiltersAtom = atom<Submission_Filter>({});
 export const useSearchFilters = () => useAtom(searchFiltersAtom);
 
-export const useSubmissions = (filter?): Submission[] => {
-  const apolloClient = initializeApollo();
+export const useTrackSearchQueries = () => {
+  const [searchTerm] = useSearchTerm();
 
-  // can we refetch infinitely until we get the correct number?
-  const submissionsQuery = useQuery(["submissions", filter], async () => {
-    const res = await apolloClient.query<GetSubmissionsQuery>({
-      query: GetSubmissionsDocument,
-      variables: { filter },
-      fetchPolicy: "network-only",
-    });
-    return res.data.submissions;
-  });
+  const debouncedGAEmit = debounce(
+    (query: string) =>
+      gaEvent({
+        action: "search",
+        params: {
+          search_term: query,
+        },
+      }),
+    500
+  );
 
-  return submissionsQuery.data;
+  useEffect(() => {
+    debounce(debouncedGAEmit);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm]);
 };
 
 // Test cases:
@@ -37,53 +41,53 @@ export const useSubmissions = (filter?): Submission[] => {
 // search term only
 // filter only
 // both search term and filter
-export const useSubmissionSearch = (): Submission[] => {
+export const useSubmissionSearch = () => {
   const apolloClient = initializeApollo();
-  const [searchTerm] = useSearchTerm();
   const [filters] = useSearchFilters();
+  const [searchTerm] = useSearchTerm();
 
   const searchResults = useQuery(
-    ["submission-search", searchTerm, filters],
+    ["submission-search-ids", searchTerm],
     async () => {
-      let IDs = [];
-      if (searchTerm) {
-        const searchQuery = await apolloClient.query<SubmissionsSearchQuery>({
-          query: SubmissionsSearchDocument,
-          variables: { searchTerm: `'${searchTerm}'` },
-        });
-
-        IDs = searchQuery.data.submissionsSearch.map(({ id }) => id);
-      }
-
-      const filter = { ...filters };
-      if (!!IDs.length) filter.id_in = IDs;
-
-      const filterQuery = await apolloClient.query<GetSubmissionsQuery>({
-        query: GetSubmissionsDocument,
-        variables: { filter },
+      const searchQuery = await apolloClient.query<SubmissionsSearchQuery>({
+        query: SubmissionsSearchDocument,
+        variables: { searchTerm: `'${searchTerm}'` },
+        fetchPolicy: "network-only",
       });
 
-      return filterQuery.data.submissions;
+      return searchQuery.data.submissionsSearch.map(({ id }) => id);
     },
-
     {
       keepPreviousData: true,
-      enabled:
-        (!!searchTerm && searchTerm !== "") || !!Object.keys(filters).length,
+      enabled: !!searchTerm && searchTerm !== "",
     }
   );
 
-  useEffect(() => {
-    gaEvent({
-      action: "search",
-      params: {
-        search_term: searchTerm,
-      },
+  const fetchSubmissionsForSearch = async ({ pageParam = 0 }) => {
+    const filter = { ...filters };
+    if (searchResults.data) filter.id_in = searchResults.data;
+
+    const res = await apolloClient.query<GetSubmissionsQuery>({
+      query: GetSubmissionsDocument,
+      variables: { filter, skip: pageParam },
+      fetchPolicy: "network-only",
     });
-  }, [searchTerm]);
 
-  const showSearchResults =
-    (!!searchTerm && searchTerm !== "") || !!Object.keys(filters).length;
+    return {
+      submissions: res.data.submissions,
+      nextPage: res.data.submissions.length
+        ? pageParam + res.data.submissions.length
+        : undefined,
+    };
+  };
 
-  return showSearchResults ? searchResults.data : null;
+  return useInfiniteQuery(
+    ["submissions-search", filters, searchResults],
+    fetchSubmissionsForSearch,
+    {
+      getNextPageParam: (lastPage, pages) => {
+        return lastPage.nextPage;
+      },
+    }
+  );
 };

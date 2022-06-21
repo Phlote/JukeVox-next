@@ -1,4 +1,4 @@
-import { debounce } from "lodash.debounce";
+import debounce from "lodash.debounce";
 import { Submission } from "../lib/graphql/generated";
 
 export function nextApiRequest(

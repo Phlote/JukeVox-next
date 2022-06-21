@@ -1,5 +1,11 @@
-query GetSubmissions($filter: Submission_filter) {
-  submissions(orderBy: timestamp, orderDirection: desc, where: $filter) {
+query GetSubmissions($filter: Submission_filter, $skip: Int) {
+  submissions(
+    first: 20
+    orderBy: timestamp
+    orderDirection: desc
+    where: $filter
+    skip: $skip
+  ) {
     ...SubmissionArchiveFields
   }
 }

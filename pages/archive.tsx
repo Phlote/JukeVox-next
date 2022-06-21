@@ -1,21 +1,24 @@
+import { ethers } from "ethers";
 import { useRouter } from "next/router";
-import { default as React } from "react";
+import React from "react";
 import Layout, { ArchiveLayout } from "../components/Layouts";
 import { RatingsMeter } from "../components/RatingsMeter";
 import {
   ArchiveTableDataCell,
   ArchiveTableHeader,
   ArchiveTableRow,
-  SubmissionDate,
+  SubmissionDate
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
 import { useOnScrollToBottom } from "../hooks/useOnScrollToBottom";
 import {
   useSubmissionSearch,
-  useTrackSearchQueries,
+  useTrackSearchQueries
 } from "../hooks/useSubmissions";
 
+
 function Archive(props) {
+
   const router = useRouter();
 
   const submissions = useSubmissionSearch();
@@ -59,15 +62,14 @@ function Archive(props) {
               {group?.submissions?.map((submission) => {
                 const {
                   id,
-                  submissionTime,
-                  curatorWallet,
+                  timestamp,
+                  submitterWallet,
                   artistName,
                   mediaTitle,
                   mediaType,
                   mediaURI,
                   marketplace,
                   cosigns,
-                  username,
                 } = submission;
 
                 return (
@@ -79,8 +81,8 @@ function Archive(props) {
                       }}
                     >
                       <ArchiveTableDataCell>
-                        <SubmissionDate submissionTimestamp={submissionTime} />
-                      </ArchiveTableDataCell>
+                      <SubmissionDate submissionTimestamp={timestamp} />
+                                            </ArchiveTableDataCell>
                       <ArchiveTableDataCell>{artistName}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>
                         <a
@@ -96,18 +98,19 @@ function Archive(props) {
                       <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>
-                        <Username
-                          username={username}
-                          wallet={curatorWallet}
-                          linkToProfile
-                        />
+                      <Username
+                            wallet={ethers.utils.hexlify(submitterWallet)}
+                            linkToProfile
+                          />
                       </ArchiveTableDataCell>
                       <ArchiveTableDataCell>
-                        <RatingsMeter
-                          submissionAddress={id}
-                          submitterWallet={curatorWallet}
-                          initialCosigns={cosigns}
-                        />
+                      <RatingsMeter
+                            submissionAddress={id}
+                            submitterWallet={ethers.utils.hexlify(
+                              submitterWallet
+                            )}
+                            initialCosigns={cosigns}
+                          />
                       </ArchiveTableDataCell>
                     </ArchiveTableRow>
                     <tr className="h-4" />
@@ -143,5 +146,6 @@ Archive.getLayout = function getLayout(page) {
     </Layout>
   );
 };
+
 
 export default Archive;
