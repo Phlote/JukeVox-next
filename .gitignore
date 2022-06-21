@@ -43,10 +43,12 @@ tsconfig.buildinfo
 
 /coverage
 coverage.json
-/typechain
 
 #Hardhat files
 /solidity/cache
+
+/solidity/typechain
+
 
 
 # INFO: https://stackoverflow.com/a/67198084/672346

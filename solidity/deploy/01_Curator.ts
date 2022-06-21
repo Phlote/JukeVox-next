@@ -1,7 +1,7 @@
-import type { HardhatRuntimeEnvironment } from "hardhat/types"
 import type { DeployFunction } from "$/hardhat-deploy"
-
+import type { HardhatRuntimeEnvironment } from "hardhat/types"
 import { ARTIFACT as PhloteVoteArtifact } from "./00_PhloteVote"
+
 
 export const ARTIFACT = "Curator"
 
@@ -11,6 +11,7 @@ const deployFunc: DeployFunction = async function (hre: HardhatRuntimeEnvironmen
   //const [deployerSigner] = await hre.ethers.getSigners()
   const PhloteVote = await hre.deployments.get(PhloteVoteArtifact, )
   const deployArgs = [PhloteVote.address, treasury, curatorAdmin]
+  console.log(deployArgs)
   let deploy
   const { catchUnknownSigner } = hre.deployments
   deploy = await hre.deployments.deploy(ARTIFACT, {
@@ -34,8 +35,11 @@ const deployFunc: DeployFunction = async function (hre: HardhatRuntimeEnvironmen
   const curator = await hre.ethers.getContractAt(ARTIFACT, deploy.address)
   const vote = await hre.ethers.getContract(PhloteVoteArtifact, deployer)
   const ownerBalance = await vote.balanceOf(await vote.owner())
-  let transferTx = await vote.transfer(curator.address, ownerBalance)
+  console.log(ownerBalance);
+  let transferTx = await vote.transfer(treasury, ownerBalance)
   await transferTx.wait()
+  console.log(await vote.balanceOf(curator.address));
+  console.log(await vote.balanceOf(treasury));
 }
 
 deployFunc.tags = [ARTIFACT]

@@ -1,0 +1,5 @@
+query GetCosignsForSubmission($id: ID!) {
+  submission(id: $id) {
+    cosigns
+  }
+}

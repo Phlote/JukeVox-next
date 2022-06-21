@@ -1,0 +1,5 @@
+query GetCurators {
+  curatorRoles {
+    id
+  }
+}

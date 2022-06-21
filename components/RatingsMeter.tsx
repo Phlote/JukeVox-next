@@ -3,50 +3,89 @@ import { ethers } from "ethers";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { useQuery } from "react-query";
 import { toast } from "react-toastify";
-import { cosign } from "../controllers/cosigns";
 import { useIsCurator } from "../hooks/useIsCurator";
-import { verifyUser } from "../utils/web3";
+import { useCurator } from "../hooks/web3/useCurator";
+import { initializeApollo } from "../lib/graphql/apollo";
+import {
+  GetCosignsForSubmissionDocument,
+  GetCosignsForSubmissionQuery,
+} from "../lib/graphql/generated";
 import { useProfile } from "./Forms/ProfileSettingsForm";
 
 export const RatingsMeter: React.FC<{
-  submissionId: number;
+  submissionAddress: string;
   submitterWallet: string;
-  initialCosigns: string[];
+  initialCosigns: Uint8Array[];
 }> = (props) => {
-  const { submissionId, submitterWallet, initialCosigns } = props;
+  const { submissionAddress, submitterWallet, initialCosigns } = props;
 
-  const { account, library } = useWeb3React();
+  const { account } = useWeb3React();
   const [cosigns, setCosigns] = React.useState<string[]>([]);
+  const [polling, setPolling] = React.useState<boolean>(false);
+  const curator = useCurator();
 
   React.useEffect(() => {
     if (initialCosigns) {
-      setCosigns(initialCosigns);
+      setCosigns(
+        initialCosigns.map((address) => ethers.utils.hexlify(address))
+      );
     }
   }, [initialCosigns]);
 
-  const isCuratorQuery = useIsCurator();
+  const client = initializeApollo();
 
-  const canCosign =
-    isCuratorQuery?.data?.isCurator &&
-    !cosigns.includes("pending") &&
-    !cosigns.includes(account) &&
-    submitterWallet.toLowerCase() !== account.toLowerCase();
+  const cosignsPollQuery = useQuery(
+    ["cosigns", submissionAddress],
+    async () => {
+      const res = await client.query<GetCosignsForSubmissionQuery>({
+        query: GetCosignsForSubmissionDocument,
+        variables: { id: submissionAddress },
+        fetchPolicy: "network-only",
+      });
+
+      return res?.data?.submission?.cosigns?.map((address) =>
+        ethers.utils.hexlify(address)
+      );
+    },
+    {
+      refetchInterval: 1000,
+      refetchIntervalInBackground: true,
+      enabled: polling,
+    }
+  );
+
+  React.useEffect(() => {
+    if (cosignsPollQuery.data && polling && cosigns.includes("pending")) {
+      // if the cosigns we have in the db are one more than we have (at this stage, cosigns must have pending)
+      if (cosignsPollQuery.data.length === cosigns.length) {
+        console.log("new cosign found");
+        setCosigns(cosignsPollQuery.data);
+        setPolling(false);
+      } else console.log("still no new cosign");
+    }
+  }, [cosignsPollQuery, polling, cosigns]);
+
+  const isCurator = useIsCurator();
+
+  const canCosign = isCurator;
+  // !cosigns.includes("pending") &&
+  // !cosigns.includes(account) &&
+  // submitterWallet.toLowerCase() !== account.toLowerCase();
 
   const onCosign = async (e) => {
     e.stopPropagation();
     setCosigns([...cosigns, "pending"]);
     try {
-      const authenticated = await verifyUser(account, library);
-      if (!authenticated) {
-        throw "Authentication failed";
-      }
-      const newCosigns = await cosign(submissionId, account);
-      if (newCosigns) setCosigns(newCosigns);
+      const txn = await curator.curate(submissionAddress);
+      setPolling(true);
+      console.log(polling);
     } catch (e) {
       console.error(e);
       toast.error(e.message);
       setCosigns((current) => current.slice(0, current.length - 1));
+      setPolling(false);
     }
   };
 
@@ -58,7 +97,7 @@ export const RatingsMeter: React.FC<{
           if (idx > cosigns.length - 1) {
             return (
               <button
-                key={`${submissionId}-cosign-${idx}`}
+                key={`${submissionAddress}-cosign-${idx}`}
                 onClick={onCosign}
                 className={`h-6 w-6 relative ${
                   canCosign ? "hover:opacity-25 cursor-pointer" : undefined
@@ -73,25 +112,11 @@ export const RatingsMeter: React.FC<{
               </button>
             );
           } else {
-            if (cosigns[idx] === "pending") {
-              return (
-                <div
-                  className="h-6 w-6 opacity-25 relative"
-                  key={`${submissionId}-cosign-${idx}`}
-                >
-                  <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
-                </div>
-              );
-            } else {
-              return (
-                <div
-                  className="h-6 w-6 relative"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Cosign wallet={cosigns[idx]} />
-                </div>
-              );
-            }
+            return (
+              <div className="relative h-6 w-6">
+                <Cosign wallet={cosigns[idx]} />
+              </div>
+            );
           }
         })}
     </div>
@@ -104,13 +129,13 @@ interface Cosign {
 
 const Cosign: React.FC<Cosign> = (props) => {
   const { wallet } = props;
-  if (!ethers.utils.isAddress(wallet)) {
+  if (!ethers.utils.isAddress(wallet) && wallet !== "pending") {
     throw "Not a valid wallet";
   }
 
   const profileQuery = useProfile(wallet);
 
-  if (profileQuery?.isLoading) {
+  if (wallet === "pending") {
     return (
       <div className="h-full w-full opacity-25">
         <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
@@ -125,7 +150,7 @@ const Cosign: React.FC<Cosign> = (props) => {
   )
     return (
       <Link
-        href={"/profile/[uuid]"}
+        href={"/profile/[userId]"}
         as={`/profile/${profileQuery.data.username}`}
         passHref
       >

@@ -101,7 +101,11 @@ const submissionTimeToDate = (timeStamp: BigNumber | number | string) => {
     time = timeStamp.toNumber();
   }
 
-  const submissionDate = dayjs(time as number | string);
+  if (typeof timeStamp === "string") {
+    time = parseInt(timeStamp);
+  }
+
+  const submissionDate = dayjs((time as number) * 1000);
   if (!submissionDate.isValid()) throw "Invalid Date String";
 
   return submissionDate.format("YYYY-MM-DD");
@@ -117,6 +121,11 @@ export const ArchiveDropdown: React.FC<{
   const { filterKey, close, options } = props;
 
   const [filters, setFilters] = useSearchFilters();
+
+  const submissionsQuery = useSubmissionSearch();
+  const submissions = submissionsQuery.data.pages.flatMap(
+    (group) => group.submissions
+  );
 
   const updateFilter = (val) => {
     setFilters((current) => {

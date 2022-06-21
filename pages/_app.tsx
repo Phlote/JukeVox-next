@@ -1,3 +1,4 @@
+import { ApolloProvider } from "@apollo/client";
 import { Web3ReactProvider } from "@web3-react/core";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
@@ -9,6 +10,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import "tailwindcss/tailwind.css";
 import { gaPageview } from "../lib/ga";
+import { useApollo } from "../lib/graphql/apollo";
 import "../styles/globals.css";
 import getLibrary from "../utils/getLibrary";
 
@@ -40,6 +42,8 @@ const NextWeb3App = ({ Component, pageProps }: AppPropsWithLayout) => {
     };
   }, [router.events]);
 
+  const apolloClient = useApollo(pageProps.initialApolloState);
+
   if (process.env.NEXT_PUBLIC_MAINTENANCE) {
     return <div>Down for maintenance. Try again later!</div>;
   }
@@ -58,18 +62,20 @@ const NextWeb3App = ({ Component, pageProps }: AppPropsWithLayout) => {
       </Head>
       <QueryClientProvider client={queryClient}>
         <Web3ReactProvider getLibrary={getLibrary}>
-          {getLayout(<Component {...pageProps} />)}
-          <ToastContainer
-            position="top-right"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-          />
+          <ApolloProvider client={apolloClient}>
+            {getLayout(<Component {...pageProps} />)}
+            <ToastContainer
+              position="top-right"
+              autoClose={15000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+            />
+          </ApolloProvider>
         </Web3ReactProvider>
       </QueryClientProvider>
     </>

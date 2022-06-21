@@ -1,8 +1,11 @@
 import { nextApiRequest } from "../utils";
 
-export const revalidate = async (username?: string, submissionId?: number) => {
+export const revalidate = async (
+  username?: string,
+  submissionAddress?: string
+) => {
   await nextApiRequest(`revalidate`, "POST", {
     username,
-    submissionId,
+    submissionAddress,
   });
 };

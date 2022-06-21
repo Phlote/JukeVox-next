@@ -1,0 +1,13 @@
+schema: ${NEXT_PUBLIC_GRAPH_PROTOCOL_QUERY_URI}
+documents: "./lib/graphql/**/*.graphql"
+generates:
+  ./lib/graphql/generated.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typed-document-node
+    config:
+      scalars:
+        Bytes: Uint8Array
+        BigInt: number
+        BigDecimal: number

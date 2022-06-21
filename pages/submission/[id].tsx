@@ -1,3 +1,4 @@
+import { ethers } from "ethers";
 import { TwitterIcon, TwitterShareButton } from "next-share";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -6,8 +7,14 @@ import styled from "styled-components";
 import tw from "twin.macro";
 import Layout from "../../components/Layouts";
 import { Username } from "../../components/Username";
-import { supabase } from "../../lib/supabase";
-import { Submission } from "../../types";
+import { initializeApollo } from "../../lib/graphql/apollo";
+import {
+  GetAllSubmissionIDsDocument,
+  GetAllSubmissionIDsQuery,
+  GetSubmissionByIdDocument,
+  GetSubmissionByIdQuery,
+  Submission,
+} from "../../lib/graphql/generated";
 
 export default function SubmissionPage(props) {
   const { submission } = props as { submission: Submission };
@@ -45,8 +52,8 @@ export default function SubmissionPage(props) {
             <h2 className="text-base opacity-60"> Curator</h2>
             <div className="h-2" />
             <Username
-              username={submission.username}
-              wallet={submission.curatorWallet}
+              // username={submission.username}
+              wallet={ethers.utils.hexlify(submission.submitterWallet)}
               linkToProfile
             />
           </div>
@@ -87,32 +94,31 @@ SubmissionPage.getLayout = function getLayout(page) {
 };
 
 export async function getStaticProps({ params }) {
-  const { id } = params;
-
-  const submissionsQuery = await supabase
-    .from("submissions")
-    .select()
-    .match({ id });
-
-  if (submissionsQuery.error) throw submissionsQuery.error;
+  const { id } = params as { id: string };
+  const apolloClient = initializeApollo();
+  const res = await apolloClient.query<GetSubmissionByIdQuery>({
+    query: GetSubmissionByIdDocument,
+    variables: { id: id.toLowerCase() },
+  });
 
   return {
     props: {
-      submission: submissionsQuery.data[0] as Submission,
+      submission: res.data.submission,
     },
     // just in case
-    revalidate: 3600,
+    revalidate: 60,
   };
 }
 
 export async function getStaticPaths() {
-  const submissionsQuery = await supabase.from("submissions").select();
+  const apolloClient = initializeApollo();
+  const res = await apolloClient.query<GetAllSubmissionIDsQuery>({
+    query: GetAllSubmissionIDsDocument,
+  });
 
-  if (submissionsQuery.error) throw submissionsQuery.error;
-
-  const paths = submissionsQuery.data.map(({ id }) => ({
+  const paths = res.data.submissions.map(({ id }) => ({
     params: {
-      id: id.toString(),
+      id,
     },
   }));
 

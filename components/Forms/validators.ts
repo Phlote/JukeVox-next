@@ -1,9 +1,8 @@
 import { ethers } from "ethers";
 import { supabase } from "../../lib/supabase";
-import { Submission } from "../../types";
 import { UserProfile } from "./ProfileSettingsForm";
 
-export const validateSubmission = (values: Submission) => {
+export const validateSubmission = (values) => {
   const errors: Record<string, string> = {};
   if (!values.mediaURI) {
     errors.mediaURI = "Required";

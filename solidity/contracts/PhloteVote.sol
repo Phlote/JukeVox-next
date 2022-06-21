@@ -25,7 +25,7 @@ contract PhloteVote is ERC20, ERC20Burnable, Pausable, Ownable, ERC20Permit {
     using SafeERC20 for PhloteVote;
     using Address for address payable;
 
-    uint256 public MAX_SUPPLY = 140000 * 10 ** decimals();
+    uint256 public MAX_SUPPLY = 2000000 * 10 ** decimals();
 
     constructor() ERC20("Phlote Vote", "PV1") ERC20Permit("Phlote Vote") {
         _mint(msg.sender, MAX_SUPPLY);

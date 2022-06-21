@@ -2,6 +2,7 @@ import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { UserProfile } from "../../components/Forms/ProfileSettingsForm";
 import Layout, { ArchiveLayout } from "../../components/Layouts";
 import { RatingsMeter } from "../../components/RatingsMeter";
 import {
@@ -13,23 +14,28 @@ import {
 import { UserStatsBar } from "../../components/UserStatsBar";
 import { useIsCurator } from "../../hooks/useIsCurator";
 import useENSName from "../../hooks/web3/useENSName";
-import { supabase } from "../../lib/supabase";
-import { Submission } from "../../types";
+import { initializeApollo } from "../../lib/graphql/apollo";
 import {
-  getProfileForWallet,
-  getSubmissionsWithFilter,
-} from "../../utils/supabase";
+  GetAllWalletsDocument,
+  GetAllWalletsQuery,
+  GetSubmissionsDocument,
+  GetSubmissionsQuery,
+  Submission,
+} from "../../lib/graphql/generated";
+import { supabase } from "../../lib/supabase";
+import { getProfileForWallet } from "../../utils/supabase";
 
 export default function Profile(props) {
   const router = useRouter();
+  //TODO: should handle case where user has submitted and is on their profile page
   const { submissions, profile } = props;
-  const uuid = router.query.uuid;
+  const userId = router.query.userId;
   const isCurator = useIsCurator();
   const { account } = useWeb3React();
 
-  const promptToMakeProfile = isCurator && uuid === account;
+  const promptToMakeProfile = isCurator && userId === account;
 
-  const ENSName = useENSName(uuid as string);
+  const ENSName = useENSName(userId as string);
 
   if (router.isFallback) {
     //TODO better loading
@@ -48,7 +54,7 @@ export default function Profile(props) {
           )}
           {!profile && (
             <div className="flex flex-col items-center">
-              <h1>{`${ENSName || uuid}'s Curations`}</h1>
+              <h1>{`${ENSName || userId}'s Curations`}</h1>
               <div className="h-4" />
               {promptToMakeProfile && (
                 <Link href="/editprofile" passHref>
@@ -81,30 +87,30 @@ export default function Profile(props) {
           {submissions?.length > 0 && (
             <tbody>
               <tr className="h-4" />
-              {submissions?.map((submission) => {
+              {submissions?.map((submission: Submission) => {
                 const {
                   id,
-                  curatorWallet,
+                  timestamp,
+                  submitterWallet,
                   artistName,
                   mediaTitle,
                   mediaType,
                   mediaURI,
                   marketplace,
-                  submissionTime,
                   cosigns,
                 } = submission;
 
                 return (
                   <>
                     <ArchiveTableRow
-                      key={`${submissionTime}`}
+                      key={`${timestamp}`}
                       className="hover:opacity-80 cursor-pointer"
                       onClick={() => {
                         router.push(`/submission/${id}`);
                       }}
                     >
                       <ArchiveTableDataCell>
-                        <SubmissionDate submissionTimestamp={submissionTime} />
+                        <SubmissionDate submissionTimestamp={timestamp} />
                       </ArchiveTableDataCell>
                       <ArchiveTableDataCell>{artistName}</ArchiveTableDataCell>
                       <ArchiveTableDataCell>
@@ -124,8 +130,10 @@ export default function Profile(props) {
                       <ArchiveTableDataCell>
                         <RatingsMeter
                           initialCosigns={cosigns}
-                          submissionId={id}
-                          submitterWallet={curatorWallet}
+                          submissionAddress={id}
+                          submitterWallet={ethers.utils.hexlify(
+                            submitterWallet
+                          )}
                         />
                       </ArchiveTableDataCell>
                     </ArchiveTableRow>
@@ -159,20 +167,31 @@ Profile.getLayout = function getLayout(page) {
 
 // params will contain the wallet for each generated page.
 export async function getStaticProps({ params }) {
-  const { uuid } = params;
+  const { userId } = params;
+  const apolloClient = initializeApollo();
 
-  if (ethers.utils.isAddress(uuid)) {
+  const getSubmissionsByWallet = async (wallet: string) => {
+    const res = await apolloClient.query<GetSubmissionsQuery>({
+      query: GetSubmissionsDocument,
+      variables: { filter: { submitterWallet: wallet } },
+      fetchPolicy: "network-only",
+    });
+
+    return res.data.submissions;
+  };
+
+  if (ethers.utils.isAddress(userId)) {
+    const wallet = userId;
+
     return {
       props: {
-        submissions: await getSubmissionsWithFilter(null, {
-          curatorWallet: uuid,
-        }),
+        submissions: await getSubmissionsByWallet(wallet),
       },
       revalidate: 60,
     };
   }
 
-  const username = uuid;
+  const username = userId;
 
   const profilesQuery = await supabase
     .from("profiles")
@@ -180,12 +199,12 @@ export async function getStaticProps({ params }) {
     .match({ username });
 
   if (profilesQuery.error) throw profilesQuery.error;
-  //TODO: this is a bit dumb, we should have more general querying for profiles
   const { wallet } = profilesQuery.data[0];
 
   return {
     props: {
-      submissions: await getSubmissionsWithFilter(null, { username }),
+      // TODO: everyone is a curator when it's just their submissions
+      submissions: await getSubmissionsByWallet(wallet),
       profile: await getProfileForWallet(wallet),
     },
     revalidate: 60,
@@ -193,20 +212,31 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-  const submissionsQuery = await supabase.from("submissions").select();
-
-  if (submissionsQuery.error) throw submissionsQuery.error;
-
-  // IDEA: should we have two pages for each user?
-  const UUIDs = submissionsQuery.data.map((submission: Submission) => {
-    if (submission.username) return submission.username;
-    else return submission.curatorWallet;
+  const apolloClient = initializeApollo();
+  const res = await apolloClient.query<GetAllWalletsQuery>({
+    query: GetAllWalletsDocument,
   });
 
+  // if we have a username for this wallet, the page should use this instead of the wallet
+  const userIds = await Promise.all(
+    res.data.submissions.map(async ({ submitterWallet }) => {
+      const profilesQuery = await supabase
+        .from("profiles")
+        .select()
+        .match({ wallet: submitterWallet });
+
+      if (profilesQuery.error) console.error(profilesQuery.error);
+      if (profilesQuery.data[0] && profilesQuery.data[0].username)
+        return (profilesQuery.data[0] as UserProfile).username;
+
+      return submitterWallet;
+    })
+  );
+
   // can be wallet or username
-  const paths = UUIDs.map((uuid) => ({
+  const paths = userIds.map((userId: string) => ({
     params: {
-      uuid,
+      userId,
     },
   }));
 
