@@ -7,22 +7,27 @@ import {
   ArchiveTableDataCell,
   ArchiveTableHeader,
   ArchiveTableRow,
-  SubmissionDate,
+  SubmissionDate
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
 import { useOnScrollToBottom } from "../hooks/useOnScrollToBottom";
 import {
   useSubmissionSearch,
-  useTrackSearchQueries,
+  useTrackSearchQueries
 } from "../hooks/useSubmissions";
 
+
 function Archive(props) {
+
+  const router = useRouter();
+
   const submissions = useSubmissionSearch();
   const noResults =
-    submissions.data?.pages[0].submissions.length === 0 &&
-    !submissions.isLoading;
+    !submissions.isLoading &&
+    !submissions.isFetching &&
+    submissions.data?.pages[0].submissions.length === 0;
+
   useTrackSearchQueries();
-  const router = useRouter();
 
   const scrollRef = useOnScrollToBottom(
     submissions.fetchNextPage,
@@ -31,15 +36,15 @@ function Archive(props) {
   );
 
   return (
-    <div ref={scrollRef} className="flex flex-col h-full">
-      <table className="table-fixed w-full text-center mt-8">
-        <thead>
-          <tr
-            style={{
-              borderBottom: "1px solid white",
-              paddingBottom: "1rem",
-            }}
-          >
+    <div ref={scrollRef} className="flex flex-col h-full overflow-y-scroll">
+      <table className="table-fixed w-full text-center mt-8 ">
+        <thead
+          style={{
+            borderBottom: "1px solid white",
+            paddingBottom: "1rem",
+          }}
+        >
+          <tr>
             <ArchiveTableHeader label="Date" />
             <ArchiveTableHeader label="Artist" />
             <ArchiveTableHeader label="Title" />
@@ -50,82 +55,81 @@ function Archive(props) {
           </tr>
         </thead>
 
-        {submissions.data?.pages.length > 0 && (
-          <tbody ref={scrollRef}>
-            <tr className="h-4" />
-            {submissions?.data?.pages.map((group, i) => (
-              <React.Fragment key={i}>
-                {group.submissions.map((submission) => {
-                  const {
-                    id,
-                    timestamp,
-                    submitterWallet,
-                    artistName,
-                    mediaTitle,
-                    mediaType,
-                    mediaURI,
-                    marketplace,
-                    cosigns,
-                  } = submission;
+        <tbody>
+          <tr className="h-4" />
+          {submissions?.data?.pages.map((group, i) => (
+            <React.Fragment key={i}>
+              {group?.submissions?.map((submission) => {
+                const {
+                  id,
+                  timestamp,
+                  submitterWallet,
+                  artistName,
+                  mediaTitle,
+                  mediaType,
+                  mediaURI,
+                  marketplace,
+                  cosigns,
+                } = submission;
 
-                  return (
-                    <React.Fragment key={id}>
-                      <ArchiveTableRow
-                        className="hover:opacity-80 cursor-pointer"
-                        onClick={() => {
-                          router.push(`/submission/${id}`);
-                        }}
-                      >
-                        <ArchiveTableDataCell>
-                          <SubmissionDate submissionTimestamp={timestamp} />
-                        </ArchiveTableDataCell>
-                        <ArchiveTableDataCell>
-                          {artistName}
-                        </ArchiveTableDataCell>
-                        <ArchiveTableDataCell>
-                          <a
-                            rel="noreferrer"
-                            target="_blank"
-                            href={mediaURI}
-                            className="hover:opacity-50"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            {mediaTitle}
-                          </a>
-                        </ArchiveTableDataCell>
-                        <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
-                        <ArchiveTableDataCell>
-                          {marketplace}
-                        </ArchiveTableDataCell>
-                        <ArchiveTableDataCell>
-                          <Username
+                return (
+                  <React.Fragment key={id}>
+                    <ArchiveTableRow
+                      className="hover:opacity-80 cursor-pointer"
+                      onClick={() => {
+                        router.push(`/submission/${id}`);
+                      }}
+                    >
+                      <ArchiveTableDataCell>
+                      <SubmissionDate submissionTimestamp={timestamp} />
+                                            </ArchiveTableDataCell>
+                      <ArchiveTableDataCell>{artistName}</ArchiveTableDataCell>
+                      <ArchiveTableDataCell>
+                        <a
+                          rel="noreferrer"
+                          target="_blank"
+                          href={mediaURI}
+                          className="hover:opacity-50"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {mediaTitle}
+                        </a>
+                      </ArchiveTableDataCell>
+                      <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
+                      <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
+                      <ArchiveTableDataCell>
+                      <Username
                             wallet={ethers.utils.hexlify(submitterWallet)}
                             linkToProfile
                           />
-                        </ArchiveTableDataCell>
-                        <ArchiveTableDataCell>
-                          <RatingsMeter
+                      </ArchiveTableDataCell>
+                      <ArchiveTableDataCell>
+                      <RatingsMeter
                             submissionAddress={id}
                             submitterWallet={ethers.utils.hexlify(
                               submitterWallet
                             )}
                             initialCosigns={cosigns}
                           />
-                        </ArchiveTableDataCell>
-                      </ArchiveTableRow>
-                      <tr className="h-4" />
-                    </React.Fragment>
-                  );
-                })}
-              </React.Fragment>
-            ))}
-          </tbody>
-        )}
+                      </ArchiveTableDataCell>
+                    </ArchiveTableRow>
+                    <tr className="h-4" />
+                  </React.Fragment>
+                );
+              })}
+            </React.Fragment>
+          ))}
+          {!submissions.hasNextPage && <tr className="h-32 "></tr>}
+        </tbody>
       </table>
-
+      {submissions.isFetching && (
+        <div className="w-full h-full flex-grow flex justify-center items-center">
+          <p className="text-lg italic text-white">{"Fetching..."}</p>
+        </div>
+      )}
       {noResults && (
         <div
-          className="w-full h-full mt-4 flex-grow flex justify-center items-center"
+          className="w-full h-full flex-grow flex justify-center items-center"
           style={{ color: "rgba(105, 105, 105, 1)" }}
         >
           <p className="text-lg italic">{"No Search Results"}</p>
@@ -143,18 +147,5 @@ Archive.getLayout = function getLayout(page) {
   );
 };
 
-// export async function getStaticProps({ params }) {
-//   const apolloClient = initializeApollo();
-//   const res = await apolloClient.query<GetSubmissionsQuery>({
-//     query: GetSubmissionsDocument,
-//   });
-//   return {
-//     props: {
-//       initialSubmissions: res.data.submissions,
-//     },
-
-//     revalidate: 60,
-//   };
-// }
 
 export default Archive;

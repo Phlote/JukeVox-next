@@ -32,6 +32,7 @@
     "ipfs-http-client": "^56.0.3",
     "jotai": "^1.5.3",
     "lodash.debounce": "^4.0.8",
+    "lodash.throttle": "^4.1.1",
     "next": "^12.1.7-canary.3",
     "next-share": "^0.13.0",
     "node-fetch": "^3.2.3",

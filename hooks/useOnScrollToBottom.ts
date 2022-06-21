@@ -1,4 +1,4 @@
-import debounce from "lodash.debounce";
+import throttle from "lodash.throttle";
 import React from "react";
 
 export const useOnScrollToBottom = (
@@ -12,21 +12,24 @@ export const useOnScrollToBottom = (
     if (!ref.current) return;
     const { scrollHeight, scrollTop, clientHeight } = ref.current;
 
-    // See if scroll is close enough to bottom to warrant loading more. 100px default buffer added
-    if (scrollHeight - Math.abs(scrollTop) < clientHeight + buffer) {
+    if (Math.abs(scrollHeight - scrollTop) < clientHeight + buffer) {
+      console.log("get more");
       await onBottom();
     }
   };
 
-  const debouncedOnScroll = debounce(() => onScroll(scrollAreaRef), 20);
+  const throttledOnScroll = throttle(() => onScroll(scrollAreaRef), 1000, {
+    trailing: true,
+    leading: true,
+  });
 
   React.useEffect(() => {
     const scrollArea = scrollAreaRef.current;
-    if (enabled) scrollArea?.addEventListener("wheel", debouncedOnScroll);
-    else scrollArea?.removeEventListener("wheel", debouncedOnScroll);
+    if (enabled) scrollArea?.addEventListener("wheel", throttledOnScroll);
+    else scrollArea?.removeEventListener("wheel", throttledOnScroll);
 
     return () => {
-      scrollArea?.removeEventListener("wheel", debouncedOnScroll);
+      scrollArea?.removeEventListener("wheel", throttledOnScroll);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enabled]);
