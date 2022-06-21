@@ -7,7 +7,7 @@ import { Submission } from "../types";
 export const getSubmissionsWithFilter = async (
   selectStatement: PostgrestFilterBuilder<any> = null,
   filters: Partial<Submission> = null,
-  page: number = 1
+  page: number = 0
 ) => {
   const { from, to } = getPagination(page);
   if (!selectStatement) selectStatement = supabase.from("submissions").select();

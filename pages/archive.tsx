@@ -28,7 +28,12 @@ function Archive({ query }) {
   useEffect(() => {
     if (query) {
       const { search, filters } = router.query;
-      if (search) setSearchBar(decodeURI(search as string));
+
+      if (search) {
+        console.log(search);
+        console.log(decodeURI(search as string));
+        setSearchBar(decodeURI(search as string));
+      }
       if (filters) {
         setFilters(JSON.parse(decodeURI(filters as string)));
       }
@@ -76,15 +81,13 @@ function Archive({ query }) {
   return (
     <div ref={scrollRef} className="flex flex-col h-full overflow-y-scroll">
       <table className="table-fixed w-full text-center mt-8 ">
-        <thead>
-          <tr
-            className="sticky top-0  z-10"
-            style={{
-              borderBottom: "1px solid white",
-              paddingBottom: "1rem",
-              backgroundColor: "rgba(0, 0, 0, 0.75)",
-            }}
-          >
+        <thead
+          style={{
+            borderBottom: "1px solid white",
+            paddingBottom: "1rem",
+          }}
+        >
+          <tr>
             <ArchiveTableHeader label="Date" />
             <ArchiveTableHeader label="Artist" />
             <ArchiveTableHeader label="Title" />
