@@ -133,7 +133,7 @@ const Cosign: React.FC<Cosign> = (props) => {
 
   if (wallet === "pending") {
     return (
-      <div className="h-6 w-6 relative opacity-25">
+      <div className="h-full w-full opacity-25">
         <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
       </div>
     );
@@ -150,21 +150,22 @@ const Cosign: React.FC<Cosign> = (props) => {
         as={`/profile/${profileQuery.data.username}`}
         passHref
       >
-        <div className="h-6 w-6 relative rounded-full cursor-pointer hover:opacity-25">
+        <a className="h-full w-full rounded-full cursor-pointer hover:opacity-25">
           <Image
             className="rounded-full"
             src={profileQuery.data.profilePic}
             alt={`${wallet} cosign`}
             layout="fill"
           />
-        </div>
+        </a>
       </Link>
     );
 
-  // No profile data
   return (
-    <div className="h-6 w-6 relative">
-      <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
-    </div>
+    <Link href={"/profile/[uuid]"} as={`/profile/${wallet}`} passHref>
+      <a className="h-full w-full rounded-full cursor-pointer hover:opacity-25">
+        <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
+      </a>
+    </Link>
   );
 };

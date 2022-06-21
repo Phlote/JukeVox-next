@@ -58,11 +58,11 @@ export const NavBarDesktop = (props) => {
             </Link>
           </NavBarElementContainer>
         )}
-        {active && profileQuery?.data?.username && isCurator && (
+        {active && (
           <NavBarElementContainer>
             <Link
-              href={"/profile/[username]"}
-              as={`/profile/${profileQuery.data.username}`}
+              href={"/profile/[userId]"}
+              as={`/profile/${profileQuery?.data?.username ?? account}`}
               passHref
             >
               <HollowButtonContainer className="flex justify-center items-center ">

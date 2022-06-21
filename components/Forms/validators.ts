@@ -58,5 +58,10 @@ export const validateProfileSettings = async (values: UserProfile) => {
     }
   }
 
+  if (values.email) {
+    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(values.email))
+      errors.email = "Invalid Email Address";
+  }
+
   return errors;
 };

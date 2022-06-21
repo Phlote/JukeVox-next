@@ -44,7 +44,7 @@ export default function Profile(props) {
 
   return (
     <ArchiveLayout>
-      <div className="flex flex-col">
+      <div className="flex flex-col overflow-y-scroll h-full pb-16">
         <div className="flex justify-center">
           {profile && (
             <>
