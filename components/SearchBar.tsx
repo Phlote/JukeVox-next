@@ -17,7 +17,7 @@ interface SearchBar {
 
 export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
   const { active } = useWeb3React();
-  const [_, setSearchTerm] = useSearchTerm();
+  const [, setSearchTerm] = useSearchTerm();
   const router = useRouter();
 
   const [inputVal, setInputVal] = React.useState<string>(
@@ -25,7 +25,7 @@ export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
   );
   const inputRef = React.useRef(null);
 
-  const [open, setOpen] = useConnectWalletModalOpen();
+  const [, setOpen] = useConnectWalletModalOpen();
 
   useKeyPress("Escape", () => {
     if (inputRef.current === document.activeElement) setInputVal("");
@@ -37,6 +37,7 @@ export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
   }, [router.pathname]);
 
   // debounce updating the atom
+  // updating the atom here will 1. change the query params and 2. get search results
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const onInputValChange = React.useCallback(
     debounce((value) => setSearchTerm(value), 300),
