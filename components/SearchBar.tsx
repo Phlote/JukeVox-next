@@ -3,7 +3,7 @@ import { atom, useAtom } from "jotai";
 import debounce from "lodash.debounce";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useCallback } from "react";
+import React from "react";
 import { useKeyPress } from "../hooks/useKeyPress";
 import { HollowInput, HollowInputContainer } from "./Hollow";
 import { useConnectWalletModalOpen } from "./Modals/ConnectWalletModal";
@@ -16,10 +16,14 @@ interface SearchBar {
 }
 
 export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
-  const { active, activate } = useWeb3React();
+  const { active } = useWeb3React();
   const [searchTerm, setSearchTerm] = useSearchTerm();
-  const inputRef = React.useRef(null);
   const router = useRouter();
+
+  const [inputVal, setInputVal] = React.useState<string>(
+    (router.query.search as string) || ""
+  );
+  const inputRef = React.useRef(null);
 
   const [open, setOpen] = useConnectWalletModalOpen();
 
@@ -27,17 +31,23 @@ export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
     if (inputRef.current === document.activeElement) setSearchTerm("");
   });
 
+  // If we are at the home page, cancel out search
   React.useEffect(() => {
-    if (router.pathname === "/") setSearchTerm("");
+    if (router.pathname === "/") setInputVal("");
   }, [router.pathname, setSearchTerm]);
 
-  const onChange = (e) => {
-    const { value } = e.target;
-    setSearchTerm(value);
-  };
-
+  // debounce updating the atom
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedOnChange = useCallback(debounce(onChange, 300), []);
+  const onInputValChange = React.useCallback(
+    debounce((value) => setSearchTerm(value), 300),
+    []
+  );
+
+  // when he input value changes, call our debounced on change handler
+  React.useEffect(() => {
+    onInputValChange(inputVal);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inputVal]);
 
   return (
     <div className="w-80 h-16" style={{ lineHeight: "0.5rem" }}>
@@ -50,8 +60,11 @@ export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
         <Image height={30} width={30} src="/search.svg" alt="search" />
         <HollowInput
           ref={inputRef}
+          value={inputVal}
           type="search"
-          onChange={debouncedOnChange}
+          onChange={(e) => {
+            setInputVal(e.target.value);
+          }}
           disabled={!active}
           placeholder={active ? placeholder : "Connect your wallet to search"}
         />

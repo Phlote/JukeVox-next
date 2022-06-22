@@ -30,8 +30,6 @@ function Archive({ query }) {
       const { search, filters } = router.query;
 
       if (search) {
-        console.log(search);
-        console.log(decodeURI(search as string));
         setSearchBar(decodeURI(search as string));
       }
       if (filters) {
