@@ -17,7 +17,7 @@ interface SearchBar {
 
 export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
   const { active } = useWeb3React();
-  const [searchTerm, setSearchTerm] = useSearchTerm();
+  const [_, setSearchTerm] = useSearchTerm();
   const router = useRouter();
 
   const [inputVal, setInputVal] = React.useState<string>(
@@ -28,13 +28,13 @@ export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
   const [open, setOpen] = useConnectWalletModalOpen();
 
   useKeyPress("Escape", () => {
-    if (inputRef.current === document.activeElement) setSearchTerm("");
+    if (inputRef.current === document.activeElement) setInputVal("");
   });
 
   // If we are at the home page, cancel out search
   React.useEffect(() => {
     if (router.pathname === "/") setInputVal("");
-  }, [router.pathname, setSearchTerm]);
+  }, [router.pathname]);
 
   // debounce updating the atom
   // eslint-disable-next-line react-hooks/exhaustive-deps
