@@ -43,7 +43,7 @@ export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
     []
   );
 
-  // when he input value changes, call our debounced on change handler
+  // when input value changes, call our debounced on change handler
   React.useEffect(() => {
     onInputValChange(inputVal);
     // eslint-disable-next-line react-hooks/exhaustive-deps

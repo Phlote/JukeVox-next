@@ -1,4 +1,3 @@
-// import throttle from "lodash.throttle";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import Layout, { ArchiveLayout } from "../components/Layouts";
@@ -27,7 +26,8 @@ function Archive({ query }) {
   // set state variables on initial render
   useEffect(() => {
     if (query) {
-      const { search, filters } = router.query;
+      console.log(query);
+      const { search, filters } = query;
 
       if (search) {
         setSearchBar(decodeURI(search as string));
