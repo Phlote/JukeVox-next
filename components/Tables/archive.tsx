@@ -33,11 +33,11 @@ export const ArchiveTableHeader = (props) => {
 
   return (
     <th>
-      <div className="w-full flex justify-center">
+      <div className="w-full flex justify-center py-4">
         <div
           ref={ref}
           className={classNames(
-            "flex items-center justify-center mb-4 relative px-1",
+            "flex items-center justify-center  relative px-1",
             {
               "rounded-full": isActiveFilter,
               "border-2": isActiveFilter,
@@ -130,8 +130,8 @@ export const ArchiveDropdown: React.FC<{
 
   return (
     <div
-      className="absolute z-10 h-64 w-64 mb-4 top-10 overflow-y-scroll p-2"
-      style={{ backgroundColor: "#1d1d1d" }}
+      className="absolute z-10 h-64 w-64 mb-4 top-10 overflow-y-scroll p-2 bg-black"
+      style={{ backgroundColor: "rgba(0, 0, 0, 0.90)" }}
     >
       <DropdownChecklist
         value={filters[filterKey]}

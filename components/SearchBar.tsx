@@ -3,9 +3,8 @@ import { atom, useAtom } from "jotai";
 import debounce from "lodash.debounce";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useCallback } from "react";
+import React from "react";
 import { useKeyPress } from "../hooks/useKeyPress";
-import { gaEvent } from "../lib/ga";
 import { HollowInput, HollowInputContainer } from "./Hollow";
 import { useConnectWalletModalOpen } from "./Modals/ConnectWalletModal";
 
@@ -17,34 +16,39 @@ interface SearchBar {
 }
 
 export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
-  const { active, activate } = useWeb3React();
-  const [searchTerm, setSearchTerm] = useSearchTerm();
-  const inputRef = React.useRef(null);
+  const { active } = useWeb3React();
+  const [, setSearchTerm] = useSearchTerm();
   const router = useRouter();
 
-  const [open, setOpen] = useConnectWalletModalOpen();
+  const [inputVal, setInputVal] = React.useState<string>(
+    (router.query.search as string) || ""
+  );
+  const inputRef = React.useRef(null);
+
+  const [, setOpen] = useConnectWalletModalOpen();
 
   useKeyPress("Escape", () => {
-    if (inputRef.current === document.activeElement) setSearchTerm("");
+    if (inputRef.current === document.activeElement) setInputVal("");
   });
 
+  // If we are at the home page, cancel out search
   React.useEffect(() => {
-    if (router.pathname === "/") setSearchTerm("");
-  }, [router.pathname, setSearchTerm]);
+    if (router.pathname === "/") setInputVal("");
+  }, [router.pathname]);
 
-  const onChange = (e) => {
-    const { value } = e.target;
-    gaEvent({
-      action: "search",
-      params: {
-        search_term: value,
-      },
-    });
-    setSearchTerm(value);
-  };
-
+  // debounce updating the atom
+  // updating the atom here will 1. change the query params and 2. get search results
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedOnChange = useCallback(debounce(onChange, 300), []);
+  const onInputValChange = React.useCallback(
+    debounce((value) => setSearchTerm(value), 300),
+    []
+  );
+
+  // when input value changes, call our debounced on change handler
+  React.useEffect(() => {
+    onInputValChange(inputVal);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inputVal]);
 
   return (
     <div className="w-80 h-16" style={{ lineHeight: "0.5rem" }}>
@@ -57,8 +61,11 @@ export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
         <Image height={30} width={30} src="/search.svg" alt="search" />
         <HollowInput
           ref={inputRef}
+          value={inputVal}
           type="search"
-          onChange={debouncedOnChange}
+          onChange={(e) => {
+            setInputVal(e.target.value);
+          }}
           disabled={!active}
           placeholder={active ? placeholder : "Connect your wallet to search"}
         />

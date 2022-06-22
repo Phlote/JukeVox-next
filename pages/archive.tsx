@@ -1,7 +1,8 @@
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 import Layout, { ArchiveLayout } from "../components/Layouts";
 import { RatingsMeter } from "../components/RatingsMeter";
+import { useSearchTerm } from "../components/SearchBar";
 import {
   ArchiveTableDataCell,
   ArchiveTableHeader,
@@ -11,12 +12,55 @@ import {
 import { Username } from "../components/Username";
 import { useOnScrollToBottom } from "../hooks/useOnScrollToBottom";
 import {
+  useSearchFilters,
   useSubmissionSearch,
   useTrackSearchQueries,
 } from "../hooks/useSubmissions";
+import { Submission } from "../types";
 
-function Archive(props) {
+function Archive({ query }) {
+  const [searchBarContent, setSearchBar] = useSearchTerm();
+  const [selectedFilters, setFilters] = useSearchFilters();
+
   const router = useRouter();
+  // set state variables on initial render
+  useEffect(() => {
+    if (query) {
+      console.log(query);
+      const { search, filters } = query;
+
+      if (search) {
+        setSearchBar(decodeURI(search as string));
+      }
+      if (filters) {
+        setFilters(JSON.parse(decodeURI(filters as string)));
+      }
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
+
+  const updateQueryParams = React.useCallback(
+    async (router, searchTerm: string, filters: Partial<Submission>) => {
+      await router.push(
+        {
+          pathname: "/archive",
+          query: {
+            search: searchTerm ? encodeURI(searchTerm) : undefined,
+            filters: filters ? encodeURI(JSON.stringify(filters)) : undefined,
+          },
+        },
+        undefined,
+        { shallow: true }
+      );
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (router) updateQueryParams(router, searchBarContent, selectedFilters);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchBarContent, selectedFilters]);
 
   const submissions = useSubmissionSearch();
   const noResults =
@@ -142,6 +186,10 @@ Archive.getLayout = function getLayout(page) {
       <ArchiveLayout>{page}</ArchiveLayout>
     </Layout>
   );
+};
+
+Archive.getInitialProps = async ({ query }) => {
+  return { query };
 };
 
 export default Archive;
