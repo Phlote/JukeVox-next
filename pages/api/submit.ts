@@ -41,7 +41,7 @@ export default async function handler(
 
     await supabase.from("comments").insert([
       {
-        id: submissionRes.id,
+        threadId: submissionRes.id,
         slug: `submission-root-${cuid.slug()}`,
         authorId: submissionRes.curatorWallet,
         isApproved: true,

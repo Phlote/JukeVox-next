@@ -48,6 +48,7 @@ var addRootComments = function () { return __awaiter(void 0, void 0, void 0, fun
             case 0:
                 _a = process.env, NEXT_PUBLIC_SUPABASE_URL = _a.NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY = _a.NEXT_PUBLIC_SUPABASE_ANON_KEY;
                 supabase = (0, supabase_js_1.createClient)(NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY);
+                supabase.from("comments")["delete"]();
                 return [4 /*yield*/, supabase.from("submissions").select()];
             case 1:
                 submissions = _c.sent();

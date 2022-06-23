@@ -11,6 +11,8 @@ const addRootComments = async () => {
     NEXT_PUBLIC_SUPABASE_ANON_KEY
   );
 
+  supabase.from("comments").delete();
+
   const submissions = await supabase.from("submissions").select();
   if (submissions.error) {
     console.error("error getting submissions");
@@ -25,8 +27,6 @@ const addRootComments = async () => {
       isApproved: true,
     };
   });
-
-  console.log(comments);
 
   const { data, error } = await supabase.from("comments").insert(comments);
   console.error(error);
