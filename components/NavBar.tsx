@@ -14,7 +14,7 @@ export const NavBarMobileWeb = () => {
   const [, setOpen] = useSubmissionFlowOpen();
   const { active } = useWeb3React();
   return (
-    <div className="w-screen flex flex-row flex-none bg-phlote-container divide-x ">
+    <div className="w-screen flex flex-row flex-none bg-phlote-container divide-x absolute bottom-0">
       {active && (
         <MobileNavBarElementContainer
           className="focus:opacity-25"
@@ -43,7 +43,7 @@ export const NavBarDesktop = (props) => {
   const isCuratorQuery = useIsCurator();
 
   return (
-    <div className="py-4 flex-none w-screen px-12">
+    <div className="py-4 flex-none w-screen px-12 absolute top-0">
       <div className="relative flex flex-row gap-4" style={{ height: 70 }}>
         <Link href="/" passHref>
           <h1 className="text-6xl cursor-pointer">Phlote</h1>

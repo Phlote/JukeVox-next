@@ -7,22 +7,21 @@ import { SubmitSidenav } from "./SideNav";
 export default function Layout({ children }) {
   return (
     <div className="absolute inset-0">
-      <div className="h-screen flex flex-col w-full overflow-y-hidden overflow-x-hidden relative">
-        <BackgroundWithBlurs />
-        <div className="hidden sm:block">
-          <SubmitSidenav />
-        </div>
-        <div className="sm:hidden block">
-          <MobileSubmissionModal />
-        </div>
-        <ConnectWalletModal />
-        <div className="hidden sm:flex">
-          <NavBarDesktop />
-        </div>
-        {children}
-        <div className="sm:hidden ">
-          <NavBarMobileWeb />
-        </div>
+      <BackgroundWithBlurs />
+      <div className="hidden sm:block">
+        <SubmitSidenav />
+      </div>
+      <div className="sm:hidden block">
+        <MobileSubmissionModal />
+      </div>
+      <ConnectWalletModal />
+      <div className="hidden sm:block">
+        <NavBarDesktop />
+      </div>
+      {children}
+
+      <div className="sm:hidden ">
+        <NavBarMobileWeb />
       </div>
     </div>
   );
@@ -30,7 +29,7 @@ export default function Layout({ children }) {
 
 export const BackgroundWithBlurs = () => {
   return (
-    <div className="-z-10 max-h-full max-w-full">
+    <div className="-z-50 fixed h-screen w-screen left-0 right-0">
       <Blob1 />
       <Ellipse1 />
       <Ellipse2 />
@@ -88,7 +87,7 @@ export const ArchiveLayout: React.FC<ArchiveLayoutProps> = ({
 }) => {
   return (
     <div
-      className="container flex justify-center mx-auto h-full pb-8"
+      className="container flex justify-center mx-auto h-full pb-8 mt-32"
       style={center ? { alignItems: "center", flexGrow: 1 } : undefined}
     >
       <div className="mx-4">{children}</div>
