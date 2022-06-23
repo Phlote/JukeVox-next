@@ -151,8 +151,9 @@ export const CommentsContextProvider = (
 
   const { data: rootComment, mutate: mutateRootComment } = useSWR(
     ["comments", commentId, account],
-    async (_, commentId, _user) =>
-      supabase
+    async (_, commentId, _user) => {
+      if (!commentId) return null;
+      return supabase
         .from("comments_thread_with_user_vote")
         .select("*")
         .eq("id", commentId)
@@ -165,7 +166,8 @@ export const CommentsContextProvider = (
           if (!data?.[0]) return null;
 
           return data[0] as unknown as CommentType;
-        })
+        });
+    }
   );
 
   const getKey = (
