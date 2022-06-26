@@ -14,20 +14,20 @@ function Home() {
 
   return (
     <div className="flex flex-col justify-center items-center relative w-full">
+        {/*Mobile*/}
       <div className="sm:hidden text-center mx-4 flex flex-col justify-center items-center">
         <h1 className="text-6xl">Phlote</h1>
         <div className="h-16"></div>
         <p>
-          Be the first to mint your favorite artist on chain. Earn status as a
-          tastemaker. Join Phlote DAO.
+            Artist submissions that receive 5 co-signs are minted every Tuesday at noon ET on Zora .
         </p>
       </div>
 
+        {/*Desktop*/}
       <div className="hidden sm:block w-full">
         <div className=" w-full flex flex-col justify-center items-center">
           <h1 className="text-center text-2xl">
-            Be the first to mint your favorite artist on chain. Earn status as a
-            tastemaker. Join Phlote DAO.{" "}
+              Artist submissions that receive 5 co-signs are minted every Tuesday at noon ET on Zora .{" "}
           </h1>
           <div className="h-16" />
           <div className="w-80 h-16 cursor-pointer hover:opacity-75 shadow-sm">
