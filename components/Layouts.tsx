@@ -95,8 +95,8 @@ const Gradient = styled.div`
   width: 200%;
   height: 200%;
   
-background: rgb(255,255,255);
-background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.15) 5%, rgba(0,0,0,0) 100%);
+  background: rgb(255,255,255);
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.15) 5%, rgba(0,0,0,0) 100%);
 `;
 
 interface ArchiveLayoutProps {
