@@ -48,6 +48,9 @@ coverage.json
 #Hardhat files
 /solidity/cache
 
+#Jetbrains files
+.idea
+
 
 # INFO: https://stackoverflow.com/a/67198084/672346
 # ------- yarn -------
