@@ -1,28 +1,28 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-import {ConnectWalletModal} from "./Modals/ConnectWalletModal";
-import {MobileSubmissionModal} from "./Modals/MobileSubmissionModal";
-import {NavBarDesktop, NavBarMobileWeb} from "./NavBar";
-import {SubmitSidenav} from "./SideNav";
-import {useState, useEffect} from "react";
+import { ConnectWalletModal } from "./Modals/ConnectWalletModal";
+import { MobileSubmissionModal } from "./Modals/MobileSubmissionModal";
+import { NavBarDesktop, NavBarMobileWeb } from "./NavBar";
+import { SubmitSidenav } from "./SideNav";
 
-export default function Layout({children}) {
+export default function Layout({ children }) {
   return (
     <div className="absolute inset-0">
-      <BackgroundWithBlurs/>
+      <BackgroundWithBlurs />
       <div className="hidden sm:block">
-        <SubmitSidenav/>
+        <SubmitSidenav />
       </div>
       <div className="sm:hidden block">
-        <MobileSubmissionModal/>
+        <MobileSubmissionModal />
       </div>
-      <ConnectWalletModal/>
+      <ConnectWalletModal />
       <div className="hidden sm:block">
-        <NavBarDesktop/>
+        <NavBarDesktop />
       </div>
       {children}
 
       <div className="sm:hidden ">
-        <NavBarMobileWeb/>
+        <NavBarMobileWeb />
       </div>
     </div>
   );
@@ -31,23 +31,27 @@ export default function Layout({children}) {
 export const BackgroundWithBlurs = () => {
   const [isFirefox, setIsFirefox] = useState(false);
 
+  // useEffect(() => {
+  //   /* DuckTyping method used for detecting browser, basically it detects a feature that is only available in the selected browser, in this case, Firefox.
+  //    * More info: https://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser */
+  //   setIsFirefox(typeof InstallTrigger !== "undefined");
+  // }, []);
+
   useEffect(() => {
-    /* DuckTyping method used for detecting browser, basically it detects a feature that is only available in the selected browser, in this case, Firefox.
-    * More info: https://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser */
-    setIsFirefox(typeof InstallTrigger !== 'undefined');
-  }, [])
+    setIsFirefox(window.navigator.userAgent.indexOf("Firefox") > -1);
+  }, []);
 
   return isFirefox ? (
     <div className="-z-50 fixed h-screen w-screen left-0 right-0">
-      <Gradient/>
+      <Gradient />
     </div>
   ) : (
     <div className="-z-50 fixed h-screen w-screen left-0 right-0">
-      <Blob1/>
-      <Ellipse1/>
-      <Ellipse2/>
+      <Blob1 />
+      <Ellipse1 />
+      <Ellipse2 />
     </div>
-  )
+  );
 };
 
 const Blob1 = styled.div`
@@ -89,14 +93,18 @@ const Ellipse2 = styled.div`
   transform: rotate(-45deg);
 `;
 
-
 const Gradient = styled.div`
   position: absolute;
   width: 200%;
   height: 200%;
-  
-background: rgb(255,255,255);
-background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.15) 5%, rgba(0,0,0,0) 100%);
+
+  background: rgb(255, 255, 255);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.15) 5%,
+    rgba(0, 0, 0, 0) 100%
+  );
 `;
 
 interface ArchiveLayoutProps {
@@ -105,13 +113,13 @@ interface ArchiveLayoutProps {
 }
 
 export const ArchiveLayout: React.FC<ArchiveLayoutProps> = ({
-                                                              children,
-                                                              center,
-                                                            }) => {
+  children,
+  center,
+}) => {
   return (
     <div
       className="container flex justify-center mx-auto h-full pb-8 mt-32"
-      style={center ? {alignItems: "center", flexGrow: 1} : undefined}
+      style={center ? { alignItems: "center", flexGrow: 1 } : undefined}
     >
       <div className="mx-4">{children}</div>
     </div>
