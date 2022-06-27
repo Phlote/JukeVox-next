@@ -7,14 +7,20 @@ import { Submission } from "../types";
 export const getSubmissionsWithFilter = async (
   selectStatement: PostgrestFilterBuilder<any> = null,
   filters: Partial<Submission> = null,
-  page: number = 0
+  page?: number
 ) => {
-  const { from, to } = getPagination(page);
   if (!selectStatement) selectStatement = supabase.from("submissions").select();
 
   if (filters) selectStatement = selectStatement.match(filters);
 
-  selectStatement.order("submissionTime", { ascending: false }).range(from, to);
+  if (page !== undefined) {
+    const { from, to } = getPagination(page);
+    selectStatement = selectStatement.range(from, to);
+  }
+
+  selectStatement = selectStatement.order("submissionTime", {
+    ascending: false,
+  });
 
   const { data, error } = await selectStatement;
   if (error) throw error;
