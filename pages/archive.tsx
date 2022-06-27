@@ -16,6 +16,7 @@ import {
   useSubmissionSearch,
   useTrackSearchQueries,
 } from "../hooks/useSubmissions";
+import CommentBubble from "../public/comment_bubble.svg";
 import { Submission } from "../types";
 
 function Archive({ query }) {
@@ -96,64 +97,9 @@ function Archive({ query }) {
           <tr className="h-4" />
           {submissions?.data?.pages.map((group, i) => (
             <React.Fragment key={i}>
-              {group?.submissions?.map((submission) => {
-                const {
-                  id,
-                  submissionTime,
-                  curatorWallet,
-                  artistName,
-                  mediaTitle,
-                  mediaType,
-                  mediaURI,
-                  marketplace,
-                  cosigns,
-                  username,
-                } = submission;
-
-                return (
-                  <React.Fragment key={id}>
-                    <ArchiveTableRow
-                      className="hover:opacity-80 cursor-pointer"
-                      onClick={() => {
-                        router.push(`/submission/${id}`);
-                      }}
-                    >
-                      <ArchiveTableDataCell>
-                        <SubmissionDate submissionTimestamp={submissionTime} />
-                      </ArchiveTableDataCell>
-                      <ArchiveTableDataCell>{artistName}</ArchiveTableDataCell>
-                      <ArchiveTableDataCell>
-                        <a
-                          rel="noreferrer"
-                          target="_blank"
-                          href={mediaURI}
-                          className="hover:opacity-50"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          {mediaTitle}
-                        </a>
-                      </ArchiveTableDataCell>
-                      <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
-                      <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
-                      <ArchiveTableDataCell>
-                        <Username
-                          username={username}
-                          wallet={curatorWallet}
-                          linkToProfile
-                        />
-                      </ArchiveTableDataCell>
-                      <ArchiveTableDataCell>
-                        <RatingsMeter
-                          submissionId={id}
-                          submitterWallet={curatorWallet}
-                          initialCosigns={cosigns}
-                        />
-                      </ArchiveTableDataCell>
-                    </ArchiveTableRow>
-                    <tr className="h-4" />
-                  </React.Fragment>
-                );
-              })}
+              {group?.submissions?.map((submission) => (
+                <ArchiveEntry key={submission.id} submission={submission} />
+              ))}
             </React.Fragment>
           ))}
           {!submissions.hasNextPage && <tr className="h-32 "></tr>}
@@ -175,6 +121,65 @@ function Archive({ query }) {
     </div>
   );
 }
+
+const ArchiveEntry: React.FC<{ submission: Submission }> = ({ submission }) => {
+  const {
+    id,
+    submissionTime,
+    curatorWallet,
+    artistName,
+    mediaTitle,
+    mediaType,
+    mediaURI,
+    marketplace,
+    cosigns,
+    username,
+  } = submission;
+  const router = useRouter();
+
+  return (
+    <React.Fragment key={id}>
+      <ArchiveTableRow
+        className="hover:opacity-80 cursor-pointer"
+        onClick={() => {
+          router.push(`/submission/${id}`);
+        }}
+      >
+        <ArchiveTableDataCell>
+          <div className="relative">
+            {true && <CommentBubble fill="white" className="absolute ml-2" />}
+            <SubmissionDate submissionTimestamp={submissionTime} />
+          </div>
+        </ArchiveTableDataCell>
+        <ArchiveTableDataCell>{artistName}</ArchiveTableDataCell>
+        <ArchiveTableDataCell>
+          <a
+            rel="noreferrer"
+            target="_blank"
+            href={mediaURI}
+            className="hover:opacity-50"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {mediaTitle}
+          </a>
+        </ArchiveTableDataCell>
+        <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
+        <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
+        <ArchiveTableDataCell>
+          <Username username={username} wallet={curatorWallet} linkToProfile />
+        </ArchiveTableDataCell>
+        <ArchiveTableDataCell>
+          <RatingsMeter
+            submissionId={id}
+            submitterWallet={curatorWallet}
+            initialCosigns={cosigns}
+          />
+        </ArchiveTableDataCell>
+      </ArchiveTableRow>
+      <tr className="h-4" />
+    </React.Fragment>
+  );
+};
 
 Archive.getLayout = function getLayout(page) {
   return (
