@@ -19,7 +19,7 @@ function Home() {
         <h1 className="text-6xl">Phlote</h1>
         <div className="h-16"></div>
         <p>
-            Artist submissions that receive 5 co-signs are minted every Tuesday at noon ET on Zora .
+            Artist submissions that receive 5 co-signs are minted every Tuesday on Zora .
         </p>
       </div>
 
@@ -27,7 +27,7 @@ function Home() {
       <div className="hidden sm:block w-full">
         <div className=" w-full flex flex-col justify-center items-center">
           <h1 className="text-center text-2xl">
-              Artist submissions that receive 5 co-signs are minted every Tuesday at noon ET on Zora .{" "}
+              Artist submissions that receive 5 co-signs are minted every Tuesday on Zora .{" "}
           </h1>
           <div className="h-16" />
           <div className="w-80 h-16 cursor-pointer hover:opacity-75 shadow-sm">
