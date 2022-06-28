@@ -49,7 +49,7 @@ coverage.json
 /solidity/cache
 
 #Jetbrains files
-.idea
+.idea/
 
 
 # INFO: https://stackoverflow.com/a/67198084/672346

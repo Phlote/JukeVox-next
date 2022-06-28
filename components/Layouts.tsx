@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { ConnectWalletModal } from "./Modals/ConnectWalletModal";
 import { MobileSubmissionModal } from "./Modals/MobileSubmissionModal";
@@ -28,11 +29,20 @@ export default function Layout({ children }) {
 }
 
 export const BackgroundWithBlurs = () => {
+  const [isFirefox, setIsFirefox] = useState(false);
+
+  useEffect(() => {
+    setIsFirefox(window.navigator.userAgent.indexOf("Firefox") > -1);
+  }, []);
+
   return (
     <div className="-z-50 fixed h-screen w-screen left-0 right-0">
-      <Blob1 />
-      <Ellipse1 />
-      <Ellipse2 />
+      { isFirefox ? <FFGradient/> :
+        <>
+          <Blob1/>
+          <Ellipse1/>
+          <Ellipse2/>
+        </> }
     </div>
   );
 };
@@ -76,12 +86,26 @@ const Ellipse2 = styled.div`
   transform: rotate(-45deg);
 `;
 
+const FFGradient = styled.div`
+  position: absolute;
+  width: 200%;
+  height: 200%;
+
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.15) 5%,
+    rgba(0, 0, 0, 0) 100%
+  );
+`;
+
 interface ArchiveLayoutProps {
   center?: boolean;
   children: React.ReactNode;
 }
 
 export const ArchiveLayout: React.FC<ArchiveLayoutProps> = ({
+
   children,
   center,
 }) => {
