@@ -41,15 +41,14 @@ export const BackgroundWithBlurs = () => {
     setIsFirefox(window.navigator.userAgent.indexOf("Firefox") > -1);
   }, []);
 
-  return isFirefox ? (
+  return (
     <div className="-z-50 fixed h-screen w-screen left-0 right-0">
-      <Gradient />
-    </div>
-  ) : (
-    <div className="-z-50 fixed h-screen w-screen left-0 right-0">
-      <Blob1 />
-      <Ellipse1 />
-      <Ellipse2 />
+      { isFirefox ? <FFGradient/> :
+        <>
+          <Blob1/>
+          <Ellipse1/>
+          <Ellipse2/>
+        </> }
     </div>
   );
 };
@@ -93,12 +92,11 @@ const Ellipse2 = styled.div`
   transform: rotate(-45deg);
 `;
 
-const Gradient = styled.div`
+const FFGradient = styled.div`
   position: absolute;
   width: 200%;
   height: 200%;
 
-  background: rgb(255, 255, 255);
   background: radial-gradient(
     circle,
     rgba(255, 255, 255, 0.15) 0%,
@@ -113,6 +111,7 @@ interface ArchiveLayoutProps {
 }
 
 export const ArchiveLayout: React.FC<ArchiveLayoutProps> = ({
+
   children,
   center,
 }) => {
