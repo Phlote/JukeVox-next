@@ -31,12 +31,6 @@ export default function Layout({ children }) {
 export const BackgroundWithBlurs = () => {
   const [isFirefox, setIsFirefox] = useState(false);
 
-  // useEffect(() => {
-  //   /* DuckTyping method used for detecting browser, basically it detects a feature that is only available in the selected browser, in this case, Firefox.
-  //    * More info: https://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser */
-  //   setIsFirefox(typeof InstallTrigger !== "undefined");
-  // }, []);
-
   useEffect(() => {
     setIsFirefox(window.navigator.userAgent.indexOf("Firefox") > -1);
   }, []);
