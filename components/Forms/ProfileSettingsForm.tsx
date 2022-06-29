@@ -22,7 +22,8 @@ export interface UserProfile {
   city: string;
   twitter: string;
   profilePic: string; // url
-  cosigns: number; // total number of cosigns that the user has earned on their submissions
+  cosignsReceived: number; // total number of cosigns that the user has earned on their submissions
+  cosignsGiven: number;// total number of cosigns that a user has given out
 }
 
 export const ProfileSettingsForm = ({ wallet }) => {

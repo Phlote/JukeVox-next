@@ -44,7 +44,7 @@ export const getProfileForWallet = async (wallet: string) => {
     //See: https://github.com/supabase/supabase/discussions/5737
     profileMeta.profilePic = `${profileMeta.profilePic}?cacheBust=${profileMeta.updateTime}`;
 
-  // get number of cosigns
+  // get number of cosigns received
 
   const submissionsQuery = await supabase
     .from("submissions")
@@ -54,14 +54,32 @@ export const getProfileForWallet = async (wallet: string) => {
   if (submissionsQuery.error) throw submissionsQuery.error;
 
   const submissions = submissionsQuery.data as Submission[];
-  const cosigns = submissions.reduce(
+  const cosignsReceived = submissions.reduce(
     (acc, curr) => acc + (curr?.cosigns?.length ?? 0),
     0
   );
 
+  // get number of cosigns given
+
+  const submissionsQueryAll = await supabase
+    .from("submissions")
+    .select()
+    .then(q=>q.body)
+
+  let cosignsGiven = 0;
+  submissionsQueryAll.forEach((submission) => {
+    let subCosigns = submission?.cosigns;
+    if (subCosigns) {
+      subCosigns.forEach((cosign) => {
+        if (cosign === wallet) cosignsGiven++;
+      });
+    }
+  });
+
   return {
     ...profileMeta,
-    cosigns,
+    cosignsReceived,
+    cosignsGiven,
   } as UserProfile;
 };
 
