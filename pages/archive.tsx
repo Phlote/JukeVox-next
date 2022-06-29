@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
+import { CommentBubble } from "../components/Comments/CommentBubble";
 import Layout, { ArchiveLayout } from "../components/Layouts";
 import { RatingsMeter } from "../components/RatingsMeter";
 import { useSearchTerm } from "../components/SearchBar";
@@ -10,13 +11,13 @@ import {
   SubmissionDate,
 } from "../components/Tables/archive";
 import { Username } from "../components/Username";
+import { CommentsContextProvider } from "../hooks/useComments";
 import { useOnScrollToBottomWindow } from "../hooks/useOnScrollToBottomWindow";
 import {
   useSearchFilters,
   useSubmissionSearch,
   useTrackSearchQueries,
 } from "../hooks/useSubmissions";
-import CommentBubble from "../public/comment_bubble.svg";
 import { Submission } from "../types";
 
 function Archive({ query }) {
@@ -138,46 +139,54 @@ const ArchiveEntry: React.FC<{ submission: Submission }> = ({ submission }) => {
   const router = useRouter();
 
   return (
-    <React.Fragment key={id}>
-      <ArchiveTableRow
-        className="hover:opacity-80 cursor-pointer"
-        onClick={() => {
-          router.push(`/submission/${id}`);
-        }}
-      >
-        <ArchiveTableDataCell>
-          <div className="relative">
-            {true && <CommentBubble fill="white" className="absolute ml-2" />}
-            <SubmissionDate submissionTimestamp={submissionTime} />
-          </div>
-        </ArchiveTableDataCell>
-        <ArchiveTableDataCell>{artistName}</ArchiveTableDataCell>
-        <ArchiveTableDataCell>
-          <a
-            rel="noreferrer"
-            target="_blank"
-            href={mediaURI}
-            className="hover:opacity-50"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {mediaTitle}
-          </a>
-        </ArchiveTableDataCell>
-        <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
-        <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
-        <ArchiveTableDataCell>
-          <Username username={username} wallet={curatorWallet} linkToProfile />
-        </ArchiveTableDataCell>
-        <ArchiveTableDataCell>
-          <RatingsMeter
-            submissionId={id}
-            submitterWallet={curatorWallet}
-            initialCosigns={cosigns}
-          />
-        </ArchiveTableDataCell>
-      </ArchiveTableRow>
-      <tr className="h-4" />
-    </React.Fragment>
+    <CommentsContextProvider threadId={submission.id}>
+      <React.Fragment key={id}>
+        <ArchiveTableRow
+          className="hover:opacity-80 cursor-pointer"
+          onClick={() => {
+            router.push(`/submission/${id}`);
+          }}
+        >
+          <ArchiveTableDataCell>
+            <div className="relative">
+              <div className="absolute ml-3">
+                <CommentBubble />
+              </div>
+              <SubmissionDate submissionTimestamp={submissionTime} />
+            </div>
+          </ArchiveTableDataCell>
+          <ArchiveTableDataCell>{artistName}</ArchiveTableDataCell>
+          <ArchiveTableDataCell>
+            <a
+              rel="noreferrer"
+              target="_blank"
+              href={mediaURI}
+              className="hover:opacity-50"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {mediaTitle}
+            </a>
+          </ArchiveTableDataCell>
+          <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
+          <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
+          <ArchiveTableDataCell>
+            <Username
+              username={username}
+              wallet={curatorWallet}
+              linkToProfile
+            />
+          </ArchiveTableDataCell>
+          <ArchiveTableDataCell>
+            <RatingsMeter
+              submissionId={id}
+              submitterWallet={curatorWallet}
+              initialCosigns={cosigns}
+            />
+          </ArchiveTableDataCell>
+        </ArchiveTableRow>
+        <tr className="h-4" />
+      </React.Fragment>
+    </CommentsContextProvider>
   );
 };
 
