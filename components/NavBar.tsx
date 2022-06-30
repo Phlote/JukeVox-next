@@ -49,15 +49,13 @@ export const NavBarDesktop = (props) => {
           <h1 className="text-6xl cursor-pointer">Phlote</h1>
         </Link>
         <div className="flex-grow" />
-        {active && (
-          <NavBarElementContainer>
-            <Link href="/archive" passHref>
-              <HollowButtonContainer className="flex justify-center items-center ">
-                Index
-              </HollowButtonContainer>
-            </Link>
-          </NavBarElementContainer>
-        )}
+        <NavBarElementContainer>
+          <Link href="/archive" passHref>
+            <HollowButtonContainer className="flex justify-center items-center ">
+              Index
+            </HollowButtonContainer>
+          </Link>
+        </NavBarElementContainer>
         {active && (
           <NavBarElementContainer>
             <Link
