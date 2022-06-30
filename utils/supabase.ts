@@ -61,13 +61,10 @@ export const getProfileForWallet = async (wallet: string) => {
 
   // get number of cosigns given
 
-  const submissionsQueryAll = await supabase
-    .from("submissions")
-    .select()
-    .then(q=>q.body)
+  const submissionsQueryAll = await supabase.from("submissions").select();
 
   let cosignsGiven = 0;
-  submissionsQueryAll.forEach((submission) => {
+  submissionsQueryAll.data.forEach((submission: Submission) => {
     let subCosigns = submission?.cosigns;
     if (subCosigns) {
       subCosigns.forEach((cosign) => {
