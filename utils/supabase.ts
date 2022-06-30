@@ -63,15 +63,10 @@ export const getProfileForWallet = async (wallet: string) => {
 
   const submissionsQueryAll = await supabase.from("submissions").select();
 
-  let cosignsGiven = 0;
-  submissionsQueryAll.data.forEach((submission: Submission) => {
-    let subCosigns = submission?.cosigns;
-    if (subCosigns) {
-      subCosigns.forEach((cosign) => {
-        if (cosign === wallet) cosignsGiven++;
-      });
-    }
-  });
+  const cosignsGiven = submissionsQueryAll.data
+    .flatMap((submission: Submission) => submission.cosigns)
+    .filter((c) => !!c)
+    .reduce((acc, c) => (c === wallet ? acc + 1 : acc), 0);
 
   return {
     ...profileMeta,
