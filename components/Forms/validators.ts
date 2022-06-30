@@ -50,9 +50,30 @@ export const usernameTaken = async (username: string, wallet: string) => {
   return query.data.length > 0 && query.data[0].wallet !== wallet;
 };
 
-export const urlDuplicate = async (mediaURI: string) => {
-  const query = await supabase.from("submissions").select().match({ mediaURI });
-  return query.data.length > 0;
+function cleanUrl(url: string){
+  const filter = [
+    "http://",
+    "https://",
+    "www.",
+  ];
+
+  for (let i in filter) {
+    url = url.replace(filter[i], "");
+  }
+
+  return url.replace(/\/+$/, '');
+}
+
+function isInArray(array: string[], el: string){
+  for (let i in array) {
+    if (array[i] === el) return true;
+  }
+  return false;
+}
+
+export const urlDuplicate = async (mediaURI) => {
+  const query = (await supabase.from("submissions").select("mediaURI")).data.map(d=> d.mediaURI);
+  return isInArray(query.map(cleanUrl), cleanUrl(mediaURI.href));
 };
 
 export const validateProfileSettings = async (values: UserProfile) => {
