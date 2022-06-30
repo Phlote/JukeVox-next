@@ -3,7 +3,7 @@ import { supabase } from "../../lib/supabase";
 import { Submission } from "../../types";
 import { UserProfile } from "./ProfileSettingsForm";
 
-export const validateSubmission = (values: Submission) => {
+export const validateSubmission = async (values: Submission) => {
   const errors: Record<string, string> = {};
   if (!values.mediaURI) {
     errors.mediaURI = "Required";
@@ -17,6 +17,9 @@ export const validateSubmission = (values: Submission) => {
 
     if (!!url && url?.protocol !== "http:" && url?.protocol !== "https:") {
       errors.mediaURI = "Only http or https";
+    }
+    if (await urlDuplicate(url)){
+      errors.mediaURI = "Duplicate submission";
     }
   }
   if (!values.mediaType) {
@@ -45,6 +48,11 @@ export const validateSubmission = (values: Submission) => {
 export const usernameTaken = async (username: string, wallet: string) => {
   const query = await supabase.from("profiles").select().match({ username });
   return query.data.length > 0 && query.data[0].wallet !== wallet;
+};
+
+export const urlDuplicate = async (mediaURI: string) => {
+  const query = await supabase.from("submissions").select().match({ mediaURI });
+  return query.data.length > 0;
 };
 
 export const validateProfileSettings = async (values: UserProfile) => {
