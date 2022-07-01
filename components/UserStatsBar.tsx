@@ -4,7 +4,8 @@ import tw from "twin.macro";
 import { UserProfile } from "./Forms/ProfileSettingsForm";
 
 export const UserStatsBar: React.FC<{ profile: UserProfile }> = (props) => {
-  const { profilePic, username, city, cosigns } = props.profile;
+  const { profilePic, username, city, cosignsReceived, cosignsGiven } =
+    props.profile;
 
   return (
     <UserStatsBarContainer>
@@ -27,10 +28,11 @@ export const UserStatsBar: React.FC<{ profile: UserProfile }> = (props) => {
       <div className="w-4" />
       <div className="flex">
         <div className="relative h-6 w-6">
-          <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
+          <Image src="/blue_diamond.png" alt="Cosigns received" layout="fill" />
         </div>
 
-        <p className="text-l italic">: {`${cosigns}`}</p>
+        <p className="text-l italic">: {`${cosignsReceived}/`}</p>
+        <p className="text-l italic">{`${cosignsGiven}`}</p>
       </div>
     </UserStatsBarContainer>
   );
