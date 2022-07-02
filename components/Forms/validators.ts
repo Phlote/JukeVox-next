@@ -18,8 +18,10 @@ export const validateSubmission = async (values: Submission) => {
     if (!!url && url?.protocol !== "http:" && url?.protocol !== "https:") {
       errors.mediaURI = "Only http or https";
     }
-    if (await urlDuplicate(url)){
-      errors.mediaURI = "Duplicate submission";
+    if (!errors.mediaURI){
+      if (await urlDuplicate(url.href)){//Second if so that it only fetches when other errors are not present
+        errors.mediaURI = "Duplicate submission";
+      }
     }
   }
   if (!values.mediaType) {
@@ -64,16 +66,12 @@ function cleanUrl(url: string){
   return url.replace(/\/+$/, '');
 }
 
-function isInArray(array: string[], el: string){
-  for (let i in array) {
-    if (array[i] === el) return true;
-  }
-  return false;
-}
-
-export const urlDuplicate = async (mediaURI) => {
-  const query = (await supabase.from("submissions").select("mediaURI")).data.map(d=> d.mediaURI);
-  return isInArray(query.map(cleanUrl), cleanUrl(mediaURI.href));
+export const urlDuplicate = async (mediaURI : string) => {
+  const query = await supabase
+    .from("submissions")
+    .select()
+    .ilike("mediaURI",`%${cleanUrl(mediaURI)}%`);
+  return query.data.length > 0;
 };
 
 export const validateProfileSettings = async (values: UserProfile) => {
