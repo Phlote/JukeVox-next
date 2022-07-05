@@ -3,7 +3,7 @@ import { supabase } from "../../lib/supabase";
 import { Submission } from "../../types";
 import { UserProfile } from "./ProfileSettingsForm";
 
-export const validateSubmission = (values: Submission) => {
+export const validateSubmission = async (values: Submission) => {
   const errors: Record<string, string> = {};
   if (!values.mediaURI) {
     errors.mediaURI = "Required";
@@ -17,6 +17,11 @@ export const validateSubmission = (values: Submission) => {
 
     if (!!url && url?.protocol !== "http:" && url?.protocol !== "https:") {
       errors.mediaURI = "Only http or https";
+    }
+    if (!errors.mediaURI){
+      if (await urlDuplicate(url.href)){//Second if so that it only fetches when other errors are not present
+        errors.mediaURI = "Duplicate submission";
+      }
     }
   }
   if (!values.mediaType) {
@@ -45,6 +50,28 @@ export const validateSubmission = (values: Submission) => {
 export const usernameTaken = async (username: string, wallet: string) => {
   const query = await supabase.from("profiles").select().match({ username });
   return query.data.length > 0 && query.data[0].wallet !== wallet;
+};
+
+function cleanUrl(url: string){
+  const filter = [
+    "http://",
+    "https://",
+    "www.",
+  ];
+
+  for (let i in filter) {
+    url = url.replace(filter[i], "");
+  }
+
+  return url.replace(/\/+$/, '');
+}
+
+export const urlDuplicate = async (mediaURI : string) => {
+  const query = await supabase
+    .from("submissions")
+    .select()
+    .ilike("mediaURI",`%${cleanUrl(mediaURI)}%`);
+  return query.data.length > 0;
 };
 
 export const validateProfileSettings = async (values: UserProfile) => {
