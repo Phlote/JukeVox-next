@@ -66,7 +66,7 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
           <DropdownChecklist
             {...mediaType.input}
             close={() => setDropdownOpen(false)}
-            fields={["Audio", "Text", "Video", "Visual Art"]}
+            fields={["Audio File","Audio", "Text", "Video", "Visual Art"]}
             closeOnSelect
             borders
           />
