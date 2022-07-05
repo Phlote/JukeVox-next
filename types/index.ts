@@ -16,6 +16,7 @@ export interface Submission {
   marketplace: string;
   tags?: string[];
   cosigns?: string[];
+  noOfCosigns?: number;
   username: string;
 }
 

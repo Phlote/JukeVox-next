@@ -90,7 +90,7 @@ function Archive({ query }) {
             <ArchiveTableHeader label="Media Type" filterKey="mediaType" />
             <ArchiveTableHeader label="Platform" filterKey="marketplace" />
             <ArchiveTableHeader label="Curator" filterKey="curatorWallet" />
-            <ArchiveTableHeader label="Co-Signs" />
+            <ArchiveTableHeader label="Co-Signs" filterKey="noOfCosigns" />
           </tr>
         </thead>
 

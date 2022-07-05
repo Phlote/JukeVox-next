@@ -11,6 +11,7 @@ import {
   useSubmissionSearch,
 } from "../../hooks/useSubmissions";
 import { DropdownChecklist } from "../Dropdowns/DropdownChecklist";
+import { DropdownRatings, GemRow } from "../Dropdowns/DropdownRatings";
 import { Username } from "../Username";
 
 export const ArchiveTableHeader = (props) => {
@@ -46,7 +47,10 @@ export const ArchiveTableHeader = (props) => {
           )}
         >
           {isActiveFilter ? (
-            <ArchiveFilterLabel filter={filters[filterKey]} />
+            <ArchiveFilterLabel
+              filterKey={filterKey}
+              filter={filters[filterKey]}
+            />
           ) : (
             label
           )}
@@ -81,11 +85,16 @@ export const ArchiveTableHeader = (props) => {
   );
 };
 
-export const ArchiveFilterLabel: React.FC<{ filter: string }> = ({
-  filter,
-}) => {
-  const isAddress = ethers.utils.isAddress(filter);
-  if (isAddress) return <Username wallet={filter} />;
+export const ArchiveFilterLabel: React.FC<{
+  filterKey: string;
+  filter: string | number;
+}> = ({ filterKey, filter }) => {
+  if (filterKey === "cosigns") {
+    return <GemRow length={filter as number} />;
+  }
+
+  const isAddress = ethers.utils.isAddress(filter as string);
+  if (isAddress) return <Username wallet={filter as string} />;
   else return <span>{filter}</span>;
 };
 
@@ -127,6 +136,22 @@ export const ArchiveDropdown: React.FC<{
       return updated;
     });
   };
+
+  if (filterKey === "noOfCosigns") {
+    return (
+      <div
+        className="absolute z-10 h-64 w-64 mb-4 top-10 overflow-y-scroll p-2"
+        style={{ backgroundColor: "#1d1d1d" }}
+      >
+        <DropdownRatings
+          value={filters[filterKey]}
+          onChange={updateFilter}
+          close={close}
+          max={5}
+        />
+      </div>
+    );
+  }
 
   return (
     <div
