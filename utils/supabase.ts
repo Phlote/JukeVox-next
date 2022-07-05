@@ -11,8 +11,7 @@ export const getSubmissionsWithFilter = async (
 ) => {
   if (!selectStatement) selectStatement = supabase.from("submissions").select();
 
-  if (filters)
-    selectStatement = selectStatement.match(filters as Partial<Submission>);
+  if (filters) selectStatement = selectStatement.match(filters);
 
   if (page !== undefined) {
     const { from, to } = getPagination(page);
