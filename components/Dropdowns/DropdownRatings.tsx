@@ -30,12 +30,11 @@ export const DropdownRatings: React.FC<DropdownRatings> = ({
 
   return (
     <div
-      className={classNames("grid grid-cols-1 w-full", {
+      className={classNames("grid grid-cols-1 w-full h-full", {
         "divide-y": borders,
       })}
     >
       {[...Array(max + 1).keys()].slice(1).map((gems) => {
-        console.log("gems: ", gems);
         return (
           <div
             className="w-full sm:h-14 h-12 flex justify-left items-center"

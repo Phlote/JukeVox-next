@@ -137,33 +137,26 @@ export const ArchiveDropdown: React.FC<{
     });
   };
 
-  if (filterKey === "noOfCosigns") {
-    return (
-      <div
-        className="absolute z-10 h-64 w-64 mb-4 top-10 overflow-y-scroll p-2"
-        style={{ backgroundColor: "#1d1d1d" }}
-      >
+  return (
+    <div
+      className="absolute z-10 h-72	 w-64 mb-4 top-10 overflow-y-scroll p-2 bg-black"
+      style={{ backgroundColor: "rgba(0, 0, 0, 0.90)" }}
+    >
+      {filterKey === "noOfCosigns" ? (
         <DropdownRatings
           value={filters[filterKey]}
           onChange={updateFilter}
           close={close}
           max={5}
         />
-      </div>
-    );
-  }
-
-  return (
-    <div
-      className="absolute z-10 h-64 w-64 mb-4 top-10 overflow-y-scroll p-2 bg-black"
-      style={{ backgroundColor: "rgba(0, 0, 0, 0.90)" }}
-    >
-      <DropdownChecklist
-        value={filters[filterKey]}
-        onChange={updateFilter}
-        fields={options}
-        close={close}
-      />
+      ) : (
+        <DropdownChecklist
+          value={filters[filterKey]}
+          onChange={updateFilter}
+          fields={options}
+          close={close}
+        />
+      )}
     </div>
   );
 };
