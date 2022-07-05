@@ -11,6 +11,13 @@ import {
 import { HollowTagsInput } from "../Hollow/HollowTagsInput";
 import { validateSubmission } from "./validators";
 
+function onFileChange(e){
+  const imageFile = e.target.files[0];
+  const imagePath = `public/${imageFile.name}`;
+
+  console.log(imagePath);
+}
+
 export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const { form, handleSubmit, valid } = useForm({
@@ -19,6 +26,7 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
   });
 
   const mediaURI = useField("mediaURI", form);
+  const mediaFile = useField("mediaFile", form);
   const mediaType = useField("mediaType", form);
   const artistName = useField("artistName", form);
   const mediaTitle = useField("mediaTitle", form);
@@ -26,14 +34,26 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
   const artistWallet = useField("artistWallet", form);
   const tags = useField("tags", form);
 
+  console.log(mediaType);
+
   return (
     <div className="grid grid-cols-1 gap-3 md:my-8">
-      <HollowInputContainer type="form">
-        <HollowInput {...mediaURI.input} type="text" placeholder="Link" />
-        {mediaURI.meta.touched && mediaURI.meta.error && (
-          <span className="text-red-600 ml-2">{mediaURI.meta.error}</span>
-        )}
-      </HollowInputContainer>
+      {mediaType.input.value === "Audio File" ? (
+        <HollowInputContainer type="form">
+          <HollowInput {...mediaFile.input} type="file" placeholder="File" onChange={onFileChange}/>
+          {mediaFile.meta.touched && mediaFile.meta.error && (
+            <span className="text-red-600 ml-2">{mediaFile.meta.error}</span>
+          )}
+        </HollowInputContainer>
+      ) : (
+        <HollowInputContainer type="form">
+          <HollowInput {...mediaURI.input} type="text" placeholder="Link" />
+          {mediaURI.meta.touched && mediaURI.meta.error && (
+            <span className="text-red-600 ml-2">{mediaURI.meta.error}</span>
+          )}
+        </HollowInputContainer>
+      )}
+
       <HollowInputContainer
         onClick={() => setDropdownOpen(!dropdownOpen)}
         type="form"
