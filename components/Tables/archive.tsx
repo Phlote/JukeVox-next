@@ -54,7 +54,7 @@ export const ArchiveTableHeader = (props) => {
           ) : (
             label
           )}
-          {filterKey && options.length > 0 && (
+          {filterKey && (
             <>
               <div className="w-2" />
 
@@ -89,7 +89,7 @@ export const ArchiveFilterLabel: React.FC<{
   filterKey: string;
   filter: string | number;
 }> = ({ filterKey, filter }) => {
-  if (filterKey === "cosigns") {
+  if (filterKey === "noOfCosigns") {
     return <GemRow length={filter as number} />;
   }
 
