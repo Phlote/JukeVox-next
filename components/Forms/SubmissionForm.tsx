@@ -16,22 +16,15 @@ import {toast} from "react-toastify";
 import {useDropzone} from "react-dropzone";
 import { useWeb3React } from "@web3-react/core";
 
-function onFileChange(e){
-  const imageFile = e.target.files[0];
-  const imagePath = `public/${imageFile.name}`;
-
-  console.log(imagePath);
-}
-
 export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+  const [fileUploaded, setFileUploaded] = useState<boolean>(false);
   const { form, handleSubmit, valid } = useForm({
     onSubmit,
     validate: validateSubmission,
   });
 
   const mediaURI = useField("mediaURI", form);
-  const mediaFile = useField("mediaFile", form);
   const mediaType = useField("mediaType", form);
   const artistName = useField("artistName", form);
   const mediaTitle = useField("mediaTitle", form);
@@ -41,11 +34,14 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
 
   const {account} = useWeb3React();
 
+  console.log(!valid, mediaType.input.value, fileUploaded,metamaskLoading || !valid && !(mediaType.input.value === "Audio File" && fileUploaded));
+
   return (
     <div className="grid grid-cols-1 gap-3 md:my-8">
       {mediaType.input.value === "Audio File" ? (
         <FileUpload
           wallet={account}
+          initialFileURL={null}
         />
       ) : (
         <HollowInputContainer type="form">
@@ -138,8 +134,8 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
       <div className="flex justify-center items-center">
         <HollowButtonContainer onClick={handleSubmit}>
           <HollowButton
-            className="w-16"
-            disabled={metamaskLoading || !valid}
+            className="w-16"//this doesn't work because valid can never be trusted and yet it's the only way to know the other fields are valid
+            disabled={metamaskLoading || !valid && !(mediaType.input.value === "Audio File" && fileUploaded)}
             style={metamaskLoading ? { width: "16rem" } : undefined}
           >
             {metamaskLoading ? "Waiting for Wallet..." : "Mint"}
@@ -151,16 +147,16 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
   );
 };
 
-const FileUpload = ({ wallet, initialImageURL }) => {
+const FileUpload = ({ wallet, initialFileURL }) => {
   const queryClient = useQueryClient();
   const path = `${wallet}/profile`;
-  const [imageURL, setImageURL] = useState<string>(initialImageURL);
+  const [fileURL, setFileURL] = useState<string>(initialFileURL);
   const [updating, setUpdating] = useState<boolean>();
 
   useEffect(() => {
-    if (initialImageURL && initialImageURL !== imageURL)
-      setImageURL(initialImageURL);
-  }, [initialImageURL, imageURL]);
+    if (initialFileURL && initialFileURL !== fileURL)
+      setFileURL(initialFileURL);
+  }, [initialFileURL, fileURL]);
 
   const onDrop = useCallback(
     async (acceptedFiles) => {
@@ -168,7 +164,7 @@ const FileUpload = ({ wallet, initialImageURL }) => {
       const updateTime = Date.now();
       try {
         const uploadProfilePic = await supabase.storage
-          .from("profile-pics")
+          .from("audio-files")
           .upload(path, acceptedFiles[0], {
             upsert: true,
           });
@@ -176,12 +172,12 @@ const FileUpload = ({ wallet, initialImageURL }) => {
         if (uploadProfilePic.error) throw uploadProfilePic.error;
 
         const publicURLQuery = supabase.storage
-          .from("profile-pics")
+          .from("audio-files")
           .getPublicUrl(`${wallet}/profile`);
 
         if (publicURLQuery.error) throw publicURLQuery.error;
 
-        setImageURL(`${publicURLQuery.publicURL}?cacheBust=${updateTime}`);
+        setFileURL(`${publicURLQuery.publicURL}?cacheBust=${updateTime}`);
 
         const profileUpsert = await supabase.from("profiles").upsert(
           {
@@ -215,25 +211,31 @@ const FileUpload = ({ wallet, initialImageURL }) => {
       type="form" {...getRootProps()}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}>
-      <HollowInput
-        {...getInputProps()}
-        type="file" placeholder={()=>dropzoneText(updating, isHovering, isDragActive, imageURL)}
-        onChange={onFileChange}/>
+      <HollowInput {...getInputProps()} />
+      <DropzoneText
+        isUpdating={updating}
+        isHovering={isHovering}
+        isDragActive={isDragActive}
+        profilePic={fileURL}
+      />
     </HollowInputContainer>
   );
 };
 
-const dropzoneText = (isUpdating, isHovering, isDragActive, profilePic) => {
-  if (isUpdating) return "Uploading...";
+const DropzoneText = ({ isUpdating, isHovering, isDragActive, profilePic }) => {
+  if (isUpdating) return <p className="text-base italic">{"Uploading..."}</p>;
 
   if (isHovering)
-    return "Upload new file";
+    return <p className="text-base italic">{"Upload new file"}</p>;
 
   if (isDragActive)
-    return "Drop file here";
+    return <p className="text-base italic">{"Drop file here"}</p>;
 
   if (!isHovering && !isDragActive && !profilePic)
-    return "Drop or select file to upload";
+    return <p className="text-base italic">{"Drop or select file to upload"}</p>;
+
+  if (profilePic && !isDragActive)
+    return <p className="text-base bold">{"File uploaded successfully!"}</p>;
 
   return null;
 };
