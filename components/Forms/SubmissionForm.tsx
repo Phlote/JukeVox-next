@@ -24,7 +24,7 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
     validate: validateSubmission,
   });
 
-  const mediaURI = useField("mediaURI", form);
+  const mediaURI = useField("mediaURI", form);//remove this and test if file upload alone can make the valid var come true
   const mediaType = useField("mediaType", form);
   const artistName = useField("artistName", form);
   const mediaTitle = useField("mediaTitle", form);
