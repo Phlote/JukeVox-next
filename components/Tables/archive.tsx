@@ -6,10 +6,7 @@ import React from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 import { useOnClickOut } from "../../hooks/useOnClickOut";
-import {
-  useSearchFilters,
-  useSubmissionSearch,
-} from "../../hooks/useSubmissions";
+import { useSearchFilters, useSubmissions } from "../../hooks/useSubmissions";
 import { DropdownChecklist } from "../Dropdowns/DropdownChecklist";
 import { DropdownRatings, GemRow } from "../Dropdowns/DropdownRatings";
 import { Username } from "../Username";
@@ -23,10 +20,7 @@ export const ArchiveTableHeader = (props) => {
 
   const isActiveFilter = !!filters[filterKey];
 
-  const submissionsQuery = useSubmissionSearch();
-  const submissions = submissionsQuery.data?.pages?.flatMap(
-    (group) => group?.submissions
-  );
+  const submissions = useSubmissions();
 
   const options = Array.from(
     new Set(submissions?.map((submission) => submission[filterKey]))
