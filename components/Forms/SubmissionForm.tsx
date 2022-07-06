@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import { useField, useForm } from "react-final-form-hooks";
 import { DropdownChecklist } from "../Dropdowns/DropdownChecklist";
 import {
@@ -10,6 +10,11 @@ import {
 } from "../Hollow";
 import { HollowTagsInput } from "../Hollow/HollowTagsInput";
 import { validateSubmission } from "./validators";
+import {useQueryClient} from "react-query";
+import {supabase} from "../../lib/supabase";
+import {toast} from "react-toastify";
+import {useDropzone} from "react-dropzone";
+import { useWeb3React } from "@web3-react/core";
 
 function onFileChange(e){
   const imageFile = e.target.files[0];
@@ -34,17 +39,14 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
   const artistWallet = useField("artistWallet", form);
   const tags = useField("tags", form);
 
-  console.log(mediaType);
+  const {account} = useWeb3React();
 
   return (
     <div className="grid grid-cols-1 gap-3 md:my-8">
       {mediaType.input.value === "Audio File" ? (
-        <HollowInputContainer type="form">
-          <HollowInput {...mediaFile.input} type="file" placeholder="File" onChange={onFileChange}/>
-          {mediaFile.meta.touched && mediaFile.meta.error && (
-            <span className="text-red-600 ml-2">{mediaFile.meta.error}</span>
-          )}
-        </HollowInputContainer>
+        <FileUpload
+          wallet={account}
+        />
       ) : (
         <HollowInputContainer type="form">
           <HollowInput {...mediaURI.input} type="text" placeholder="Link" />
@@ -147,4 +149,91 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
       </div>
     </div>
   );
+};
+
+const FileUpload = ({ wallet, initialImageURL }) => {
+  const queryClient = useQueryClient();
+  const path = `${wallet}/profile`;
+  const [imageURL, setImageURL] = useState<string>(initialImageURL);
+  const [updating, setUpdating] = useState<boolean>();
+
+  useEffect(() => {
+    if (initialImageURL && initialImageURL !== imageURL)
+      setImageURL(initialImageURL);
+  }, [initialImageURL, imageURL]);
+
+  const onDrop = useCallback(
+    async (acceptedFiles) => {
+      setUpdating(true);
+      const updateTime = Date.now();
+      try {
+        const uploadProfilePic = await supabase.storage
+          .from("profile-pics")
+          .upload(path, acceptedFiles[0], {
+            upsert: true,
+          });
+
+        if (uploadProfilePic.error) throw uploadProfilePic.error;
+
+        const publicURLQuery = supabase.storage
+          .from("profile-pics")
+          .getPublicUrl(`${wallet}/profile`);
+
+        if (publicURLQuery.error) throw publicURLQuery.error;
+
+        setImageURL(`${publicURLQuery.publicURL}?cacheBust=${updateTime}`);
+
+        const profileUpsert = await supabase.from("profiles").upsert(
+          {
+            wallet,
+            profilePic: publicURLQuery.publicURL,
+            updateTime,
+          },
+          { onConflict: "wallet" }
+        );
+
+        if (profileUpsert.error) throw profileUpsert.error;
+        await queryClient.invalidateQueries(["profile", wallet]);
+      } catch (e) {
+        console.error(e);
+        toast.error(e);
+      } finally {
+        setUpdating(false);
+      }
+    },
+    [path, queryClient, wallet]
+  );
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: "image/jpeg,image/png",
+  });
+
+  const [isHovering, setIsHovering] = useState<boolean>();
+  return (
+    <HollowInputContainer
+      type="form" {...getRootProps()}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}>
+      <HollowInput
+        {...getInputProps()}
+        type="file" placeholder={()=>dropzoneText(updating, isHovering, isDragActive, imageURL)}
+        onChange={onFileChange}/>
+    </HollowInputContainer>
+  );
+};
+
+const dropzoneText = (isUpdating, isHovering, isDragActive, profilePic) => {
+  if (isUpdating) return "Uploading...";
+
+  if (isHovering)
+    return "Upload new file";
+
+  if (isDragActive)
+    return "Drop file here";
+
+  if (!isHovering && !isDragActive && !profilePic)
+    return "Drop or select file to upload";
+
+  return null;
 };
