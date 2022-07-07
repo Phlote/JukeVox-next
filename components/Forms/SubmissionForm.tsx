@@ -18,7 +18,7 @@ import { useWeb3React } from "@web3-react/core";
 
 export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-  const [fileUploaded, setFileUploaded] = useState<boolean>(false);
+  const [fileSelected, setFileSelected] = useState<boolean>(false);
   const { form, handleSubmit, valid } = useForm({
     onSubmit,
     validate: validateSubmission,
@@ -79,6 +79,8 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
         <FileUpload
           wallet={account}
           initialFileURL={null}
+          fileSelected={fileSelected}
+          setFileSelected={setFileSelected}
         />
       ) : (
         <HollowInputContainer type="form">
@@ -135,7 +137,7 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
             className="w-16"
             disabled={!(metamaskLoading ?
               false :
-              ((mediaType.input.value === "File" && valid && fileUploaded) || (mediaType.input.value === "Link" && valid)))}
+              ((mediaType.input.value === "File" && valid && fileSelected) || (mediaType.input.value === "Link" && valid)))}
           >
             {metamaskLoading ? "Waiting for Wallet..." : "Mint"}
           </HollowButton>
@@ -146,7 +148,7 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
   );
 };
 
-const FileUpload = ({ wallet, initialFileURL }) => {
+const FileUpload = ({ wallet, initialFileURL, fileSelected,setFileSelected }) => {
   const queryClient = useQueryClient();
   const path = `${wallet}/profile`;
   const [fileURL, setFileURL] = useState<string>(initialFileURL);
@@ -157,45 +159,47 @@ const FileUpload = ({ wallet, initialFileURL }) => {
       setFileURL(initialFileURL);
   }, [initialFileURL, fileURL]);
 
+  let uploadFiles = async (acceptedFiles) => {
+    setUpdating(true);
+    const updateTime = Date.now();
+    try {
+      const uploadProfilePic = await supabase.storage
+        .from("audio-files")
+        .upload(path, acceptedFiles[0], {
+          upsert: true,
+        });
+
+      if (uploadProfilePic.error) throw uploadProfilePic.error;
+
+      const publicURLQuery = supabase.storage
+        .from("audio-files")
+        .getPublicUrl(`${wallet}/profile`);
+
+      if (publicURLQuery.error) throw publicURLQuery.error;
+
+      setFileURL(`${publicURLQuery.publicURL}?cacheBust=${updateTime}`);
+
+      const profileUpsert = await supabase.from("profiles").upsert(
+        {
+          wallet,
+          profilePic: publicURLQuery.publicURL,
+          updateTime,
+        },
+        { onConflict: "wallet" }
+      );
+
+      if (profileUpsert.error) throw profileUpsert.error;
+      await queryClient.invalidateQueries(["profile", wallet]);
+    } catch (e) {
+      console.error(e);
+      toast.error(e);
+    } finally {
+      setUpdating(false);
+    }
+  }
+
   const onDrop = useCallback(
-    async (acceptedFiles) => {
-      setUpdating(true);
-      const updateTime = Date.now();
-      try {
-        const uploadProfilePic = await supabase.storage
-          .from("audio-files")
-          .upload(path, acceptedFiles[0], {
-            upsert: true,
-          });
-
-        if (uploadProfilePic.error) throw uploadProfilePic.error;
-
-        const publicURLQuery = supabase.storage
-          .from("audio-files")
-          .getPublicUrl(`${wallet}/profile`);
-
-        if (publicURLQuery.error) throw publicURLQuery.error;
-
-        setFileURL(`${publicURLQuery.publicURL}?cacheBust=${updateTime}`);
-
-        const profileUpsert = await supabase.from("profiles").upsert(
-          {
-            wallet,
-            profilePic: publicURLQuery.publicURL,
-            updateTime,
-          },
-          { onConflict: "wallet" }
-        );
-
-        if (profileUpsert.error) throw profileUpsert.error;
-        await queryClient.invalidateQueries(["profile", wallet]);
-      } catch (e) {
-        console.error(e);
-        toast.error(e);
-      } finally {
-        setUpdating(false);
-      }
-    },
+    () => setFileSelected(true),
     [path, queryClient, wallet]
   );
 
@@ -215,13 +219,13 @@ const FileUpload = ({ wallet, initialFileURL }) => {
         isUpdating={updating}
         isHovering={isHovering}
         isDragActive={isDragActive}
-        profilePic={fileURL}
+        fileSelected={fileSelected}
       />
     </HollowInputContainer>
   );
 };
 
-const DropzoneText = ({ isUpdating, isHovering, isDragActive, profilePic }) => {
+const DropzoneText = ({ isUpdating, isHovering, isDragActive, fileSelected }) => {
   if (isUpdating) return <p className="text-base italic">{"Uploading..."}</p>;
 
   if (isHovering)
@@ -230,11 +234,11 @@ const DropzoneText = ({ isUpdating, isHovering, isDragActive, profilePic }) => {
   if (isDragActive)
     return <p className="text-base italic">{"Drop file here"}</p>;
 
-  if (!isHovering && !isDragActive && !profilePic)
+  if (!isHovering && !isDragActive && !fileSelected)
     return <p className="text-base italic">{"Drop or select file to upload"}</p>;
 
-  if (profilePic && !isDragActive)
-    return <p className="text-base bold">{"File uploaded successfully!"}</p>;
+  if (fileSelected && !isDragActive)
+    return <p className="text-base bold">{"File selected!"}</p>;
 
   return null;
 };
