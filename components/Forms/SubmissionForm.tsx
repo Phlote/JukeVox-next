@@ -1,6 +1,11 @@
+import { useWeb3React } from "@web3-react/core";
 import Image from "next/image";
-import React, {useCallback, useEffect, useState} from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { DropEvent, FileRejection, useDropzone } from "react-dropzone";
 import { useField, useForm } from "react-final-form-hooks";
+import { useQueryClient } from "react-query";
+import { toast } from "react-toastify";
+import { supabase } from "../../lib/supabase";
 import { DropdownChecklist } from "../Dropdowns/DropdownChecklist";
 import {
   HollowButton,
@@ -10,15 +15,10 @@ import {
 } from "../Hollow";
 import { HollowTagsInput } from "../Hollow/HollowTagsInput";
 import { validateSubmission } from "./validators";
-import {useQueryClient} from "react-query";
-import {supabase} from "../../lib/supabase";
-import {toast} from "react-toastify";
-import {useDropzone} from "react-dropzone";
-import { useWeb3React } from "@web3-react/core";
 
 export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-  const [fileSelected, setFileSelected] = useState<boolean>(false);
+  const [fileSelected, setFileSelected] = useState<File>();
   const { form, handleSubmit, valid } = useForm({
     onSubmit,
     validate: validateSubmission,
@@ -32,7 +32,7 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
   const artistWallet = useField("artistWallet", form);
   const tags = useField("tags", form);
 
-  const {account} = useWeb3React();
+  const { account } = useWeb3React();
 
   return (
     <div className="grid grid-cols-1 gap-3 md:my-8">
@@ -135,9 +135,14 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
         <HollowButtonContainer onClick={handleSubmit}>
           <HollowButton
             className="w-16"
-            disabled={!(metamaskLoading ?
-              false :
-              ((mediaType.input.value === "File" && valid && fileSelected) || (mediaType.input.value === "Link" && valid)))}
+            disabled={
+              !(metamaskLoading
+                ? false
+                : (mediaType.input.value === "File" &&
+                    valid &&
+                    !!fileSelected) ||
+                  (mediaType.input.value === "Link" && valid))
+            }
           >
             {metamaskLoading ? "Waiting for Wallet..." : "Mint"}
           </HollowButton>
@@ -148,7 +153,19 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
   );
 };
 
-const FileUpload = ({ wallet, initialFileURL, fileSelected,setFileSelected }) => {
+interface FileUploadProps {
+  wallet: string;
+  initialFileURL: string;
+  fileSelected: File;
+  setFileSelected: React.Dispatch<React.SetStateAction<File>>;
+}
+
+const FileUpload: React.FC<FileUploadProps> = ({
+  wallet,
+  initialFileURL,
+  fileSelected,
+  setFileSelected,
+}) => {
   const queryClient = useQueryClient();
   const path = `${wallet}/profile`;
   const [fileURL, setFileURL] = useState<string>(initialFileURL);
@@ -196,10 +213,14 @@ const FileUpload = ({ wallet, initialFileURL, fileSelected,setFileSelected }) =>
     } finally {
       setUpdating(false);
     }
-  }
+  };
 
   const onDrop = useCallback(
-    () => setFileSelected(true),
+    (
+      acceptedFiles: File[],
+      fileRejections: FileRejection[],
+      event: DropEvent
+    ) => setFileSelected(acceptedFiles[0]),
     [path, queryClient, wallet]
   );
 
@@ -211,9 +232,11 @@ const FileUpload = ({ wallet, initialFileURL, fileSelected,setFileSelected }) =>
   const [isHovering, setIsHovering] = useState<boolean>();
   return (
     <HollowInputContainer
-      type="form" {...getRootProps()}
+      type="form"
+      {...getRootProps()}
       onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}>
+      onMouseLeave={() => setIsHovering(false)}
+    >
       <HollowInput {...getInputProps()} />
       <DropzoneText
         isUpdating={updating}
@@ -225,7 +248,12 @@ const FileUpload = ({ wallet, initialFileURL, fileSelected,setFileSelected }) =>
   );
 };
 
-const DropzoneText = ({ isUpdating, isHovering, isDragActive, fileSelected }) => {
+const DropzoneText = ({
+  isUpdating,
+  isHovering,
+  isDragActive,
+  fileSelected,
+}) => {
   if (isUpdating) return <p className="text-base italic">{"Uploading..."}</p>;
 
   if (isHovering)
@@ -235,9 +263,11 @@ const DropzoneText = ({ isUpdating, isHovering, isDragActive, fileSelected }) =>
     return <p className="text-base italic">{"Drop file here"}</p>;
 
   if (!isHovering && !isDragActive && !fileSelected)
-    return <p className="text-base italic">{"Drop or select file to upload"}</p>;
+    return (
+      <p className="text-base italic">{"Drop or select file to upload"}</p>
+    );
 
-  if (fileSelected && !isDragActive)
+  if (!!fileSelected && !isDragActive)
     return <p className="text-base bold">{"File selected!"}</p>;
 
   return null;
