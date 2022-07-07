@@ -5,22 +5,24 @@ import { UserProfile } from "./ProfileSettingsForm";
 
 export const validateSubmission = async (values: Submission) => {
   const errors: Record<string, string> = {};
-  if (!values.mediaURI) {
-    errors.mediaURI = "Required";
-  } else if (values.mediaURI) {
-    let url;
-    try {
-      url = new URL(values.mediaURI);
-    } catch (_) {
-      errors.mediaURI = "Invalid URL";
-    }
+  if (values.mediaType !== "File"){
+    if (!values.mediaURI) {
+      errors.mediaURI = "Required";
+    } else if (values.mediaURI) {
+      let url;
+      try {
+        url = new URL(values.mediaURI);
+      } catch (_) {
+        errors.mediaURI = "Invalid URL";
+      }
 
-    if (!!url && url?.protocol !== "http:" && url?.protocol !== "https:") {
-      errors.mediaURI = "Only http or https";
-    }
-    if (!errors.mediaURI){
-      if (await urlDuplicate(url.href)){//Second if so that it only fetches when other errors are not present
-        errors.mediaURI = "Duplicate submission";
+      if (!!url && url?.protocol !== "http:" && url?.protocol !== "https:") {
+        errors.mediaURI = "Only http or https";
+      }
+      if (!errors.mediaURI){
+        if (await urlDuplicate(url.href)){//Second if so that it only fetches when other errors are not present
+          errors.mediaURI = "Duplicate submission";
+        }
       }
     }
   }

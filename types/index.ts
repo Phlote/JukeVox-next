@@ -3,7 +3,7 @@ export interface UserNonce {
   nonce: number;
 }
 
-type MediaType = "Audio" | "Text" | "Video" | "Visual Art";
+type MediaType = "File" | "Link";
 export interface Submission {
   id: number;
   submissionTime: string;

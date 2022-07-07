@@ -24,7 +24,7 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
     validate: validateSubmission,
   });
 
-  const mediaURI = useField("mediaURI", form);//remove this and test if file upload alone can make the valid var come true
+  const mediaURI = useField("mediaURI", form);
   const mediaType = useField("mediaType", form);
   const artistName = useField("artistName", form);
   const mediaTitle = useField("mediaTitle", form);
@@ -34,24 +34,8 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
 
   const {account} = useWeb3React();
 
-  console.log(!valid, mediaType.input.value, fileUploaded,metamaskLoading || !valid && !(mediaType.input.value === "Audio File" && fileUploaded));
-
   return (
     <div className="grid grid-cols-1 gap-3 md:my-8">
-      {mediaType.input.value === "Audio File" ? (
-        <FileUpload
-          wallet={account}
-          initialFileURL={null}
-        />
-      ) : (
-        <HollowInputContainer type="form">
-          <HollowInput {...mediaURI.input} type="text" placeholder="Link" />
-          {mediaURI.meta.touched && mediaURI.meta.error && (
-            <span className="text-red-600 ml-2">{mediaURI.meta.error}</span>
-          )}
-        </HollowInputContainer>
-      )}
-
       <HollowInputContainer
         onClick={() => setDropdownOpen(!dropdownOpen)}
         type="form"
@@ -84,10 +68,24 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
           <DropdownChecklist
             {...mediaType.input}
             close={() => setDropdownOpen(false)}
-            fields={["Audio File","Audio", "Text", "Video", "Visual Art"]}
+            fields={["File", "Link"]}
             closeOnSelect
             borders
           />
+        </HollowInputContainer>
+      )}
+
+      {mediaType.input.value === "File" ? (
+        <FileUpload
+          wallet={account}
+          initialFileURL={null}
+        />
+      ) : (
+        <HollowInputContainer type="form">
+          <HollowInput {...mediaURI.input} type="text" placeholder="Link" />
+          {mediaURI.meta.touched && mediaURI.meta.error && (
+            <span className="text-red-600 ml-2">{mediaURI.meta.error}</span>
+          )}
         </HollowInputContainer>
       )}
 
@@ -134,9 +132,10 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
       <div className="flex justify-center items-center">
         <HollowButtonContainer onClick={handleSubmit}>
           <HollowButton
-            className="w-16"//this doesn't work because valid can never be trusted and yet it's the only way to know the other fields are valid
-            disabled={metamaskLoading || !valid && !(mediaType.input.value === "Audio File" && fileUploaded)}
-            style={metamaskLoading ? { width: "16rem" } : undefined}
+            className="w-16"
+            disabled={!(metamaskLoading ?
+              false :
+              ((mediaType.input.value === "File" && valid && fileUploaded) || (mediaType.input.value === "Link" && valid)))}
           >
             {metamaskLoading ? "Waiting for Wallet..." : "Mint"}
           </HollowButton>
