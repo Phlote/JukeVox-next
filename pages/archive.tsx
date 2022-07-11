@@ -28,7 +28,6 @@ function Archive({ query }) {
   // set state variables on initial render
   useEffect(() => {
     if (query) {
-      console.log(query);
       const { search, filters } = query;
 
       if (search) {
@@ -48,8 +47,8 @@ function Archive({ query }) {
         {
           pathname: "/archive",
           query: {
-            search: searchTerm ? encodeURI(searchTerm) : undefined,
-            filters: filters ? encodeURI(JSON.stringify(filters)) : undefined,
+            search: searchTerm ? searchTerm : undefined,
+            filters: filters ? JSON.stringify(filters) : undefined,
           },
         },
         undefined,
