@@ -10,7 +10,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "cd ./solidity; yarn"
+    "postinstall": "cd ./solidity; yarn",
+    "moralis-watch-cloud-folder": "env-cmd -x --use-shell 'moralis-admin-cli watch-cloud-folder --moralisApiKey $MORALIS_CLI_API_KEY --moralisApiSecret $MORALIS_CLI_SECRET_KEY -autoSave 1 --moralisCloudfolder ./moralis/cloud'"
   },
   "dependencies": {
     "@elastic/app-search-node": "^8.1.0",
@@ -33,6 +34,7 @@
     "classnames": "^2.3.1",
     "cuid": "^2.1.8",
     "dayjs": "^1.11.0",
+    "env-cmd": "^10.1.0",
     "final-form": "^4.20.6",
     "jotai": "^1.5.3",
     "lodash.debounce": "^4.0.8",
@@ -72,6 +74,7 @@
     "eslint-config-next": "12.0.8",
     "ethers": "^5.5.4",
     "hardhat": "^2.8.3",
+    "moralis-admin-cli": "^2.1.16",
     "postcss": "^8.4.6",
     "tailwindcss": "^3.0.18",
     "typechain": "^6.1.0",
