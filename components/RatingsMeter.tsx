@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { useMoralisCloudFunction } from "react-moralis";
 import { toast } from "react-toastify";
 import { cosign } from "../controllers/cosigns";
 import { useIsCurator } from "../hooks/useIsCurator";
@@ -16,8 +17,16 @@ export const RatingsMeter: React.FC<{
 }> = (props) => {
   const { submissionId, submitterWallet, initialCosigns } = props;
 
+  const { fetch } = useMoralisCloudFunction("mintOnZora", { autoFetch: false });
+
   const { account, library } = useWeb3React();
   const [cosigns, setCosigns] = React.useState<string[]>([]);
+
+  React.useEffect(() => {
+    fetch({
+      onSuccess: (data) => console.log("should say DAI: ", data),
+    });
+  }, []);
 
   React.useEffect(() => {
     if (initialCosigns) {

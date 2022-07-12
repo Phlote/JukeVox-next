@@ -4,6 +4,7 @@ import { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { ReactElement, ReactNode, useEffect } from "react";
+import { MoralisProvider } from "react-moralis";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -58,18 +59,23 @@ const NextWeb3App = ({ Component, pageProps }: AppPropsWithLayout) => {
       </Head>
       <QueryClientProvider client={queryClient}>
         <Web3ReactProvider getLibrary={getLibrary}>
-          {getLayout(<Component {...pageProps} />)}
-          <ToastContainer
-            position="top-right"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-          />
+          <MoralisProvider
+            appId="YNGhmnUijkqSan7lqElDTUa8uKTFadKiY7AzUxhE"
+            serverUrl="https://cjb6zxovwuul.usemoralis.com:2053/server"
+          >
+            {getLayout(<Component {...pageProps} />)}
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+            />
+          </MoralisProvider>
         </Web3ReactProvider>
       </QueryClientProvider>
     </>
