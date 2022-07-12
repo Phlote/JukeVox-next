@@ -1,13 +1,12 @@
-import pinataSDK from "@pinata/sdk";
 import cuid from "cuid";
+import Moralis from "moralis/node";
 import { NextApiRequest, NextApiResponse } from "next";
 import { nodeElasticClient } from "../../lib/elastic-app-search";
 import { supabase } from "../../lib/supabase";
 import { Submission } from "../../types";
 import { submissionToElasticSearchDocument } from "../../utils";
 
-const { ELASTIC_ENGINE_NAME, PINATA_API_KEY, PINATA_SECRET_API_KEY } =
-  process.env;
+const { ELASTIC_ENGINE_NAME } = process.env;
 
 export default async function handler(
   request: NextApiRequest,
@@ -30,6 +29,9 @@ export default async function handler(
       const { username } = profileQuery.data[0];
       submissionWithSubmitterInfo.username = username;
     }
+
+    const uri = await storeSubmissionOnIPFS(submissionWithSubmitterInfo);
+    submissionWithSubmitterInfo.nftMetadata = uri;
 
     const submissionsInsert = await supabase
       .from("submissions")
@@ -66,38 +68,39 @@ const indexSubmission = async (submission: Submission) => {
   if (res[0].errors.length > 0) throw res;
 };
 
-const storeSubmissionOnIPFS = async (submission: Submission) => {
-  const pinata = pinataSDK(PINATA_API_KEY, PINATA_SECRET_API_KEY);
+// See here: https://gateway.pinata.cloud/ipfs/Qmb8Jmabe5agSBxjScYQ9cyZvbBopMRUvnFg3SpJTA4jp6
+const defaultSubmissionImage =
+  "ipfs://Qmb8Jmabe5agSBxjScYQ9cyZvbBopMRUvnFg3SpJTA4jp6";
 
-  const {
-    mediaType,
-    artistName,
-    artistWallet,
-    curatorWallet,
-    mediaTitle,
-    mediaURI,
-    marketplace,
-    tags,
-  } = submission;
+const storeSubmissionOnIPFS = async (
+  submission: Submission,
+  imageUrl = defaultSubmissionImage
+) => {
+  // const pinata = pinataSDK(PINATA_API_KEY, PINATA_SECRET_API_KEY);
+  const serverUrl = process.env.MORALIS_SERVER_URL;
+  const appId = process.env.MORALIS_APP_ID;
 
-  const erc1155Metadata = {
-    title: "Phlote Curation NFT",
-    description: "Thanks for curating on Phlote",
-    image: "url",
+  await Moralis.start({ serverUrl, appId });
+
+  const { artistName, artistWallet, curatorWallet, mediaTitle, mediaURI } =
+    submission;
+
+  const nftMetadata = {
+    title: "Phlote Submissions NFT",
+    description: "Thanks for submitting to Phlote",
+    image: imageUrl,
     properties: {
-      mediaType,
       artistName,
       artistWallet,
       curatorWallet,
       mediaTitle,
       mediaURI,
-      marketplace,
-      tags: {
-        name: "tags",
-        value: tags,
-      },
     },
   };
-  const pin = await pinata.pinJSONToIPFS(erc1155Metadata);
-  console.log("Pinned here: ", pin);
+
+  const metadataFile = new Moralis.File("metadata.json", {
+    base64: Buffer.from(JSON.stringify(nftMetadata)).toString("base64"),
+  });
+  await metadataFile.saveIPFS();
+  return metadataFile.url();
 };

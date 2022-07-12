@@ -18,6 +18,7 @@ export interface Submission {
   cosigns?: string[];
   noOfCosigns?: number;
   username: string;
+  nftMetadata: string;
 }
 
 export interface SubmissionElasticSearchDocument {
