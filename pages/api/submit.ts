@@ -77,7 +77,6 @@ const storeSubmissionOnIPFS = async (
   submission: Submission,
   imageUrl = defaultSubmissionImage
 ) => {
-  // const pinata = pinataSDK(PINATA_API_KEY, PINATA_SECRET_API_KEY);
   const serverUrl = process.env.MORALIS_SERVER_URL;
   const appId = process.env.MORALIS_APP_ID;
   const masterKey = process.env.MORALIS_MASTER_KEY;
