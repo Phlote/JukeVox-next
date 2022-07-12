@@ -28,10 +28,11 @@ export const RatingsMeter: React.FC<{
   const isCuratorQuery = useIsCurator();
 
   const canCosign =
-    isCuratorQuery?.data?.isCurator &&
-    !cosigns.includes("pending") &&
-    !cosigns.includes(account) &&
-    submitterWallet.toLowerCase() !== account.toLowerCase();
+    process.env.NODE_ENV !== "production" ||
+    (isCuratorQuery?.data?.isCurator &&
+      !cosigns.includes("pending") &&
+      !cosigns.includes(account) &&
+      submitterWallet.toLowerCase() !== account.toLowerCase());
 
   const onCosign = async (e) => {
     e.stopPropagation();

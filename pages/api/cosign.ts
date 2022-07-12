@@ -2,12 +2,15 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { supabase } from "../../lib/supabase";
 import { Submission } from "../../types";
 
+const cloudFunctionName = "launchZoraAuction";
+
 export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
   try {
     const { submissionId, cosignerWallet } = request.body;
+    let minted = false;
 
     const submissionsQuery = await supabase
       .from("submissions")
@@ -33,13 +36,22 @@ export default async function handler(
       updatedCosigns = [...cosigns, cosignerWallet];
     } else updatedCosigns = [cosignerWallet];
 
+    // if we now have 5, mint this on Zora
+    if (updatedCosigns.length === 5) {
+      console.log("Sending over submission to Minting Cloud Function");
+      const res = await fetch(
+        `${process.env.MORALIS_SERVER_URL}/functions/${cloudFunctionName}?_ApplicationId=${process.env.MORALIS_APP_ID}`
+      );
+      console.log((await res.json()).result);
+      minted = true;
+    }
+
     const { data, error } = await supabase
       .from("submissions")
       .upsert({ id, cosigns: updatedCosigns });
 
     if (error || data?.length === 0) throw error;
-
-    response.status(200).send({ cosigns: data[0].cosigns });
+    response.status(200).send({ cosigns: data[0].cosigns, minted });
   } catch (e) {
     console.error(e);
     response.status(500).send(e);
