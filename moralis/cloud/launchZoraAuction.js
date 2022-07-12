@@ -1,4 +1,4 @@
-Moralis.Cloud.define("mintOnZora", async (request) => {
+Moralis.Cloud.define("launchZoraAuction", async (request) => {
   web3 = new Moralis.Web3(
     new Moralis.Web3.providers.HttpProvider(
       "https://mainnet.infura.io/v3/7536042cc02045b28fd2219ae2285419"
