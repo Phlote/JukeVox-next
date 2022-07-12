@@ -31,6 +31,7 @@ export default async function handler(
     }
 
     const uri = await storeSubmissionOnIPFS(submissionWithSubmitterInfo);
+    console.log(uri);
     submissionWithSubmitterInfo.nftMetadata = uri;
 
     const submissionsInsert = await supabase
@@ -79,8 +80,9 @@ const storeSubmissionOnIPFS = async (
   // const pinata = pinataSDK(PINATA_API_KEY, PINATA_SECRET_API_KEY);
   const serverUrl = process.env.MORALIS_SERVER_URL;
   const appId = process.env.MORALIS_APP_ID;
+  const masterKey = process.env.MORALIS_MASTER_KEY;
 
-  await Moralis.start({ serverUrl, appId });
+  await Moralis.start({ serverUrl, appId, masterKey });
 
   const { artistName, artistWallet, curatorWallet, mediaTitle, mediaURI } =
     submission;
@@ -101,6 +103,6 @@ const storeSubmissionOnIPFS = async (
   const metadataFile = new Moralis.File("metadata.json", {
     base64: Buffer.from(JSON.stringify(nftMetadata)).toString("base64"),
   });
-  await metadataFile.saveIPFS();
+  await metadataFile.saveIPFS({ useMasterKey: true });
   return metadataFile.url();
 };
