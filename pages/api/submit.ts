@@ -31,7 +31,6 @@ export default async function handler(
     }
 
     const uri = await storeSubmissionOnIPFS(submissionWithSubmitterInfo);
-    console.log(uri);
     submissionWithSubmitterInfo.nftMetadata = uri;
 
     const submissionsInsert = await supabase
