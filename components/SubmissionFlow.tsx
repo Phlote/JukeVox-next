@@ -1,27 +1,31 @@
-import { useWeb3React } from "@web3-react/core";
-import { atom, useAtom } from "jotai";
-import React, { useState } from "react";
-import { useQueryClient } from "react-query";
-import { toast } from "react-toastify";
-import { revalidate } from "../controllers/revalidate";
-import { submit } from "../controllers/submissions";
-import { Submission } from "../types";
-import { verifyUser } from "../utils/web3";
-import { useProfile } from "./Forms/ProfileSettingsForm";
-import { SubmissionForm } from "./Forms/SubmissionForm";
-import { HollowButton, HollowButtonContainer } from "./Hollow";
+import {useWeb3React} from "@web3-react/core";
+import {atom, useAtom} from "jotai";
+import {FC, useEffect, useState} from "react";
+import {useQueryClient} from "react-query";
+import {toast} from "react-toastify";
+import {revalidate} from "../controllers/revalidate";
+import {submit} from "../controllers/submissions";
+import {Submission} from "../types";
+import {verifyUser} from "../utils/web3";
+import {useProfile} from "./Forms/ProfileSettingsForm";
+import {SubmissionForm} from "./Forms/SubmissionForm";
+import {HollowButton, HollowButtonContainer} from "./Hollow";
+import {uploadFiles} from "./FileUpload";
 
 const submissionFlowOpen = atom<boolean>(false);
 export const useSubmissionFlowOpen = () => useAtom(submissionFlowOpen);
 
-export const SubmissionFlow: React.FC = (props) => {
+export const SubmissionFlow: FC = (props) => {
   const { account, library } = useWeb3React();
   const queryClient = useQueryClient();
 
   const [page, setPage] = useState<number>(0);
+  const [fileSelected, setFileSelected] = useState<File>();
+  const [fileURL, setFileURL] = useState<string>(null);
+  const [updating, setUpdating] = useState<boolean>();
 
   const [open] = useSubmissionFlowOpen();
-  React.useEffect(() => {
+  useEffect(() => {
     if (!open) setPage(0);
   }, [open]);
 
@@ -34,6 +38,18 @@ export const SubmissionFlow: React.FC = (props) => {
       const authenticated = await verifyUser(account, library);
       if (!authenticated) {
         throw "Not Authenticated";
+      }
+      
+      if (!!fileSelected){
+        submission.mediaURI = await uploadFiles({
+          acceptedFiles: fileSelected,
+          wallet: account,
+          queryClient,
+          fileURL,
+          setFileURL,
+          updating,
+          setUpdating
+        });
       }
 
       const result = (await submit(submission, account)) as Submission;
@@ -56,7 +72,12 @@ export const SubmissionFlow: React.FC = (props) => {
       </h1>
       <div className="h-8" />
       {page === 0 && (
-        <SubmissionForm metamaskLoading={loading} onSubmit={onSubmit} />
+        <SubmissionForm
+          metamaskLoading={loading}
+          onSubmit={onSubmit}
+          fileSelected={fileSelected}
+          setFileSelected={setFileSelected}
+          updating={updating}/>
       )}
       {page === 1 && (
         <div className="flex flex-col items-center text-sm mt-8 gap-8">

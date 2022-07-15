@@ -15,10 +15,10 @@ import {
 } from "../Hollow";
 import { HollowTagsInput } from "../Hollow/HollowTagsInput";
 import { validateSubmission } from "./validators";
+import {FileUpload} from "../FileUpload";
 
-export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
+export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFileSelected, updating }) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-  const [fileSelected, setFileSelected] = useState<File>();
   const { form, handleSubmit, valid } = useForm({
     onSubmit,
     validate: validateSubmission,
@@ -78,9 +78,9 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
       {mediaType.input.value === "File" ? (
         <FileUpload
           wallet={account}
-          initialFileURL={null}
           fileSelected={fileSelected}
           setFileSelected={setFileSelected}
+          updating={updating}
         />
       ) : (
         <HollowInputContainer type="form">
@@ -141,7 +141,7 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
                 : (mediaType.input.value === "File" &&
                     valid &&
                     !!fileSelected) ||
-                  (mediaType.input.value === "Link" && valid))
+                  (mediaType.input.value === "Link" && valid))//TODO: do mediaType checks in the validator file
             }
           >
             {metamaskLoading ? "Waiting for Wallet..." : "Mint"}
@@ -151,124 +151,4 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
       </div>
     </div>
   );
-};
-
-interface FileUploadProps {
-  wallet: string;
-  initialFileURL: string;
-  fileSelected: File;
-  setFileSelected: React.Dispatch<React.SetStateAction<File>>;
-}
-
-const FileUpload: React.FC<FileUploadProps> = ({
-  wallet,
-  initialFileURL,
-  fileSelected,
-  setFileSelected,
-}) => {
-  const queryClient = useQueryClient();
-  const path = `${wallet}/profile`;
-  const [fileURL, setFileURL] = useState<string>(initialFileURL);
-  const [updating, setUpdating] = useState<boolean>();
-
-  useEffect(() => {
-    if (initialFileURL && initialFileURL !== fileURL)
-      setFileURL(initialFileURL);
-  }, [initialFileURL, fileURL]);
-
-  let uploadFiles = async (acceptedFiles) => {
-    setUpdating(true);
-    const updateTime = Date.now();
-    try {
-      const uploadProfilePic = await supabase.storage
-        .from("audio-files")
-        .upload(path, acceptedFiles[0], {
-          upsert: true,
-        });
-
-      if (uploadProfilePic.error) throw uploadProfilePic.error;
-
-      const publicURLQuery = supabase.storage
-        .from("audio-files")
-        .getPublicUrl(`${wallet}/profile`);
-
-      if (publicURLQuery.error) throw publicURLQuery.error;
-
-      setFileURL(`${publicURLQuery.publicURL}?cacheBust=${updateTime}`);
-
-      const profileUpsert = await supabase.from("profiles").upsert(
-        {
-          wallet,
-          profilePic: publicURLQuery.publicURL,
-          updateTime,
-        },
-        { onConflict: "wallet" }
-      );
-
-      if (profileUpsert.error) throw profileUpsert.error;
-      await queryClient.invalidateQueries(["profile", wallet]);
-    } catch (e) {
-      console.error(e);
-      toast.error(e);
-    } finally {
-      setUpdating(false);
-    }
-  };
-
-  const onDrop = useCallback(
-    (
-      acceptedFiles: File[],
-      fileRejections: FileRejection[],
-      event: DropEvent
-    ) => setFileSelected(acceptedFiles[0]),
-    [path, queryClient, wallet]
-  );
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: "image/jpeg,image/png",
-  });
-
-  const [isHovering, setIsHovering] = useState<boolean>();
-  return (
-    <HollowInputContainer
-      type="form"
-      {...getRootProps()}
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
-    >
-      <HollowInput {...getInputProps()} />
-      <DropzoneText
-        isUpdating={updating}
-        isHovering={isHovering}
-        isDragActive={isDragActive}
-        fileSelected={fileSelected}
-      />
-    </HollowInputContainer>
-  );
-};
-
-const DropzoneText = ({
-  isUpdating,
-  isHovering,
-  isDragActive,
-  fileSelected,
-}) => {
-  if (isUpdating) return <p className="text-base italic">{"Uploading..."}</p>;
-
-  if (isHovering)
-    return <p className="text-base italic">{"Upload new file"}</p>;
-
-  if (isDragActive)
-    return <p className="text-base italic">{"Drop file here"}</p>;
-
-  if (!isHovering && !isDragActive && !fileSelected)
-    return (
-      <p className="text-base italic">{"Drop or select file to upload"}</p>
-    );
-
-  if (!!fileSelected && !isDragActive)
-    return <p className="text-base bold">{"File selected!"}</p>;
-
-  return null;
 };
