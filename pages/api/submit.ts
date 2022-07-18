@@ -31,6 +31,7 @@ export default async function handler(
     }
 
     const uri = await storeSubmissionOnIPFS(submissionWithSubmitterInfo);
+    console.log("uri: ", uri);
     submissionWithSubmitterInfo.nftMetadata = uri;
 
     const submissionsInsert = await supabase
@@ -85,17 +86,19 @@ const storeSubmissionOnIPFS = async (
   const { artistName, artistWallet, curatorWallet, mediaTitle, mediaURI } =
     submission;
 
+  //TODO: update for file uplaods
   const nftMetadata = {
-    title: "Phlote Submissions NFT",
-    description: "Thanks for submitting to Phlote",
+    name: mediaTitle,
+    description: "Submission on Phlote.xyz",
     image: imageUrl,
-    properties: {
-      artistName,
-      artistWallet,
-      curatorWallet,
-      mediaTitle,
-      mediaURI,
-    },
+    external_url: mediaURI,
+    attributes: [
+      { trait_type: "string", value: artistName },
+      { trait_type: "string", value: artistWallet },
+      { trait_type: "string", value: curatorWallet },
+      { trait_type: "string", value: mediaTitle },
+      { trait_type: "string", value: mediaURI },
+    ],
   };
 
   const metadataFile = new Moralis.File("metadata.json", {
