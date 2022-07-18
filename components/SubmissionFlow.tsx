@@ -1,16 +1,16 @@
-import {useWeb3React} from "@web3-react/core";
-import {atom, useAtom} from "jotai";
-import {FC, useEffect, useState} from "react";
-import {useQueryClient} from "react-query";
-import {toast} from "react-toastify";
-import {revalidate} from "../controllers/revalidate";
-import {submit} from "../controllers/submissions";
-import {Submission} from "../types";
-import {verifyUser} from "../utils/web3";
-import {useProfile} from "./Forms/ProfileSettingsForm";
-import {SubmissionForm} from "./Forms/SubmissionForm";
-import {HollowButton, HollowButtonContainer} from "./Hollow";
-import {uploadFiles} from "./FileUpload";
+import { useWeb3React } from "@web3-react/core";
+import { atom, useAtom } from "jotai";
+import { FC, useEffect, useState } from "react";
+import { useQueryClient } from "react-query";
+import { toast } from "react-toastify";
+import { revalidate } from "../controllers/revalidate";
+import { submit } from "../controllers/submissions";
+import { Submission } from "../types";
+import { verifyUser } from "../utils/web3";
+import { uploadFiles } from "./FileUpload";
+import { useProfile } from "./Forms/ProfileSettingsForm";
+import { SubmissionForm } from "./Forms/SubmissionForm";
+import { HollowButton, HollowButtonContainer } from "./Hollow";
 
 const submissionFlowOpen = atom<boolean>(false);
 export const useSubmissionFlowOpen = () => useAtom(submissionFlowOpen);
@@ -39,16 +39,16 @@ export const SubmissionFlow: FC = (props) => {
       if (!authenticated) {
         throw "Not Authenticated";
       }
-      
-      if (!!fileSelected){
+
+      if (!!fileSelected) {
         submission.mediaURI = await uploadFiles({
-          acceptedFiles: fileSelected,
+          acceptedFile: fileSelected,
           wallet: account,
           queryClient,
           fileURL,
           setFileURL,
           updating,
-          setUpdating
+          setUpdating,
         });
       }
 
@@ -77,7 +77,8 @@ export const SubmissionFlow: FC = (props) => {
           onSubmit={onSubmit}
           fileSelected={fileSelected}
           setFileSelected={setFileSelected}
-          updating={updating}/>
+          updating={updating}
+        />
       )}
       {page === 1 && (
         <div className="flex flex-col items-center text-sm mt-8 gap-8">

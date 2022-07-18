@@ -1,10 +1,10 @@
-import React, {useCallback, useEffect, useState} from "react";
-import {useQueryClient} from "react-query";
-import {supabase} from "../lib/supabase";
-import {toast} from "react-toastify";
-import {DropEvent, FileRejection, useDropzone} from "react-dropzone";
-import {HollowInput, HollowInputContainer} from "./Hollow";
-import {QueryClient} from "react-query/core";
+import React, { useCallback, useState } from "react";
+import { DropEvent, FileRejection, useDropzone } from "react-dropzone";
+import { useQueryClient } from "react-query";
+import { QueryClient } from "react-query/core";
+import { toast } from "react-toastify";
+import { supabase } from "../lib/supabase";
+import { HollowInput, HollowInputContainer } from "./Hollow";
 
 interface FileUploadProps {
   wallet: string;
@@ -14,7 +14,7 @@ interface FileUploadProps {
 }
 
 interface uploadFilesArguments {
-  acceptedFiles: File;
+  acceptedFile: File;
   wallet: string;
   queryClient: QueryClient;
   fileURL: string;
@@ -24,17 +24,27 @@ interface uploadFilesArguments {
 }
 
 //I feel like I am doing something wrong here having to pass so many arguments around
-export const uploadFiles = async (args: uploadFilesArguments) => {//TODO: use this function on submit button click
-  let { acceptedFiles, wallet, queryClient, fileURL, setFileURL, updating, setUpdating } = args;
+export const uploadFiles = async (args: uploadFilesArguments) => {
+  //TODO: use this function on submit button click
+  let {
+    acceptedFile,
+    wallet,
+    queryClient,
+    fileURL,
+    setFileURL,
+    updating,
+    setUpdating,
+  } = args;
 
+  console.log(acceptedFile);
   setUpdating(true);
   const path = `${wallet}/profile`;
   const updateTime = Date.now();
   try {
     const uploadAudioFile = await supabase.storage
       .from("audio-files")
-      .upload(path, acceptedFiles[0], {
-        upsert: true,
+      .upload(path, acceptedFile, {
+        contentType: acceptedFile.type,
       });
 
     if (uploadAudioFile.error) throw uploadAudioFile.error;
@@ -47,16 +57,16 @@ export const uploadFiles = async (args: uploadFilesArguments) => {//TODO: use th
 
     setFileURL(`${publicURLQuery.publicURL}?cacheBust=${updateTime}`);
 
-    const profileUpsert = await supabase.from("profiles").upsert(
-      {
-        wallet,
-        profilePic: publicURLQuery.publicURL,
-        updateTime,
-      },
-      { onConflict: "wallet" }
-    );
+    // const profileUpsert = await supabase.from("profiles").upsert(
+    //   {
+    //     wallet,
+    //     profilePic: publicURLQuery.publicURL,
+    //     updateTime,
+    //   },
+    //   { onConflict: "wallet" }
+    // );
 
-    if (profileUpsert.error) throw profileUpsert.error;
+    // if (profileUpsert.error) throw profileUpsert.error;
     await queryClient.invalidateQueries(["profile", wallet]);
   } catch (e) {
     console.error(e);
@@ -68,16 +78,17 @@ export const uploadFiles = async (args: uploadFilesArguments) => {//TODO: use th
 };
 
 export const FileUpload: React.FC<FileUploadProps> = ({
-                                                        wallet,
-                                                        fileSelected,
-                                                        setFileSelected,
-                                                        updating}) => {
+  wallet,
+  fileSelected,
+  setFileSelected,
+  updating,
+}) => {
   const queryClient = useQueryClient();
   const path = `${wallet}/profile`;
 
   const onDrop = useCallback(
     (
-      acceptedFiles: File[],//TODO: define accepted file types
+      acceptedFiles: File[], //TODO: define accepted file types
       fileRejections: FileRejection[],
       event: DropEvent
     ) => setFileSelected(acceptedFiles[0]),
@@ -86,7 +97,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: "image/jpeg,image/png",
+    accept: "audio/mpeg",
   });
 
   const [isHovering, setIsHovering] = useState<boolean>();
@@ -108,7 +119,12 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   );
 };
 
-const DropzoneText = ({isUpdating, isHovering, isDragActive, fileSelected}) => {
+const DropzoneText = ({
+  isUpdating,
+  isHovering,
+  isDragActive,
+  fileSelected,
+}) => {
   if (isUpdating) return <p className="text-base italic">{"Uploading..."}</p>;
 
   if (isHovering)
