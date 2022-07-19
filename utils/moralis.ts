@@ -25,7 +25,6 @@ export const storeSubmissionOnIPFS = async (
   const { artistName, artistWallet, curatorWallet, mediaTitle, mediaURI } =
     submission;
 
-  //TODO: update for file uplaods
   const nftMetadata = {
     name: mediaTitle,
     description: "Submission on Phlote.xyz",
@@ -44,20 +43,5 @@ export const storeSubmissionOnIPFS = async (
     base64: Buffer.from(JSON.stringify(nftMetadata)).toString("base64"),
   });
   await metadataFile.saveIPFS({ useMasterKey: true });
-
-  const uploadedSubmission = new Moralis.Object("Submissions");
-  uploadedSubmission.set("id", submission.id);
-  uploadedSubmission.set("metadata", metadataFile);
-  await uploadedSubmission.save();
-
-  // Retrieve file
-  const query = new Moralis.Query("Submissions");
-  query.equalTo("id", submission.id);
-  const res = await query.find();
-  return res[0].get("metadata").ipfs();
+  return (metadataFile as any).ipfs();
 };
-
-export const storeAudioOnIpfs = async (
-  submission: Submission,
-  imageUrl = defaultSubmissionImage
-) => {};
