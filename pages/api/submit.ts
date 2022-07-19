@@ -1,10 +1,10 @@
 import cuid from "cuid";
-import Moralis from "moralis/node";
 import { NextApiRequest, NextApiResponse } from "next";
 import { nodeElasticClient } from "../../lib/elastic-app-search";
 import { supabase } from "../../lib/supabase";
 import { Submission } from "../../types";
 import { submissionToElasticSearchDocument } from "../../utils";
+import { storeSubmissionOnIPFS } from "../../utils/moralis";
 
 const { ELASTIC_ENGINE_NAME } = process.env;
 
@@ -67,43 +67,4 @@ const indexSubmission = async (submission: Submission) => {
   ]);
   // Does not throw on indexing error, see: https://github.com/elastic/app-search-node
   if (res[0].errors.length > 0) throw res;
-};
-
-// See here: https://gateway.pinata.cloud/ipfs/Qmb8Jmabe5agSBxjScYQ9cyZvbBopMRUvnFg3SpJTA4jp6
-const defaultSubmissionImage =
-  "ipfs://Qmb8Jmabe5agSBxjScYQ9cyZvbBopMRUvnFg3SpJTA4jp6";
-
-const storeSubmissionOnIPFS = async (
-  submission: Submission,
-  imageUrl = defaultSubmissionImage
-) => {
-  const serverUrl = process.env.MORALIS_SERVER_URL;
-  const appId = process.env.MORALIS_APP_ID;
-  const masterKey = process.env.MORALIS_MASTER_KEY;
-
-  await Moralis.start({ serverUrl, appId, masterKey });
-
-  const { artistName, artistWallet, curatorWallet, mediaTitle, mediaURI } =
-    submission;
-
-  //TODO: update for file uplaods
-  const nftMetadata = {
-    name: mediaTitle,
-    description: "Submission on Phlote.xyz",
-    image: imageUrl,
-    external_url: mediaURI,
-    attributes: [
-      { trait_type: "string", value: artistName },
-      { trait_type: "string", value: artistWallet },
-      { trait_type: "string", value: curatorWallet },
-      { trait_type: "string", value: mediaTitle },
-      { trait_type: "string", value: mediaURI },
-    ],
-  };
-
-  const metadataFile = new Moralis.File("metadata.json", {
-    base64: Buffer.from(JSON.stringify(nftMetadata)).toString("base64"),
-  });
-  await metadataFile.saveIPFS({ useMasterKey: true });
-  return metadataFile.url();
 };
