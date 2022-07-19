@@ -39,8 +39,7 @@ export const SubmissionFlow: FC = (props) => {
       if (!authenticated) {
         throw "Not Authenticated";
       }
-
-      if (!!fileSelected) {
+      if (fileSelected) {
         const supabaseURL = await uploadFiles({
           acceptedFile: fileSelected,
           setUpdating,

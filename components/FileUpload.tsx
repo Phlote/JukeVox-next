@@ -23,11 +23,11 @@ export const uploadFiles = async (args: uploadFilesArguments) => {
 
   setUpdating(true);
   try {
-    const ipfsURI = await pinFile(acceptedFile);
+    const { uri, hash } = await pinFile(acceptedFile);
 
     const uploadAudioFile = await supabase.storage
       .from("audio-files")
-      .upload(ipfsURI, acceptedFile, {
+      .upload(hash, acceptedFile, {
         contentType: acceptedFile.type,
       });
 
@@ -35,7 +35,7 @@ export const uploadFiles = async (args: uploadFilesArguments) => {
 
     const publicURLQuery = supabase.storage
       .from("audio-files")
-      .getPublicUrl(ipfsURI);
+      .getPublicUrl(hash);
 
     if (publicURLQuery.error) throw publicURLQuery.error;
 
