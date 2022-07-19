@@ -1,13 +1,12 @@
-import pinataSDK from "@pinata/sdk";
 import cuid from "cuid";
 import { NextApiRequest, NextApiResponse } from "next";
 import { nodeElasticClient } from "../../lib/elastic-app-search";
 import { supabase } from "../../lib/supabase";
 import { Submission } from "../../types";
 import { submissionToElasticSearchDocument } from "../../utils";
+import { storeSubmissionOnIPFS } from "../../utils/moralis";
 
-const { ELASTIC_ENGINE_NAME, PINATA_API_KEY, PINATA_SECRET_API_KEY } =
-  process.env;
+const { ELASTIC_ENGINE_NAME } = process.env;
 
 export default async function handler(
   request: NextApiRequest,
@@ -30,6 +29,10 @@ export default async function handler(
       const { username } = profileQuery.data[0];
       submissionWithSubmitterInfo.username = username;
     }
+
+    const uri = await storeSubmissionOnIPFS(submissionWithSubmitterInfo);
+    console.log("uri: ", uri);
+    submissionWithSubmitterInfo.nftMetadata = uri;
 
     const submissionsInsert = await supabase
       .from("submissions")
@@ -64,40 +67,4 @@ const indexSubmission = async (submission: Submission) => {
   ]);
   // Does not throw on indexing error, see: https://github.com/elastic/app-search-node
   if (res[0].errors.length > 0) throw res;
-};
-
-const storeSubmissionOnIPFS = async (submission: Submission) => {
-  const pinata = pinataSDK(PINATA_API_KEY, PINATA_SECRET_API_KEY);
-
-  const {
-    mediaType,
-    artistName,
-    artistWallet,
-    curatorWallet,
-    mediaTitle,
-    mediaURI,
-    marketplace,
-    tags,
-  } = submission;
-
-  const erc1155Metadata = {
-    title: "Phlote Curation NFT",
-    description: "Thanks for curating on Phlote",
-    image: "url",
-    properties: {
-      mediaType,
-      artistName,
-      artistWallet,
-      curatorWallet,
-      mediaTitle,
-      mediaURI,
-      marketplace,
-      tags: {
-        name: "tags",
-        value: tags,
-      },
-    },
-  };
-  const pin = await pinata.pinJSONToIPFS(erc1155Metadata);
-  console.log("Pinned here: ", pin);
 };

@@ -16,7 +16,9 @@ export interface Submission {
   marketplace: string;
   tags?: string[];
   cosigns?: string[];
+  noOfCosigns?: number;
   username: string;
+  nftMetadata: string;
 }
 
 export interface SubmissionElasticSearchDocument {

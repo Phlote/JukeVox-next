@@ -6,7 +6,6 @@ export const useOnScrollToBottomWindow = (
   enabled = true
 ) => {
   useEffect(() => {
-    console.log("rerun");
     const onScroll = () => {
       const windowHeight =
         "innerHeight" in window

@@ -6,11 +6,9 @@ import React from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 import { useOnClickOut } from "../../hooks/useOnClickOut";
-import {
-  useSearchFilters,
-  useSubmissionSearch,
-} from "../../hooks/useSubmissions";
+import { useSearchFilters, useSubmissions } from "../../hooks/useSubmissions";
 import { DropdownChecklist } from "../Dropdowns/DropdownChecklist";
+import { DropdownRatings, GemRow } from "../Dropdowns/DropdownRatings";
 import { Username } from "../Username";
 
 export const ArchiveTableHeader = (props) => {
@@ -22,10 +20,7 @@ export const ArchiveTableHeader = (props) => {
 
   const isActiveFilter = !!filters[filterKey];
 
-  const submissionsQuery = useSubmissionSearch();
-  const submissions = submissionsQuery.data?.pages?.flatMap(
-    (group) => group?.submissions
-  );
+  const submissions = useSubmissions();
 
   const options = Array.from(
     new Set(submissions?.map((submission) => submission[filterKey]))
@@ -46,11 +41,14 @@ export const ArchiveTableHeader = (props) => {
           )}
         >
           {isActiveFilter ? (
-            <ArchiveFilterLabel filter={filters[filterKey]} />
+            <ArchiveFilterLabel
+              filterKey={filterKey}
+              filter={filters[filterKey]}
+            />
           ) : (
             label
           )}
-          {filterKey && options.length > 0 && (
+          {filterKey && (
             <>
               <div className="w-2" />
 
@@ -81,11 +79,16 @@ export const ArchiveTableHeader = (props) => {
   );
 };
 
-export const ArchiveFilterLabel: React.FC<{ filter: string }> = ({
-  filter,
-}) => {
-  const isAddress = ethers.utils.isAddress(filter);
-  if (isAddress) return <Username wallet={filter} />;
+export const ArchiveFilterLabel: React.FC<{
+  filterKey: string;
+  filter: string | number;
+}> = ({ filterKey, filter }) => {
+  if (filterKey === "noOfCosigns") {
+    return <GemRow length={filter as number} />;
+  }
+
+  const isAddress = ethers.utils.isAddress(filter as string);
+  if (isAddress) return <Username wallet={filter as string} />;
   else return <span>{filter}</span>;
 };
 
@@ -130,15 +133,24 @@ export const ArchiveDropdown: React.FC<{
 
   return (
     <div
-      className="absolute z-10 h-64 w-64 mb-4 top-10 overflow-y-scroll p-2 bg-black"
+      className="absolute z-10 h-72	 w-64 mb-4 top-10 overflow-y-scroll p-2 bg-black"
       style={{ backgroundColor: "rgba(0, 0, 0, 0.90)" }}
     >
-      <DropdownChecklist
-        value={filters[filterKey]}
-        onChange={updateFilter}
-        fields={options}
-        close={close}
-      />
+      {filterKey === "noOfCosigns" ? (
+        <DropdownRatings
+          value={filters[filterKey]}
+          onChange={updateFilter}
+          close={close}
+          max={5}
+        />
+      ) : (
+        <DropdownChecklist
+          value={filters[filterKey]}
+          onChange={updateFilter}
+          fields={options}
+          close={close}
+        />
+      )}
     </div>
   );
 };
