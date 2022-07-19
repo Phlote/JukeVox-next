@@ -39,6 +39,7 @@ export const uploadFiles = async (args: uploadFilesArguments) => {
 
     if (publicURLQuery.error) throw publicURLQuery.error;
 
+    //You could also return the moralis uri here as well
     return publicURLQuery.publicURL;
   } catch (e) {
     console.error(e);
