@@ -49,26 +49,28 @@ export const submissionToElasticSearchDocument = (submission: Submission) => {
 
 export const cleanSubmission = (submission: Submission) => {
   const cleaned = { ...submission };
-  if (submission.mediaURI.includes("opensea")) {
-    cleaned.marketplace = "OpenSea";
-  }
-  if (submission.mediaURI.includes("catalog")) {
-    cleaned.marketplace = "Catalog";
-  }
-  if (submission.mediaURI.includes("zora")) {
-    cleaned.marketplace = "Zora";
-  }
-  if (submission.mediaURI.includes("foundation")) {
-    cleaned.marketplace = "Foundation";
-  }
-  if (submission.mediaURI.includes("spotify")) {
-    cleaned.marketplace = "Spotify";
-  }
-  if (submission.mediaURI.includes("soundcloud")) {
-    cleaned.marketplace = "Soundcloud";
-  }
-  if (submission.mediaURI.includes("youtu")) {
-    cleaned.marketplace = "Youtube";
+  if (!!submission.mediaURI) {
+    if (submission.mediaURI.includes("opensea")) {
+      cleaned.marketplace = "OpenSea";
+    }
+    if (submission.mediaURI.includes("catalog")) {
+      cleaned.marketplace = "Catalog";
+    }
+    if (submission.mediaURI.includes("zora")) {
+      cleaned.marketplace = "Zora";
+    }
+    if (submission.mediaURI.includes("foundation")) {
+      cleaned.marketplace = "Foundation";
+    }
+    if (submission.mediaURI.includes("spotify")) {
+      cleaned.marketplace = "Spotify";
+    }
+    if (submission.mediaURI.includes("soundcloud")) {
+      cleaned.marketplace = "Soundcloud";
+    }
+    if (submission.mediaURI.includes("youtu")) {
+      cleaned.marketplace = "Youtube";
+    }
   }
 
   return cleaned;
