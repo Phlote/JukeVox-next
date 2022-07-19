@@ -1,8 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { DropEvent, FileRejection, useDropzone } from "react-dropzone";
-import { useQueryClient } from "react-query";
-import { QueryClient } from "react-query/core";
 import { toast } from "react-toastify";
+import { pinFile } from "../controllers/moralis";
 import { supabase } from "../lib/supabase";
 import { HollowInput, HollowInputContainer } from "./Hollow";
 
@@ -15,35 +14,20 @@ interface FileUploadProps {
 
 interface uploadFilesArguments {
   acceptedFile: File;
-  wallet: string;
-  queryClient: QueryClient;
-  fileURL: string;
-  setFileURL: (string) => void;
-  updating: boolean;
   setUpdating: (boolean) => void;
 }
 
-//I feel like I am doing something wrong here having to pass so many arguments around
 export const uploadFiles = async (args: uploadFilesArguments) => {
   //TODO: use this function on submit button click
-  let {
-    acceptedFile,
-    wallet,
-    queryClient,
-    fileURL,
-    setFileURL,
-    updating,
-    setUpdating,
-  } = args;
+  let { acceptedFile, setUpdating } = args;
 
-  console.log(acceptedFile);
   setUpdating(true);
-  const path = `${wallet}/profile`;
-  const updateTime = Date.now();
   try {
+    const ipfsURI = await pinFile(acceptedFile);
+
     const uploadAudioFile = await supabase.storage
       .from("audio-files")
-      .upload(path, acceptedFile, {
+      .upload(ipfsURI, acceptedFile, {
         contentType: acceptedFile.type,
       });
 
@@ -51,48 +35,31 @@ export const uploadFiles = async (args: uploadFilesArguments) => {
 
     const publicURLQuery = supabase.storage
       .from("audio-files")
-      .getPublicUrl(`${wallet}/profile`);
+      .getPublicUrl(ipfsURI);
 
     if (publicURLQuery.error) throw publicURLQuery.error;
 
-    setFileURL(`${publicURLQuery.publicURL}?cacheBust=${updateTime}`);
-
-    // const profileUpsert = await supabase.from("profiles").upsert(
-    //   {
-    //     wallet,
-    //     profilePic: publicURLQuery.publicURL,
-    //     updateTime,
-    //   },
-    //   { onConflict: "wallet" }
-    // );
-
-    // if (profileUpsert.error) throw profileUpsert.error;
-    await queryClient.invalidateQueries(["profile", wallet]);
+    return publicURLQuery.publicURL;
   } catch (e) {
     console.error(e);
     toast.error(e);
   } finally {
     setUpdating(false);
   }
-  return fileURL;
 };
 
 export const FileUpload: React.FC<FileUploadProps> = ({
-  wallet,
   fileSelected,
   setFileSelected,
   updating,
 }) => {
-  const queryClient = useQueryClient();
-  const path = `${wallet}/profile`;
-
   const onDrop = useCallback(
     (
       acceptedFiles: File[], //TODO: define accepted file types
       fileRejections: FileRejection[],
       event: DropEvent
     ) => setFileSelected(acceptedFiles[0]),
-    [path, queryClient, wallet]
+    [setFileSelected]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

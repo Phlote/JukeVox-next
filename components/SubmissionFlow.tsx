@@ -41,15 +41,12 @@ export const SubmissionFlow: FC = (props) => {
       }
 
       if (!!fileSelected) {
-        submission.mediaURI = await uploadFiles({
+        const supabaseURL = await uploadFiles({
           acceptedFile: fileSelected,
-          wallet: account,
-          queryClient,
-          fileURL,
-          setFileURL,
-          updating,
           setUpdating,
         });
+        setFileURL(supabaseURL);
+        submission.mediaURI = supabaseURL;
       }
 
       const result = (await submit(submission, account)) as Submission;
