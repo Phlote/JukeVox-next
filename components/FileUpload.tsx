@@ -2,7 +2,6 @@ import React, { useCallback, useState } from "react";
 import { DropEvent, FileRejection, useDropzone } from "react-dropzone";
 import { toast } from "react-toastify";
 import { pinFile } from "../controllers/moralis";
-import { supabase } from "../lib/supabase";
 import { HollowInput, HollowInputContainer } from "./Hollow";
 
 interface FileUploadProps {
@@ -25,21 +24,7 @@ export const uploadFiles = async (args: uploadFilesArguments) => {
   try {
     const { uri, hash } = await pinFile(acceptedFile);
 
-    const uploadAudioFile = await supabase.storage
-      .from("audio-files")
-      .upload(hash, acceptedFile, {
-        contentType: acceptedFile.type,
-      });
-
-    if (uploadAudioFile.error) throw uploadAudioFile.error;
-
-    const publicURLQuery = supabase.storage
-      .from("audio-files")
-      .getPublicUrl(hash);
-
-    if (publicURLQuery.error) throw publicURLQuery.error;
-
-    return publicURLQuery.publicURL;
+    return uri;
   } catch (e) {
     console.error(e);
     toast.error(e);
