@@ -1,11 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import Image from "next/image";
-import React, { useCallback, useEffect, useState } from "react";
-import { DropEvent, FileRejection, useDropzone } from "react-dropzone";
+import React, { useState } from "react";
 import { useField, useForm } from "react-final-form-hooks";
-import { useQueryClient } from "react-query";
-import { toast } from "react-toastify";
-import { supabase } from "../../lib/supabase";
 import { DropdownChecklist } from "../Dropdowns/DropdownChecklist";
 import {
   HollowButton,
@@ -17,7 +13,7 @@ import { HollowTagsInput } from "../Hollow/HollowTagsInput";
 import { validateSubmission } from "./validators";
 import {FileUpload} from "../FileUpload";
 
-export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFileSelected, updating }) => {
+export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFileSelected}) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const { form, handleSubmit, valid } = useForm({
     onSubmit,
@@ -80,7 +76,6 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
           wallet={account}
           fileSelected={fileSelected}
           setFileSelected={setFileSelected}
-          updating={updating}
         />
       ) : (
         <HollowInputContainer type="form">

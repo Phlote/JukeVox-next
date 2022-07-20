@@ -8,19 +8,15 @@ interface FileUploadProps {
   wallet: string;
   fileSelected: File;
   setFileSelected: React.Dispatch<React.SetStateAction<File>>;
-  updating: boolean;
 }
 
 interface uploadFilesArguments {
   acceptedFile: File;
-  setUpdating: (boolean) => void;
 }
 
 export const uploadFiles = async (args: uploadFilesArguments) => {
-  //TODO: use this function on submit button click
-  let { acceptedFile, setUpdating } = args;
+  let { acceptedFile } = args;
 
-  setUpdating(true);
   try {
     const { uri, hash } = await pinFile(acceptedFile);
 
@@ -29,14 +25,13 @@ export const uploadFiles = async (args: uploadFilesArguments) => {
     console.error(e);
     toast.error(e);
   } finally {
-    setUpdating(false);
+
   }
 };
 
 export const FileUpload: React.FC<FileUploadProps> = ({
   fileSelected,
   setFileSelected,
-  updating,
 }) => {
   const onDrop = useCallback(
     (
@@ -62,23 +57,21 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     >
       <HollowInput {...getInputProps()} />
       <DropzoneText
-        isUpdating={updating}
         isHovering={isHovering}
         isDragActive={isDragActive}
         fileSelected={fileSelected}
+        fileName={fileSelected?.name}
       />
     </HollowInputContainer>
   );
 };
 
 const DropzoneText = ({
-  isUpdating,
   isHovering,
   isDragActive,
   fileSelected,
+  fileName
 }) => {
-  if (isUpdating) return <p className="text-base italic">{"Uploading..."}</p>;
-
   if (isHovering)
     return <p className="text-base italic">{"Upload new file"}</p>;
 
@@ -91,7 +84,7 @@ const DropzoneText = ({
     );
 
   if (!!fileSelected && !isDragActive)
-    return <p className="text-base bold">{"File selected!"}</p>;
+    return <p className="text-base bold">{"Selected: " + fileName}</p>;
 
   return null;
 };

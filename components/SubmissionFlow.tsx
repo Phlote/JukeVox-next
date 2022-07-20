@@ -22,7 +22,6 @@ export const SubmissionFlow: FC = (props) => {
   const [page, setPage] = useState<number>(0);
   const [fileSelected, setFileSelected] = useState<File>();
   const [fileURL, setFileURL] = useState<string>(null);
-  const [updating, setUpdating] = useState<boolean>();
 
   const [open] = useSubmissionFlowOpen();
   useEffect(() => {
@@ -40,12 +39,10 @@ export const SubmissionFlow: FC = (props) => {
         throw "Not Authenticated";
       }
       if (fileSelected) {
-        const supabaseURL = await uploadFiles({
-          acceptedFile: fileSelected,
-          setUpdating,
-        });
+        const supabaseURL = await uploadFiles({ acceptedFile: fileSelected });
         setFileURL(supabaseURL);
         submission.mediaURI = supabaseURL;
+        console.log(supabaseURL);
       }
 
       const result = (await submit(submission, account)) as Submission;
@@ -73,7 +70,6 @@ export const SubmissionFlow: FC = (props) => {
           onSubmit={onSubmit}
           fileSelected={fileSelected}
           setFileSelected={setFileSelected}
-          updating={updating}
         />
       )}
       {page === 1 && (

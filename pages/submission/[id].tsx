@@ -2,7 +2,7 @@ import { useWeb3React } from "@web3-react/core";
 import { TwitterIcon, TwitterShareButton } from "next-share";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 import CommentSection from "../../components/Comments/CommentSection";
@@ -12,6 +12,7 @@ import { CommentsContextProvider } from "../../hooks/useComments";
 import { useIsCurator } from "../../hooks/useIsCurator";
 import { supabase } from "../../lib/supabase";
 import { Submission } from "../../types";
+import PlayAudioButton from "../../components/PlayAudioButton";
 
 export default function SubmissionPage(props) {
   const { submission } = props as { submission: Submission };
@@ -38,12 +39,17 @@ export default function SubmissionPage(props) {
             </div>
 
             <SubmissionCardDetails>
-              <a
-                href={submission.mediaURI}
-                className="text-3xl hover:opacity-50"
-              >
-                {submission.mediaTitle}
-              </a>
+              <div className="flex">
+                <div>
+                  <a href={submission.mediaURI} className="text-3xl hover:opacity-50">
+                    {submission.mediaTitle}
+                  </a>
+                </div>
+                <div className="flex-grow" />
+                <div className="flex items-center">
+                  {submission.mediaType === "File" && <PlayAudioButton url={submission.mediaURI} />}
+                </div>
+              </div>
               <div className="h-8" />
 
               <div className="flex">
