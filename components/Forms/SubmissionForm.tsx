@@ -129,7 +129,7 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
       <div className="flex justify-center items-center">
         <HollowButtonContainer onClick={handleSubmit}>
           <HollowButton
-            className="w-16"
+            className="w-18"
             disabled={
               !(metamaskLoading
                 ? false
