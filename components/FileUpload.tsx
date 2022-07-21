@@ -5,7 +5,16 @@ import { pinFile } from "../controllers/moralis";
 import { HollowInput, HollowInputContainer } from "./Hollow";
 
 interface FileUploadProps {
-  wallet: string;
+  fileUpload: {
+    input: {
+      onChange: (field: string) => void,
+      onFocus?: () => void
+    }, meta: {
+      touched: boolean,
+      visited: boolean,
+      error: string
+    }
+  };
   fileSelected: File;
   setFileSelected: React.Dispatch<React.SetStateAction<File>>;
 }
@@ -30,15 +39,26 @@ export const uploadFiles = async (args: uploadFilesArguments) => {
 };
 
 export const FileUpload: React.FC<FileUploadProps> = ({
+  fileUpload,
   fileSelected,
   setFileSelected,
 }) => {
+  React.useEffect(() => {
+    return () => {
+      if (fileUpload.input.onFocus) fileUpload.input.onFocus();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  console.log(fileUpload);
   const onDrop = useCallback(
     (
       acceptedFiles: File[], //TODO: define accepted file types
       fileRejections: FileRejection[],
       event: DropEvent
-    ) => setFileSelected(acceptedFiles[0]),
+    ) => {
+      setFileSelected(acceptedFiles[0]);
+      fileUpload.input.onChange(acceptedFiles[0].name);
+    },
     [setFileSelected]
   );
 
@@ -62,6 +82,10 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         fileSelected={fileSelected}
         fileName={fileSelected?.name}
       />
+      {(fileUpload.meta.touched || fileUpload.meta.visited) &&
+        fileUpload.meta.error && (
+          <span className="text-red-600 ml-2">{fileUpload.meta.error}</span>
+        )}
     </HollowInputContainer>
   );
 };

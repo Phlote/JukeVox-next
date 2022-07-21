@@ -44,6 +44,8 @@ export const validateSubmission = async (values: Submission) => {
         }
       }
     }
+  } else {
+
   }
   if (!values.mediaType) {
     errors.mediaType = "Required";

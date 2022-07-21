@@ -21,6 +21,7 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
   });
 
   const mediaURI = useField("mediaURI", form);
+  const fileUpload = useField("fileUpload", form);
   const mediaType = useField("mediaType", form);
   const artistName = useField("artistName", form);
   const mediaTitle = useField("mediaTitle", form);
@@ -73,7 +74,7 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
 
       {mediaType.input.value === "File" ? (
         <FileUpload
-          wallet={account}
+          fileUpload={fileUpload}
           fileSelected={fileSelected}
           setFileSelected={setFileSelected}
         />
