@@ -47,9 +47,10 @@ export const storeSubmissionOnIPFS = async (
 };
 
 export const pinFile = async (b64File: string, name: string) => {
+  await initializeMoralis();
   const file = new Moralis.File(name, {
     base64: b64File,
   });
   await file.saveIPFS({ useMasterKey: true });
-  return (file as any).ipfs();
+  return { uri: (file as any).ipfs(), hash: (file as any).hash() };
 };

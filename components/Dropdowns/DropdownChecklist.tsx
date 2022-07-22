@@ -31,7 +31,7 @@ export const DropdownChecklist: React.FC<DropdownChecklist> = ({
 
   return (
     <div
-      className={classNames("grid grid-cols-1 w-full overflow-y-scroll", {
+      className={classNames("grid grid-cols-1 w-full", {
         "divide-y": borders,
       })}
     >

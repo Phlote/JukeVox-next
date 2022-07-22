@@ -1,3 +1,4 @@
+import { useWeb3React } from "@web3-react/core";
 import Image from "next/image";
 import React, { useState } from "react";
 import { useField, useForm } from "react-final-form-hooks";
@@ -10,8 +11,9 @@ import {
 } from "../Hollow";
 import { HollowTagsInput } from "../Hollow/HollowTagsInput";
 import { validateSubmission } from "./validators";
+import {FileUpload} from "../FileUpload";
 
-export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
+export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFileSelected}) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const { form, handleSubmit, valid } = useForm({
     onSubmit,
@@ -26,14 +28,10 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
   const artistWallet = useField("artistWallet", form);
   const tags = useField("tags", form);
 
+  const { account } = useWeb3React();
+
   return (
     <div className="grid grid-cols-1 gap-3 md:my-8">
-      <HollowInputContainer type="form">
-        <HollowInput {...mediaURI.input} type="text" placeholder="Link" />
-        {mediaURI.meta.touched && mediaURI.meta.error && (
-          <span className="text-red-600 ml-2">{mediaURI.meta.error}</span>
-        )}
-      </HollowInputContainer>
       <HollowInputContainer
         onClick={() => setDropdownOpen(!dropdownOpen)}
         type="form"
@@ -66,10 +64,25 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
           <DropdownChecklist
             {...mediaType.input}
             close={() => setDropdownOpen(false)}
-            fields={["Audio", "Text", "Video", "Visual Art"]}
+            fields={["File", "Link"]}
             closeOnSelect
             borders
           />
+        </HollowInputContainer>
+      )}
+
+      {mediaType.input.value === "File" ? (
+        <FileUpload
+          wallet={account}
+          fileSelected={fileSelected}
+          setFileSelected={setFileSelected}
+        />
+      ) : (
+        <HollowInputContainer type="form">
+          <HollowInput {...mediaURI.input} type="text" placeholder="Link" />
+          {mediaURI.meta.touched && mediaURI.meta.error && (
+            <span className="text-red-600 ml-2">{mediaURI.meta.error}</span>
+          )}
         </HollowInputContainer>
       )}
 
@@ -116,9 +129,15 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit }) => {
       <div className="flex justify-center items-center">
         <HollowButtonContainer onClick={handleSubmit}>
           <HollowButton
-            className="w-16"
-            disabled={metamaskLoading || !valid}
-            style={metamaskLoading ? { width: "16rem" } : undefined}
+            className="w-18"
+            disabled={
+              !(metamaskLoading
+                ? false
+                : (mediaType.input.value === "File" &&
+                    valid &&
+                    !!fileSelected) ||
+                  (mediaType.input.value === "Link" && valid))//TODO: do mediaType checks in the validator file
+            }
           >
             {metamaskLoading ? "Waiting for Wallet..." : "Mint"}
           </HollowButton>
