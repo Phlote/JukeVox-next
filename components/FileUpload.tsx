@@ -25,7 +25,6 @@ export const uploadFiles = async (args: uploadFilesArguments) => {
     console.error(e);
     toast.error(e);
   } finally {
-
   }
 };
 
@@ -66,12 +65,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   );
 };
 
-const DropzoneText = ({
-  isHovering,
-  isDragActive,
-  fileSelected,
-  fileName
-}) => {
+const DropzoneText = ({ isHovering, isDragActive, fileSelected, fileName }) => {
   if (isHovering)
     return <p className="text-base italic">{"Upload new file"}</p>;
 
@@ -84,7 +78,7 @@ const DropzoneText = ({
     );
 
   if (!!fileSelected && !isDragActive)
-    return <p className="text-base bold">{"Selected: " + fileName}</p>;
+    return <p className="text-base bold">{fileName}</p>;
 
   return null;
 };

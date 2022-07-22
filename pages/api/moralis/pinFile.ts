@@ -14,7 +14,11 @@ export default async function handler(
   response: NextApiResponse
 ) {
   const { b64File, name } = request.body;
-
-  const res = await pinFile(b64File as string, name as string);
-  response.status(200).send(res);
+  try {
+    const res = await pinFile(b64File as string, name as string);
+    response.status(200).send(res);
+  } catch (e) {
+    console.error(e);
+    response.status(500).send(e);
+  }
 }
