@@ -66,7 +66,7 @@ export const RatingsMeter: React.FC<{
                 disabled={!canCosign}
               >
                 <Image
-                  src="/clear_diamond.png"
+                  src="/blue_diamond.png"
                   alt="cosign here"
                   layout="fill"
                 />

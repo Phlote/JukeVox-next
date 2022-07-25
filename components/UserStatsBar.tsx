@@ -31,8 +31,8 @@ export const UserStatsBar: React.FC<{ profile: UserProfile }> = (props) => {
           <Image src="/blue_diamond.png" alt="Cosigns received" layout="fill" />
         </div>
 
-        <p className="text-l italic">: {`${cosignsReceived}/`}</p>
-        <p className="text-l italic">{`${cosignsGiven}`}</p>
+        <p className="text-l italic">: {`${cosignsGiven }/`}</p>
+        <p className="text-l italic">{`${cosignsReceived}`}</p>
       </div>
     </UserStatsBarContainer>
   );
