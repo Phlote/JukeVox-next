@@ -43,7 +43,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: "audio/mpeg",
+    accept: ["audio/mpeg", "audio/wav", "application/pdf", "video/quicktime"],
   });
 
   const [isHovering, setIsHovering] = useState<boolean>();

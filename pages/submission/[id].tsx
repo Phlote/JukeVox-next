@@ -2,7 +2,7 @@ import { useWeb3React } from "@web3-react/core";
 import { TwitterIcon, TwitterShareButton } from "next-share";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 import CommentSection from "../../components/Comments/CommentSection";
@@ -12,13 +12,16 @@ import { CommentsContextProvider } from "../../hooks/useComments";
 import { useIsCurator } from "../../hooks/useIsCurator";
 import { supabase } from "../../lib/supabase";
 import { Submission } from "../../types";
-import PlayAudioButton from "../../components/PlayAudioButton";
+import PlayButton from "../../components/PlayButton";
+import { useVideo } from "../../hooks/useVideo";
+import { useAudio } from "../../hooks/useAudio";
 
 export default function SubmissionPage(props) {
   const { submission } = props as { submission: Submission };
   const router = useRouter();
   const isCurator = useIsCurator();
   const { account } = useWeb3React();
+  const videoEl = useRef(null);
 
   if (router.isFallback) {
     //TODO better loading
@@ -30,12 +33,21 @@ export default function SubmissionPage(props) {
       <div className="min-w-full mt-32">
         <div className="flex justify-center min-w-full mb-8">
           <div className="flex flex-col w-80">
-            <div className="w-full h-60 flex-none relative">
-              <Image
-                src={"/default_submission_image.jpeg"}
-                layout="fill"
-                alt="submission image"
-              />
+            <div className="w-full h-60 relative">
+              {true ?
+                <video
+                  className="absolute bottom-0"
+                  src={submission.mediaURI}
+                  ref={videoEl}
+                />
+                :
+                <Image
+                  src={"/default_submission_image.jpeg"}
+                  layout="fill"
+                  alt="submission image"
+                />
+              }
+
             </div>
 
             <SubmissionCardDetails>
@@ -47,7 +59,7 @@ export default function SubmissionPage(props) {
                 </div>
                 <div className="flex-grow" />
                 <div className="flex items-center">
-                  {submission.mediaType === "File" && <PlayAudioButton url={submission.mediaURI} />}
+                  {submission.mediaType === "File" && <PlayButton hook={useVideo} media={videoEl} />}
                 </div>
               </div>
               <div className="h-8" />
