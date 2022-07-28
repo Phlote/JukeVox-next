@@ -1,8 +1,9 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { DropEvent, FileRejection, useDropzone } from "react-dropzone";
 import { toast } from "react-toastify";
 import { pinFile } from "../controllers/moralis";
 import { HollowInput, HollowInputContainer } from "./Hollow";
+import ReactTooltip from "react-tooltip";
 
 interface FileUploadProps {
   wallet: string;
@@ -32,18 +33,32 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   fileSelected,
   setFileSelected,
 }) => {
+  useEffect(() => ReactTooltip.rebuild() as () => (void),[]);
+
   const onDrop = useCallback(
     (
       acceptedFiles: File[], //TODO: define accepted file types
       fileRejections: FileRejection[],
       event: DropEvent
-    ) => setFileSelected(acceptedFiles[0]),
+    ) => {
+      let fileRej = fileRejections[0];
+      fileRej.errors.forEach((err) => {
+        if (err.code === "file-too-large") {
+          toast.error(`Error: ${err.message}`);
+        }
+        if (err.code === "file-invalid-type") {
+          toast.error(`Error: ${err.message}`);
+        }
+      });
+      setFileSelected(acceptedFiles[0]);
+    },
     [setFileSelected]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: "audio/mpeg",
+    maxSize: 5242880
   });
 
   const [isHovering, setIsHovering] = useState<boolean>();
@@ -53,6 +68,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       {...getRootProps()}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
+      data-tip='Max file size: 5mb'
     >
       <HollowInput {...getInputProps()} />
       <DropzoneText

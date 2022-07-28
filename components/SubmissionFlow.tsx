@@ -1,6 +1,6 @@
 import { useWeb3React } from "@web3-react/core";
 import { atom, useAtom } from "jotai";
-import { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { revalidate } from "../controllers/revalidate";
