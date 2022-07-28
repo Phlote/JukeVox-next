@@ -15,24 +15,10 @@ import { Submission } from "../../types";
 import PlayButton from "../../components/PlayButton";
 import { useVideo } from "../../hooks/useVideo";
 import { useAudio } from "../../hooks/useAudio";
+import { nextApiRequest } from "../../utils";
 
-function getFileTypeRemote(url) {
-  return new Promise(function (resolve, reject) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('HEAD', url, true);
-
-    xhr.onload = function() {
-      var contentType = xhr.getResponseHeader('Content-Type');
-      var status = xhr.status;
-      if (status == 200) {
-        resolve(contentType);
-      } else {
-        reject(status);
-      }
-    };
-
-    xhr.send();
-  });
+async function getFileTypeRemote(url) {
+  return await nextApiRequest("get-file-type", "POST", url);
 }
 
 export default function SubmissionPage(props) {
@@ -41,16 +27,14 @@ export default function SubmissionPage(props) {
   const isCurator = useIsCurator();
   const { account } = useWeb3React();
   const videoEl = useRef(null);
-  const [isVideo, setIsVideo] = useState(false);
+  const [submissionType, setSubmissionType] = useState('');
 
   useEffect(()=>{
     const fetchData = async () => {
-      const data = await getFileTypeRemote(submission.mediaURI);
-      console.log(data);
-      // @ts-ignore
-      if (data === "video/quicktime") setIsVideo(true);
+      const data = await getFileTypeRemote(submission.mediaURI) as unknown as string;
+      setSubmissionType(data);
     }
-    fetchData().catch(console.error);;
+    fetchData().catch(console.error);
   }, []);
 
   if (router.isFallback) {
@@ -64,7 +48,7 @@ export default function SubmissionPage(props) {
         <div className="flex justify-center min-w-full mb-8">
           <div className="flex flex-col w-80">
             <div className="w-full h-60 relative">
-              {isVideo ?
+              {submissionType === "video/quicktime" ?
                 <video
                   className="absolute bottom-0"
                   src={submission.mediaURI}
@@ -88,7 +72,8 @@ export default function SubmissionPage(props) {
                 </div>
                 <div className="flex-grow" />
                 <div className="flex items-center">
-                  {submission.mediaType === "File" && <PlayButton hook={useVideo} media={videoEl} />}
+                  {submissionType.includes("video") && <PlayButton hook={useVideo} media={videoEl} />}
+                  {submissionType.includes("audio") && <PlayButton hook={useAudio} media={submission.mediaURI} />}
                 </div>
               </div>
               <div className="h-8" />
