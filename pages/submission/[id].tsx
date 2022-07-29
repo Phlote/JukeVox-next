@@ -14,11 +14,17 @@ import { useVideo } from "../../hooks/useVideo";
 import { supabase } from "../../lib/supabase";
 import { Submission } from "../../types";
 
-export default function SubmissionPage(props) {
-  const { submission, submissionFileType } = props as {
-    submission: Submission;
-    submissionFileType: string;
-  };
+// interface SubmissionPageProps {
+//   submission: Submission;
+//   submissionFileType: string;
+//   getLayout: (any) => JSX.Element;
+// }
+
+export default function SubmissionPage(props: {
+  submission: Submission;
+  submissionFileType: string | null;
+}) {
+  const { submission, submissionFileType } = props;
   const router = useRouter();
 
   const videoEl = useRef(null);
@@ -61,10 +67,10 @@ export default function SubmissionPage(props) {
                 </div>
                 <div className="flex-grow" />
                 <div className="flex items-center">
-                  {submissionFileType.includes("video") && (
+                  {submissionFileType?.includes("video") && (
                     <PlayButton hook={useVideo} media={videoEl} />
                   )}
-                  {submissionFileType.includes("audio") && (
+                  {submissionFileType?.includes("audio") && (
                     <PlayButton hook={useAudio} media={submission.mediaURI} />
                   )}
                 </div>
@@ -150,8 +156,6 @@ export async function getStaticProps({ params }) {
       console.error(e);
     }
   }
-
-  console.log(submissionFileType);
 
   return {
     props: {
