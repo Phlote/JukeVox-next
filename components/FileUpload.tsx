@@ -41,7 +41,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       fileRejections: FileRejection[],
       event: DropEvent
     ) => {
-      let fileRej = fileRejections[0];
+      const fileRej = fileRejections[0];
       fileRej.errors.forEach((err) => {
         if (err.code === "file-too-large") {
           toast.error(`Error: ${err.message}`);

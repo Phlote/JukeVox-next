@@ -5,7 +5,6 @@ import { HollowInputContainer } from "../components/Hollow";
 import Layout from "../components/Layouts";
 import { useConnectWalletModalOpen } from "../components/Modals/ConnectWalletModal";
 import { useSubmissionFlowOpen } from "../components/SubmissionFlow";
-import ReactTooltip from "react-tooltip";
 
 function Home() {
   const [, setOpen] = useSubmissionFlowOpen();
@@ -57,7 +56,6 @@ Home.getLayout = function getLayout(page) {
         {page}
       </div>
       <Footer />
-      <ReactTooltip type="dark" effect="solid" place="left" backgroundColor='#000000'/>
     </Layout>
   );
 };
