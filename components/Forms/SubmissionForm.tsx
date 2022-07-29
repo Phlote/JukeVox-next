@@ -72,11 +72,11 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
       )}
 
       {mediaType.input.value === "File" ? (
-        <FileUpload
-          wallet={account}
-          fileSelected={fileSelected}
-          setFileSelected={setFileSelected}
-        />
+            <FileUpload
+              wallet={account}
+              fileSelected={fileSelected}
+              setFileSelected={setFileSelected}
+            />
       ) : (
         <HollowInputContainer type="form">
           <HollowInput {...mediaURI.input} type="text" placeholder="Link" />

@@ -7,6 +7,7 @@ import React, { ReactElement, ReactNode, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
+import ReactTooltip from "react-tooltip";
 import "tailwindcss/tailwind.css";
 import { gaPageview } from "../lib/ga";
 import "../styles/globals.css";
@@ -72,6 +73,7 @@ const NextWeb3App = ({ Component, pageProps }: AppPropsWithLayout) => {
           />
         </Web3ReactProvider>
       </QueryClientProvider>
+      <ReactTooltip type="dark" effect="solid" place="left" backgroundColor='#000000'/>
     </>
   );
 };
