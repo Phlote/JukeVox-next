@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { PauseIcon, PlayIcon } from "../icons/PlayIcons";
+import { useEffect, useState } from "react";
 
-const useAudio = (url) => {
+export const useAudio = (url) => {
   const [audio, setAudio] = useState(null);
   const [playing, setPlaying] = useState(false);
 
@@ -24,13 +23,3 @@ const useAudio = (url) => {
 
   return [playing, toggle] as [boolean, () => void];
 };
-
-const PlayAudioButton = ({ url }) => {
-  const [playing, toggle] = useAudio(url);
-
-  return (
-    <button onClick={toggle}>{playing ? <PauseIcon /> : <PlayIcon />}</button>
-  );
-};
-
-export default PlayAudioButton;
