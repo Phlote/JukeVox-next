@@ -15,9 +15,9 @@ import { supabase } from "../../lib/supabase";
 import { Submission } from "../../types";
 
 export default function SubmissionPage(props) {
-  const { submission, submissionType } = props as {
+  const { submission, submissionFileType } = props as {
     submission: Submission;
-    submissionType: string;
+    submissionFileType: string;
   };
   const router = useRouter();
 
@@ -34,7 +34,7 @@ export default function SubmissionPage(props) {
         <div className="flex justify-center min-w-full mb-8">
           <div className="flex flex-col w-80">
             <div className="w-full h-60 relative">
-              {submissionType === "video/quicktime" ? (
+              {submissionFileType === "video/quicktime" ? (
                 <video
                   className="absolute bottom-0"
                   src={submission.mediaURI}
@@ -61,10 +61,10 @@ export default function SubmissionPage(props) {
                 </div>
                 <div className="flex-grow" />
                 <div className="flex items-center">
-                  {submissionType.includes("video") && (
+                  {submissionFileType.includes("video") && (
                     <PlayButton hook={useVideo} media={videoEl} />
                   )}
-                  {submissionType.includes("audio") && (
+                  {submissionFileType.includes("audio") && (
                     <PlayButton hook={useAudio} media={submission.mediaURI} />
                   )}
                 </div>
@@ -141,13 +141,22 @@ export async function getStaticProps({ params }) {
   if (submissionsQuery.error) throw submissionsQuery.error;
 
   const submission = submissionsQuery.data[0] as Submission;
-  const response = await fetch(submission.mediaURI, { method: "HEAD" });
-  const submissionType = response.headers.get("content-type");
+  let submissionFileType = null;
+  if (submission.mediaType === "File") {
+    try {
+      const response = await fetch(submission.mediaURI, { method: "HEAD" });
+      submissionFileType = response.headers.get("content-type");
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  console.log(submissionFileType);
 
   return {
     props: {
-      submission: submission,
-      submissionType,
+      submission,
+      submissionFileType,
     },
     // just in case
     revalidate: 3600,
