@@ -6,11 +6,9 @@ import styled from "styled-components";
 import tw from "twin.macro";
 import CommentSection from "../../components/Comments/CommentSection";
 import Layout from "../../components/Layouts";
-import PlayButton from "../../components/PlayButton";
+import { PlayButtonAudio, PlayButtonVideo } from "../../components/PlayButton";
 import { Username } from "../../components/Username";
-import { useAudio } from "../../hooks/useAudio";
 import { CommentsContextProvider } from "../../hooks/useComments";
-import { useVideo } from "../../hooks/useVideo";
 import { supabase } from "../../lib/supabase";
 import { Submission } from "../../types";
 
@@ -68,10 +66,10 @@ export default function SubmissionPage(props: {
                 <div className="flex-grow" />
                 <div className="flex items-center">
                   {submissionFileType?.includes("video") && (
-                    <PlayButton hook={useVideo} media={videoEl} />
+                    <PlayButtonVideo el={videoEl} />
                   )}
                   {submissionFileType?.includes("audio") && (
-                    <PlayButton hook={useAudio} media={submission.mediaURI} />
+                    <PlayButtonAudio url={submission.mediaURI} />
                   )}
                 </div>
               </div>

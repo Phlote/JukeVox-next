@@ -1,11 +1,19 @@
 import { PauseIcon, PlayIcon } from "../icons/PlayIcons";
+import { useAudio } from "../hooks/useAudio";
+import { useVideo } from "../hooks/useVideo";
 
-const PlayButton = ({ hook, media }) => {
-  const [playing, toggle] = hook(media);
+export const PlayButtonAudio = ({ url }) => {
+  const [playing, toggle] = useAudio(url);
 
   return (
     <button onClick={toggle}>{playing ? <PauseIcon /> : <PlayIcon />}</button>
   );
 };
 
-export default PlayButton;
+export const PlayButtonVideo = ({ el }) => {
+  const [playing, toggle] = useVideo(el);
+
+  return (
+    <button onClick={toggle}>{playing ? <PauseIcon /> : <PlayIcon />}</button>
+  );
+};
