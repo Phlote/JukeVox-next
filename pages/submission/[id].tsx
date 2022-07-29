@@ -1,24 +1,31 @@
-import { useWeb3React } from "@web3-react/core";
 import { TwitterIcon, TwitterShareButton } from "next-share";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 import CommentSection from "../../components/Comments/CommentSection";
 import Layout from "../../components/Layouts";
+import { PlayButtonAudio, PlayButtonVideo } from "../../components/PlayButton";
 import { Username } from "../../components/Username";
 import { CommentsContextProvider } from "../../hooks/useComments";
-import { useIsCurator } from "../../hooks/useIsCurator";
 import { supabase } from "../../lib/supabase";
 import { Submission } from "../../types";
-import PlayAudioButton from "../../components/PlayAudioButton";
 
-export default function SubmissionPage(props) {
-  const { submission } = props as { submission: Submission };
+// interface SubmissionPageProps {
+//   submission: Submission;
+//   submissionFileType: string;
+//   getLayout: (any) => JSX.Element;
+// }
+
+export default function SubmissionPage(props: {
+  submission: Submission;
+  submissionFileType: string | null;
+}) {
+  const { submission, submissionFileType } = props;
   const router = useRouter();
-  const isCurator = useIsCurator();
-  const { account } = useWeb3React();
+
+  const videoEl = useRef(null);
 
   if (router.isFallback) {
     //TODO better loading
@@ -30,24 +37,40 @@ export default function SubmissionPage(props) {
       <div className="min-w-full mt-32">
         <div className="flex justify-center min-w-full mb-8">
           <div className="flex flex-col w-80">
-            <div className="w-full h-60 flex-none relative">
-              <Image
-                src={"/default_submission_image.jpeg"}
-                layout="fill"
-                alt="submission image"
-              />
+            <div className="w-full h-60 relative">
+              {submissionFileType === "video/quicktime" ? (
+                <video
+                  className="absolute bottom-0"
+                  src={submission.mediaURI}
+                  ref={videoEl}
+                />
+              ) : (
+                <Image
+                  src={"/default_submission_image.jpeg"}
+                  layout="fill"
+                  alt="submission image"
+                />
+              )}
             </div>
 
             <SubmissionCardDetails>
               <div className="flex">
                 <div>
-                  <a href={submission.mediaURI} className="text-3xl hover:opacity-50">
+                  <a
+                    href={submission.mediaURI}
+                    className="text-3xl hover:opacity-50"
+                  >
                     {submission.mediaTitle}
                   </a>
                 </div>
                 <div className="flex-grow" />
                 <div className="flex items-center">
-                  {submission.mediaType === "File" && <PlayAudioButton url={submission.mediaURI} />}
+                  {submissionFileType?.includes("video") && (
+                    <PlayButtonVideo el={videoEl} />
+                  )}
+                  {submissionFileType?.includes("audio") && (
+                    <PlayButtonAudio url={submission.mediaURI} />
+                  )}
                 </div>
               </div>
               <div className="h-8" />
@@ -109,7 +132,6 @@ SubmissionPage.getLayout = function getLayout(page) {
       </div>
     </Layout>
   );
-  // return <div>{page}</div>;
 };
 
 export async function getStaticProps({ params }) {
@@ -122,9 +144,21 @@ export async function getStaticProps({ params }) {
 
   if (submissionsQuery.error) throw submissionsQuery.error;
 
+  const submission = submissionsQuery.data[0] as Submission;
+  let submissionFileType = null;
+  if (submission.mediaType === "File") {
+    try {
+      const response = await fetch(submission.mediaURI, { method: "HEAD" });
+      submissionFileType = response.headers.get("content-type");
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   return {
     props: {
-      submission: submissionsQuery.data[0] as Submission,
+      submission,
+      submissionFileType,
     },
     // just in case
     revalidate: 3600,
