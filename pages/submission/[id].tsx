@@ -1,41 +1,27 @@
-import { useWeb3React } from "@web3-react/core";
 import { TwitterIcon, TwitterShareButton } from "next-share";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 import CommentSection from "../../components/Comments/CommentSection";
 import Layout from "../../components/Layouts";
+import PlayButton from "../../components/PlayButton";
 import { Username } from "../../components/Username";
+import { useAudio } from "../../hooks/useAudio";
 import { CommentsContextProvider } from "../../hooks/useComments";
-import { useIsCurator } from "../../hooks/useIsCurator";
+import { useVideo } from "../../hooks/useVideo";
 import { supabase } from "../../lib/supabase";
 import { Submission } from "../../types";
-import PlayButton from "../../components/PlayButton";
-import { useVideo } from "../../hooks/useVideo";
-import { useAudio } from "../../hooks/useAudio";
-import { nextApiRequest } from "../../utils";
-
-async function getFileTypeRemote(url) {
-  return await nextApiRequest("get-file-type", "POST", url);
-}
 
 export default function SubmissionPage(props) {
-  const { submission } = props as { submission: Submission };
+  const { submission, submissionType } = props as {
+    submission: Submission;
+    submissionType: string;
+  };
   const router = useRouter();
-  const isCurator = useIsCurator();
-  const { account } = useWeb3React();
-  const videoEl = useRef(null);
-  const [submissionType, setSubmissionType] = useState('');
 
-  useEffect(()=>{
-    const fetchData = async () => {
-      const data = await getFileTypeRemote(submission.mediaURI) as unknown as string;
-      setSubmissionType(data);
-    }
-    fetchData().catch(console.error);
-  }, []);
+  const videoEl = useRef(null);
 
   if (router.isFallback) {
     //TODO better loading
@@ -48,32 +34,39 @@ export default function SubmissionPage(props) {
         <div className="flex justify-center min-w-full mb-8">
           <div className="flex flex-col w-80">
             <div className="w-full h-60 relative">
-              {submissionType === "video/quicktime" ?
+              {submissionType === "video/quicktime" ? (
                 <video
                   className="absolute bottom-0"
                   src={submission.mediaURI}
                   ref={videoEl}
                 />
-                :
+              ) : (
                 <Image
                   src={"/default_submission_image.jpeg"}
                   layout="fill"
                   alt="submission image"
                 />
-              }
+              )}
             </div>
 
             <SubmissionCardDetails>
               <div className="flex">
                 <div>
-                  <a href={submission.mediaURI} className="text-3xl hover:opacity-50">
+                  <a
+                    href={submission.mediaURI}
+                    className="text-3xl hover:opacity-50"
+                  >
                     {submission.mediaTitle}
                   </a>
                 </div>
                 <div className="flex-grow" />
                 <div className="flex items-center">
-                  {submissionType.includes("video") && <PlayButton hook={useVideo} media={videoEl} />}
-                  {submissionType.includes("audio") && <PlayButton hook={useAudio} media={submission.mediaURI} />}
+                  {submissionType.includes("video") && (
+                    <PlayButton hook={useVideo} media={videoEl} />
+                  )}
+                  {submissionType.includes("audio") && (
+                    <PlayButton hook={useAudio} media={submission.mediaURI} />
+                  )}
                 </div>
               </div>
               <div className="h-8" />
@@ -135,7 +128,6 @@ SubmissionPage.getLayout = function getLayout(page) {
       </div>
     </Layout>
   );
-  // return <div>{page}</div>;
 };
 
 export async function getStaticProps({ params }) {
@@ -148,9 +140,14 @@ export async function getStaticProps({ params }) {
 
   if (submissionsQuery.error) throw submissionsQuery.error;
 
+  const submission = submissionsQuery.data[0] as Submission;
+  const response = await fetch(submission.mediaURI, { method: "HEAD" });
+  const submissionType = response.headers.get("content-type");
+
   return {
     props: {
-      submission: submissionsQuery.data[0] as Submission,
+      submission: submission,
+      submissionType,
     },
     // just in case
     revalidate: 3600,
