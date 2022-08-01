@@ -8,9 +8,9 @@ const toBase64 = (file: File) =>
     reader.onerror = (error) => reject(error);
   });
 
-export const pinFile = async (file: File) => {
+export const pinFile = async (url: string) => {
   const res = await nextApiRequest("moralis/pinFile", "POST", {
-    b64File: await toBase64(file),
+    url,
   });
   return res as { uri: string; hash: string };
 };

@@ -20,13 +20,11 @@ export const uploadFiles = async (args: uploadFilesArguments) => {
   let { acceptedFile } = args;
 
   try {
-    const { uri, hash } = await pinFile(acceptedFile);
-
-    console.log(acceptedFile);
+    let id = acceptedFile.name + '' + Date.now();
 
     const uploadAudioFile = await supabase.storage
       .from("audio-files")
-      .upload(hash, acceptedFile, {
+      .upload(id, acceptedFile, {
         contentType: acceptedFile.type,
       });
 
@@ -34,9 +32,11 @@ export const uploadFiles = async (args: uploadFilesArguments) => {
 
     const publicURLQuery = supabase.storage
       .from("audio-files")
-      .getPublicUrl(hash);
+      .getPublicUrl(id);
 
     if (publicURLQuery.error) throw publicURLQuery.error;
+
+    const { uri, hash } = await pinFile(publicURLQuery.publicURL);
 
     return publicURLQuery.publicURL;
   } catch (e) {
