@@ -6,6 +6,10 @@ import Layout from "../components/Layouts";
 import { useConnectWalletModalOpen } from "../components/Modals/ConnectWalletModal";
 import { useSubmissionFlowOpen } from "../components/SubmissionFlow";
 
+function titleSection(){
+
+}
+
 function Home() {
   const [, setOpen] = useSubmissionFlowOpen();
 
@@ -19,18 +23,19 @@ function Home() {
         <h1 className="text-6xl">Phlote</h1>
         <div className="h-16"></div>
         <p>
-          Artist submissions that receive 5 co-signs are minted every Tuesday on
-          Zora .
+          Decentralized music label run by a passionate community of music lovers.
         </p>
       </div>
 
       {/*Desktop*/}
-      <div className="hidden sm:block w-full">
+      <div className="hidden sm:block w-full bg-center bg-no-repeat bg-[url('/landing-map.png')]">
         <div className=" w-full flex flex-col justify-center items-center">
-          <h1 className="text-center text-2xl">
-            Artist submissions that receive 5 co-signs are minted every Tuesday
-            on Zora .{" "}
+          <h1 className="text-center italic text-2xl">
+            Decentralized music label run by a passionate community of music lovers.{" "}
           </h1>
+          <h3 className="text-center italic text-xl opacity-70">
+            Artist submissions the recieve 5 co-signs are minted every Tuesday on Zora.{" "}
+          </h3>
           <div className="h-16" />
           <div className="w-80 h-16 cursor-pointer hover:opacity-75 shadow-sm">
             <HollowInputContainer

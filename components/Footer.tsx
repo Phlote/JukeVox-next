@@ -4,7 +4,7 @@ import Clock from "./Clock";
 
 export const Footer: React.FC = (props) => {
   return (
-    <div className="grid-cols-3 gap-4 absolute h-14 bottom-0 w-screen bg-phlote-container sm:grid hidden">
+    <div className="grid-cols-3 gap-4 relative h-14 bottom-0 w-screen bg-phlote-container sm:grid hidden">
       <div className="my-auto ml-8">
         <Clock />
       </div>
