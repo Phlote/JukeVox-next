@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { pinFile } from "../controllers/moralis";
 import { HollowInput, HollowInputContainer } from "./Hollow";
 import ReactTooltip from "react-tooltip";
+import { supabase } from "../lib/supabase";
 
 interface FileUploadProps {
   wallet: string;
@@ -21,7 +22,23 @@ export const uploadFiles = async (args: uploadFilesArguments) => {
   try {
     const { uri, hash } = await pinFile(acceptedFile);
 
-    return uri;
+    console.log(acceptedFile);
+
+    const uploadAudioFile = await supabase.storage
+      .from("audio-files")
+      .upload(hash, acceptedFile, {
+        contentType: acceptedFile.type,
+      });
+
+    if (uploadAudioFile.error) throw uploadAudioFile.error;
+
+    const publicURLQuery = supabase.storage
+      .from("audio-files")
+      .getPublicUrl(hash);
+
+    if (publicURLQuery.error) throw publicURLQuery.error;
+
+    return publicURLQuery.publicURL;
   } catch (e) {
     console.error(e);
     toast.error(e);
