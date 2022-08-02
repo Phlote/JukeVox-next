@@ -45,7 +45,7 @@ export const uploadFiles = async (args: uploadFilesArguments) => {
      */
     console.log(uri, hash);
 
-    return publicURLQuery.publicURL;
+    return uri;
   } catch (e) {
     console.error(e);
     toast.error(e);

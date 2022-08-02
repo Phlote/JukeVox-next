@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { pinFile } from "../../../utils/moralis";
+import * as fs from "fs";
+import fetch from "node-fetch";
 
 export const config = {
   api: {
@@ -9,13 +11,9 @@ export const config = {
   },
 };
 
-const toBase64 = (file: Blob) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
+const toBase64 = (file: ArrayBuffer) => {
+    return Buffer.from(file).toString('base64');
+  };
 
 export default async function handler(
   request: NextApiRequest,
@@ -24,10 +22,9 @@ export default async function handler(
   const { url, name } = request.body;
 
   const fileResponse = await fetch(url);
-  const fileResult = await fileResponse.blob();
-  console.log(fileResult);
+  const fileResult = await fileResponse.arrayBuffer();
 
-  let b64File = await toBase64(fileResult);
+  let b64File = toBase64(fileResult);
 
   try {
     const res = await pinFile(b64File as string, name as string);
