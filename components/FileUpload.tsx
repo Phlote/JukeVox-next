@@ -37,6 +37,13 @@ export const uploadFiles = async (args: uploadFilesArguments) => {
     if (publicURLQuery.error) throw publicURLQuery.error;
 
     const { uri, hash } = await pinFile(publicURLQuery.publicURL);
+    /*
+    * Pass the file url down the calls until api/pinFile.ts
+    * ?(Figure out if the name is used for something or not)
+    * There, fetch the file from the url and convert it to base64
+    * Finally, send the base64 file using the pinFile function in api/pinFile.ts
+     */
+    console.log(uri, hash);
 
     return publicURLQuery.publicURL;
   } catch (e) {
