@@ -88,7 +88,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       {...getRootProps()}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
-      data-tip='Max file size: 5mb'
+      data-tip='Max file size: 100mb'
     >
       <HollowInput {...getInputProps()} />
       <DropzoneText
