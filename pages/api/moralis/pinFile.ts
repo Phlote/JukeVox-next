@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { pinFile } from "../../../utils/moralis";
-import * as fs from "fs";
-import fetch from "node-fetch";
+import { supabase } from "../../../lib/supabase";
 
 export const config = {
   api: {
@@ -27,7 +26,18 @@ export default async function handler(
   let b64File = toBase64(fileResult);
 
   try {
-    const res = await pinFile(b64File as string, name as string);
+    const deleteFiles = await supabase
+      .storage
+      .from('audio-files')
+      .remove([name])
+
+    if (deleteFiles.error) throw deleteFiles.error;
+  } catch (e) {
+    console.error(e);
+  }
+
+  try {
+    const res = await pinFile(b64File as string, 'phlotexyzfile' as string);
     response.status(200).send(res);
   } catch (e) {
     console.error(e);
