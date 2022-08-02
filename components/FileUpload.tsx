@@ -52,7 +52,6 @@ export const FileUpload: React.FC<FileUploadProps> = ({
           }
         });
       }
-      console.log("Reaches?");
       setFileSelected(acceptedFiles[0]);
     },
     [setFileSelected]
