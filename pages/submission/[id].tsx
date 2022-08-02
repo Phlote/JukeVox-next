@@ -148,6 +148,7 @@ export async function getStaticProps({ params }) {
   let submissionFileType = null;
   if (submission.mediaType === "File") {
     try {
+      if (typeof submission.mediaURI !== "string") throw "Submission mediaURI is undefined";
       const response = await fetch(submission.mediaURI, { method: "HEAD" });
       submissionFileType = response.headers.get("content-type");
     } catch (e) {
