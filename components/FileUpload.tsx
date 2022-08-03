@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { pinFile } from "../controllers/moralis";
 import { HollowInput, HollowInputContainer } from "./Hollow";
 import ReactTooltip from "react-tooltip";
+import { supabase } from "../lib/supabase";
 
 interface FileUploadProps {
   wallet: string;
@@ -19,7 +20,23 @@ export const uploadFiles = async (args: uploadFilesArguments) => {
   let { acceptedFile } = args;
 
   try {
-    const { uri, hash } = await pinFile(acceptedFile);
+    let id = acceptedFile.name + '' + Date.now();
+
+    const uploadAudioFile = await supabase.storage
+      .from("files")
+      .upload(id, acceptedFile, {
+        contentType: acceptedFile.type,
+      });
+
+    if (uploadAudioFile.error) throw uploadAudioFile.error;
+
+    const publicURLQuery = supabase.storage
+      .from("files")
+      .getPublicUrl(id);
+
+    if (publicURLQuery.error) throw publicURLQuery.error;
+
+    const { uri, hash } = await pinFile(publicURLQuery.publicURL, id);
 
     return uri;
   } catch (e) {
@@ -61,7 +78,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: ["audio/mpeg", "audio/wav", "application/pdf", "video/quicktime"],
-    maxSize: 5242880
+    maxSize: 52428800 //50mb
   });
 
   const [isHovering, setIsHovering] = useState<boolean>();
@@ -71,7 +88,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       {...getRootProps()}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
-      data-tip='Max file size: 5mb'
+      data-tip='Max file size: 50mb'
     >
       <HollowInput {...getInputProps()} />
       <DropzoneText
