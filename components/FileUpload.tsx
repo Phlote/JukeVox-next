@@ -23,7 +23,7 @@ export const uploadFiles = async (args: uploadFilesArguments) => {
     let id = acceptedFile.name + '' + Date.now();
 
     const uploadAudioFile = await supabase.storage
-      .from("audio-files")
+      .from("files")
       .upload(id, acceptedFile, {
         contentType: acceptedFile.type,
       });
@@ -31,7 +31,7 @@ export const uploadFiles = async (args: uploadFilesArguments) => {
     if (uploadAudioFile.error) throw uploadAudioFile.error;
 
     const publicURLQuery = supabase.storage
-      .from("audio-files")
+      .from("files")
       .getPublicUrl(id);
 
     if (publicURLQuery.error) throw publicURLQuery.error;
@@ -78,7 +78,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: ["audio/mpeg", "audio/wav", "application/pdf", "video/quicktime"],
-    maxSize: 104857600 //100mb
+    maxSize: 52428800 //50mb
   });
 
   const [isHovering, setIsHovering] = useState<boolean>();
@@ -88,7 +88,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       {...getRootProps()}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
-      data-tip='Max file size: 100mb'
+      data-tip='Max file size: 50mb'
     >
       <HollowInput {...getInputProps()} />
       <DropzoneText

@@ -1,35 +1,37 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { pinFile } from "../../../utils/moralis";
 import { supabase } from "../../../lib/supabase";
+import sanitize from "sanitize-filename";
 
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: "100mb",
+      sizeLimit: "50mb",
     },
   },
 };
 
 const toBase64 = (file: ArrayBuffer) => {
-    return Buffer.from(file).toString('base64');
-  };
+  return Buffer.from(file).toString('base64');
+};
 
 export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  const { url, name } = request.body;
+  const { url, id } = request.body;
 
-  const fileResponse = await fetch(url);
-  const fileResult = await fileResponse.arrayBuffer();
+  let fileName = sanitize(id.replace(/[^a-z0-9]/gi, '_').toLowerCase());// Make sure filename is valid for Moralis
 
-  let b64File = toBase64(fileResult);
+  let remoteFileResponse = await supabase.storage.from('files').download(id) as {data: Blob, error: Error};
+  let blob = remoteFileResponse.data;
+  let b64File = toBase64(await blob.arrayBuffer());
 
   try {
     const deleteFiles = await supabase
       .storage
-      .from('audio-files')
-      .remove([name])
+      .from('files')
+      .remove([id])
 
     if (deleteFiles.error) throw deleteFiles.error;
   } catch (e) {
@@ -37,7 +39,7 @@ export default async function handler(
   }
 
   try {
-    const res = await pinFile(b64File as string, 'phlotexyzfile' as string);
+    const res = await pinFile(b64File as string, fileName as string);
     response.status(200).send(res);
   } catch (e) {
     console.error(e);
