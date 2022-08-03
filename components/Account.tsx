@@ -8,6 +8,7 @@ import useEagerConnect from "../hooks/web3/useEagerConnect";
 import Hamburger from "../public/hamburger.svg";
 import { DropdownActions } from "./Dropdowns/DropdownActions";
 import { useConnectWalletModalOpen } from "./Modals/ConnectWalletModal";
+import { LoginLens } from "./Modals/LoginLens";
 import { ShortenedWallet } from "./ShortenedWallet";
 
 const Account = (props) => {
@@ -91,6 +92,7 @@ const AccountDropdown = (props) => {
       {dropdownOpen && (
         <div className="absolute sm:top-14 bottom-16 z-20">
           <DropdownActions>
+            <LoginLens />
             <div
               className="cursor-pointer m-4 text-center text-xl hover:opacity-50 flex items-center"
               onClick={() => {

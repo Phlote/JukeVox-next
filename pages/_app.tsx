@@ -1,4 +1,8 @@
 import { Web3ReactProvider } from "@web3-react/core";
+import { ApolloProvider } from "@apollo/client";
+import { apollo } from "./apollo";
+import { WagmiConfig, createClient, configureChains, chain } from "wagmi";
+import { publicProvider } from "wagmi/providers/public";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import Head from "next/head";
@@ -46,6 +50,17 @@ const NextWeb3App = ({ Component, pageProps }: AppPropsWithLayout) => {
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
+  const { provider, webSocketProvider } = configureChains(
+    [chain.polygonMumbai, chain.polygon],
+    [publicProvider()]
+  );
+
+  const wagmiClient = createClient({
+    autoConnect: true,
+    provider,
+    webSocketProvider,
+  });
+
   return (
     <>
       <Head>
@@ -56,20 +71,25 @@ const NextWeb3App = ({ Component, pageProps }: AppPropsWithLayout) => {
         <link rel="icon" type="image/png" href="/favicon.png" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </Head>
+
       <QueryClientProvider client={queryClient}>
         <Web3ReactProvider getLibrary={getLibrary}>
-          {getLayout(<Component {...pageProps} />)}
-          <ToastContainer
-            position="top-right"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-          />
+          <WagmiConfig client={wagmiClient}>
+            <ApolloProvider client={apollo}>
+              {getLayout(<Component {...pageProps} />)}
+              <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+              />
+            </ApolloProvider>
+          </WagmiConfig>
         </Web3ReactProvider>
       </QueryClientProvider>
     </>

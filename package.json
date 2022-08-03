@@ -9,10 +9,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "postinstall": "cd ./solidity; yarn"
+    "lint": "next lint"
   },
   "dependencies": {
+    "@apollo/client": "^3.6.9",
     "@elastic/app-search-node": "^8.1.0",
     "@ethersproject/abi": "^5.6.0",
     "@ethersproject/bignumber": "^5.5.0",
@@ -34,7 +34,8 @@
     "cuid": "^2.1.8",
     "dayjs": "^1.11.0",
     "final-form": "^4.20.6",
-    "jotai": "^1.5.3",
+    "graphql": "^16.5.0",
+    "jotai": "^1.6.5",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
     "moralis": "^1.9.0",
@@ -54,7 +55,8 @@
     "supports-color": "^9.2.1",
     "swr": "^0.5.5",
     "twin.macro": "^2.8.2",
-    "utf-8-validate": "^5.0.9"
+    "utf-8-validate": "^5.0.9",
+    "wagmi": "^0.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.17.7",
