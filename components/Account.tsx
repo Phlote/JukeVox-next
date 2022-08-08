@@ -8,6 +8,8 @@ import useEagerConnect from "../hooks/web3/useEagerConnect";
 import Hamburger from "../public/hamburger.svg";
 import { DropdownActions } from "./Dropdowns/DropdownActions";
 import { useConnectWalletModalOpen } from "./Modals/ConnectWalletModal";
+import { LoginLens } from "./Modals/LoginLens";
+import { CreateProfileLens } from "./Modals/CreateProfile";
 import { ShortenedWallet } from "./ShortenedWallet";
 
 const Account = (props) => {
@@ -19,6 +21,7 @@ const Account = (props) => {
   // manage connecting state for injected connector
 
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+  const [connectLens, setConnectLens] = useState<boolean>(false);
   const [, setOpen] = useConnectWalletModalOpen();
 
   const ref = useRef();
@@ -50,18 +53,25 @@ const Account = (props) => {
       className="h-full w-full text-center flex flex-row"
       style={{ justifyContent: "center" }}
     >
-      <ShortenedWallet wallet={account} />
+      {!connectLens ? (
+        <LoginLens connectLens={connectLens} setConnectLens={setConnectLens} />
+      ) : (
+        <>
+          <ShortenedWallet wallet={account} />
+          <AccountDropdown
+            dropdownOpen={dropdownOpen}
+            setDropdownOpen={setDropdownOpen}
+          />
+        </>
+      )}
       <div className="w-2" />
-      <AccountDropdown
-        dropdownOpen={dropdownOpen}
-        setDropdownOpen={setDropdownOpen}
-      />
     </div>
   );
 };
 
 const AccountDropdown = (props) => {
   const { deactivate } = useWeb3React();
+  const [connectLens, setConnectLens] = useState<boolean>(false);
 
   const router = useRouter();
 
@@ -91,6 +101,7 @@ const AccountDropdown = (props) => {
       {dropdownOpen && (
         <div className="absolute sm:top-14 bottom-16 z-20">
           <DropdownActions>
+            <CreateProfileLens />
             <div
               className="cursor-pointer m-4 text-center text-xl hover:opacity-50 flex items-center"
               onClick={() => {

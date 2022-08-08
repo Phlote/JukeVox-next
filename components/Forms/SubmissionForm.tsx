@@ -11,9 +11,17 @@ import {
 } from "../Hollow";
 import { HollowTagsInput } from "../Hollow/HollowTagsInput";
 import { validateSubmission } from "./validators";
-import {FileUpload} from "../FileUpload";
+import { FileUpload } from "../FileUpload";
+import { LensHubProxy } from "../../abis/LensHubProxy";
 
-export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFileSelected}) => {
+export const SubmissionForm = ({
+  ipfsLoading,
+  transactionLoading,
+  onSubmit,
+  fileSelected,
+  setFileSelected,
+}) => {
+  const test = () => console.log("ciao");
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const { form, handleSubmit, valid } = useForm({
     onSubmit,
@@ -131,15 +139,19 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
           <HollowButton
             className="w-18"
             disabled={
-              !(metamaskLoading
+              !(ipfsLoading
                 ? false
                 : (mediaType.input.value === "File" &&
                     valid &&
                     !!fileSelected) ||
-                  (mediaType.input.value === "Link" && valid))//TODO: do mediaType checks in the validator file
+                  (mediaType.input.value === "Link" && valid)) //TODO: do mediaType checks in the validator file
             }
           >
-            {metamaskLoading ? "Waiting for Wallet..." : "Mint"}
+            {ipfsLoading
+              ? "Uploading to IPFS..."
+              : transactionLoading
+              ? "Submitting transaction..."
+              : "Mint"}
           </HollowButton>
           <Image src="/favicon.svg" height={16} width={16} alt={"Gem"} />
         </HollowButtonContainer>
