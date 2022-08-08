@@ -1,4 +1,8 @@
 import { apollo } from "../../pages/apollo";
+import {
+  getAuthenticationToken,
+  setAuthenticationToken,
+} from "../../pages/state";
 import { gql } from "@apollo/client";
 import Image from "next/image";
 import { useConnect, useAccount, useSignMessage } from "wagmi";
@@ -43,9 +47,10 @@ const authenticate = (address: string, signature: string) => {
   });
 };
 
-export const LoginLens = () => {
+export const LoginLens = (props) => {
   const { connect, connectors } = useConnect();
   const { address, connector: activeConnector } = useAccount();
+  const { connectLens, setConnectLens } = props;
 
   const { signMessageAsync, isLoading: signLoading } = useSignMessage({
     onError(error) {
@@ -63,20 +68,22 @@ export const LoginLens = () => {
     });
 
     const accessTokens = await authenticate(address, signature);
+
+    setAuthenticationToken(accessTokens.data.authenticate.accessToken);
+    setConnectLens(true);
   };
 
   return (
     <>
       {connectors.map((connector) => (
         <div
-          className="cursor-pointer m-4 text-center text-xl hover:opacity-50 flex items-center"
+          className="w-full h-full text-center"
           onClick={() => {
             handleSign(connector);
           }}
         >
           Sign-in with Lens
           <div className="w-4" />
-          <Image src="/exit.svg" alt={"disconnect"} height={24} width={24} />
         </div>
       ))}
     </>
