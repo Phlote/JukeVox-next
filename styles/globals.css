@@ -43,6 +43,25 @@ img {
   src: url("/Jeko/Jeko ExtraBold.otf");
 }
 
+@font-face {
+  font-family: "Roboto";
+  font-weight: light;
+  src: url("/Roboto/Roboto-Light.ttf");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: italic;
+  src: url("/Roboto/Roboto-Italic.ttf");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: italic;
+  font-weight: light;
+  src: url("/Roboto/Roboto-LightItalic.ttf");
+}
+
 input[type="search"]::-webkit-search-cancel-button {
   -webkit-appearance: none;
   height: 1rem;
@@ -58,6 +77,11 @@ input[type="search"]::-webkit-search-cancel-button {
   --accents-2: #eaeaea;
   --accents-dark-1: #555;
   --accents-dark-2: #777;
+}
+
+.stroke-text {
+  color: black;
+  -webkit-text-stroke: 1px white;
 }
 
 @layer components {

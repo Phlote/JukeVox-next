@@ -7,6 +7,7 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ["Jeko", "sans-serif"],
+        roboto: ["Roboto"]
       },
       textUnderlineOffset: {
         16: "16px",

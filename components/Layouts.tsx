@@ -105,7 +105,6 @@ interface ArchiveLayoutProps {
 }
 
 export const ArchiveLayout: React.FC<ArchiveLayoutProps> = ({
-
   children,
   center,
 }) => {
