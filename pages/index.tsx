@@ -212,18 +212,18 @@ function Collaborators(){
       <div
         className="flex flex-col gap-8 items-center w-10/12">
           <div className="flex flex-col justify-center items-center pt-10 gap-4">
-            <h1 className="text-center text-6xl stroke-text">
+            <h1 className="text-center text-4xl sm:text-6xl stroke-text">
               Our Collaborators
             </h1>
-            <h3 className="text-center text-xs sm:text-lg opacity-70 font-light">
+            <h3 className="text-center text- sm:text-lg opacity-70 font-light">
               Web 3.0 is all about supporting and building together for a better world.
             </h3>
           </div>
-        <div className="flex gap-5">
-          <img className="h-16 sm:h-24" src="/landing-page/collaborators/colab1.png"/>
-          <img className="h-16 sm:h-24" src="/landing-page/collaborators/colab2.png"/>
-          <img className="h-16 sm:h-24" src="/landing-page/collaborators/colab3.png"/>
-          <img className="h-16 sm:h-24" src="/landing-page/collaborators/colab4.png"/>
+        <div className="w-80 flex gap-5 flex-wrap justify-center sm:flex-nowrap">
+          <img className="h-16 md:h-24" src="/landing-page/collaborators/colab1.png"/>
+          <img className="h-16 md:h-24" src="/landing-page/collaborators/colab2.png"/>
+          <img className="h-16 md:h-24" src="/landing-page/collaborators/colab3.png"/>
+          <img className="h-16 md:h-24" src="/landing-page/collaborators/colab4.png"/>
         </div>
       </div>
     </section>
