@@ -62,12 +62,15 @@ function Hero({account, setOpen, setConnectWalletOpen}) {
 
 function AboutUs(){
   return (
-    <section className="flex items-center justify-center mt-96 sm:py-20 sm:mt-20 lg:mt-38">
-      <div
-        className="flex items-center">
-        {/*Desktop*/}
-        <div className="w-full]">
-          <div className=" w-full flex flex-col justify-center items-center pt-10 gap-4">
+    /****************
+     *   Mobile
+     *   Medium (tablets?)
+     *   Desktop
+     */
+    <section className="flex items-center justify-center
+    mt-96
+    sm:py-20 sm:mt-20 lg:mt-38">
+          <div className="w-9/12 sm:w-8/12 2xl:w-full flex flex-col justify-center items-center pt-10 gap-4">
             <h1 className="text-center italic text-5xl stroke-text">
               About Us.{" "}
             </h1>
@@ -75,7 +78,7 @@ function AboutUs(){
               Phlote is a music label built to help musicians maximize the visibility and value of their work.{" "}
             </h3>
             <div className="relative mt-20 lg:mt-24">
-              <div className="container flex flex-col lg:flex-row items-center justify-center gap-x-24">
+              <div className="container flex flex-col-reverse lg:flex-row items-center justify-center gap-x-24">
                 {/*Content*/}
                 <div className="flex flex-1 flex-col items-center lg:items-start">
                   <h1 className="text-3xl text-bookmark-blue font-extrabold">Merit Based Process</h1>
@@ -121,7 +124,7 @@ function AboutUs(){
               </div>
             </div>
             <div className="relative mt-20 lg:mt-24">
-              <div className="container flex flex-col lg:flex-row items-center justify-center gap-x-24">
+              <div className="container flex flex-col-reverse lg:flex-row items-center justify-center gap-x-24">
                 {/*Content*/}
                 <div className="flex flex-1 flex-col items-center lg:items-start">
                   <h1 className="text-3xl text-bookmark-blue font-extrabold">Programmatic Rewards</h1>
@@ -146,8 +149,6 @@ function AboutUs(){
               </div>
             </div>
           </div>
-        </div>
-      </div>
     </section>
   );
 }
@@ -155,7 +156,7 @@ function AboutUs(){
 function HowItWorks(){
   return (
     <section className="flex items-center justify-center py-20 mt-20">
-        <div className="hidden sm:block w-full]">
+        <div className="w-9/12">
           <div className="sm:w-3/4 lg:w-5/12 mx-auto px-2">
             <h1 className="text-center italic text-5xl stroke-text">How it works</h1>
           </div>
@@ -190,7 +191,6 @@ function HowItWorks(){
 function SubmissionSchedule(){
   return (
     <section className="flex items-center justify-center lg:mt-38">
-        <div className="hidden sm:block w-full]">
           <div className=" w-full flex flex-col justify-center items-center pt-10 gap-4">
             <h1 className="text-center italic text-5xl font-extrabold">
               Submissions Schedule.{" "}
@@ -202,7 +202,6 @@ function SubmissionSchedule(){
               <img className="w-full" src="/landing-page/submissions-dates-b&w.png"/>
             </div>
           </div>
-        </div>
     </section>
   );
 }
@@ -211,22 +210,20 @@ function Collaborators(){
   return (
     <section className="flex items-center justify-center py-20 mt-20 lg:mt-38">
       <div
-        className="flex flex-col gap-8 items-center">
-        <div className="hidden sm:block w-full]">
-          <div className=" w-full flex flex-col justify-center items-center pt-10 gap-4">
+        className="flex flex-col gap-8 items-center w-10/12">
+          <div className="flex flex-col justify-center items-center pt-10 gap-4">
             <h1 className="text-center text-6xl stroke-text">
               Our Collaborators
             </h1>
-            <h3 className="text-center text-lg opacity-70 font-light">
+            <h3 className="text-center text-xs sm:text-lg opacity-70 font-light">
               Web 3.0 is all about supporting and building together for a better world.
             </h3>
           </div>
-        </div>
         <div className="flex gap-5">
-          <img className="h-24" src="/landing-page/collaborators/colab1.png"/>
-          <img className="h-24" src="/landing-page/collaborators/colab2.png"/>
-          <img className="h-24" src="/landing-page/collaborators/colab3.png"/>
-          <img className="h-24" src="/landing-page/collaborators/colab4.png"/>
+          <img className="h-16 sm:h-24" src="/landing-page/collaborators/colab1.png"/>
+          <img className="h-16 sm:h-24" src="/landing-page/collaborators/colab2.png"/>
+          <img className="h-16 sm:h-24" src="/landing-page/collaborators/colab3.png"/>
+          <img className="h-16 sm:h-24" src="/landing-page/collaborators/colab4.png"/>
         </div>
       </div>
     </section>
