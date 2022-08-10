@@ -20,10 +20,6 @@ export default function Layout({ children }) {
         <NavBarDesktop />
       </div>
       {children}
-
-      <div className="sm:hidden ">
-        <NavBarMobileWeb />
-      </div>
     </div>
   );
 }

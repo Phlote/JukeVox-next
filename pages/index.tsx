@@ -8,7 +8,7 @@ import { useSubmissionFlowOpen } from "../components/SubmissionFlow";
 
 function Hero({account, setOpen, setConnectWalletOpen}) {
   return (
-    <section className="flex items-center justify-center py-28 mt-20 bg-cover lg:py-44 lg:mt-28 bg-center bg-no-repeat bg-[url('/map-landing-page.png')]">
+    <section className="flex items-center justify-center py-44 bg-cover lg:py-80 bg-contain bg-center bg-no-repeat sm:bg-[url('/landing-page/map-landing-page.png')]">
       <div
         className="flex items-center">
         {/*Mobile*/}
@@ -18,15 +18,27 @@ function Hero({account, setOpen, setConnectWalletOpen}) {
           <p>
             Decentralized music label run by a passionate community of music lovers.
           </p>
+          <div className="h-16"></div>
+          <div className="w-80 h-16 cursor-pointer hover:opacity-75 shadow-sm">
+            <HollowInputContainer
+              style={{ justifyContent: "center", border: "1px solid white" }}
+              onClick={() => {
+                if (account) setOpen(true);
+                else setConnectWalletOpen(true);
+              }}
+            >
+              {account ? "Submit music to Phlote" : "Connect"}
+            </HollowInputContainer>
+          </div>
         </div>
 
         {/*Desktop*/}
         <div className="hidden sm:block w-full]">
-          <div className=" w-full flex flex-col justify-center items-center pt-10">
-            <h1 className="text-center italic text-2xl">
+          <div className=" w-full flex flex-col gap-2 justify-center items-center pt-10">
+            <h1 className="text-center italic text-4xl sm:text-2xl">
               Decentralized music label run by a passionate community of music lovers.{" "}
             </h1>
-            <h3 className="text-center italic text-xl opacity-70">
+            <h3 className="text-center italic text-2xl sm:text-xl opacity-70">
               Artist submissions the receive 5 co-signs are minted every Tuesday on Zora.{" "}
             </h3>
             <div className="h-16" />
@@ -50,20 +62,11 @@ function Hero({account, setOpen, setConnectWalletOpen}) {
 
 function AboutUs(){
   return (
-    <section className="flex items-center justify-center py-20 mt-20 lg:mt-38">
+    <section className="flex items-center justify-center mt-96 sm:py-20 sm:mt-20 lg:mt-38">
       <div
         className="flex items-center">
-        {/*Mobile*/}
-        <div className="sm:hidden text-center mx-4 flex flex-col justify-center items-center">
-          <h1 className="text-6xl">Phlote</h1>
-          <div className="h-16"></div>
-          <p>
-            Decentralized music label run by a passionate community of music lovers.
-          </p>
-        </div>
-
         {/*Desktop*/}
-        <div className="hidden sm:block w-full]">
+        <div className="w-full]">
           <div className=" w-full flex flex-col justify-center items-center pt-10 gap-4">
             <h1 className="text-center italic text-5xl stroke-text">
               About Us.{" "}
@@ -87,7 +90,7 @@ function AboutUs(){
                 <div className="flex flex-1 justify-center z-10 mb-10 lg:mb-0">
                   <img
                     className="w-5/6 h-5/6 sm:w-3/4 sm:h-3/4 md:w-full md:h-full"
-                    src="/inverted-piramid.gif"
+                    src="/landing-page/inverted-piramid.gif"
                     alt=""
                   />
                 </div>
@@ -136,7 +139,7 @@ function AboutUs(){
                 <div className="flex flex-1 justify-center z-10 mb-10 lg:mb-0">
                   <img
                     className="w-5/6 h-5/6 sm:w-3/4 sm:h-3/4 md:w-full md:h-full"
-                    src="/ethereum.png"
+                    src="/landing-page/ethereum.png"
                     alt=""
                   />
                 </div>
@@ -196,10 +199,36 @@ function SubmissionSchedule(){
               All tracks that receive 5 cosigns are scheduled to be auctioned on Zora.
             </h3>
             <div className="relative ">
-              <img className="w-full" src="/submissions-dates-b&w.png"/>
+              <img className="w-full" src="/landing-page/submissions-dates-b&w.png"/>
             </div>
           </div>
         </div>
+    </section>
+  );
+}
+
+function Collaborators(){
+  return (
+    <section className="flex items-center justify-center py-20 mt-20 lg:mt-38">
+      <div
+        className="flex flex-col gap-8 items-center">
+        <div className="hidden sm:block w-full]">
+          <div className=" w-full flex flex-col justify-center items-center pt-10 gap-4">
+            <h1 className="text-center text-6xl stroke-text">
+              Our Collaborators
+            </h1>
+            <h3 className="text-center text-lg opacity-70 font-light">
+              Web 3.0 is all about supporting and building together for a better world.
+            </h3>
+          </div>
+        </div>
+        <div className="flex gap-5">
+          <img className="h-24" src="/landing-page/collaborators/colab1.png"/>
+          <img className="h-24" src="/landing-page/collaborators/colab2.png"/>
+          <img className="h-24" src="/landing-page/collaborators/colab3.png"/>
+          <img className="h-24" src="/landing-page/collaborators/colab4.png"/>
+        </div>
+      </div>
     </section>
   );
 }
@@ -211,11 +240,12 @@ function Home() {
   const [, setConnectWalletOpen] = useConnectWalletModalOpen();
 
   return (
-    <div className="font-roboto italic">
+    <div className="font-roboto">
       <Hero account={account} setOpen={setOpen} setConnectWalletOpen={setConnectWalletOpen} />
       <AboutUs/>
       <HowItWorks/>
       <SubmissionSchedule/>
+      <Collaborators />
     </div>
   );
 }
