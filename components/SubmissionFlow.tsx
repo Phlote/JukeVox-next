@@ -38,10 +38,10 @@ export const SubmissionFlow: FC = (props) => {
         throw "Not Authenticated";
       }
       if (fileSelected) {
-        const moralisAudioURL = await uploadFiles({
+        submission.mediaFormat = fileSelected.type;
+        submission.mediaURI = await uploadFiles({
           acceptedFile: fileSelected,
         });
-        submission.mediaURI = moralisAudioURL;
       }
 
       const result = (await submit(submission, account)) as Submission;
