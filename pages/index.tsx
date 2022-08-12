@@ -5,8 +5,10 @@ import { HollowInputContainer } from "../components/Hollow";
 import Layout from "../components/Layouts";
 import { useConnectWalletModalOpen } from "../components/Modals/ConnectWalletModal";
 import { useSubmissionFlowOpen } from "../components/SubmissionFlow";
+import { useSubmissionSearch } from "../hooks/useSubmissions";
+import SubmissionCard from "../components/SubmissionCard";
 
-function Hero({ account, setOpen, setConnectWalletOpen }) {
+const Hero = ({ account, setOpen, setConnectWalletOpen }) => {
   return (
     <section
       className="flex items-center justify-center py-44 bg-cover lg:py-80 bg-contain bg-center bg-no-repeat sm:bg-[url('/landing-page/map-landing-page.png')]">
@@ -61,7 +63,38 @@ function Hero({ account, setOpen, setConnectWalletOpen }) {
   );
 }
 
-function AboutUs() {
+const RecentlyCurated = () => {
+
+  const submissions = useSubmissionSearch();
+  const noResults =
+    !submissions.isLoading &&
+    !submissions.isFetching &&
+    submissions.data?.pages[0].submissions.length === 0;
+
+  return (
+    <section className="flex items-center justify-center mt-96 sm:py-20 sm:mt-20 lg:mt-38">
+      <div className="w-9/12 sm:w-8/12 2xl:w-full flex flex-col justify-center items-center pt-10 gap-4">
+        <h1 className="text-center italic text-5xl stroke-text">
+          Recently Curated
+        </h1>
+        <h3 className="text-center italic opacity-70 font-light">
+          These are some of the most wanted songs as voted on by the Phlote community.
+        </h3>
+        {/*<div className="w-full flex gap-5 flex-wrap justify-center sm:flex-nowrap">*/}
+        {/*  {submissions?.data?.pages.map((group, i) => (*/}
+        {/*    <React.Fragment key={i}>*/}
+        {/*      {group?.submissions?.map((submission) => (*/}
+        {/*        <SubmissionCard submission={submission} submissionFileType={}/>*/}
+        {/*      ))}*/}
+        {/*    </React.Fragment>*/}
+        {/*  ))}*/}
+        {/*</div>*/}
+      </div>
+    </section>
+  );
+}
+
+const AboutUs = () => {
   return (
     <section className="flex items-center justify-center mt-96 sm:py-20 sm:mt-20 lg:mt-38">
       <div className="w-9/12 sm:w-8/12 2xl:w-full flex flex-col justify-center items-center pt-10 gap-4">
@@ -76,7 +109,7 @@ function AboutUs() {
             {/*Content*/}
             <div className="flex flex-1 flex-col sm:items-center lg:items-start">
               <h1 className="text-2xl sm:text-3xl font-extrabold">Merit Based Process</h1>
-              {/*Think about making texts for mobile and desktop when its justified because
+              {/*Todo: Think about making texts for mobile and desktop when its justified because
               of the - (dashes) between words used to better format */}
               <p className="my-4 text-justify sm:w-3/4 lg:w-full">
                 Our process for selecting music is
@@ -149,7 +182,7 @@ function AboutUs() {
   );
 }
 
-function HowItWorks() {
+const HowItWorks = () => {
   return (
     <section className="flex items-center justify-center py-20 mt-20">
       <div className="w-9/12">
@@ -188,7 +221,7 @@ function HowItWorks() {
   );
 }
 
-function SubmissionSchedule() {
+const SubmissionSchedule = () => {
   return (
     <section className="flex items-center justify-center lg:mt-38">
       <div className=" w-full flex flex-col justify-center items-center pt-10 gap-4">
@@ -206,7 +239,7 @@ function SubmissionSchedule() {
   );
 }
 
-function Collaborators() {
+const Collaborators = () => {
   return (
     <section className="flex items-center justify-center py-20 mt-20 lg:mt-38">
       <div
@@ -230,7 +263,7 @@ function Collaborators() {
   );
 }
 
-function Home() {
+function Home() { // LANDING PAGE
   const [, setOpen] = useSubmissionFlowOpen();
 
   const { account } = useWeb3React();

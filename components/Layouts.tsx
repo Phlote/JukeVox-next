@@ -107,7 +107,7 @@ export const ArchiveLayout: React.FC<ArchiveLayoutProps> = ({
   return (
     <div
       className="container flex justify-center mx-auto h-full pb-8 mt-32"
-      style={center ? { alignItems: "center", flexGrow: 1 } : undefined}
+      style={center ? { alignItems: "center", flexGrow: 1 } : undefined} //Todo: move this to the classname
     >
       <div className="mx-4">{children}</div>
     </div>
