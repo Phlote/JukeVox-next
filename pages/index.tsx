@@ -1,5 +1,5 @@
 import { useWeb3React } from "@web3-react/core";
-import React from "react";
+import React, { useEffect } from "react";
 import { Footer } from "../components/Footer";
 import { HollowInputContainer } from "../components/Hollow";
 import Layout from "../components/Layouts";
@@ -9,6 +9,8 @@ import { useSubmissionSearch } from "../hooks/useSubmissions";
 import SubmissionCard from "../components/SubmissionCard";
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
+import { sub } from "mcl-wasm";
+import { cosign } from "../controllers/cosigns";
 
 const Hero = ({ account, setOpen, setConnectWalletOpen }) => {
   return (
@@ -66,7 +68,6 @@ const Hero = ({ account, setOpen, setConnectWalletOpen }) => {
 }
 
 const RecentlyCurated = () => {
-
   const submissions = useSubmissionSearch();
   const noResults =
     !submissions.isLoading &&
@@ -80,12 +81,27 @@ const RecentlyCurated = () => {
     1700: { items: 4 },
   };
 
-    let recentSubs = [];
-    submissions?.data?.pages.map((group, i) =>
-        group?.submissions?.map((submission) => recentSubs.push(
-          <SubmissionCard submission={submission} />)
-        )
+  let subCount = 0;
+  let cosignedSubs = [];
+  submissions?.data?.pages.map((group, i) =>
+    group?.submissions?.map((submission) => {
+        !!submission.noOfCosigns && submission.noOfCosigns > 0 &&
+        cosignedSubs.push(<SubmissionCard submission={submission} />)
+      }
     )
+  )
+
+  if (cosignedSubs.length === 0 && submissions.hasNextPage){
+    submissions.fetchNextPage();
+  }
+
+  let recentSubs = [];
+  submissions?.data?.pages.map((group, i) =>
+    group?.submissions?.map((submission) =>
+      submission.noOfCosigns && submission.noOfCosigns > 0 &&
+      recentSubs.push(<SubmissionCard submission={submission} />)
+    )
+  )
 
   return (
     <section className="flex items-center justify-center sm:py-20 sm:mt-20 lg:mt-38">
