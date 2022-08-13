@@ -7,6 +7,8 @@ import { useConnectWalletModalOpen } from "../components/Modals/ConnectWalletMod
 import { useSubmissionFlowOpen } from "../components/SubmissionFlow";
 import { useSubmissionSearch } from "../hooks/useSubmissions";
 import SubmissionCard from "../components/SubmissionCard";
+import AliceCarousel from 'react-alice-carousel';
+import 'react-alice-carousel/lib/alice-carousel.css';
 
 const Hero = ({ account, setOpen, setConnectWalletOpen }) => {
   return (
@@ -22,7 +24,7 @@ const Hero = ({ account, setOpen, setConnectWalletOpen }) => {
             Decentralized music label run by a passionate community of music lovers.
           </p>
           <div className="h-16"></div>
-          <div className="w-80 h-16 cursor-pointer hover:opacity-75 shadow-sm">
+          <div className="w-80 mt-80 h-16 cursor-pointer hover:opacity-75 shadow-sm">
             <HollowInputContainer
               style={{ justifyContent: "center", border: "1px solid white" }}
               onClick={() => {
@@ -71,8 +73,22 @@ const RecentlyCurated = () => {
     !submissions.isFetching &&
     submissions.data?.pages[0].submissions.length === 0;
 
+  const responsive = {
+    640: { items: 1 },
+    1024: { items: 2 },
+    1280: { items: 3 },
+    1700: { items: 4 },
+  };
+
+    let recentSubs = [];
+    submissions?.data?.pages.map((group, i) =>
+        group?.submissions?.map((submission) => recentSubs.push(
+          <SubmissionCard submission={submission} />)
+        )
+    )
+
   return (
-    <section className="flex items-center justify-center mt-96 sm:py-20 sm:mt-20 lg:mt-38">
+    <section className="flex items-center justify-center sm:py-20 sm:mt-20 lg:mt-38">
       <div className="w-9/12 sm:w-8/12 2xl:w-full flex flex-col justify-center items-center pt-10 gap-4">
         <h1 className="text-center italic text-5xl stroke-text">
           Recently Curated
@@ -80,15 +96,15 @@ const RecentlyCurated = () => {
         <h3 className="text-center italic opacity-70 font-light">
           These are some of the most wanted songs as voted on by the Phlote community.
         </h3>
-        {/*<div className="w-full flex gap-5 flex-wrap justify-center sm:flex-nowrap">*/}
-        {/*  {submissions?.data?.pages.map((group, i) => (*/}
-        {/*    <React.Fragment key={i}>*/}
-        {/*      {group?.submissions?.map((submission) => (*/}
-        {/*        <SubmissionCard submission={submission} submissionFileType={}/>*/}
-        {/*      ))}*/}
-        {/*    </React.Fragment>*/}
-        {/*  ))}*/}
-        {/*</div>*/}
+        <div className="w-[320px] lg:w-[670px] xl:w-[1100px] 2xl:w-[1400px] flex justify-center">
+          <AliceCarousel
+            responsive={responsive}
+            mouseTracking
+            items={recentSubs}
+            controlsStrategy="alternate"
+            disableDotsControls
+          />
+        </div>
       </div>
     </section>
   );
@@ -96,7 +112,7 @@ const RecentlyCurated = () => {
 
 const AboutUs = () => {
   return (
-    <section className="flex items-center justify-center mt-96 sm:py-20 sm:mt-20 lg:mt-38">
+    <section className="flex items-center justify-center mt-14 sm:py-20 sm:mt-20 lg:mt-38">
       <div className="w-9/12 sm:w-8/12 2xl:w-full flex flex-col justify-center items-center pt-10 gap-4">
         <h1 className="text-center italic text-5xl stroke-text">
           About Us
@@ -231,7 +247,7 @@ const SubmissionSchedule = () => {
         <h3 className="text-center italic opacity-70 font-light">
           All tracks that receive 5 cosigns are scheduled to be auctioned on Zora.
         </h3>
-        <div className="relative ">
+        <div className="relative hidden sm:block">
           <img className="w-full" src="/landing-page/submissions-dates-b&w.png" />
         </div>
       </div>
@@ -272,6 +288,7 @@ function Home() { // LANDING PAGE
   return (
     <div className="font-roboto">
       <Hero account={account} setOpen={setOpen} setConnectWalletOpen={setConnectWalletOpen} />
+      <RecentlyCurated />
       <AboutUs />
       <HowItWorks />
       <SubmissionSchedule />
