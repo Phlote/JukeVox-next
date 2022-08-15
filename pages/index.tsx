@@ -15,7 +15,7 @@ import { Submission } from "../types";
 const Hero = ({ account, setOpen, setConnectWalletOpen }) => {
   return (
     <section
-      className="flex items-center justify-center py-44 bg-cover lg:py-80 bg-contain bg-center bg-no-repeat sm:bg-[url('/landing-page/map-landing-page.png')]">
+      className="flex items-center justify-center py-24 bg-cover lg:py-80 bg-contain bg-center bg-no-repeat sm:bg-[url('/landing-page/map-landing-page.png')]">
       <div
         className="flex items-center">
         {/*Mobile*/}
