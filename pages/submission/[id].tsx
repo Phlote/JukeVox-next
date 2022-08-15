@@ -29,7 +29,7 @@ export default function SubmissionPage(props: {
     <CommentsContextProvider threadId={submission.id}>
       <div className="min-w-full mt-32">
         <div className="flex justify-center min-w-full mb-8">
-          <SubmissionCard submission={submission} submissionFileType={submissionFileType} />
+          <SubmissionCard submission={submission} />
         </div>
         <div className="max-w-prose mx-auto flex-grow">
           <CommentSection />

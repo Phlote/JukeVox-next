@@ -9,8 +9,8 @@ import { useSubmissionSearch } from "../hooks/useSubmissions";
 import SubmissionCard from "../components/SubmissionCard";
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
-import { sub } from "mcl-wasm";
 import { cosign } from "../controllers/cosigns";
+import { Submission } from "../types";
 
 const Hero = ({ account, setOpen, setConnectWalletOpen }) => {
   return (
@@ -84,7 +84,7 @@ const RecentlyCurated = () => {
   let subCount = 0;
   let cosignedSubs = [];
   submissions?.data?.pages.map((group, i) =>
-    group?.submissions?.map((submission) => {
+    group?.submissions?.map((submission: Submission) => {
         !!submission.noOfCosigns && submission.noOfCosigns > 0 &&
         cosignedSubs.push(<SubmissionCard submission={submission} />)
       }
