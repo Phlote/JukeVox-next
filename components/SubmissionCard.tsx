@@ -5,10 +5,13 @@ import { TwitterIcon, TwitterShareButton } from "next-share";
 import React, { useRef } from "react";
 import tw from "twin.macro";
 import styled from "styled-components";
+import { RatingsMeter } from "./RatingsMeter";
+import { CommentBubble } from "./Comments/CommentBubble";
 
 const SubmissionCardDetails = styled.div`
   ${tw`p-4 bg-phlote-ff-modal`}
   border-radius: 0px;
+  flex: 1;
   @supports (backdrop-filter: none) {
     background: rgba(122, 122, 122, 0.08);
     box-shadow: 0px 0px 55px rgba(42, 45, 61, 0.08),
@@ -22,7 +25,7 @@ const SubmissionCard = ({ submission }) => {
   const videoEl = useRef(null);
 
   return (
-    <div className="flex flex-col w-80 m-auto">
+    <div className="flex flex-col w-80 h-[480px] m-auto">
       <div className="w-full h-60 relative">
         {submission.mediaFormat === "video/quicktime" ? (
           <video
@@ -39,7 +42,7 @@ const SubmissionCard = ({ submission }) => {
         )}
       </div>
       <SubmissionCardDetails>
-        <div className="flex">
+        <div className="flex h-12 items-center">
           <div>
             <a
               href={submission.mediaURI}
@@ -60,7 +63,7 @@ const SubmissionCard = ({ submission }) => {
         </div>
         <div className="h-8" />
 
-        <div className="flex">
+        <div className="flex h-24">
           <div>
             <h2 className="text-base opacity-60"> Artist</h2>
             <div className="h-2" />
@@ -78,16 +81,25 @@ const SubmissionCard = ({ submission }) => {
           </div>
         </div>
         <div className="h-8" />
-        <TwitterShareButton
-          url={`${
-            process.env.NEXT_PUBLIC_URL ??
-            process.env.NEXT_PUBLIC_VERCEL_URL
-          }/submission/${submission.id}`}
-          title={`Have you heard ${submission.mediaTitle}? It's a 💎`}
-        >
-          <TwitterIcon size={32} round />
-        </TwitterShareButton>
-      </SubmissionCardDetails>
+        <div className="flex">
+          <div className="flex flex-1 items-center gap-2">
+            <TwitterShareButton
+              className="w-24"
+              url={`${
+                process.env.NEXT_PUBLIC_URL ??
+                process.env.NEXT_PUBLIC_VERCEL_URL
+              }/submission/${submission.id}`}
+              title={`Have you heard ${submission.mediaTitle}? It's a 💎`}
+            >
+              <TwitterIcon size={32} round />
+            </TwitterShareButton>
+            <CommentBubble />
+          </div>
+          <div className="flex flex-10 justify-center items-center">
+            <RatingsMeter submissionId={submission.id} submitterWallet={submission.wallet} initialCosigns={submission.cosigns}/>
+          </div>
+        </div>
+        </SubmissionCardDetails>
     </div>
   )
 }
