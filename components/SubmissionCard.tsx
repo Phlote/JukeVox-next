@@ -93,7 +93,7 @@ const SubmissionCard = ({ submission }) => {
             >
               <TwitterIcon size={32} round />
             </TwitterShareButton>
-            <CommentBubble />
+            {/*<CommentBubble />*/}
           </div>
           <div className="flex flex-10 justify-center items-center">
             <RatingsMeter submissionId={submission.id} submitterWallet={submission.wallet} initialCosigns={submission.cosigns}/>
