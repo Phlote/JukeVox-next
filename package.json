@@ -44,7 +44,6 @@
     "performant-array-to-tree": "^1.11.0",
     "prop-types": "^15.8.1",
     "react": "17.0.2",
-    "react-alice-carousel": "^2.6.4",
     "react-dom": "17.0.2",
     "react-dropzone": "^12.0.4",
     "react-final-form-hooks": "^2.0.2",
