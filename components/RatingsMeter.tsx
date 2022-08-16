@@ -31,7 +31,7 @@ export const RatingsMeter: React.FC<{
     isCuratorQuery?.data?.isCurator &&
     !cosigns.includes("pending") &&
     !cosigns.includes(account) &&
-    submitterWallet.toLowerCase() !== account.toLowerCase();
+    submitterWallet?.toLowerCase() !== account.toLowerCase();
 
   const onCosign = async (e) => {
     e.stopPropagation();
