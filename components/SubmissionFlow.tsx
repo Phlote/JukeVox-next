@@ -38,6 +38,7 @@ export const SubmissionFlow: FC = (props) => {
         throw "Not Authenticated";
       }
       if (fileSelected) {
+        submission.mediaFormat = fileSelected.type;
         submission.mediaURI = await uploadFiles({
           acceptedFile: fileSelected,
         });

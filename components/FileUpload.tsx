@@ -22,6 +22,8 @@ export const uploadFiles = async (args: uploadFilesArguments) => {
   try {
     let id = acceptedFile.name + '' + Date.now();
 
+
+
     const uploadAudioFile = await supabase.storage
       .from("files")
       .upload(id, acceptedFile, {
@@ -69,7 +71,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
           }
         });
       }
-      console.log("Reaches?");
+
       setFileSelected(acceptedFiles[0]);
     },
     [setFileSelected]
