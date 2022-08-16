@@ -81,8 +81,8 @@ const RecentlyCurated = () => {
     1700: { items: 4 },
   };
 
-  let subCount = 0;
   let cosignedSubs = [];
+
   submissions?.data?.pages.map((group, i) =>
     group?.submissions?.map((submission: Submission) => {
         !!submission.noOfCosigns && submission.noOfCosigns > 0 &&
@@ -90,18 +90,7 @@ const RecentlyCurated = () => {
       }
     )
   )
-
-  if (cosignedSubs.length === 0 && submissions.hasNextPage){
-    submissions.fetchNextPage();
-  }
-
-  let recentSubs = [];
-  submissions?.data?.pages.map((group, i) =>
-    group?.submissions?.map((submission) =>
-      submission.noOfCosigns && submission.noOfCosigns > 0 &&
-      recentSubs.push(<SubmissionCard submission={submission} />)
-    )
-  )
+  // console.log(cosignedSubs);
 
   return (
     <section className="flex items-center justify-center sm:py-20 sm:mt-20 lg:mt-38">
@@ -116,7 +105,7 @@ const RecentlyCurated = () => {
           <AliceCarousel
             responsive={responsive}
             mouseTracking
-            items={recentSubs}
+            items={cosignedSubs}
             controlsStrategy="alternate"
             disableDotsControls
           />

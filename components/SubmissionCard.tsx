@@ -96,7 +96,7 @@ const SubmissionCard = ({ submission }) => {
             {/*<CommentBubble />*/}
           </div>
           <div className="flex flex-10 justify-center items-center">
-            <RatingsMeter submissionId={submission.id} submitterWallet={submission.wallet} initialCosigns={submission.cosigns}/>
+            {/*<RatingsMeter key={submission.id} submissionId={submission.id} submitterWallet={submission.wallet} initialCosigns={submission.cosigns}/>*/}
           </div>
         </div>
         </SubmissionCardDetails>
