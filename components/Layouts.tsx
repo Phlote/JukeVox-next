@@ -20,6 +20,10 @@ export default function Layout({ children }) {
         <NavBarDesktop />
       </div>
       {children}
+
+      <div className="sm:hidden ">
+        <NavBarMobileWeb />
+      </div>
     </div>
   );
 }
@@ -101,13 +105,14 @@ interface ArchiveLayoutProps {
 }
 
 export const ArchiveLayout: React.FC<ArchiveLayoutProps> = ({
+
   children,
   center,
 }) => {
   return (
     <div
       className="container flex justify-center mx-auto h-full pb-8 mt-32"
-      style={center ? { alignItems: "center", flexGrow: 1 } : undefined} //Todo: move this to the classname
+      style={center ? { alignItems: "center", flexGrow: 1 } : undefined}
     >
       <div className="mx-4">{children}</div>
     </div>

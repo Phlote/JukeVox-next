@@ -12,7 +12,6 @@ export interface Submission {
   artistWallet: string;
   curatorWallet: string;
   mediaTitle: string;
-  mediaFormat: string;
   mediaURI: string;
   marketplace: string;
   tags?: string[];
