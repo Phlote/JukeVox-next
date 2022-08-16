@@ -82,14 +82,15 @@ const RecentlyCurated = () => {
   };
 
   let cosignedSubs = [];
-
-  submissions?.data?.pages.map((group, i) =>
-    group?.submissions?.map((submission: Submission) => {
-        !!submission.noOfCosigns && submission.noOfCosigns > 0 &&
-        cosignedSubs.push(<SubmissionCard submission={submission} />)
-      }
+  if (!(submissions.isLoading || submissions.isFetching) && !noResults) {
+    submissions?.data?.pages.map((group, i) =>
+      group?.submissions?.map((submission: Submission) => {
+          !!submission.noOfCosigns && submission.noOfCosigns > 0 &&
+          cosignedSubs.push(<SubmissionCard submission={submission} />)
+        }
+      )
     )
-  )
+  }
   // console.log(cosignedSubs);
 
   return (
