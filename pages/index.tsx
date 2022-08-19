@@ -9,7 +9,6 @@ import { useSubmissionSearch } from "../hooks/useSubmissions";
 import SubmissionCard from "../components/SubmissionCard";
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
-import { cosign } from "../controllers/cosigns";
 import { Submission } from "../types";
 
 const Hero = ({ account, setOpen, setConnectWalletOpen }) => {
@@ -118,7 +117,7 @@ const RecentlyCurated = () => {
 
 const AboutUs = () => {
   return (
-    <section className="flex items-center justify-center mt-14 sm:py-20 sm:mt-20 lg:mt-38">
+    <section className="sm:hidden flex items-center justify-center mt-14 sm:py-20 sm:mt-20 lg:mt-38">
       <div className="w-9/12 sm:w-8/12 2xl:w-full flex flex-col justify-center items-center pt-10 gap-4">
         <h1 className="text-center italic text-5xl stroke-text">
           About Us
@@ -206,7 +205,7 @@ const AboutUs = () => {
 
 const HowItWorks = () => {
   return (
-    <section className="flex items-center justify-center py-20 mt-20">
+    <section className="sm:hidden flex items-center justify-center py-20 mt-20">
       <div className="w-9/12">
         <div className="sm:w-3/4 lg:w-5/12 mx-auto px-2">
           <h1 className="text-center italic text-5xl stroke-text">How it works</h1>
@@ -245,7 +244,7 @@ const HowItWorks = () => {
 
 const SubmissionSchedule = () => {
   return (
-    <section className="flex items-center justify-center lg:mt-38">
+    <section className="sm:hidden flex items-center justify-center lg:mt-38">
       <div className=" w-full flex flex-col justify-center items-center pt-10 gap-4">
         <h1 className="text-center italic text-3xl sm:text-5xl font-extrabold">
           Submissions Schedule
