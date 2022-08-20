@@ -163,7 +163,7 @@ const Collaborators = () => {
           <h1 className="text-center text-4xl sm:text-6xl stroke-text">
             Press + Partners
           </h1>
-          <h3 className="hidden text-center text- sm:text-lg opacity-70 font-light">
+          <h3 className="sm:hidden text-center text- sm:text-lg opacity-70 font-light">
             Web 3.0 is all about supporting and building together for a better world.
           </h3>
         </div>
