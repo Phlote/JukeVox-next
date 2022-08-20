@@ -50,6 +50,13 @@ export const NavBarDesktop = (props) => {
         </Link>
         <div className="flex-grow" />
         <NavBarElementContainer>
+          <Link href="/archive" passHref>
+            <HollowButtonContainer className="flex justify-center items-center ">
+              Index
+            </HollowButtonContainer>
+          </Link>
+        </NavBarElementContainer>
+        <NavBarElementContainer>
           <Link href="/about-us" passHref>
             <HollowButtonContainer className="flex justify-center items-center ">
               About Us
@@ -60,13 +67,6 @@ export const NavBarDesktop = (props) => {
           <Link href="/how-it-works" passHref>
             <HollowButtonContainer className="flex justify-center items-center ">
               How it works
-            </HollowButtonContainer>
-          </Link>
-        </NavBarElementContainer>
-        <NavBarElementContainer>
-          <Link href="/archive" passHref>
-            <HollowButtonContainer className="flex justify-center items-center ">
-              Index
             </HollowButtonContainer>
           </Link>
         </NavBarElementContainer>
