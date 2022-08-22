@@ -117,7 +117,7 @@ const RecentlyCurated = ({ account, setOpen, setConnectWalletOpen }) => {
         </div>
         <div className="h-2"></div>
         <h3 className="text-center italic opacity-70 font-light lg:text-lg 2xl:text-2xl">
-          These are some of the most wanted songs as voted on by the Phlote community.
+          Recently Curated by Team Phlote
         </h3>
         <div className="h-2"></div>
         <div className="w-80 h-16 cursor-pointer hover:opacity-75 shadow-sm">
