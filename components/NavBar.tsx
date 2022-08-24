@@ -56,6 +56,20 @@ export const NavBarDesktop = (props) => {
             </HollowButtonContainer>
           </Link>
         </NavBarElementContainer>
+        <NavBarElementContainer>
+          <Link href="/about-us" passHref>
+            <HollowButtonContainer className="flex justify-center items-center ">
+              About Us
+            </HollowButtonContainer>
+          </Link>
+        </NavBarElementContainer>
+        <NavBarElementContainer>
+          <Link href="/how-it-works" passHref>
+            <HollowButtonContainer className="flex justify-center items-center ">
+              How it works
+            </HollowButtonContainer>
+          </Link>
+        </NavBarElementContainer>
         {active && (
           <NavBarElementContainer>
             <Link
