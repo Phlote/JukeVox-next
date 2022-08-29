@@ -7,6 +7,7 @@ import ExpandComment from "../../icons/ExpandComment";
 import { supabase } from "../../lib/supabase";
 import Avatar from "./Avatar";
 import NewCommentForm from "./NewCommentForm";
+import Linkify from "react-linkify";
 
 const MAX_LINES = 10;
 const LINE_HEIGHT = 24; // in px
@@ -16,6 +17,7 @@ interface ReplyFormProps {
   comment: CommentType;
   handleResetCallback: () => void;
 }
+
 const ReplyForm = ({
   comment,
   handleResetCallback,
@@ -125,7 +127,8 @@ const Comment = ({
       {!hidden && parent && (
         <div className="grid pb-1 gap-x-2 comment-grid">
           <div className="w-6 relative">
-            <div className="col-start-1 border-gray-200 border-t-2 border-l-2 rounded-tl box-border absolute -right-1 bottom-0 w-2/3 h-1/2" />
+            <div
+              className="col-start-1 border-gray-200 border-t-2 border-l-2 rounded-tl box-border absolute -right-1 bottom-0 w-2/3 h-1/2" />
           </div>
           <div className="col-start-2 flex items-center leading-none mb-1 transform translate-y-1">
             <button
@@ -134,7 +137,8 @@ const Comment = ({
             >
               @{parent.author?.username}:
             </button>
-            <div className="text-xs text-gray-500 ml-1 hover:text-gray-400 focus-ring active:text-gray-400 cursor-pointer focus:outline-none line-clamp-1">
+            <div
+              className="text-xs text-gray-500 ml-1 hover:text-gray-400 focus-ring active:text-gray-400 cursor-pointer focus:outline-none line-clamp-1">
               {parent.content}
             </div>
           </div>
@@ -148,7 +152,8 @@ const Comment = ({
       >
         {highlight && (
           <>
-            <div className="row-start-1 col-start-1 row-end-3 col-end-3 -m-1 opacity-5 bg-indigo-700 dark:bg-indigo-50 dark:border-gray-100 rounded shadow-2xl pointer-events-none" />
+            <div
+              className="row-start-1 col-start-1 row-end-3 col-end-3 -m-1 opacity-5 bg-indigo-700 dark:bg-indigo-50 dark:border-gray-100 rounded shadow-2xl pointer-events-none" />
           </>
         )}
         {!hidden ? (
@@ -170,7 +175,7 @@ const Comment = ({
                     "bg-gray-200 group-hover:bg-gray-500 group-active:bg-gray-500 dark:bg-gray-600 dark:group-hover:bg-gray-400 dark:group-active:bg-gray-400":
                       !highlight,
                     "bg-gray-300 group-hover:bg-gray-600 group-active:bg-gray-600 dark:bg-gray-600 dark:group-hover:bg-gray-400 dark:group-active:bg-gray-400":
-                      highlight,
+                    highlight,
                   })}
                 />
               </button>
@@ -231,7 +236,13 @@ const Comment = ({
             )}
             ref={contentRef}
           >
-            {comment.content}
+            <Linkify componentDecorator={(decoratedHref, decoratedText, key) => (
+              <a target="blank" href={decoratedHref} key={key} className="text-blue-500">
+                {decoratedText}
+              </a>
+            )}>
+              {comment.content}
+            </Linkify>
           </section>
           {isOverflow && (
             <button
