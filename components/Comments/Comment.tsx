@@ -7,6 +7,7 @@ import ExpandComment from "../../icons/ExpandComment";
 import { supabase } from "../../lib/supabase";
 import Avatar from "./Avatar";
 import NewCommentForm from "./NewCommentForm";
+import Linkify from "react-linkify";
 
 const MAX_LINES = 10;
 const LINE_HEIGHT = 24; // in px
@@ -16,6 +17,7 @@ interface ReplyFormProps {
   comment: CommentType;
   handleResetCallback: () => void;
 }
+
 const ReplyForm = ({
   comment,
   handleResetCallback,
@@ -125,16 +127,18 @@ const Comment = ({
       {!hidden && parent && (
         <div className="grid pb-1 gap-x-2 comment-grid">
           <div className="w-6 relative">
-            <div className="col-start-1 border-gray-200 border-t-2 border-l-2 rounded-tl box-border absolute -right-1 bottom-0 w-2/3 h-1/2" />
+            <div
+              className="col-start-1 border-gray-200 border-t-2 border-l-2 rounded-tl box-border absolute -right-1 bottom-0 w-2/3 h-1/2" />
           </div>
           <div className="col-start-2 flex items-center leading-none mb-1 transform translate-y-1">
             <button
-              className="text-xs text-gray-500 hover:underline focus-ring active:underline cursor-pointer focus:outline-none"
+              className="text-xs text-white-500 hover:underline focus-ring active:underline cursor-pointer focus:outline-none"
               aria-label={`View comment by ${parent.author?.username}`}
             >
               @{parent.author?.username}:
             </button>
-            <div className="text-xs text-gray-500 ml-1 hover:text-gray-400 focus-ring active:text-gray-400 cursor-pointer focus:outline-none line-clamp-1">
+            <div
+              className="text-xs text-white-500 ml-1 hover:text-white-400 focus-ring active:text-white-400 cursor-pointer focus:outline-none line-clamp-1">
               {parent.content}
             </div>
           </div>
@@ -148,7 +152,8 @@ const Comment = ({
       >
         {highlight && (
           <>
-            <div className="row-start-1 col-start-1 row-end-3 col-end-3 -m-1 opacity-5 bg-indigo-700 dark:bg-indigo-50 dark:border-gray-100 rounded shadow-2xl pointer-events-none" />
+            <div
+              className="row-start-1 col-start-1 row-end-3 col-end-3 -m-1 opacity-5 bg-indigo-700 dark:bg-indigo-50 dark:border-gray-100 rounded shadow-2xl pointer-events-none" />
           </>
         )}
         {!hidden ? (
@@ -170,7 +175,7 @@ const Comment = ({
                     "bg-gray-200 group-hover:bg-gray-500 group-active:bg-gray-500 dark:bg-gray-600 dark:group-hover:bg-gray-400 dark:group-active:bg-gray-400":
                       !highlight,
                     "bg-gray-300 group-hover:bg-gray-600 group-active:bg-gray-600 dark:bg-gray-600 dark:group-hover:bg-gray-400 dark:group-active:bg-gray-400":
-                      highlight,
+                    highlight,
                   })}
                 />
               </button>
@@ -184,24 +189,24 @@ const Comment = ({
             }
             aria-label={`Expand comment by ${comment.author}`}
           >
-            <ExpandComment className="w-4 h-4 text-gray-500" />
+            <ExpandComment className="w-4 h-4 text-white-500" />
           </button>
         )}
         <div className="row-start-1 col-start-2 self-center">
           <div className="flex flex-grow items-end">
             <span
-              className={cn("text-gray-700 dark:text-gray-100 leading-none", {
+              className={cn("text-white-700 dark:text-white-100 leading-none", {
                 "text-sm font-medium": !hidden,
                 "text-xs": hidden,
               })}
             >
               {!comment.isDeleted ? comment.author?.username : <>[Deleted]</>}{" "}
             </span>
-            <span className="text-gray-300 dark:text-gray-500 font-semibold text-xs mx-1 leading-none select-none">
+            <span className="text-white-300 dark:text-white-500 font-semibold text-xs mx-1 leading-none select-none">
               ·
             </span>
             <span
-              className="text-gray-400 text-xs font-light leading-none"
+              className="text-white-400 text-xs font-light leading-none"
               suppressHydrationWarning
             >
               {dayjs().diff(comment.createdAt, "seconds", true) < 30
@@ -210,7 +215,7 @@ const Comment = ({
             </span>
             {isAdmin && (
               <button
-                className="text-xs flex flex-row items-center text-gray-600 dark:text-gray-400 focus-ring border-none ml-5 leading-none"
+                className="text-xs flex flex-row items-center text-white-600 dark:text-white-400 focus-ring border-none ml-5 leading-none"
                 onClick={handlePin}
                 aria-label={`Pin comment by ${comment.author?.username}`}
               >
@@ -223,7 +228,7 @@ const Comment = ({
         <div className={cn("row-start-2 col-start-2", { hidden })}>
           <section
             className={cn(
-              "text-gray-800 dark:text-gray-300 leading-6 text-sm",
+              "text-white-800 dark:text-white-300 leading-6 text-sm italic",
               {
                 "line-clamp-10": !isOverflowExpanded,
                 hidden,
@@ -231,7 +236,13 @@ const Comment = ({
             )}
             ref={contentRef}
           >
-            {comment.content}
+            <Linkify componentDecorator={(decoratedHref, decoratedText, key) => (
+              <a target="blank" href={decoratedHref} key={key} className="text-blue-500">
+                {decoratedText}
+              </a>
+            )}>
+              {comment.content}
+            </Linkify>
           </section>
           {isOverflow && (
             <button
@@ -250,7 +261,7 @@ const Comment = ({
             <div className="grid grid-flow-col auto-cols-min gap-x-3 transform -translate-x-1.5">
               {/* <VoteButtons comment={comment} /> */}
               <button
-                className="text-xs flex items-center text-gray-600 dark:text-gray-400 focus-ring border-none"
+                className="text-xs flex items-center text-white-600 dark:text-white-400 focus-ring border-none"
                 onClick={() => setShowReplyForm(!showReplyForm)}
                 aria-label={
                   showReplyForm
@@ -264,7 +275,7 @@ const Comment = ({
                 <>
                   {!comment.isApproved && (
                     <button
-                      className="text-xs flex flex-row items-center text-gray-600 dark:text-gray-400 focus-ring border-none"
+                      className="text-xs flex flex-row items-center text-white-600 dark:text-white-400 focus-ring border-none"
                       onClick={handleApprove}
                       aria-label={`Approve comment by ${comment.author?.username}`}
                     >
@@ -273,7 +284,7 @@ const Comment = ({
                   )}
                   {comment.isApproved && (
                     <button
-                      className="text-xs flex flex-row items-center text-gray-600 dark:text-gray-400 focus-ring border-none"
+                      className="text-xs flex flex-row items-center text-white-600 dark:text-white-400 focus-ring border-none"
                       onClick={handleDeny}
                       aria-label={`Unapprove comment by ${comment.author?.username}`}
                     >
@@ -333,13 +344,13 @@ const Comment = ({
           <div className="flex items-center">
             <button
               className={cn(
-                "mt-5 text-xs inline-flex items-center text-gray-600 focus-ring border border-transparent",
+                "mt-5 text-xs inline-flex items-center text-white-600 focus-ring border border-transparent",
                 { hidden }
               )}
               aria-label={`Continue thread`}
             >
               <div className="h-px w-8 bg-gray-400 dark:bg-gray-600 mr-2" />
-              <span className="text-gray-600 dark:text-gray-400">
+              <span className="text-white-600 dark:text-white-400">
                 {`View ${comment.responsesCount === 1 ? "reply" : "replies"} (${
                   comment.responsesCount
                 })`}
