@@ -82,7 +82,6 @@ export const ConnectWalletModal = () => {
 export const WalletConnectButton = () => {
   const { active, error, activate, chainId, account, setError, deactivate } =
     useWeb3React();
-  const router = useRouter();
 
   const [connecting, setConnecting] = useState(false);
   useEffect(() => {
