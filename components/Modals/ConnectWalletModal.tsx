@@ -8,9 +8,8 @@ import { Injected, WalletConnect } from "../../utils/connectors";
 import { cacheConnector, CachedConnector } from "../../utils/web3";
 import { HollowButtonContainer } from "../Hollow";
 import { Modal } from "../Modal";
-import { getProfileForWallet } from "../../utils/supabase";
-import { useProfile } from "../Forms/ProfileSettingsForm";
 import { useRouter } from "next/router";
+import { getProfile } from "../../controllers/profiles";
 
 const connectWalletModalOpenAtom = atom<boolean>(false);
 export const useConnectWalletModalOpen = () =>
@@ -20,11 +19,22 @@ export const ConnectWalletModal = () => {
   const [open, setOpen] = useConnectWalletModalOpen();
   const { account, activate, deactivate, chainId, active, error } =
     useWeb3React();
+  const router = useRouter();
 
   const isUnsupportedChainId = error instanceof UnsupportedChainIdError;
 
   React.useEffect(() => {
-    if (account) setOpen(false);
+    if (account) {
+      setOpen(false);
+      getProfile(account)
+        .then((profile) => {
+          router.push("/archive");
+        })
+        .catch(error => {
+          router.push("/editprofile");
+        });
+    } else
+      router.push("/");
   }, [account, setOpen]);
 
   React.useEffect(() => {
@@ -72,7 +82,6 @@ export const ConnectWalletModal = () => {
 export const WalletConnectButton = () => {
   const { active, error, activate, chainId, account, setError, deactivate } =
     useWeb3React();
-  const profileQuery = useProfile(account);
   const router = useRouter();
 
   const [connecting, setConnecting] = useState(false);
@@ -89,10 +98,6 @@ export const WalletConnectButton = () => {
         setConnecting(true);
         activate(WalletConnect, undefined, true)
           .then(() => {
-            console.log(account, profileQuery);
-            // getProfileForWallet().then(()=>{})
-            // router.push("/editprofile");
-            router.push('/archive');
             cacheConnector(CachedConnector.WalletConnect);
           })
           .catch((error) => {
@@ -123,8 +128,6 @@ export const WalletConnectButton = () => {
 export const InjectedConnectorButton = () => {
   const { active, error, activate, chainId, account, setError, deactivate } =
     useWeb3React();
-  const profileQuery = useProfile(account);
-  const router = useRouter();
 
   const {
     isMetaMaskInstalled,
@@ -151,9 +154,6 @@ export const InjectedConnectorButton = () => {
           setConnecting(true);
           activate(Injected, undefined, true)
             .then(() => {
-              console.log(account, profileQuery);
-              // router.push("/editprofile");
-              router.push('/archive');
               cacheConnector(CachedConnector.Injected);
             })
             .catch((error) => {
