@@ -27,7 +27,7 @@ export const RatingsMeter: React.FC<{
 
   const isCuratorQuery = useIsCurator();
 
-  const canCosign =
+  const canCosign = account &&
     isCuratorQuery?.data?.isCurator &&
     !cosigns.includes("pending") &&
     !cosigns.includes(account) &&
