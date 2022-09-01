@@ -76,8 +76,6 @@ export const ProfileSettingsForm = ({ wallet }) => {
   const twitter = useField("twitter", form);
   const email = useField("email", form);
 
-  console.log(submitting, valid);
-
   return (
     // <div className="grid lg:grid-cols-2 grid-cols-1 w-10/12 md:gap-16 gap-8 h-full flex flex-grow">
     <div className="grid lg:grid-cols-2 grid-cols-1 w-10/12 md:gap-16 gap-1 max-h-full flex flex-grow my-8">
