@@ -52,7 +52,7 @@ export const NavBarDesktop = (props) => {
         <NavBarElementContainer>
           <Link href="/archive" passHref>
             <HollowButtonContainer className="flex justify-center items-center ">
-              Index
+              Feed
             </HollowButtonContainer>
           </Link>
         </NavBarElementContainer>
