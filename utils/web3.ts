@@ -94,6 +94,11 @@ export const cacheConnector = (provider: CachedConnector) => {
     localStorage.setItem(WEB3_CONNECT_CACHED_CONNECTOR, provider);
 };
 
+export const clearCachedConnector = () => {
+  if (typeof window !== "undefined")
+    localStorage.setItem(WEB3_CONNECT_CACHED_CONNECTOR, '');
+};
+
 export const getCachedConnector = () => {
   if (typeof window !== "undefined")
     return localStorage.getItem(WEB3_CONNECT_CACHED_CONNECTOR);

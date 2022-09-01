@@ -9,6 +9,7 @@ import Hamburger from "../public/hamburger.svg";
 import { DropdownActions } from "./Dropdowns/DropdownActions";
 import { useConnectWalletModalOpen } from "./Modals/ConnectWalletModal";
 import { ShortenedWallet } from "./ShortenedWallet";
+import { clearCachedConnector } from "../utils/web3";
 
 const Account = (props) => {
   const { active, error, activate, chainId, account, setError, deactivate } =
@@ -95,6 +96,7 @@ const AccountDropdown = (props) => {
               className="cursor-pointer m-4 text-center text-xl hover:opacity-50 flex items-center"
               onClick={() => {
                 deactivate();
+                clearCachedConnector();
                 setDropdownOpen(false);
               }}
             >
