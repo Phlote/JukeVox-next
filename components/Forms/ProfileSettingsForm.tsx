@@ -65,7 +65,7 @@ export const ProfileSettingsForm = ({ wallet }) => {
 
   const profile = useProfile(wallet);
 
-  const { form, handleSubmit } = useForm({
+  const { form, handleSubmit, valid } = useForm({
     onSubmit,
     validate: validateProfileSettings,
     initialValues: profile.data ?? undefined,
@@ -75,6 +75,8 @@ export const ProfileSettingsForm = ({ wallet }) => {
   const city = useField("city", form);
   const twitter = useField("twitter", form);
   const email = useField("email", form);
+
+  console.log(submitting, valid);
 
   return (
     // <div className="grid lg:grid-cols-2 grid-cols-1 w-10/12 md:gap-16 gap-8 h-full flex flex-grow">
@@ -89,16 +91,12 @@ export const ProfileSettingsForm = ({ wallet }) => {
       <div className="flex flex-col items-center justify-center">
         <div className="grid grid-cols-1 gap-4 lg:w-full w-3/4">
           <HollowInputContainer type="form">
+            <HollowInput {...username.input} type="text" placeholder="Username" />
             {username.meta.error && (
-              <p className="absolute text-red-600 -top-10">
+              <p className="text-red-600 ml-2">
                 {username.meta.error}
               </p>
             )}
-            <HollowInput
-              {...username.input}
-              type="text"
-              placeholder="Username"
-            />
           </HollowInputContainer>
           <HollowInputContainer type="form">
             <HollowInput {...city.input} type="text" placeholder="City" />
@@ -123,7 +121,7 @@ export const ProfileSettingsForm = ({ wallet }) => {
               className="lg:w-1/4  w-full"
               onClick={handleSubmit}
             >
-              <HollowButton disabled={submitting}>Submit</HollowButton>
+              <HollowButton disabled={submitting || !valid}>Submit</HollowButton>
             </HollowButtonContainer>
           </div>
         </div>
