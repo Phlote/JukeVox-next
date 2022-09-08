@@ -1,5 +1,9 @@
 export const TEST_PHOTE_TOKEN_ADDRESS =
   "0x31DA0475d29a452DA24Eb2ed0d41AD53E576b780";
+export const APP_NAME = "Phlote";
+export const API_URL = "https://api-mumbai.lens.dev";
+export const LENSHUB_PROXY = "0x60Ae865ee4C725cd04353b5AAb364553f56ceF82";
+export const FREE_COLLECT_MODULE = "0x0BE6bD7092ee83D44a6eC1D949626FeE48caB30c";
 
 export enum SupportedChainId {
   MAINNET = 1,
@@ -15,7 +19,7 @@ export enum SupportedChainId {
   // OPTIMISTIC_KOVAN = 69,
 
   POLYGON = 137,
-  // POLYGON_MUMBAI = 80001,
+  POLYGON_MUMBAI = 80001,
 }
 
 export const CHAIN_IDS_TO_NAMES = {
@@ -25,7 +29,7 @@ export const CHAIN_IDS_TO_NAMES = {
   // [SupportedChainId.GOERLI]: "goerli",
   // [SupportedChainId.KOVAN]: "kovan",
   [SupportedChainId.POLYGON]: "polygon",
-  // [SupportedChainId.POLYGON_MUMBAI]: "polygon_mumbai",
+  [SupportedChainId.POLYGON_MUMBAI]: "polygon_mumbai",
   // [SupportedChainId.ARBITRUM_ONE]: "arbitrum",
   // [SupportedChainId.ARBITRUM_RINKEBY]: "arbitrum_rinkeby",
   // [SupportedChainId.OPTIMISM]: "optimism",

@@ -180,6 +180,11 @@ const ArchiveEntry: React.FC<{ submission: Submission }> = ({ submission }) => {
               submissionId={id}
               submitterWallet={curatorWallet}
               initialCosigns={cosigns}
+              artistName={artistName}
+              mediaTitle={mediaTitle}
+              mediaType={mediaType}
+              mediaURI={mediaURI}
+              marketplace={marketplace}
             />
           </ArchiveTableDataCell>
         </ArchiveTableRow>

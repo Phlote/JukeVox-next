@@ -7,6 +7,7 @@ export const Injected = new InjectedConnector({
     SupportedChainId.MAINNET,
     SupportedChainId.RINKEBY,
     SupportedChainId.POLYGON,
+    SupportedChainId.POLYGON_MUMBAI,
   ],
 });
 
@@ -15,6 +16,7 @@ export const WalletConnect = new WalletConnectConnector({
     // SupportedChainId.MAINNET,
     SupportedChainId.RINKEBY,
     SupportedChainId.POLYGON,
+    SupportedChainId.POLYGON_MUMBAI,
   ],
   bridge: "https://bridge.walletconnect.org",
   rpc: {
