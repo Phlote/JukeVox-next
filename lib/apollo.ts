@@ -4,6 +4,7 @@ import {
   InMemoryCache,
   ApolloLink,
 } from "@apollo/client";
+import { getAuthenticationToken } from "./state";
 
 const APIURL = "https://api-mumbai.lens.dev/";
 
@@ -14,7 +15,7 @@ const httpLink = new HttpLink({
 });
 
 const authLink = new ApolloLink((operation, forward) => {
-  const accessToken = localStorage.getItem("accessToken");
+  const accessToken = getAuthenticationToken();
   operation.setContext({
     headers: {
       "x-access-token": accessToken ? `Bearer ${accessToken}` : "",
