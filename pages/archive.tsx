@@ -133,7 +133,6 @@ const ArchiveEntry: React.FC<{ submission: Submission }> = ({ submission }) => {
     mediaURI,
     marketplace,
     cosigns,
-    username,
   } = submission;
   const router = useRouter();
 
@@ -170,7 +169,6 @@ const ArchiveEntry: React.FC<{ submission: Submission }> = ({ submission }) => {
           <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
           <ArchiveTableDataCell>
             <Username
-              username={username}
               wallet={curatorWallet}
               linkToProfile
             />

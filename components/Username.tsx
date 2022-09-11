@@ -2,24 +2,29 @@ import { ethers } from "ethers";
 import Link from "next/link";
 import { useProfile } from "./Forms/ProfileSettingsForm";
 import { ShortenedWallet } from "./ShortenedWallet";
+import { useState } from "react";
+
 interface Username {
   wallet?: string;
-  username?: string;
   linkToProfile?: boolean;
 }
 
-export const Username: React.FC<Username> = (props) => {
-  const { wallet, username, linkToProfile } = props;
+//REFERENCE: for how to define types on JSX react function
+export const Username = (props: Username): JSX.Element => {
+  const { wallet, linkToProfile } = props;
+  const [username, setUsername] = useState('');
+
   const validWallet = wallet && ethers.utils.isAddress(wallet);
   const profileQuery = useProfile(wallet, {
     enabled: !username && validWallet,
   });
+  setUsername(profileQuery?.data?.username);
 
   let content = null;
   // if we have a username, use it
-  if (username) content = username;
-  // otherwise check if we have a valid wallet
-  else if (validWallet) {
+  if (username) {
+    content = username;
+  } else if (validWallet) { // otherwise check if we have a valid wallet
     if (profileQuery?.data?.username) content = profileQuery.data.username;
     else content = <ShortenedWallet wallet={wallet} />;
   }
