@@ -51,7 +51,7 @@ export const ProfileSettingsForm = ({ wallet }) => {
         .update({ username })
         .match({ curatorWallet: wallet });
 
-      if (submissionsUpdate.error) throw submissionsUpdate.error;
+      if (submissionsUpdate.error) console.error(submissionsUpdate.error);
 
       await queryClient.invalidateQueries(["profile", wallet]);
       await revalidate(username);
