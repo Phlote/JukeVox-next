@@ -99,10 +99,10 @@ const RecentlyCurated = ({ account, setOpen, setConnectWalletOpen }) => {
     <section className="flex items-center justify-center sm:py-20 sm:mt-5">
       {/* Desktop */}
       <div className="hidden sm:flex w-full flex-col justify-center items-center pt-10 gap-4">
-        <h1 className="text-center italic lg:text-xl 2xl:text-4xl">
+        <h1 className="hidden text-center italic lg:text-xl 2xl:text-4xl">
           Decentralized music label run by a passionate community of music lovers.{" "}
         </h1>
-        <h3 className="text-center italic lg:text-lg 2xl:text-2xl opacity-70">
+        <h3 className="hidden text-center italic lg:text-lg 2xl:text-2xl opacity-70">
           Artist submissions the receive 5 co-signs are minted every Tuesday on Zora.{" "}
         </h3>
         <div className="w-[320px] lg:w-[670px] xl:w-[1100px] 2xl:w-[1400px] flex justify-center">
@@ -117,7 +117,7 @@ const RecentlyCurated = ({ account, setOpen, setConnectWalletOpen }) => {
         </div>
         <div className="h-2"></div>
         <h3 className="text-center italic opacity-70 font-light lg:text-lg 2xl:text-2xl">
-          Recently Curated by Team Phlote
+          Community Curated by Team Phlote
         </h3>
         <div className="h-2"></div>
         <div className="w-80 h-16 cursor-pointer hover:opacity-75 shadow-sm">
@@ -188,7 +188,7 @@ function Home() { // LANDING PAGE
     <>
       <div className="hidden sm:block font-roboto"> {/* Desktop */}
         <RecentlyCurated account={account} setOpen={setOpen} setConnectWalletOpen={setConnectWalletOpen}/>
-        <Collaborators />
+        {/*<Collaborators />*/}
       </div>
       <div className="sm:hidden font-roboto"> {/* Mobile */}
         <Hero account={account} setOpen={setOpen} setConnectWalletOpen={setConnectWalletOpen} />
