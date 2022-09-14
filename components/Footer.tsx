@@ -19,10 +19,10 @@ export const Footer: React.FC = (props) => {
           <a
             rel="noreferrer"
             target="_blank"
-            href={"https://docsend.com/view/ssfndm7m2e2pyx35"}
+            href={"https://www.notion.so/Phlote-DAO-Start-Here-7aba7e7e8cc7453a8135ad516002f36a"}
             className="underline"
           >
-            Investors
+            Documentation
           </a>
 
           <a
