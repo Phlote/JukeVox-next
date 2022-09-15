@@ -10,6 +10,16 @@ import { DropdownActions } from "./Dropdowns/DropdownActions";
 import { useConnectWalletModalOpen } from "./Modals/ConnectWalletModal";
 import { ShortenedWallet } from "./ShortenedWallet";
 import { clearCachedConnector } from "../utils/web3";
+import { LENSHUB_PROXY, DISPATCHER } from "../utils/constants";
+import { LensHubProxy } from "../abis/LensHubProxy";
+import { useContractWrite, useSignTypedData } from "wagmi";
+import { omit } from "../lib/omit";
+import { splitSignature } from "../lib/splitSignature";
+import { toast } from "react-toastify";
+import {
+  enableDispatcherWithTypedData,
+  disableDispatcherWithTypedData,
+} from "../controllers/dispatcher";
 
 const Account = (props) => {
   const { active, error, activate, chainId, account, setError, deactivate } =
@@ -63,11 +73,63 @@ const Account = (props) => {
 
 const AccountDropdown = (props) => {
   const { deactivate } = useWeb3React();
+  const { signTypedDataAsync } = useSignTypedData({
+    onError(error) {
+      toast.error(error?.message);
+      //setTransactionLoading(false);
+    },
+  });
+  const { data: dispatcherData, write: setDispathcer } = useContractWrite({
+    addressOrName: LENSHUB_PROXY,
+    contractInterface: LensHubProxy,
+    functionName: "setDispatcherWithSig",
+    mode: "recklesslyUnprepared",
+    onSuccess() {
+      //setTransactionLoading(false);
+    },
+    onError(error: any) {
+      toast.error(error);
+      //setTransactionLoading(false);
+    },
+  });
 
   const router = useRouter();
 
   const onClickHandler = () => {
     setDropdownOpen(!dropdownOpen);
+  };
+
+  const enableDispatcher = async () => {
+    try {
+      const setDispatcherRequest = {
+        profileId: "0x4318",
+        dispatcher: DISPATCHER,
+      };
+
+      const result = await enableDispatcherWithTypedData(
+        setDispatcherRequest.profileId,
+        setDispatcherRequest.dispatcher
+      );
+
+      const typedData = result.data?.createSetDispatcherTypedData.typedData;
+
+      const signature = await signTypedDataAsync({
+        domain: omit(typedData?.domain, "__typename"),
+        types: omit(typedData?.types, "__typename"),
+        value: omit(typedData?.value, "__typename"),
+      });
+      const { v, r, s } = splitSignature(signature);
+      const sig = { v, r, s, deadline: typedData.value.deadline };
+      const inputStruct = {
+        profileId: typedData.value.profileId,
+        dispatcher: DISPATCHER,
+        sig,
+      };
+
+      setDispathcer?.({ recklesslySetUnpreparedArgs: inputStruct });
+    } catch (error) {
+      toast.error(error);
+    }
   };
 
   const isCuratorQuery = useIsCurator();
@@ -104,6 +166,22 @@ const AccountDropdown = (props) => {
               <div className="w-4" />
               <Image
                 src="/exit.svg"
+                alt={"disconnect"}
+                height={24}
+                width={24}
+              />
+            </div>
+            <div
+              className="cursor-pointer m-4 text-center text-xl hover:opacity-50 flex items-center"
+              onClick={() => {
+                enableDispatcher();
+                setDropdownOpen(false);
+              }}
+            >
+              Enable Dispatcher
+              <div className="w-4" />
+              <Image
+                src="/arrow.svg"
                 alt={"disconnect"}
                 height={24}
                 width={24}

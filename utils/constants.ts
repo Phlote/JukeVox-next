@@ -4,6 +4,7 @@ export const APP_NAME = "Phlote";
 export const API_URL = "https://api-mumbai.lens.dev";
 export const LENSHUB_PROXY = "0x60Ae865ee4C725cd04353b5AAb364553f56ceF82";
 export const FREE_COLLECT_MODULE = "0x0BE6bD7092ee83D44a6eC1D949626FeE48caB30c";
+export const DISPATCHER = "0xd4218255175160583A7d7F4854Ab2Eef4F45B144";
 
 export enum SupportedChainId {
   MAINNET = 1,
