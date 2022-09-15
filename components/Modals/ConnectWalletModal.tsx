@@ -8,6 +8,8 @@ import { Injected, WalletConnect } from "../../utils/connectors";
 import { cacheConnector, CachedConnector } from "../../utils/web3";
 import { HollowButtonContainer } from "../Hollow";
 import { Modal } from "../Modal";
+import { useRouter } from "next/router";
+import { getProfile } from "../../controllers/profiles";
 
 const connectWalletModalOpenAtom = atom<boolean>(false);
 export const useConnectWalletModalOpen = () =>
@@ -19,10 +21,6 @@ export const ConnectWalletModal = () => {
     useWeb3React();
 
   const isUnsupportedChainId = error instanceof UnsupportedChainIdError;
-
-  React.useEffect(() => {
-    if (account) setOpen(false);
-  }, [account, setOpen]);
 
   React.useEffect(() => {
     if (isUnsupportedChainId) setOpen(true);
@@ -47,9 +45,9 @@ export const ConnectWalletModal = () => {
         </p> */}
         <div className="flex-grow w-full flex justify-center items-center">
           <div className="w-3/4 grid grid-cols-1 gap-4">
-            <WalletConnectButton />
+            <WalletConnectButton setOpen={setOpen} />
             <div className="sm:block hidden">
-              <InjectedConnectorButton />
+              <InjectedConnectorButton setOpen={setOpen} />
             </div>
 
             {isUnsupportedChainId && (
@@ -66,9 +64,12 @@ export const ConnectWalletModal = () => {
   );
 };
 
-export const WalletConnectButton = () => {
+// TODO: These components are almost duplicates, create a more general component that can be extended
+
+export const WalletConnectButton = ({setOpen}) => {
   const { active, error, activate, chainId, account, setError, deactivate } =
     useWeb3React();
+  const router = useRouter();
 
   const [connecting, setConnecting] = useState(false);
   useEffect(() => {
@@ -76,6 +77,23 @@ export const WalletConnectButton = () => {
       setConnecting(false);
     }
   }, [active, error]);
+
+  useEffect(() => {
+    if (account && connecting) {
+      setOpen(false);
+      getProfile(account)
+        .then((profile) => {
+          if (!router.pathname.includes('archive'))
+            // console.log("SEND");
+            router.push("/archive");
+        })
+        .catch(error => {
+          // console.log("ERROR: ", error);
+          router.push("/editprofile");
+        });
+    }
+    // TODO: Do this instead only when user is interacting with the connect wallet modal
+  }, [account, setOpen]);
 
   return (
     <HollowButtonContainer
@@ -111,9 +129,10 @@ export const WalletConnectButton = () => {
   );
 };
 
-export const InjectedConnectorButton = () => {
+export const InjectedConnectorButton = ({setOpen}) => {
   const { active, error, activate, chainId, account, setError, deactivate } =
     useWeb3React();
+  const router = useRouter();
 
   const {
     isMetaMaskInstalled,
@@ -129,6 +148,23 @@ export const InjectedConnectorButton = () => {
       stopOnboarding();
     }
   }, [active, error, stopOnboarding]);
+
+  useEffect(() => {
+    if (account && connecting) {
+      setOpen(false);
+      getProfile(account)
+        .then((profile) => {
+          if (!router.pathname.includes('archive'))
+            // console.log("SEND");
+            router.push("/archive");
+        })
+        .catch(error => {
+          // console.log("ERROR: ", error);
+          router.push("/editprofile");
+        });
+    }
+    // TODO: Do this instead only when user is interacting with the connect wallet modal
+  }, [account, setOpen]);
 
   if (isWeb3Available) {
     return (

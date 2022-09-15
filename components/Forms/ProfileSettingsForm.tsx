@@ -51,7 +51,7 @@ export const ProfileSettingsForm = ({ wallet }) => {
         .update({ username })
         .match({ curatorWallet: wallet });
 
-      if (submissionsUpdate.error) throw submissionsUpdate.error;
+      if (submissionsUpdate.error) console.error(submissionsUpdate.error);
 
       await queryClient.invalidateQueries(["profile", wallet]);
       await revalidate(username);
@@ -65,7 +65,7 @@ export const ProfileSettingsForm = ({ wallet }) => {
 
   const profile = useProfile(wallet);
 
-  const { form, handleSubmit } = useForm({
+  const { form, handleSubmit, valid } = useForm({
     onSubmit,
     validate: validateProfileSettings,
     initialValues: profile.data ?? undefined,
@@ -89,16 +89,12 @@ export const ProfileSettingsForm = ({ wallet }) => {
       <div className="flex flex-col items-center justify-center">
         <div className="grid grid-cols-1 gap-4 lg:w-full w-3/4">
           <HollowInputContainer type="form">
+            <HollowInput {...username.input} type="text" placeholder="Username" />
             {username.meta.error && (
-              <p className="absolute text-red-600 -top-10">
+              <p className="text-red-600 ml-2">
                 {username.meta.error}
               </p>
             )}
-            <HollowInput
-              {...username.input}
-              type="text"
-              placeholder="Username"
-            />
           </HollowInputContainer>
           <HollowInputContainer type="form">
             <HollowInput {...city.input} type="text" placeholder="City" />
@@ -123,7 +119,7 @@ export const ProfileSettingsForm = ({ wallet }) => {
               className="lg:w-1/4  w-full"
               onClick={handleSubmit}
             >
-              <HollowButton disabled={submitting}>Submit</HollowButton>
+              <HollowButton disabled={submitting || !valid}>Submit</HollowButton>
             </HollowButtonContainer>
           </div>
         </div>

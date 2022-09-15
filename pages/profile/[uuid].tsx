@@ -19,10 +19,11 @@ import {
   getProfileForWallet,
   getSubmissionsWithFilter,
 } from "../../utils/supabase";
+import { useProfile } from "../../components/Forms/ProfileSettingsForm";
 
 export default function Profile(props) {
   const router = useRouter();
-  const { submissions, profile } = props;
+  const { submissions } = props;
   const uuid = router.query.uuid;
   const isCurator = useIsCurator();
   const { account } = useWeb3React();
@@ -30,6 +31,7 @@ export default function Profile(props) {
   const promptToMakeProfile = isCurator && uuid === account;
 
   const ENSName = useENSName(uuid as string);
+  const profile = useProfile(uuid);
 
   if (router.isFallback) {
     //TODO better loading
@@ -39,25 +41,25 @@ export default function Profile(props) {
   return (
     <div className="flex flex-col ">
       <div className="flex justify-center">
-        {profile && (
-          <>
-            <div className="flex-grow"></div>
-            <UserStatsBar profile={profile} />
-          </>
-        )}
-        {!profile && (
-          <div className="flex flex-col items-center">
-            <h1>{`${ENSName || uuid}'s Curations`}</h1>
-            <div className="h-4" />
-            {promptToMakeProfile && (
-              <Link href="/editprofile" passHref>
-                <h1 className="italic underline cursor-pointer">
-                  {"Click here to set your profile"}
-                </h1>
-              </Link>
-            )}
-          </div>
-        )}
+        {profile?.data ? (
+            <>
+              <div className="flex-grow"></div>
+              <UserStatsBar profile={profile.data} />
+            </>
+          ) :
+          profile?.status === "loading" ? <div>Loading...</div> : (
+            <div className="flex flex-col items-center">
+              <h1>{`${ENSName || uuid}'s Curations`}</h1>
+              <div className="h-4" />
+              {promptToMakeProfile && (
+                <Link href="/editprofile" passHref>
+                  <h1 className="italic underline cursor-pointer">
+                    {"Click here to set your profile"}
+                  </h1>
+                </Link>
+              )}
+            </div>
+          )}
       </div>
 
       <table className="table-fixed w-full text-center mt-8">
@@ -197,8 +199,7 @@ export async function getStaticPaths() {
 
   // IDEA: should we have two pages for each user?
   const UUIDs = submissionsQuery.data.map((submission: Submission) => {
-    if (submission.username) return submission.username;
-    else return submission.curatorWallet;
+    return submission.curatorWallet;
   });
 
   // can be wallet or username

@@ -84,10 +84,15 @@ export const validateProfileSettings = async (values: UserProfile) => {
       errors.username = "Username taken!";
     }
   }
-
   if (values.email) {
     if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(values.email))
       errors.email = "Invalid Email Address";
+  }
+  if (!values.username) {
+    errors.username = "Required";
+  }
+  if (!values.email) {
+    errors.email = "Required";
   }
 
   return errors;
