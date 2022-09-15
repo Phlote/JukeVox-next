@@ -60,7 +60,8 @@ export const ProfileSettingsForm = ({ wallet }) => {
       await revalidate(username);
       toast.success("Submitted!");
 
-      // TODO: Send email from here with a handler
+      // Only send on profile creation or very submission?
+      await sendEmail(email, username, "Welcome to Phlote", `Welcome to Phlote ${username}`);
     } catch (e) {
       toast.error(e);
     } finally {
@@ -129,24 +130,6 @@ export const ProfileSettingsForm = ({ wallet }) => {
               onClick={handleSubmit}
             >
               <HollowButton disabled={submitting}>Submit</HollowButton>
-            </HollowButtonContainer>
-            <HollowButtonContainer
-              className="lg:w-1/4  w-full"
-              onClick={async ()=>{
-                try {
-                  let result = await sendEmail(
-                    'theocarraraleao@gmail.com',
-                    'Theo',
-                    'Test Phlote Email',
-                    'This is a test email from phlote.xyz'
-                  );
-                } catch (e) {
-                  console.error(e);
-                  toast.error(e.message);
-                }
-              }}
-            >
-              <HollowButton>Send email</HollowButton>
             </HollowButtonContainer>
           </div>
         </div>
