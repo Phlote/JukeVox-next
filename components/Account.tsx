@@ -146,6 +146,18 @@ const AccountDropdown = (props) => {
     }
   };
 
+  const disableDispatcher = async () => {
+    try {
+      const setDispatcherRequest = {
+        profileId: props.profile.id,
+      };
+
+      await disableDispatcherWithTypedData(setDispatcherRequest.profileId);
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+
   const isCuratorQuery = useIsCurator();
 
   const { dropdownOpen, setDropdownOpen } = props;
@@ -185,22 +197,42 @@ const AccountDropdown = (props) => {
                 width={24}
               />
             </div>
-            <div
-              className="cursor-pointer m-4 text-center text-xl hover:opacity-50 flex items-center"
-              onClick={() => {
-                enableDispatcher();
-                setDropdownOpen(false);
-              }}
-            >
-              Enable Dispatcher
-              <div className="w-4" />
-              <Image
-                src="/arrow.svg"
-                alt={"disconnect"}
-                height={24}
-                width={24}
-              />
-            </div>
+            {!props.profile?.dispatcher?.address ? (
+              <div
+                className="cursor-pointer m-4 text-center text-xl hover:opacity-50 flex items-center"
+                onClick={() => {
+                  enableDispatcher();
+                  setDropdownOpen(false);
+                }}
+              >
+                Enable Dispatcher
+                <div className="w-4" />
+                <Image
+                  src="/arrow.svg"
+                  alt={"disconnect"}
+                  height={24}
+                  width={24}
+                />
+              </div>
+            ) : (
+              <div
+                className="cursor-pointer m-4 text-center text-xl hover:opacity-50 flex items-center"
+                onClick={() => {
+                  disableDispatcher();
+                  setDropdownOpen(false);
+                }}
+              >
+                Disable Dispatcher
+                <div className="w-4" />
+                <Image
+                  src="/arrow.svg"
+                  alt={"disconnect"}
+                  height={24}
+                  width={24}
+                />
+              </div>
+            )}
+
             {isCuratorQuery?.data?.isCurator && (
               <>
                 <div className="w-4" />
