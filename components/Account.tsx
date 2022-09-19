@@ -21,6 +21,7 @@ import {
   enableDispatcherWithTypedData,
   disableDispatcherWithTypedData,
 } from "../controllers/dispatcher";
+import { getProfile } from "../utils/profile";
 
 const Account = (props) => {
   const { active, error, activate, chainId, account, setError, deactivate } =
@@ -32,7 +33,6 @@ const Account = (props) => {
 
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const [connectLens, setConnectLens] = useState<boolean>(false);
-  const [profile, setProfile] = useState<string>("");
   const [, setOpen] = useConnectWalletModalOpen();
 
   const ref = useRef();
@@ -65,19 +65,13 @@ const Account = (props) => {
       style={{ justifyContent: "center" }}
     >
       {!connectLens ? (
-        <LoginLens
-          connectLens={connectLens}
-          setConnectLens={setConnectLens}
-          profile={profile}
-          setProfile={setProfile}
-        />
+        <LoginLens connectLens={connectLens} setConnectLens={setConnectLens} />
       ) : (
         <>
           <ShortenedWallet wallet={account} />
           <AccountDropdown
             dropdownOpen={dropdownOpen}
             setDropdownOpen={setDropdownOpen}
-            profile={profile}
           />
         </>
       )}
@@ -107,6 +101,7 @@ const AccountDropdown = (props) => {
     },
   });
 
+  const profile = getProfile();
   const router = useRouter();
 
   const onClickHandler = () => {
@@ -116,7 +111,7 @@ const AccountDropdown = (props) => {
   const enableDispatcher = async () => {
     try {
       const setDispatcherRequest = {
-        profileId: props.profile.id,
+        profileId: profile.id,
         dispatcher: DISPATCHER,
       };
 
@@ -197,7 +192,7 @@ const AccountDropdown = (props) => {
                 width={24}
               />
             </div>
-            {!props.profile?.dispatcher?.address ? (
+            {!profile?.dispatcher?.address ? (
               <div
                 className="cursor-pointer m-4 text-center text-xl hover:opacity-50 flex items-center"
                 onClick={() => {

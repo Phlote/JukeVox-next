@@ -3,6 +3,7 @@ import { gql } from "@apollo/client";
 import Image from "next/image";
 import { useConnect, useAccount, useSignMessage } from "wagmi";
 import { setAuthenticationToken } from "../../lib/state";
+import { setProfile } from "../../utils/profile";
 import { toast } from "react-toastify";
 
 const GET_CHALLENGE = `
@@ -157,7 +158,6 @@ export const LoginLens = (props) => {
   const { connect, connectors } = useConnect();
   const { address, connector: activeConnector } = useAccount();
   const { connectLens, setConnectLens } = props;
-  const { profile, setProfile } = props;
 
   const { signMessageAsync, isLoading: signLoading } = useSignMessage({
     onError(error) {
