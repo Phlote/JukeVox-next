@@ -10,6 +10,7 @@ import { DropdownActions } from "./Dropdowns/DropdownActions";
 import { useConnectWalletModalOpen } from "./Modals/ConnectWalletModal";
 import { ShortenedWallet } from "./ShortenedWallet";
 import { clearCachedConnector } from "../utils/web3";
+import { LoginLens } from "./Modals/LoginLens";
 import { LENSHUB_PROXY, DISPATCHER } from "../utils/constants";
 import { LensHubProxy } from "../abis/LensHubProxy";
 import { useContractWrite, useSignTypedData } from "wagmi";
@@ -30,6 +31,8 @@ const Account = (props) => {
   // manage connecting state for injected connector
 
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+  const [connectLens, setConnectLens] = useState<boolean>(false);
+  const [profile, setProfile] = useState<string>("");
   const [, setOpen] = useConnectWalletModalOpen();
 
   const ref = useRef();
@@ -61,12 +64,23 @@ const Account = (props) => {
       className="h-full w-full text-center flex flex-row"
       style={{ justifyContent: "center" }}
     >
-      <ShortenedWallet wallet={account} />
-      <div className="w-2" />
-      <AccountDropdown
-        dropdownOpen={dropdownOpen}
-        setDropdownOpen={setDropdownOpen}
-      />
+      {!connectLens ? (
+        <LoginLens
+          connectLens={connectLens}
+          setConnectLens={setConnectLens}
+          profile={profile}
+          setProfile={setProfile}
+        />
+      ) : (
+        <>
+          <ShortenedWallet wallet={account} />
+          <AccountDropdown
+            dropdownOpen={dropdownOpen}
+            setDropdownOpen={setDropdownOpen}
+            profile={profile}
+          />
+        </>
+      )}
     </div>
   );
 };
@@ -102,7 +116,7 @@ const AccountDropdown = (props) => {
   const enableDispatcher = async () => {
     try {
       const setDispatcherRequest = {
-        profileId: "0x4318",
+        profileId: props.profile.id,
         dispatcher: DISPATCHER,
       };
 
