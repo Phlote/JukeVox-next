@@ -24,7 +24,7 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
   const mediaType = useField("mediaType", form);
   const artistName = useField("artistName", form);
   const mediaTitle = useField("mediaTitle", form);
-  const marketplace = useField("marketplace", form);
+  const playlist = useField("playlist", form);
   const artistWallet = useField("artistWallet", form);
   const tags = useField("tags", form);
 
@@ -32,34 +32,7 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
 
   return (
     <div className="grid grid-cols-1 gap-3 md:my-8">
-      <HollowInputContainer
-        onClick={() => setDropdownOpen(!dropdownOpen)}
-        type="form"
-      >
-        <div className="flex flex-row w-full">
-          <HollowInput
-            value={mediaType.input.value}
-            className="flex-grow"
-            type="text"
-            placeholder="Media Type"
-            readOnly
-          />
-          {(mediaType.meta.touched || mediaType.meta.visited) &&
-            mediaType.meta.error && (
-              <span className="text-red-600 ml-2">{mediaType.meta.error}</span>
-            )}
-          <div className="w-2" />
-          <Image
-            className={dropdownOpen ? "-rotate-90" : "rotate-90"}
-            src={"/chevron.svg"}
-            alt="dropdown"
-            height={16}
-            width={16}
-          />
-        </div>
-      </HollowInputContainer>
-
-      {dropdownOpen && (
+        {/*Toggle*/}
         <HollowInputContainer style={{ borderRadius: "60px" }}>
           <DropdownChecklist
             {...mediaType.input}
@@ -69,7 +42,6 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
             borders
           />
         </HollowInputContainer>
-      )}
 
       {mediaType.input.value === "File" ? (
             <FileUpload
@@ -104,16 +76,44 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
         )}
       </HollowInputContainer>
 
-      <HollowInputContainer type="form">
-        <HollowInput
-          {...marketplace.input}
-          type="text"
-          placeholder="Marketplace/Platform"
-        />
-        {marketplace.meta.touched && marketplace.meta.error && (
-          <span className="text-red-600 ml-2">{marketplace.meta.error}</span>
-        )}
+      <HollowInputContainer
+        onClick={() => setDropdownOpen(!dropdownOpen)}
+        type="form"
+      >
+        <div className="flex flex-row w-full">
+          <HollowInput
+            value={playlist.input.value}
+            className="flex-grow"
+            type="text"
+            placeholder="Playlist"
+            readOnly
+          />
+          {(playlist.meta.touched || playlist.meta.visited) &&
+            playlist.meta.error && (
+              <span className="text-red-600 ml-2">{playlist.meta.error}</span>
+            )}
+          <div className="w-2" />
+          <Image
+            className={dropdownOpen ? "-rotate-90" : "rotate-90"}
+            src={"/chevron.svg"}
+            alt="dropdown"
+            height={16}
+            width={16}
+          />
+        </div>
       </HollowInputContainer>
+
+      {dropdownOpen && (
+        <HollowInputContainer style={{ borderRadius: "60px" }}>
+          <DropdownChecklist
+            {...playlist.input}
+            close={() => setDropdownOpen(false)}
+            fields={["Lo. Fi", "Smooth Jazz", "R E T R O", "Strings"]}
+            closeOnSelect
+            borders
+          />
+        </HollowInputContainer>
+      )}
 
       <HollowInputContainer type="form">
         <HollowInput
