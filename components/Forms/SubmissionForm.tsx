@@ -11,10 +11,12 @@ import {
 } from "../Hollow";
 import { HollowTagsInput } from "../Hollow/HollowTagsInput";
 import { validateSubmission } from "./validators";
-import {FileUpload} from "../FileUpload";
+import { FileUpload } from "../FileUpload";
+import { Toggle } from "../Dropdowns/Toggle";
 
-export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFileSelected}) => {
+export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFileSelected }) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+  const [artist, setArtist] = useState(false);
   const { form, handleSubmit, valid } = useForm({
     onSubmit,
     validate: validateSubmission,
@@ -32,23 +34,19 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
 
   return (
     <div className="grid grid-cols-1 gap-3 md:my-8">
-        {/*Toggle*/}
-        <HollowInputContainer style={{ borderRadius: "60px" }}>
-          <DropdownChecklist
-            {...mediaType.input}
-            close={() => setDropdownOpen(false)}
-            fields={["File", "Link"]}
-            closeOnSelect
-            borders
-          />
-        </HollowInputContainer>
+      {/*Toggle*/}
+
+      <span className="flex justify-between">
+        <span>{mediaType.input.value === "File" ? "Artist" : "Curator"}</span>
+        <Toggle {...mediaType.input} fields={['Link', 'File']} />
+      </span>
 
       {mediaType.input.value === "File" ? (
-            <FileUpload
-              wallet={account}
-              fileSelected={fileSelected}
-              setFileSelected={setFileSelected}
-            />
+        <FileUpload
+          wallet={account}
+          fileSelected={fileSelected}
+          setFileSelected={setFileSelected}
+        />
       ) : (
         <HollowInputContainer type="form">
           <HollowInput {...mediaURI.input} type="text" placeholder="Link" />
@@ -115,16 +113,6 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
         </HollowInputContainer>
       )}
 
-      <HollowInputContainer type="form">
-        <HollowInput
-          {...artistWallet.input}
-          type="text"
-          placeholder="Artist Wallet Address (Optional)"
-        />
-        {artistWallet.meta.touched && artistWallet.meta.error && (
-          <span className="ml-2 text-red-600">{artistWallet.meta.error}</span>
-        )}
-      </HollowInputContainer>
       <HollowTagsInput {...tags.input} />
       <div className="flex justify-center items-center">
         <HollowButtonContainer onClick={handleSubmit}>
@@ -134,9 +122,9 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
               !(metamaskLoading
                 ? false
                 : (mediaType.input.value === "File" &&
-                    valid &&
-                    !!fileSelected) ||
-                  (mediaType.input.value === "Link" && valid))//TODO: do mediaType checks in the validator file
+                  valid &&
+                  !!fileSelected) ||
+                (mediaType.input.value === "Link" && valid))//TODO: do mediaType checks in the validator file
             }
           >
             {metamaskLoading ? "Waiting for Wallet..." : "Mint"}

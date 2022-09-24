@@ -5,7 +5,6 @@ import { Username } from "../Username";
 
 interface DropdownChecklist {
   fields: string[];
-  close: () => void;
   value?: string;
   onChange: (field: string) => void;
   onFocus?: () => void;
@@ -15,7 +14,6 @@ interface DropdownChecklist {
 
 export const DropdownChecklist: React.FC<DropdownChecklist> = ({
   fields,
-  close,
   value,
   onChange,
   onFocus,
