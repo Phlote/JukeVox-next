@@ -18,7 +18,6 @@ import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
 import "./PhloteVote.sol";
 import "./Hotdrop.sol";
 
-
 /// @title A factor and manager for "Hotdrop" NFTs (Phlote user-submitted-content).
 /// @author Zachary Fogg <me@zfo.gg>
 /// @notice This contract's events should be indexed for use by front-ends.
