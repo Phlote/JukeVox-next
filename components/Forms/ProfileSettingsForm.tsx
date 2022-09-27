@@ -17,6 +17,7 @@ import { validateProfileSettings } from "./validators";
 import { sendEmail } from "../../controllers/sendEmail";
 import { verifyUser } from "../../utils/web3";
 import { cosign } from "../../controllers/cosigns";
+import { minutesBetweenDateAndNow } from "../../utils/numbers";
 
 export interface UserProfile {
   wallet: string; // user has already connected wallet, so this is not a form field
@@ -47,21 +48,23 @@ export const ProfileSettingsForm = ({ wallet }) => {
         },
         { onConflict: "wallet" }
       );
-      if (error) throw error;
+      if (error) throw 'SUPABASE: ' + error;
 
       const submissionsUpdate = await supabase
         .from("submissions")
         .update({ username })
         .match({ curatorWallet: wallet });
 
-      if (submissionsUpdate.error) throw submissionsUpdate.error;
+      if (submissionsUpdate.error) throw 'SUBMISSIONS: ' + submissionsUpdate.error;
 
       await queryClient.invalidateQueries(["profile", wallet]);
       await revalidate(username);
       toast.success("Submitted!");
 
-      // Only send on profile creation or very submission?
-      await sendEmail(email, username, "Welcome to Phlote", `Welcome to Phlote ${username}`);
+      if (minutesBetweenDateAndNow(data[0].created_at) < 2){ // Only send email on profile creation
+        await sendEmail(email, username, "Welcome to Phlote", `Welcome to Phlote ${username}`);
+        console.log('SENT EMAIL');
+      }
     } catch (e) {
       toast.error(e);
     } finally {
