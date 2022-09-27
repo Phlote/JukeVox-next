@@ -54,16 +54,9 @@ export const validateSubmission = async (values: Submission) => {
   if (!values.mediaTitle) {
     errors.mediaTitle = "Required";
   }
-  if (!values.marketplace) {
-    errors.marketplace = "Required";
-  }
-
-  if (values.artistWallet) {
-    if (!ethers.utils.isAddress(values.artistWallet)) {
-      errors.artistWallet = "Invalid ETH Address";
-    }
-  }
-
+  // if (!values.playlist) {
+  //   errors.marketplace = "Required"; // Should the playlist be required or optional?
+  // }
   return errors;
 };
 

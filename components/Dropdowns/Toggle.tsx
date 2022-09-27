@@ -4,26 +4,34 @@ import "react-toggle/style.css";
 
 interface DropdownChecklist {
   fields: string[];
-  close: () => void;
   value?: string;
   onChange: (field: string) => void;
   onFocus?: () => void;
   closeOnSelect?: boolean;
   borders?: boolean;
+  setFileSelected: () => void;
+  setURI: (field: any) => void;
 }
 
 export const Toggle: React.FC<DropdownChecklist> = ({
   fields,
-  close,
   value,
   onChange,
   onFocus,
   closeOnSelect = false,
   borders = false,
+  setFileSelected,
+  setURI
 }) => {
   const [state, setState] = useState(false);
 
+  const clearFields = () => {
+    setFileSelected(); // Clear file selection when toggling
+    setURI(null);
+  }
+
   const toggle = () => {
+    clearFields();
     state ? onChange(fields[0]) : onChange(fields[1]);
     setState(!state);
   }

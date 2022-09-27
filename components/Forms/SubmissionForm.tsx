@@ -27,7 +27,6 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
   const artistName = useField("artistName", form);
   const mediaTitle = useField("mediaTitle", form);
   const playlist = useField("playlist", form);
-  const artistWallet = useField("artistWallet", form);
   const tags = useField("tags", form);
 
   const { account } = useWeb3React();
@@ -38,7 +37,7 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
 
       <span className="flex justify-between">
         <span>{mediaType.input.value === "File" ? "Artist" : "Curator"}</span>
-        <Toggle {...mediaType.input} fields={['Link', 'File']} />
+        <Toggle {...mediaType.input} fields={['Link', 'File']} setURI={mediaURI.input.onChange} setFileSelected={setFileSelected} />
       </span>
 
       {mediaType.input.value === "File" ? (
