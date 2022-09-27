@@ -61,9 +61,8 @@ export const ProfileSettingsForm = ({ wallet }) => {
       await revalidate(username);
       toast.success("Submitted!");
 
-      if (minutesBetweenDateAndNow(data[0].created_at) < 2){ // Only send email on profile creation
+      if (minutesBetweenDateAndNow(data[0].created_at) < 2) { // Only send email on profile creation
         await sendEmail(email, username, "Welcome to Phlote", `Welcome to Phlote ${username}`);
-        console.log('SENT EMAIL');
       }
     } catch (e) {
       toast.error(e);

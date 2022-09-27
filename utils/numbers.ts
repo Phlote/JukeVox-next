@@ -3,5 +3,5 @@ export function minutesBetweenDateAndNow(dateStr: Date) {
   let now = Date.now();
   let date = new Date(dateStr).valueOf();
 
-  return now - date;
+  return (now - date)/1000/60; // /1000 to seconds /60 to minutes
 }
