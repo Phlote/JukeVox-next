@@ -120,13 +120,12 @@ const Cosign: React.FC<Cosign> = (props) => {
 
   if (
     profileQuery?.data &&
-    profileQuery.data?.username &&
     profileQuery.data?.profilePic
   )
     return (
       <Link
         href={"/profile/[uuid]"}
-        as={`/profile/${profileQuery.data.username}`}
+        as={`/profile/${wallet}`}
         passHref
       >
         <a className="h-full w-full rounded-full cursor-pointer hover:opacity-25">
@@ -143,7 +142,7 @@ const Cosign: React.FC<Cosign> = (props) => {
   return (
     <Link href={"/profile/[uuid]"} as={`/profile/${wallet}`} passHref>
       <a className="h-full w-full rounded-full cursor-pointer hover:opacity-25">
-        <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
+        <Image src="/default.png" alt="cosigned" layout="fill" />
       </a>
     </Link>
   );

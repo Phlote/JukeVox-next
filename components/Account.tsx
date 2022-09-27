@@ -10,6 +10,7 @@ import { DropdownActions } from "./Dropdowns/DropdownActions";
 import { useConnectWalletModalOpen } from "./Modals/ConnectWalletModal";
 import { ShortenedWallet } from "./ShortenedWallet";
 import { clearCachedConnector } from "../utils/web3";
+import { useProfile } from "./Forms/ProfileSettingsForm";
 
 const Account = (props) => {
   const { active, error, activate, chainId, account, setError, deactivate } =
@@ -56,6 +57,7 @@ const Account = (props) => {
       <AccountDropdown
         dropdownOpen={dropdownOpen}
         setDropdownOpen={setDropdownOpen}
+        wallet={account}
       />
     </div>
   );
@@ -72,7 +74,10 @@ const AccountDropdown = (props) => {
 
   const isCuratorQuery = useIsCurator();
 
-  const { dropdownOpen, setDropdownOpen } = props;
+  const { dropdownOpen, setDropdownOpen, wallet } = props;
+
+  const profile = useProfile(wallet);
+
   return (
     <>
       <div className="hidden sm:block" onClick={onClickHandler}>
@@ -109,7 +114,7 @@ const AccountDropdown = (props) => {
                 width={24}
               />
             </div>
-            {isCuratorQuery?.data?.isCurator && (
+            {profile?.data && (
               <>
                 <div className="w-4" />
                 <div
