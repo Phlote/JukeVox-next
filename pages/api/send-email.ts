@@ -8,9 +8,10 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
   const msg = {
     to: email,
     from: 'theo@phlote.co',// TEMP
-    subject,
-    name,
-    text: message,
+    templateId: 'd-c8b756a2e07b48c697db16fe1113674e',
+    dynamicTemplateData: {
+      name,
+    }
   };
 
   try {
