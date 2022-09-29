@@ -105,7 +105,7 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
           <DropdownChecklist
             {...playlist.input}
             close={() => setDropdownOpen(false)}
-            fields={["Lo. Fi", "Smooth Jazz", "R E T R O", "Strings"]}
+            fields={["Secret Radio"]}
             closeOnSelect
             borders
           />
