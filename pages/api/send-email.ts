@@ -7,7 +7,7 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
   const { email, subject, message, name } = req.body
   const msg = {
     to: email,
-    from: 'theo@phlote.co',// TEMP
+    from: 'hey@phlote.co',
     templateId: 'd-c8b756a2e07b48c697db16fe1113674e',
     dynamicTemplateData: {
       name,
