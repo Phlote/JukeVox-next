@@ -1,5 +1,9 @@
 import { gql } from "@apollo/client";
 import { apollo } from "../lib/apollo";
+import {
+  CreateSetDispatcherTypedDataDocument,
+  SetDispatcherRequest,
+} from "../utils/graphql/generated";
 
 const CREATE_SET_DISPATCHER_TYPED_DATA = `
 mutation($request: SetDispatcherRequest!) { 
@@ -30,26 +34,28 @@ mutation($request: SetDispatcherRequest!) {
 }
 `;
 
-export const enableDispatcherWithTypedData = (profileId, dispatcher) => {
-  return apollo.mutate({
-    mutation: gql(CREATE_SET_DISPATCHER_TYPED_DATA),
+export const enableDispatcherWithTypedData = async (
+  request: SetDispatcherRequest
+) => {
+  const result = await apollo.mutate({
+    mutation: CreateSetDispatcherTypedDataDocument,
     variables: {
-      request: {
-        profileId,
-        dispatcher,
-      },
+      request,
     },
   });
+
+  return result.data!.createSetDispatcherTypedData;
 };
 
-export const disableDispatcherWithTypedData = (profileId) => {
-  return apollo.mutate({
-    mutation: gql(CREATE_SET_DISPATCHER_TYPED_DATA),
+export const disableDispatcherWithTypedData = async (
+  request: SetDispatcherRequest
+) => {
+  const result = await apollo.mutate({
+    mutation: CreateSetDispatcherTypedDataDocument,
     variables: {
-      request: {
-        profileId,
-        enabled: false,
-      },
+      request,
     },
   });
+
+  return result.data!.createSetDispatcherTypedData;
 };
