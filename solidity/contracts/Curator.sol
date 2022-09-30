@@ -18,6 +18,7 @@ import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
 import "./PhloteVote.sol";
 import "./Hotdrop.sol";
 
+
 /// @title A factor and manager for "Hotdrop" NFTs (Phlote user-submitted-content).
 /// @author Zachary Fogg <me@zfo.gg>
 /// @notice This contract's events should be indexed for use by front-ends.
@@ -113,6 +114,11 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
 
     function setCuratorTokenMinimum(uint256 _curatorTokenMinimum) public onlyOwner {
         curatorTokenMinimum = _curatorTokenMinimum;
+    }
+
+    function setAddresses(address _treasury, address _curatorAdmin) public onlyOwner {
+        treasury = _treasury;
+        curatorAdmin = _curatorAdmin;
     }
 
 

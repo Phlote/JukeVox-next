@@ -9,8 +9,8 @@ import '@openzeppelin/hardhat-upgrades';
 let phloteTokenAddress: any, treasuryAddress: any, curatorAdminAddress:any;
 
 //Ensure you have the correct addresses
-phloteTokenAddress = "0xb60D2E146903852A94271B9A71CF45aa94277eB5"
-treasuryAddress = "0x56ceF7b74CC7121bb88C6D9b469819B5D32c9B22"
+phloteTokenAddress = "0xc973F97a608b4E282EB97C7E86901ab5EBf3A014"
+treasuryAddress = "0x941c72afb4B02C2efCB6DDaEdC032Ec15F6ec5f7"
 curatorAdminAddress = "0xb60D2E146903852A94271B9A71CF45aa94277eB5"
 
 async function main() {
