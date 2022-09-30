@@ -21,7 +21,7 @@ import {
   enableDispatcherWithTypedData,
   disableDispatcherWithTypedData,
 } from "../controllers/dispatcher";
-import { getProfile } from "../utils/profile";
+import { getLensProfile } from "../utils/profile";
 
 const Account = (props) => {
   const { active, error, activate, chainId, account, setError, deactivate } =
@@ -101,7 +101,7 @@ const AccountDropdown = (props) => {
     },
   });
 
-  const profile = getProfile();
+  const profile = getLensProfile();
   const router = useRouter();
 
   const onClickHandler = () => {
@@ -110,17 +110,13 @@ const AccountDropdown = (props) => {
 
   const enableDispatcher = async () => {
     try {
-      const setDispatcherRequest = {
+      const result = await enableDispatcherWithTypedData({
         profileId: profile.id,
-        dispatcher: DISPATCHER,
-      };
+        // if left empty, a deafult dispatcher by Lens is used. Not clear why a custom value is not allowed (canUseRelay remains sety to false)
+        // dispatcher: DISPATCHER,
+      });
 
-      const result = await enableDispatcherWithTypedData(
-        setDispatcherRequest.profileId,
-        setDispatcherRequest.dispatcher
-      );
-
-      const typedData = result.data?.createSetDispatcherTypedData.typedData;
+      const typedData = result.typedData;
 
       const signature = await signTypedDataAsync({
         domain: omit(typedData?.domain, "__typename"),
@@ -131,7 +127,7 @@ const AccountDropdown = (props) => {
       const sig = { v, r, s, deadline: typedData.value.deadline };
       const inputStruct = {
         profileId: typedData.value.profileId,
-        dispatcher: DISPATCHER,
+        dispatcher: typedData.value.dispatcher,
         sig,
       };
 
@@ -141,13 +137,30 @@ const AccountDropdown = (props) => {
     }
   };
 
+  // doesn't work
   const disableDispatcher = async () => {
     try {
-      const setDispatcherRequest = {
+      const result = await disableDispatcherWithTypedData({
         profileId: props.profile.id,
+        enable: false,
+      });
+
+      const typedData = result.typedData;
+
+      const signature = await signTypedDataAsync({
+        domain: omit(typedData?.domain, "__typename"),
+        types: omit(typedData?.types, "__typename"),
+        value: omit(typedData?.value, "__typename"),
+      });
+      const { v, r, s } = splitSignature(signature);
+      const sig = { v, r, s, deadline: typedData.value.deadline };
+      const inputStruct = {
+        profileId: typedData.value.profileId,
+        dispatcher: typedData.value.dispatcher,
+        sig,
       };
 
-      await disableDispatcherWithTypedData(setDispatcherRequest.profileId);
+      setDispathcer?.({ recklesslySetUnpreparedArgs: inputStruct });
     } catch (error) {
       toast.error(error);
     }
@@ -192,7 +205,7 @@ const AccountDropdown = (props) => {
                 width={24}
               />
             </div>
-            {!profile?.dispatcher?.address ? (
+            {!profile?.dispatcher?.canUseRelay ? (
               <div
                 className="cursor-pointer m-4 text-center text-xl hover:opacity-50 flex items-center"
                 onClick={() => {
