@@ -10,6 +10,7 @@ import { HollowButtonContainer } from "../../components/Hollow";
 import Link from "next/link";
 import { cosign } from "../../controllers/cosigns";
 import { getSubmissionById } from "../../utils/supabase";
+import { ArrowLeft, ArrowRight } from "../../icons/Arrows";
 
 // interface SubmissionPageProps {
 //   submission: Submission;
@@ -50,27 +51,26 @@ export default function SubmissionPage(props: {
   return (
     <CommentsContextProvider threadId={submission.id}>
       <div className="min-w-full mt-32">
-        {next &&
-            <div className="absolute left-10 top-1/3">
-                <a
-                    href={`/submission/${submission.id + 1}`}
-                >
-                  {"<"}
-                </a>
-            </div>
-        }
-
-        {prev &&
-            <div className="absolute right-10 top-1/3">
-                <a
-                    href={`/submission/${submission.id - 1}`}
-                >
-                  {">"}
-                </a>
-            </div>
-        }
         <div className="flex justify-center min-w-full mb-8">
+          {next &&
+              <div className="my-auto sm:left-10">
+                  <a
+                      href={`/submission/${submission.id + 1}`}
+                  >
+                      <ArrowLeft className="m-0 w-8 h-8 sm:w-32 sm:h-32 sm:m-0 sm:w-auto"/>
+                  </a>
+              </div>
+          }
           <SubmissionCard submission={submission} />
+          {prev &&
+              <div className="my-auto sm:right-10">
+                  <a
+                      href={`/submission/${submission.id - 1}`}
+                  >
+                      <ArrowRight className="m-0 w-8 h-8 sm:w-32 sm:h-32 sm:m-0 sm:w-auto"/>
+                  </a>
+              </div>
+          }
         </div>
         <div className="max-w-prose mx-auto flex-grow">
           <CommentSection />
