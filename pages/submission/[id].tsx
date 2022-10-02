@@ -41,25 +41,25 @@ export default function SubmissionPage(props: {
     <CommentsContextProvider threadId={submission.id}>
       <div className="min-w-full mt-32">
         <div className="flex justify-center min-w-full mb-8">
-          {next &&
-              <div className="my-auto sm:left-10">
-                  <a
-                      href={`/submission/${submission.id + 1}`}
-                  >
-                      <ArrowLeft className="m-0 w-8 h-8 sm:w-32 sm:h-32 sm:m-0 sm:w-auto"/>
-                  </a>
-              </div>
-          }
+          <div className="my-auto sm:left-10 w-8 h-8 sm:w-32 sm:h-32">
+            {next &&
+                <a
+                    href={`/submission/${submission.id + 1}`}
+                >
+                    <ArrowLeft className="m-0 w-8 h-8 sm:w-32 sm:h-32 sm:m-0 sm:w-auto" />
+                </a>
+            }
+          </div>
           <SubmissionCard submission={submission} />
-          {prev &&
-              <div className="my-auto sm:right-10">
-                  <a
-                      href={`/submission/${submission.id - 1}`}
-                  >
-                      <ArrowRight className="m-0 w-8 h-8 sm:w-32 sm:h-32 sm:m-0 sm:w-auto"/>
-                  </a>
-              </div>
-          }
+          <div className="my-auto sm:right-10 w-8 h-8 sm:w-32 sm:h-32">
+            {prev &&
+                <a
+                    href={`/submission/${submission.id - 1}`}
+                >
+                    <ArrowRight className="m-0 w-8 h-8 sm:w-32 sm:h-32 sm:m-0 sm:w-auto" />
+                </a>
+            }
+          </div>
         </div>
         <div className="max-w-prose mx-auto flex-grow">
           <CommentSection />
