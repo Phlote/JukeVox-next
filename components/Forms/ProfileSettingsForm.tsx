@@ -14,6 +14,10 @@ import {
   HollowInputContainer,
 } from "../Hollow";
 import { validateProfileSettings } from "./validators";
+import { sendEmail } from "../../controllers/sendEmail";
+import { verifyUser } from "../../utils/web3";
+import { cosign } from "../../controllers/cosigns";
+import { minutesBetweenDateAndNow } from "../../utils/numbers";
 
 export interface UserProfile {
   wallet: string; // user has already connected wallet, so this is not a form field
@@ -56,6 +60,10 @@ export const ProfileSettingsForm = ({ wallet }) => {
       await queryClient.invalidateQueries(["profile", wallet]);
       await revalidate(username);
       toast.success("Submitted!");
+
+      if (minutesBetweenDateAndNow(data[0].created_at) < 2) { // Only send email on profile creation
+        await sendEmail(email, username, "Welcome to Phlote", `Welcome to Phlote ${username}`);
+      }
     } catch (e) {
       toast.error(e);
     } finally {

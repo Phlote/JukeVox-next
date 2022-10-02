@@ -24,6 +24,7 @@
     "@metamask/detect-provider": "^1.2.0",
     "@metamask/onboarding": "^1.0.1",
     "@pinata/sdk": "^1.1.23",
+    "@sendgrid/mail": "^7.7.0",
     "@supabase/postgrest-js": "^0.37.2",
     "@supabase/supabase-js": "^1.31.1",
     "@web3-react/core": "^6.1.9",
