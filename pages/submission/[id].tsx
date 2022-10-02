@@ -1,17 +1,13 @@
 import { useRouter } from "next/router";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CommentSection from "../../components/Comments/CommentSection";
 import Layout from "../../components/Layouts";
 import { CommentsContextProvider } from "../../hooks/useComments";
 import { supabase } from "../../lib/supabase";
 import { Submission } from "../../types";
 import SubmissionCard from "../../components/SubmissionCard";
-
-// interface SubmissionPageProps {
-//   submission: Submission;
-//   submissionFileType: string;
-//   getLayout: (any) => JSX.Element;
-// }
+import { getSubmissionById } from "../../utils/supabase";
+import { ArrowLeft, ArrowRight } from "../../icons/Arrows";
 
 export default function SubmissionPage(props: {
   submission: Submission;
@@ -19,6 +15,22 @@ export default function SubmissionPage(props: {
 }) {
   const { submission, submissionFileType } = props;
   const router = useRouter();
+  const [prev, setPrev] = useState(false);
+  const [next, setNext] = useState(false);
+
+  useEffect(() => {
+    if (submission) {
+      let prevId = submission.id - 1;
+      let nextId = submission.id + 1;
+
+      getSubmissionById(prevId).then(v => {
+        setPrev(v.data.length > 0);
+      });
+      getSubmissionById(nextId).then(v => {
+        setNext(v.data.length > 0);
+      });
+    }
+  }, [submission]);
 
   if (router.isFallback) {
     //TODO better loading
@@ -29,7 +41,25 @@ export default function SubmissionPage(props: {
     <CommentsContextProvider threadId={submission.id}>
       <div className="min-w-full mt-32">
         <div className="flex justify-center min-w-full mb-8">
+          {next &&
+              <div className="my-auto sm:left-10">
+                  <a
+                      href={`/submission/${submission.id + 1}`}
+                  >
+                      <ArrowLeft className="m-0 w-8 h-8 sm:w-32 sm:h-32 sm:m-0 sm:w-auto"/>
+                  </a>
+              </div>
+          }
           <SubmissionCard submission={submission} />
+          {prev &&
+              <div className="my-auto sm:right-10">
+                  <a
+                      href={`/submission/${submission.id - 1}`}
+                  >
+                      <ArrowRight className="m-0 w-8 h-8 sm:w-32 sm:h-32 sm:m-0 sm:w-auto"/>
+                  </a>
+              </div>
+          }
         </div>
         <div className="max-w-prose mx-auto flex-grow">
           <CommentSection />
