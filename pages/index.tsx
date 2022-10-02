@@ -1,5 +1,5 @@
 import { useWeb3React } from "@web3-react/core";
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import { Footer } from "../components/Footer";
 import { HollowInputContainer } from "../components/Hollow";
 import Layout from "../components/Layouts";
@@ -73,7 +73,11 @@ const RecentlyCurated = ({ account, setOpen, setConnectWalletOpen }) => {
   const [selectedFilters, setFilters] = useSearchFilters();
 
   useEffect(() => {
-    setFilters({noOfCosigns: 5});
+    setFilters({ noOfCosigns: 5 });
+
+    return ()=>{ // Clean up filters so it doesn't pass along to /Feed
+      setFilters({});
+    }
   }, []);
 
   const submissions = useSubmissionSearch();
