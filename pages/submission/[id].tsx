@@ -6,17 +6,8 @@ import { CommentsContextProvider } from "../../hooks/useComments";
 import { supabase } from "../../lib/supabase";
 import { Submission } from "../../types";
 import SubmissionCard from "../../components/SubmissionCard";
-import { HollowButtonContainer } from "../../components/Hollow";
-import Link from "next/link";
-import { cosign } from "../../controllers/cosigns";
 import { getSubmissionById } from "../../utils/supabase";
 import { ArrowLeft, ArrowRight } from "../../icons/Arrows";
-
-// interface SubmissionPageProps {
-//   submission: Submission;
-//   submissionFileType: string;
-//   getLayout: (any) => JSX.Element;
-// }
 
 export default function SubmissionPage(props: {
   submission: Submission;
