@@ -14,7 +14,6 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 
-import "hardhat/console.sol";
 
 /// @custom:security-contact nohackplz@phlote.xyz
 contract PhloteVote is ERC20, ERC20Burnable, Pausable, Ownable, ERC20Permit {

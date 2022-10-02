@@ -1,8 +1,11 @@
-/contracts/deps
-/typechain
-/node_modules
-/artifacts
-/cache
-/.openzeppelin
-/deployments/localhost
-/deployments/hardhat
+node_modules
+.env
+coverage
+coverage.json
+typechain
+typechain-types
+
+#Hardhat files
+cache
+artifacts
+

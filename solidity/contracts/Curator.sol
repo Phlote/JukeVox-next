@@ -11,17 +11,13 @@ import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 import "@openzeppelin/contracts/interfaces/IERC1155.sol";
 
 import "@openzeppelin/contracts/interfaces/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
 
-import "hardhat/console.sol";
-
 import "./PhloteVote.sol";
 import "./Hotdrop.sol";
 
-/*import "./lib/IPFSStorage.sol";*/
 
 /// @title A factor and manager for "Hotdrop" NFTs (Phlote user-submitted-content).
 /// @author Zachary Fogg <me@zfo.gg>
@@ -32,13 +28,12 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
     using SafeMathUpgradeable for uint256;
     using StringsUpgradeable for uint256;
     using CountersUpgradeable for CountersUpgradeable.Counter;
-    using SafeERC20 for IERC20;
-    using SafeERC20 for PhloteVote;
+
     using AddressUpgradeable for address payable;
 
     address public admin;
 
-    PhloteVote public vote;
+    PhloteVote public phloteToken;
     address public treasury;
     uint256 public curatorTokenMinimum;
 
@@ -50,21 +45,24 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
     event Submit(
         address indexed submitter,
         string ipfsURI,
+        bool _isArtistSubmission,
         Hotdrop hotdrop
     );
 
-    event Phlote(
+    event Cosign(
         address indexed cosigner,
         Hotdrop hotdrop,
-        uint256 generation
+        uint256 cosignEdition
     );
 
-    /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor() { return; }
+    modifier onlyOwner() {
+        require(msg.sender == admin, "You do not have access to this function.");
+        _;
+    }
 
     /// @dev The constructor function. It also calls the upgrade function.
-    /// @param _vote Phlote's ERC20 DAO token.
-    function initialize(PhloteVote _vote, address _treasury, address _curatorAdmin) public initializer {
+    /// @param _phloteToken Phlote's ERC20 DAO token.
+    function initialize(PhloteVote _phloteToken, address _treasury, address _curatorAdmin) public initializer {
         __Pausable_init();
         __AccessControlEnumerable_init();
 
@@ -73,25 +71,25 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
         _grantRole(CURATOR_ADMIN, msg.sender);
         _setRoleAdmin(CURATOR, CURATOR_ADMIN);
         _grantRole(CURATOR, msg.sender);
-        // hi
+        curatorTokenMinimum = 50;
 
-        _onUpgrade(_vote, _treasury, _curatorAdmin);
+        _onUpgrade(_phloteToken, _treasury, _curatorAdmin);
         /*if (vote.allowance(address(this)) < vote.MAX_SUPPLY()) {*/
             /*vote.approve(address(this), vote.MAX_SUPPLY());*/
         /*}*/
     }
 
     /// @dev The upgrade function. To be called by the constructor as well.
-    /// @param _vote Phlote's ERC20 DAO token.
-    function onUpgrade(PhloteVote _vote, address _treasury, address _curatorAdmin) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        _onUpgrade(_vote, _treasury, _curatorAdmin);
+    /// @param _phloteToken's ERC20 DAO token.
+    function onUpgrade(PhloteVote _phloteToken, address _treasury, address _curatorAdmin) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        _onUpgrade(_phloteToken, _treasury, _curatorAdmin);
     }
 
     /// @dev The upgrade function. To be called by the constructor as well.
-    /// @param _vote Phlote's ERC20 DAO token.
-    function _onUpgrade(PhloteVote _vote, address _treasury, address _curatorAdmin) private {
+    /// @param _phloteToken Phlote's ERC20 DAO token.
+    function _onUpgrade(PhloteVote _phloteToken, address _treasury, address _curatorAdmin) private {
         /*require(_vote.owner() == address(this), "_vote not owned by Curator");*/
-        vote = _vote;
+        phloteToken = _phloteToken;
         treasury = _treasury;
 
         // revoke the old curator admin and grant the new one (if changed).
@@ -110,12 +108,28 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
         _unpause();
     }
 
+    /*////////////////////////////////
+                Owner Only
+    ///////////////////////////////*/
+
+    function setCuratorTokenMinimum(uint256 _curatorTokenMinimum) public onlyOwner {
+        curatorTokenMinimum = _curatorTokenMinimum;
+    }
+
+    function setAddresses(address _treasury, address _curatorAdmin) public onlyOwner {
+        treasury = _treasury;
+        curatorAdmin = _curatorAdmin;
+    }
+
+
     /// @dev Give an address the `CURATOR` role.
     /// @param _newCurator The address of the curator who has enough PhloteVote tokes to curate for us.
     function grantCuratorRole(address _newCurator) public onlyRole(CURATOR_ADMIN) {
-        require(vote.balanceOf(_newCurator) >= curatorTokenMinimum, "too few vote tokens");
+        require(phloteToken.balanceOf(_newCurator) >= curatorTokenMinimum, "too few Phlote tokens");
         grantRole(CURATOR, _newCurator);
     }
+
+
 
     /// @dev Revoke an address's `CURATOR` role.
     /// @param _oldCurator The address of the curator to disallow from Phlote curation.
@@ -123,41 +137,65 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
         revokeRole(CURATOR, _oldCurator);
     }
 
+
     /// @dev Create an NFT ("Hotdrop") of your musical internet findings that may be curated in the future.
     /// @param _ipfsURI The ipfs://Qm... URI of the metadata for this submission.
     /// @return hotdrop The address of the new Hotdrop contract that was deployed from this submission.
-    function submit(string memory _ipfsURI) public returns (Hotdrop hotdrop) {
+    function submit(string memory _ipfsURI, bool _isArtistSubmission) public whenNotPaused returns (Hotdrop hotdrop) {
         // there should be enough PhloteVote tokens in this contract to support
         // five cosigns for each submission.
-        hotdrop = new Hotdrop(msg.sender);
+        hotdrop = new Hotdrop(msg.sender,_isArtistSubmission);
         hotdrop.setURI(_ipfsURI);
         emit Submit(
             msg.sender,
             _ipfsURI,
+            _isArtistSubmission,
             hotdrop
         );
         return hotdrop;
     }
 
-    /// @dev Curate a Hotdrop NFT (un-curated) that was submitted to us.
+
+    /// @dev Curate a Hotdrop NFT that was submitted to us. This function is for curating ARTIST HOTDROPS ONLY. NOT CURATOR HOTDROP SUBMISSIONS.
     /// @param _hotdrop The address of the hotdrop to curate.
-    function curate(Hotdrop _hotdrop) public onlyRole(CURATOR) {
-        uint256 cosigns = _hotdrop.phlote(msg.sender);
-        console.log("cosigns", cosigns);
-        // send the community reward to the treasury
-        uint256 communityReward = _hotdrop.COSIGN_COSTS(cosigns-1) - ((cosigns)*_hotdrop.COSIGN_REWARD());
-        vote.transfer(treasury, communityReward);
-        // send the cosign reward to the original submitter
-        vote.transfer(_hotdrop.submitter(), _hotdrop.COSIGN_REWARD());
-        // send cosign rewards to previous cosigners
-        for (uint256 i = 0; i < cosigns - 1; i++) {
-            console.log("transfer to", i, _hotdrop.cosigners(i), _hotdrop.COSIGN_REWARD());
-            vote.transfer(_hotdrop.cosigners(i), _hotdrop.COSIGN_REWARD());
+    function curate(Hotdrop _hotdrop) public whenNotPaused {
+        require(phloteToken.balanceOf(msg.sender) >= curatorTokenMinimum, "Your Phlote balance is too low.");
+        (address hotdropSubmitter, bool isArtistSubmission) = _hotdrop.submission();
+        (uint256 cosignNumber, address[5] memory cosigners) = _hotdrop.cosigns();
+        if(isArtistSubmission == true){
+            require(_hotdrop.totalSupply(_hotdrop.artistCosignerNFT()) < 5, "Sorry! We have reached the maximum cosigns on this record.");
+            uint256 mintPrice = _hotdrop.COSIGN_COSTS(cosignNumber);
+
+            _hotdrop.cosign(msg.sender);
+            // send the reward to the artist
+            
+           require(phloteToken.transferFrom(msg.sender, address(this),mintPrice));
+            uint256 artistReward = mintPrice - _hotdrop.COSIGN_REWARD();
+            phloteToken.transfer(hotdropSubmitter, artistReward);
+
+            // send the remaining amount to treasury
+            phloteToken.transfer(treasury, mintPrice - artistReward);
+
         }
-        emit Phlote(
+
+        else{
+            require(_hotdrop.totalSupply(_hotdrop.curatorCosignerNFT()) < 5, "Sorry! We have reached the maximum cosigns on this record.");
+            _hotdrop.cosign(msg.sender);
+
+            // send the reward to the original submitter
+            phloteToken.transferFrom(treasury, hotdropSubmitter, _hotdrop.COSIGN_REWARD());
+
+            //send cosign rewards to previous cosigners, to reward early cosigners
+            for (uint256 i = 0; i < cosignNumber; i++) {
+            
+                phloteToken.transferFrom(treasury, cosigners[i], _hotdrop.COSIGN_REWARD());
+            }
+        }
+        
+        emit Cosign(
             msg.sender,
             _hotdrop,
-            cosigns
+            (cosignNumber + 1)
         );
     }
 
@@ -189,3 +227,4 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
 }
 
 // vim: set fdm=marker:
+

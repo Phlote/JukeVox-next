@@ -14,6 +14,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 
+
 /// @custom:security-contact nohackplz@phlote.xyz
 contract Hotdrop is
     ERC1155,
@@ -29,35 +30,57 @@ contract Hotdrop is
     /*using SafeERC20 for PhloteVote;*/
     using Address for address payable;
 
+    IERC20 public phloteToken;
+
     // types of NFTs in this contract
     /*uint256 public ID_SUBMISSION = 1;*/
-    uint256 public ID_PHLOTE     = 0;
+    uint256 public artistCosignerNFT = 0;
+    uint256 public curatorCosignerNFT = 1;
     /*uint256 public ID_CURATION   = 1;*/
     /*uint256 public ID_COSIGN     = 2;*/
 
-    address public submitter;
-
-    uint256 public COSIGN_REWARD = 15 ether;
+    uint256 public COSIGN_REWARD = 15;
     uint256[5] public COSIGN_COSTS = [
-        50 ether,
-        60 ether,
-        70 ether,
-        80 ether,
-        90 ether
+        50,
+        60,
+        70,
+        80,
+        90
     ];
 
-    address[5] public cosigners;
+    struct Submission {
+        address submitter;
+        bool isArtistSubmission;
+        address[5] cosigners;
+    }
 
-    uint256 public NFTS_PER_COSIGN = 5;
+    Submission public submission;
 
-    bool public curated = false;
+    modifier cosignerExists(address _cosigner) {
+        bool allowed = true;
+        for (uint i; i< submission.cosigners.length;i++){
+          if (submission.cosigners[i]== _cosigner){
+            allowed = false;
+          }
+      }
+      if(allowed == false){
+        require(allowed, "You have already cosigned the following record");
+        _;
+      }
+      else{
+        require(_cosigner != submission.submitter, "You cannot vote for your own track");
+        _;
+      }
+    }
 
     constructor(
-        address _submitter
+        address _submitter, bool _isArtistSubmission
     )
         ERC1155("https://ipfs.phlote.xyz/hotdrop/{id}.json")
     {
-        submitter = _submitter;
+        address[5] memory cosigners;
+        submission = Submission(_submitter,_isArtistSubmission, cosigners);
+        phloteToken = IERC20(0x8eF43798e0f8Bb4C7531e1e12D02894ac34F3A61);
         return;
     }
 
@@ -74,8 +97,14 @@ contract Hotdrop is
     }
 
     function mint(address account, uint256 id, uint256 amount, bytes memory data) public onlyOwner {
-        require(totalSupply(ID_PHLOTE) < cosigners.length, "can't mint more");
-        cosigners[totalSupply(ID_PHLOTE)] = account;
+        if(id == 0){
+            require(totalSupply(artistCosignerNFT) < submission.cosigners.length, "can't mint more");
+            submission.cosigners[totalSupply(artistCosignerNFT)] = account;
+        }
+        else{
+            require(totalSupply(curatorCosignerNFT) < submission.cosigners.length, "can't mint more");
+            submission.cosigners[totalSupply(curatorCosignerNFT)] = account;
+        }
         _mint(account, id, amount, data);
     }
 
@@ -96,19 +125,34 @@ contract Hotdrop is
         super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
     }
 
-    function phlote(address _cosigner) public onlyOwner returns (uint256) {
-        curated = true;
-        /*uint256 cosignGeneration = cosigns() + 1;*/
-        /*bytes memory mintData = abi.encodePacked(cosignGeneration);*/
-        /*_mint(msg.sender, cosignGeneration, NFTS_PER_COSIGN, mintData);*/
-        bytes memory mintData = abi.encodePacked(totalSupply(ID_PHLOTE)+1);
-        mint(_cosigner, ID_PHLOTE, 1, mintData);
-        return totalSupply(ID_PHLOTE);
+    function cosign(address _cosigner) public cosignerExists(_cosigner) onlyOwner returns (uint256) {
+        uint256 cosignType;
+        if(submission.isArtistSubmission == true){
+            cosignType = artistCosignerNFT;
+        }
+        else{
+            cosignType = curatorCosignerNFT;
+        }
+        bytes memory mintData = abi.encodePacked(totalSupply(cosignType)+1);
+        
+        mint(_cosigner, cosignType, 1, mintData);
+
+        return totalSupply(cosignType);
     }
 
-    function cosigns() public view returns (uint256) {
+    function cosigns() public view returns (uint256, address[5] memory) {
         // INFO: https://docs.openzeppelin.com/contracts/4.x/api/token/erc1155#ERC1155Supply
-        /*return totalSupply(ID_PHLOTE) / NFTS_PER_COSIGN;*/
-        return totalSupply(ID_PHLOTE);
+        /*return totalSupply(CosignerNFT) / NFTS_PER_COSIGN;*/
+        address[5] memory _cosignersList = submission.cosigners;
+        if(submission.isArtistSubmission == true){
+            return (totalSupply(artistCosignerNFT),_cosignersList);
+        }
+        else{
+            return (totalSupply(curatorCosignerNFT),_cosignersList);
+        }
+    }
+
+    function submissionDetails() view public returns(address,bool,address[5] memory){
+        return(submission.submitter,submission.isArtistSubmission,submission.cosigners);
     }
 }
