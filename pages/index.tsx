@@ -5,7 +5,7 @@ import { HollowInputContainer } from "../components/Hollow";
 import Layout from "../components/Layouts";
 import { useConnectWalletModalOpen } from "../components/Modals/ConnectWalletModal";
 import { useSubmissionFlowOpen } from "../components/SubmissionFlow";
-import { useSubmissionSearch } from "../hooks/useSubmissions";
+import { useSearchFilters, useSubmissionSearch } from "../hooks/useSubmissions";
 import SubmissionCard from "../components/SubmissionCard";
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
@@ -70,6 +70,12 @@ const Hero = ({ account, setOpen, setConnectWalletOpen }) => {
 }
 
 const RecentlyCurated = ({ account, setOpen, setConnectWalletOpen }) => {
+  const [selectedFilters, setFilters] = useSearchFilters();
+
+  useEffect(() => {
+    setFilters({noOfCosigns: 5});
+  }, []);
+
   const submissions = useSubmissionSearch();
   const noResults =
     !submissions.isLoading &&
@@ -87,7 +93,6 @@ const RecentlyCurated = ({ account, setOpen, setConnectWalletOpen }) => {
   if (!(submissions.isLoading || submissions.isFetching) && !noResults) {
     submissions?.data?.pages.map((group, i) =>
       group?.submissions?.map((submission: Submission) => {
-          !!submission.noOfCosigns && submission.noOfCosigns > 0 &&
           cosignedSubs.push(<SubmissionCard submission={submission} />)
         }
       )
@@ -187,12 +192,12 @@ function Home() { // LANDING PAGE
   return (
     <>
       <div className="hidden sm:block font-roboto"> {/* Desktop */}
-        <RecentlyCurated account={account} setOpen={setOpen} setConnectWalletOpen={setConnectWalletOpen}/>
+        <RecentlyCurated account={account} setOpen={setOpen} setConnectWalletOpen={setConnectWalletOpen} />
         {/*<Collaborators />*/}
       </div>
       <div className="sm:hidden font-roboto"> {/* Mobile */}
         <Hero account={account} setOpen={setOpen} setConnectWalletOpen={setConnectWalletOpen} />
-        <RecentlyCurated account={account} setOpen={setOpen} setConnectWalletOpen={setConnectWalletOpen}/>
+        <RecentlyCurated account={account} setOpen={setOpen} setConnectWalletOpen={setConnectWalletOpen} />
         <AboutUsContent />
         <HowItWorksContent />
         <SubmissionScheduleContent />
