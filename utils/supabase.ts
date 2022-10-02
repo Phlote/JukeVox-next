@@ -28,6 +28,10 @@ export const getSubmissionsWithFilter = async (
   return data.map(cleanSubmission);
 };
 
+export const getSubmissionById = async (id: number) => {
+  return supabase.from('submissions').select().match({ id });
+}
+
 export const getProfileForWallet = async (wallet: string) => {
   const profilesQuery = await supabase
     .from("profiles")

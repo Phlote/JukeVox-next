@@ -25,7 +25,7 @@ const SubmissionCard = ({ submission }) => {
   const videoEl = useRef(null);
 
   return (
-    <div className="flex flex-col w-80 h-[480px] m-auto">
+    <div className="flex flex-col w-80 h-[480px]">
       <div className="w-full h-60 relative">
         {submission.mediaFormat === "video/quicktime" ? (
           <video
