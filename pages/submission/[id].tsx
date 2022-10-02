@@ -33,11 +33,9 @@ export default function SubmissionPage(props: {
       let nextId = submission.id + 1;
 
       getSubmissionById(prevId).then(v => {
-        console.log(v);
         setPrev(v.data.length > 0);
       });
       getSubmissionById(nextId).then(v => {
-        console.log(v);
         setNext(v.data.length > 0);
       });
     }
