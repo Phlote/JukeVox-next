@@ -17,6 +17,14 @@ import { gql } from "@apollo/client";
 import { apollo } from "../lib/apollo";
 import { omit } from "../lib/omit";
 import { splitSignature } from "../lib/splitSignature";
+import { getLensProfile } from "../utils/profile";
+import { pollUntilIndexed } from "../utils/indexing_transacrions";
+import {
+  CreatePostViaDispatcherDocument,
+  CreatePublicPostRequest,
+} from "../utils/graphql/generated";
+
+import { BigNumber, utils } from "ethers";
 
 const CREATE_POST_TYPED_DATA = `
   mutation CreatePostTypedData(
@@ -63,6 +71,19 @@ const createPostTypedData = (createPostTypedDataRequest: any) => {
   });
 };
 
+const createPostWithDispatcher = async (request: CreatePublicPostRequest) => {
+  const result = await apollo.mutate({
+    mutation: CreatePostViaDispatcherDocument,
+    variables: {
+      request,
+    },
+  });
+
+  console.log(result);
+
+  return result.data!.createPostViaDispatcher;
+};
+
 export const RatingsMeter: React.FC<{
   submissionId: number;
   submitterWallet: string;
@@ -87,6 +108,7 @@ export const RatingsMeter: React.FC<{
   const { account, library } = useWeb3React();
   const [cosigns, setCosigns] = React.useState<string[]>([]);
   const [path, setPath] = React.useState<string>("");
+  const profile = getLensProfile();
 
   const { signTypedDataAsync } = useSignTypedData({
     onError(error) {
@@ -107,6 +129,51 @@ export const RatingsMeter: React.FC<{
       //setTransactionLoading(false);
     },
   });
+
+  const post = async (createPostRequest: CreatePublicPostRequest) => {
+    if (profile?.dispatcher?.canUseRelay) {
+      const dispatcherResult = await createPostWithDispatcher(
+        createPostRequest
+      );
+
+      if (dispatcherResult.__typename !== "RelayerResult") {
+        console.error("create post via dispatcher: failed", dispatcherResult);
+        throw new Error("create post via dispatcher: failed");
+      }
+
+      return { txHash: dispatcherResult.txHash, txId: dispatcherResult.txId };
+      // signing with dispatcher
+    } else {
+      //signing without dispatcher
+      const post = await createPostTypedData(createPostRequest);
+
+      const typedData = post.data?.createPostTypedData.typedData;
+
+      try {
+        const signature = await signTypedDataAsync({
+          domain: omit(typedData?.domain, "__typename"),
+          types: omit(typedData?.types, "__typename"),
+          value: omit(typedData?.value, "__typename"),
+        });
+
+        const { v, r, s } = splitSignature(signature);
+        const sig = { v, r, s, deadline: typedData.value.deadline };
+        const inputStruct = {
+          profileId: typedData.value.profileId,
+          contentURI: typedData.value.contentURI,
+          collectModule: typedData.value.collectModule,
+          collectModuleInitData: typedData.value.collectModuleInitData,
+          referenceModule: typedData.value.referenceModule,
+          referenceModuleInitData: typedData.value.referenceModuleInitData,
+          sig,
+        };
+
+        createSong?.({ recklesslySetUnpreparedArgs: inputStruct });
+      } catch (error) {
+        toast.error(error);
+      }
+    }
+  };
 
   React.useEffect(() => {
     if (initialCosigns) {
@@ -133,6 +200,7 @@ export const RatingsMeter: React.FC<{
       const newCosigns = await cosign(submissionId, account);
       if (newCosigns) setCosigns(newCosigns);
 
+      // A post on Lens is published after 5 co-signs
       if (newCosigns.length == 5) {
         const { path } = await uploadIpfs({
           version: "1.0.0",
@@ -168,11 +236,9 @@ export const RatingsMeter: React.FC<{
           //setIpfsLoading(false);
         });
 
-        console.log(path);
-
         //setTransactionLoading(true);
         const createPostRequest = {
-          profileId: "0x4318",
+          profileId: profile.id,
           contentURI: `https://ipfs.infura.io/ipfs/${path}`,
           collectModule: { freeCollectModule: { followerOnly: false } },
           referenceModule: {
@@ -180,35 +246,45 @@ export const RatingsMeter: React.FC<{
           },
         };
 
-        const post = await createPostTypedData(createPostRequest);
+        const result = await post(createPostRequest);
 
-        const typedData = post.data?.createPostTypedData.typedData;
+        console.log("create post gasless", result);
 
-        console.log("step 1");
+        const indexedResult = await pollUntilIndexed({ txId: result.txId });
 
-        try {
-          const signature = await signTypedDataAsync({
-            domain: omit(typedData?.domain, "__typename"),
-            types: omit(typedData?.types, "__typename"),
-            value: omit(typedData?.value, "__typename"),
-          });
+        console.log("create post: profile has been indexed", result);
 
-          const { v, r, s } = splitSignature(signature);
-          const sig = { v, r, s, deadline: typedData.value.deadline };
-          const inputStruct = {
-            profileId: typedData.value.profileId,
-            contentURI: typedData.value.contentURI,
-            collectModule: typedData.value.collectModule,
-            collectModuleInitData: typedData.value.collectModuleInitData,
-            referenceModule: typedData.value.referenceModule,
-            referenceModuleInitData: typedData.value.referenceModuleInitData,
-            sig,
-          };
+        const logs = indexedResult.txReceipt!.logs;
 
-          createSong?.({ recklesslySetUnpreparedArgs: inputStruct });
-        } catch (error) {
-          toast.error(error);
-        }
+        console.log("create post: logs", logs);
+
+        const topicId = utils.id(
+          "PostCreated(uint256,uint256,string,address,bytes,address,bytes,uint256)"
+        );
+        console.log("topicid we care about", topicId);
+
+        const profileCreatedLog = logs.find(
+          (l: any) => l.topics[0] === topicId
+        );
+        console.log("create post: created log", profileCreatedLog);
+
+        let profileCreatedEventLog = profileCreatedLog!.topics;
+        console.log("create post: created event logs", profileCreatedEventLog);
+
+        const publicationId = utils.defaultAbiCoder.decode(
+          ["uint256"],
+          profileCreatedEventLog[2]
+        )[0];
+
+        console.log(
+          "create post: contract publication id",
+          BigNumber.from(publicationId).toHexString()
+        );
+        console.log(
+          "create post: internal publication id",
+          profile.id + "-" + BigNumber.from(publicationId).toHexString()
+        );
+        toast.success("Post created");
       }
     } catch (e) {
       console.error(e);

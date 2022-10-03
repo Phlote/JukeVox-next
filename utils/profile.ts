@@ -4,6 +4,6 @@ export let setProfile = (profileData: any) => {
   console.log(profile);
 };
 
-export let getProfile = () => {
+export let getLensProfile = () => {
   return profile;
 };
