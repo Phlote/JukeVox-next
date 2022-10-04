@@ -22,6 +22,7 @@ import {
   getProfileForWallet,
   getSubmissionsWithFilter,
 } from "../../utils/supabase";
+import { toast } from "react-toastify";
 
 export default function Profile(props) {
   const router = useRouter();
@@ -76,7 +77,6 @@ export default function Profile(props) {
           </div>
         )}
       </div>
-
       <table className="table-fixed w-full text-center mt-8">
         <thead>
           <tr
@@ -197,10 +197,27 @@ export default function Profile(props) {
                     <ArchiveTableDataCell>
                       {lensPublication?.metadata?.description}
                     </ArchiveTableDataCell>
-                    <ArchiveTableDataCell>MIRROR</ArchiveTableDataCell>
-                    <ArchiveTableDataCell>COLLECT</ArchiveTableDataCell>
-
-                    <ArchiveTableDataCell>COMMENT</ArchiveTableDataCell>
+                    <ArchiveTableDataCell
+                      onClick={() => {
+                        toast.success("You mirrored");
+                      }}
+                    >
+                      MIRROR
+                    </ArchiveTableDataCell>
+                    <ArchiveTableDataCell
+                      onClick={() => {
+                        toast.success("You collected");
+                      }}
+                    >
+                      COLLECT
+                    </ArchiveTableDataCell>
+                    <ArchiveTableDataCell
+                      onClick={() => {
+                        toast.success("You commented");
+                      }}
+                    >
+                      COMMENT
+                    </ArchiveTableDataCell>
                   </ArchiveTableRow>
                   <tr className="h-4" />
                 </>
