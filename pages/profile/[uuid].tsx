@@ -1,4 +1,5 @@
 import { useWeb3React } from "@web3-react/core";
+import React from "react";
 import { ethers } from "ethers";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -15,6 +16,8 @@ import { useIsCurator } from "../../hooks/useIsCurator";
 import useENSName from "../../hooks/web3/useENSName";
 import { supabase } from "../../lib/supabase";
 import { Submission } from "../../types";
+import { getPublications } from "../../utils/getPublications";
+import { getLensProfile } from "../../utils/profile";
 import {
   getProfileForWallet,
   getSubmissionsWithFilter,
@@ -26,10 +29,24 @@ export default function Profile(props) {
   const uuid = router.query.uuid;
   const isCurator = useIsCurator();
   const { account } = useWeb3React();
+  const [lensPublications, setLensPublications] = React.useState<any>([]);
 
   const promptToMakeProfile = isCurator && uuid === account;
 
   const ENSName = useENSName(uuid as string);
+
+  const lensProfile = getLensProfile();
+
+  // retrieve Lens publications for the selected profile
+  async function getLensPublications() {
+    try {
+      const result = await getPublications(lensProfile);
+      setLensPublications(result.items);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  getLensPublications();
 
   if (router.isFallback) {
     //TODO better loading
@@ -127,6 +144,63 @@ export default function Profile(props) {
                         submitterWallet={curatorWallet}
                       />
                     </ArchiveTableDataCell>
+                  </ArchiveTableRow>
+                  <tr className="h-4" />
+                </>
+              );
+            })}
+          </tbody>
+        )}
+      </table>
+      {submissions?.length === 0 && (
+        <div
+          className="w-full mt-4 flex-grow flex justify-center items-center"
+          style={{ color: "rgba(105, 105, 105, 1)" }}
+        >
+          <p className="text-lg italic">{"No Search Results"}</p>
+        </div>
+      )}
+      // LENS //
+      <table className="table-fixed w-full text-center mt-8">
+        <thead>
+          <tr
+            style={{
+              borderBottom: "1px solid white",
+              paddingBottom: "1rem",
+            }}
+          >
+            <ArchiveTableHeader label="Type" />
+            <ArchiveTableHeader label="Reference Id" />
+            <ArchiveTableHeader label="Title" />
+            <ArchiveTableHeader label="Mirror" />
+            <ArchiveTableHeader label="Collect" />
+            <ArchiveTableHeader label="Comment" />
+          </tr>
+        </thead>
+
+        {lensPublications?.length > 0 && (
+          <tbody>
+            <tr className="h-4" />
+            {lensPublications?.map((lensPublication) => {
+              return (
+                <>
+                  <ArchiveTableRow
+                    key={`${lensPublication.id}`}
+                    className="hover:opacity-80 cursor-pointer"
+                  >
+                    <ArchiveTableDataCell>
+                      {lensPublication?.__typename}
+                    </ArchiveTableDataCell>
+                    <ArchiveTableDataCell>
+                      {lensPublication?.id}
+                    </ArchiveTableDataCell>
+                    <ArchiveTableDataCell>
+                      {lensPublication?.metadata?.description}
+                    </ArchiveTableDataCell>
+                    <ArchiveTableDataCell>MIRROR</ArchiveTableDataCell>
+                    <ArchiveTableDataCell>COLLECT</ArchiveTableDataCell>
+
+                    <ArchiveTableDataCell>COMMENT</ArchiveTableDataCell>
                   </ArchiveTableRow>
                   <tr className="h-4" />
                 </>
