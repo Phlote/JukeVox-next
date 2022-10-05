@@ -11,10 +11,10 @@ import { useConnectWalletModalOpen } from "./Modals/ConnectWalletModal";
 import { ShortenedWallet } from "./ShortenedWallet";
 import { clearCachedConnector } from "../utils/web3";
 import { useProfile } from "./Forms/ProfileSettingsForm";
+import { useMoralis } from "react-moralis";
 
 const Account = (props) => {
-  const { active, error, activate, chainId, account, setError, deactivate } =
-    useWeb3React();
+  const { account } = useMoralis();
 
   useEagerConnect();
 
@@ -64,7 +64,7 @@ const Account = (props) => {
 };
 
 const AccountDropdown = (props) => {
-  const { deactivate } = useWeb3React();
+  const { logout } = useMoralis();
 
   const router = useRouter();
 
@@ -100,7 +100,13 @@ const AccountDropdown = (props) => {
             <div
               className="cursor-pointer m-4 text-center text-xl hover:opacity-50 flex items-center"
               onClick={() => {
-                deactivate();
+                logout()
+                  .then((user) => {
+                    console.log("logged out user:", user);
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                  });
                 clearCachedConnector();
                 setDropdownOpen(false);
               }}

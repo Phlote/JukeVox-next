@@ -9,10 +9,11 @@ import {
 } from "../components/Forms/ProfileSettingsForm";
 import { HollowButton, HollowButtonContainer } from "../components/Hollow";
 import Layout from "../components/Layouts";
+import { useMoralis } from "react-moralis";
 
 function ProfileEdit() {
   const router = useRouter();
-  const { account } = useWeb3React();
+  const { account } = useMoralis();
   const profileQuery = useProfile(account);
 
   return (

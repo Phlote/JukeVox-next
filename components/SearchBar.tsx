@@ -7,6 +7,7 @@ import React from "react";
 import { useKeyPress } from "../hooks/useKeyPress";
 import { HollowInput, HollowInputContainer } from "./Hollow";
 import { useConnectWalletModalOpen } from "./Modals/ConnectWalletModal";
+import { useMoralis } from "react-moralis";
 
 const searchTermAtom = atom<string>("");
 export const useSearchTerm = () => useAtom(searchTermAtom);
@@ -16,7 +17,7 @@ interface SearchBar {
 }
 
 export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
-  const { active } = useWeb3React();
+  const { isAuthenticated } = useMoralis();
   const [, setSearchTerm] = useSearchTerm();
   const router = useRouter();
 
@@ -54,7 +55,7 @@ export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
     <div className="w-80 h-16" style={{ lineHeight: "0.5rem" }}>
       <HollowInputContainer
         onClick={() => {
-          if (active) inputRef.current.focus();
+          if (isAuthenticated) inputRef.current.focus();
           else setOpen(true);
         }}
       >
@@ -66,8 +67,8 @@ export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
           onChange={(e) => {
             setInputVal(e.target.value);
           }}
-          disabled={!active}
-          placeholder={active ? placeholder : "Connect your wallet to search"}
+          disabled={!isAuthenticated}
+          placeholder={isAuthenticated ? placeholder : "Connect your wallet to search"}
         />
       </HollowInputContainer>
     </div>

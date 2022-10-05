@@ -5,6 +5,7 @@ import { useQuery } from "react-query";
 import useSWR, { useSWRInfinite } from "swr";
 import { UserProfile } from "../components/Forms/ProfileSettingsForm";
 import { supabase } from "../lib/supabase";
+import { useMoralis } from "react-moralis";
 
 const PAGE_SIZE = 10;
 
@@ -112,7 +113,7 @@ export const CommentsContextProvider = (
   props: CommentsContextProviderProps
 ): JSX.Element => {
   const { threadId } = props;
-  const { account } = useWeb3React();
+  const { account } = useMoralis();
   const [sortingBehavior, setSortingBehavior] =
     useState<SortingBehavior>("pathVotesRecent");
 

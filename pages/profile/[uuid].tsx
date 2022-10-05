@@ -20,13 +20,14 @@ import {
   getSubmissionsWithFilter,
 } from "../../utils/supabase";
 import { useProfile } from "../../components/Forms/ProfileSettingsForm";
+import { useMoralis } from "react-moralis";
 
 export default function Profile(props) {
   const router = useRouter();
   const { submissions } = props;
   const uuid = router.query.uuid;
   const isCurator = useIsCurator();
-  const { account } = useWeb3React();
+  const { account } = useMoralis();
 
   const promptToMakeProfile = isCurator && uuid === account;
 

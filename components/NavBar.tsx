@@ -9,13 +9,14 @@ import { useProfile } from "./Forms/ProfileSettingsForm";
 import { HollowButtonContainer, HollowInputContainer } from "./Hollow";
 import { SearchBar } from "./SearchBar";
 import { useSubmissionFlowOpen } from "./SubmissionFlow";
+import { useMoralis } from "react-moralis";
 
 export const NavBarMobileWeb = () => {
   const [, setOpen] = useSubmissionFlowOpen();
-  const { active } = useWeb3React();
+  const { isAuthenticated } = useMoralis();
   return (
     <div className="w-screen flex flex-row flex-none bg-phlote-container divide-x absolute bottom-0">
-      {active && (
+      {isAuthenticated && (
         <MobileNavBarElementContainer
           className="focus:opacity-25"
           onClick={(e) => {
@@ -38,7 +39,7 @@ const MobileNavBarElementContainer = tw.button`h-full w-full py-8 text-center `;
 export const NavBarDesktop = (props) => {
   const [, setOpen] = useSubmissionFlowOpen();
   const router = useRouter();
-  const { active, account } = useWeb3React();
+  const { isAuthenticated, account } = useMoralis();
   const profileQuery = useProfile(account);
   const isCuratorQuery = useIsCurator();
 
@@ -70,7 +71,7 @@ export const NavBarDesktop = (props) => {
             </HollowButtonContainer>
           </Link>
         </NavBarElementContainer>
-        {active && (
+        {isAuthenticated && (
           <NavBarElementContainer>
             <Link
               href={"/profile/[uuid]"}
@@ -85,7 +86,7 @@ export const NavBarDesktop = (props) => {
         )}
         {router.pathname == "/archive" && <SearchBar />}
 
-        {active && (
+        {isAuthenticated && (
           <NavBarElementContainer>
             <HollowButtonContainer
               className="flex justify-center items-center "
