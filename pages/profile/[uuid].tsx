@@ -22,6 +22,7 @@ import {
   getProfileForWallet,
   getSubmissionsWithFilter,
 } from "../../utils/supabase";
+import { Mirror, MirrorWithDispatcher } from "../../components/Mirror";
 import { toast } from "react-toastify";
 
 export default function Profile(props) {
@@ -197,12 +198,18 @@ export default function Profile(props) {
                     <ArchiveTableDataCell>
                       {lensPublication?.metadata?.description}
                     </ArchiveTableDataCell>
-                    <ArchiveTableDataCell
-                      onClick={() => {
-                        toast.success("You mirrored");
-                      }}
-                    >
-                      MIRROR
+                    <ArchiveTableDataCell>
+                      {lensProfile?.dispatcher?.canUseRelay ? (
+                        <MirrorWithDispatcher
+                          profileId={lensProfile.id}
+                          publicationId={lensPublication?.id}
+                        />
+                      ) : (
+                        <Mirror
+                          profileId={lensProfile.id}
+                          publicationId={lensPublication?.id}
+                        />
+                      )}
                     </ArchiveTableDataCell>
                     <ArchiveTableDataCell
                       onClick={() => {
