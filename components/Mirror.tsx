@@ -154,28 +154,17 @@ export const MirrorWithDispatcher: React.FC<{
       const result = await createMirrorViaDispatcherRequest(
         createMirrorRequest
       );
-
-      console.log("create mirror gasless", result);
-
-      console.log("create mirror: poll until indexed");
       const indexedResult = await pollUntilIndexed({ txId: result.txId });
 
-      console.log("create mirror: profile has been indexed", result);
-
       const logs = indexedResult.txReceipt!.logs;
-
-      console.log("create mirror: logs", logs);
 
       const topicId = utils.id(
         "MirrorCreated(uint256,uint256,uint256,uint256,bytes,address,bytes,uint256)"
       );
-      console.log("topicid we care about", topicId);
 
       const profileCreatedLog = logs.find((l: any) => l.topics[0] === topicId);
-      console.log("create mirror: created log", profileCreatedLog);
 
       let profileCreatedEventLog = profileCreatedLog!.topics;
-      console.log("create mirror: created event logs", profileCreatedEventLog);
 
       const publicationId = utils.defaultAbiCoder.decode(
         ["uint256"],
