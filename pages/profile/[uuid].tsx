@@ -23,6 +23,7 @@ import {
   getSubmissionsWithFilter,
 } from "../../utils/supabase";
 import { Mirror, MirrorWithDispatcher } from "../../components/Mirror";
+import { Comment, CommentWithDispatcher } from "../../components/Comment";
 import { toast } from "react-toastify";
 
 export default function Profile(props) {
@@ -218,12 +219,18 @@ export default function Profile(props) {
                     >
                       COLLECT
                     </ArchiveTableDataCell>
-                    <ArchiveTableDataCell
-                      onClick={() => {
-                        toast.success("You commented");
-                      }}
-                    >
-                      COMMENT
+                    <ArchiveTableDataCell>
+                      {lensProfile?.dispatcher?.canUseRelay ? (
+                        <CommentWithDispatcher
+                          profileId={lensProfile.id}
+                          publicationId={lensPublication?.id}
+                        />
+                      ) : (
+                        <Comment
+                          profileId={lensProfile.id}
+                          publicationId={lensPublication?.id}
+                        />
+                      )}
                     </ArchiveTableDataCell>
                   </ArchiveTableRow>
                   <tr className="h-4" />
