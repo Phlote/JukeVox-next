@@ -24,7 +24,7 @@ import {
 } from "../../utils/supabase";
 import { Mirror, MirrorWithDispatcher } from "../../components/Mirror";
 import { Comment, CommentWithDispatcher } from "../../components/Comment";
-import { toast } from "react-toastify";
+import { Collect } from "../../components/Collect";
 
 export default function Profile(props) {
   const router = useRouter();
@@ -212,12 +212,12 @@ export default function Profile(props) {
                         />
                       )}
                     </ArchiveTableDataCell>
-                    <ArchiveTableDataCell
-                      onClick={() => {
-                        toast.success("You collected");
-                      }}
-                    >
-                      COLLECT
+                    <ArchiveTableDataCell>
+                      <Collect
+                        profileId={lensProfile.id}
+                        profileAddress={lensProfile.ownedBy}
+                        publicationId={lensPublication?.id}
+                      />
                     </ArchiveTableDataCell>
                     <ArchiveTableDataCell>
                       {lensProfile?.dispatcher?.canUseRelay ? (
