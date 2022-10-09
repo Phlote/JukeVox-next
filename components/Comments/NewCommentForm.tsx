@@ -1,6 +1,5 @@
 // import { useSignInModal } from '@lib/components/comments/SignInModal';
 
-import { useWeb3React } from "@web3-react/core";
 import cn from "classnames";
 import cuid from "cuid";
 import { useEffect, useRef, useState } from "react";

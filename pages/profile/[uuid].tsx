@@ -1,4 +1,3 @@
-import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -27,7 +26,7 @@ export default function Profile(props) {
   const { submissions } = props;
   const uuid = router.query.uuid;
   const isCurator = useIsCurator();
-  const { account } = useMoralis();
+  const { account } = useMoralis(); // Moralis account is lowercase !!!!
 
   const promptToMakeProfile = isCurator && uuid === account;
 
@@ -160,34 +159,12 @@ Profile.getLayout = function getLayout(page) {
 
 // params will contain the wallet for each generated page.
 export async function getStaticProps({ params }) {
-  const { uuid } = params;
-
-  if (ethers.utils.isAddress(uuid)) {
-    return {
-      props: {
-        submissions: await getSubmissionsWithFilter(null, {
-          curatorWallet: uuid,
-        }),
-      },
-      revalidate: 60,
-    };
-  }
-
-  const username = uuid;
-
-  const profilesQuery = await supabase
-    .from("profiles")
-    .select()
-    .match({ username });
-
-  if (profilesQuery.error) throw profilesQuery.error;
-  //TODO: this is a bit dumb, we should have more general querying for profiles
-  const { wallet } = profilesQuery.data[0];
+  let { uuid } = params;
 
   return {
     props: {
-      submissions: await getSubmissionsWithFilter(null, { username }),
-      profile: await getProfileForWallet(wallet),
+      submissions: await getSubmissionsWithFilter(null, { curatorWallet: uuid }),
+      profile: await getProfileForWallet(uuid),
     },
     revalidate: 60,
   };
@@ -200,7 +177,8 @@ export async function getStaticPaths() {
 
   // IDEA: should we have two pages for each user?
   const UUIDs = submissionsQuery.data.map((submission: Submission) => {
-    return submission.curatorWallet;
+    return submission.curatorWallet; // Make sure to generate lower case links as a default
+    // Supabase db still has many uppercase links, thus this is necessary
   });
 
   // can be wallet or username

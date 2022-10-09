@@ -1,4 +1,3 @@
-import { useWeb3React } from "@web3-react/core";
 import { useQuery } from "react-query";
 import { nextApiRequest } from "../utils/";
 import { useMoralis } from "react-moralis";

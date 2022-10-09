@@ -1,4 +1,3 @@
-import { useWeb3React } from "@web3-react/core";
 import Image from "next/image";
 import React, { useState } from "react";
 import { useField, useForm } from "react-final-form-hooks";

@@ -1,4 +1,3 @@
-import { useWeb3React } from "@web3-react/core";
 import { atom, useAtom } from "jotai";
 import debounce from "lodash.debounce";
 import Image from "next/image";
@@ -17,7 +16,7 @@ interface SearchBar {
 }
 
 export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
-  const { isAuthenticated } = useMoralis();
+  const { isWeb3Enabled } = useMoralis();
   const [, setSearchTerm] = useSearchTerm();
   const router = useRouter();
 
@@ -55,7 +54,7 @@ export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
     <div className="w-80 h-16" style={{ lineHeight: "0.5rem" }}>
       <HollowInputContainer
         onClick={() => {
-          if (isAuthenticated) inputRef.current.focus();
+          if (isWeb3Enabled) inputRef.current.focus();
           else setOpen(true);
         }}
       >
@@ -67,8 +66,8 @@ export const SearchBar: React.FC<SearchBar> = ({ placeholder }) => {
           onChange={(e) => {
             setInputVal(e.target.value);
           }}
-          disabled={!isAuthenticated}
-          placeholder={isAuthenticated ? placeholder : "Connect your wallet to search"}
+          disabled={!isWeb3Enabled}
+          placeholder={isWeb3Enabled ? placeholder : "Connect your wallet to search"}
         />
       </HollowInputContainer>
     </div>

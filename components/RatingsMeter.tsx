@@ -1,4 +1,3 @@
-import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import Image from "next/image";
 import Link from "next/link";
@@ -6,8 +5,8 @@ import React from "react";
 import { toast } from "react-toastify";
 import { cosign } from "../controllers/cosigns";
 import { useIsCurator } from "../hooks/useIsCurator";
-import { verifyUser } from "../utils/web3";
 import { useProfile } from "./Forms/ProfileSettingsForm";
+import { useMoralis } from "react-moralis";
 
 export const RatingsMeter: React.FC<{
   submissionId: number;
@@ -16,7 +15,7 @@ export const RatingsMeter: React.FC<{
 }> = (props) => {
   const { submissionId, submitterWallet, initialCosigns } = props;
 
-  const { account, library } = useWeb3React();
+  const { isWeb3Enabled, account } = useMoralis();
   const [cosigns, setCosigns] = React.useState<string[]>([]);
 
   React.useEffect(() => {
@@ -37,8 +36,7 @@ export const RatingsMeter: React.FC<{
     e.stopPropagation();
     setCosigns([...cosigns, "pending"]);
     try {
-      const authenticated = await verifyUser(account, library);
-      if (!authenticated) {
+      if (!isWeb3Enabled) {
         throw "Authentication failed";
       }
       const newCosigns = await cosign(submissionId, account);

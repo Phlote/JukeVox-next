@@ -1,4 +1,3 @@
-import { useWeb3React } from "@web3-react/core";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";

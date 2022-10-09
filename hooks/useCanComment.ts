@@ -1,4 +1,3 @@
-import { useWeb3React } from "@web3-react/core";
 import { useRouter } from "next/router";
 import React from "react";
 import { supabase } from "../lib/supabase";

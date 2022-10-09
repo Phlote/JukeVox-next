@@ -1,16 +1,14 @@
-import { UserRejectedRequestError } from "@web3-react/injected-connector";
 import { atom, useAtom } from "jotai";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import useMetaMaskOnboarding from "../../hooks/web3/useMetaMaskOnboarding";
-import { Injected, WalletConnect } from "../../utils/connectors";
-import { cacheConnector, CachedConnector } from "../../utils/web3";
 import { HollowButtonContainer } from "../Hollow";
 import { Modal } from "../Modal";
 import { useRouter } from "next/router";
 import { getProfile } from "../../controllers/profiles";
 import { useMoralis } from "react-moralis";
-import { useWeb3React } from "@web3-react/core";
+import { UnsupportedChainIdError } from "@web3-react/core";
+import { toast } from "react-toastify";
 
 const connectWalletModalOpenAtom = atom<boolean>(false);
 export const useConnectWalletModalOpen = () => useAtom(connectWalletModalOpenAtom);
@@ -19,8 +17,8 @@ export const ConnectWalletModal = () => {
   const [open, setOpen] = useConnectWalletModalOpen();
   const { hasAuthError, authError, chainId } = useMoralis();
 
-  const isUnsupportedChainId = chainId === null;
-  // TODO: Test if this works
+  const isUnsupportedChainId = authError instanceof UnsupportedChainIdError;
+  // TODO: Throw error for unsupported blockchains?
 
   React.useEffect(() => {
     if (isUnsupportedChainId) setOpen(true);
@@ -45,11 +43,7 @@ export const ConnectWalletModal = () => {
         </p> */}
         <div className="flex-grow w-full flex justify-center items-center">
           <div className="w-3/4 grid grid-cols-1 gap-4">
-            <MyWalletConnectButton setOpen={setOpen} />
-            {/*<WalletConnectButton setOpen={setOpen} />*/}
-            {/*<div className="sm:block hidden">*/}
-            {/*  <InjectedConnectorButton setOpen={setOpen} />*/}
-            {/*</div>*/}
+            <ConnectWalletButtons setOpen={setOpen} />
 
             {isUnsupportedChainId && (
               <p className="text-red-500">
@@ -65,138 +59,8 @@ export const ConnectWalletModal = () => {
   );
 };
 
-export const MyWalletConnectButton = ({ setOpen }) => {
-  const { authenticate, isAuthenticated, isAuthenticating, user, account } = useMoralis();
-
-  const router = useRouter();
-
-  const [connecting, setConnecting] = useState(false);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      setConnecting(false);
-      setOpen(false);
-    }
-  }, [isAuthenticated, setOpen]);
-
-  useEffect(() => {
-    if (account && connecting) {
-      getProfile(account)
-        .then((profile) => {
-          if (!router.pathname.includes('archive'))
-            // console.log("SEND");
-            router.push("/archive");
-        })
-        .catch(error => {
-          // console.log("ERROR: ", error);
-          router.push("/editprofile");
-        });
-    }
-  }, [account]);
-
-  const login = async () => {
-    if (!isAuthenticated) {
-      setConnecting(true);
-      await authenticate({ signingMessage: "Log in using Moralis" })
-        .then((user) => {
-          console.log("logged in user:", user);
-          console.log(user!.get("ethAddress"));
-        })
-        .catch((error) => {
-          setConnecting(false);
-          console.log(error);
-        });
-    }
-  }
-
-  return (
-    <HollowButtonContainer
-      disabled={connecting}
-      onClick={login}
-    >
-      <div className="flex flex-row w-full justify-left items-center">
-        <Image
-          src="/walletconnect.svg"
-          height={32}
-          width={32}
-          alt={"WalletConnect"}
-        />
-        <div className="w-2" />
-        WalletConnect
-      </div>
-    </HollowButtonContainer>
-  );
-};
-
-// TODO: These components are almost duplicates, create a more general component that can be extended
-
-export const WalletConnectButton = ({ setOpen }) => {
-  const { active, error, activate, chainId, account, setError, deactivate } =
-    useWeb3React();
-  const router = useRouter();
-
-  const [connecting, setConnecting] = useState(false);
-  useEffect(() => {
-    if (active || error) {
-      setConnecting(false);
-    }
-  }, [active, error]);
-
-  useEffect(() => {
-    if (account && connecting) {
-      setOpen(false);
-      getProfile(account)
-        .then((profile) => {
-          if (!router.pathname.includes('archive'))
-            // console.log("SEND");
-            router.push("/archive");
-        })
-        .catch(error => {
-          // console.log("ERROR: ", error);
-          router.push("/editprofile");
-        });
-    }
-    // TODO: Do this instead only when user is interacting with the connect wallet modal
-  }, [account, setOpen]);
-
-  return (
-    <HollowButtonContainer
-      disabled={connecting}
-      onClick={() => {
-        setConnecting(true);
-        activate(WalletConnect, undefined, true)
-          .then(() => {
-            cacheConnector(CachedConnector.WalletConnect);
-          })
-          .catch((error) => {
-            console.error("this error: ", error);
-            // ignore the error if it's a user rejected request
-            if (error instanceof UserRejectedRequestError) {
-              setConnecting(false);
-            } else {
-              setError(error);
-            }
-          });
-      }}
-    >
-      <div className="flex flex-row w-full justify-left items-center">
-        <Image
-          src="/walletconnect.svg"
-          height={32}
-          width={32}
-          alt={"WalletConnect"}
-        />
-        <div className="w-2" />
-        WalletConnect
-      </div>
-    </HollowButtonContainer>
-  );
-};
-
-export const InjectedConnectorButton = ({ setOpen }) => {
-  const { active, error, activate, chainId, account, setError, deactivate } =
-    useWeb3React();
-  const router = useRouter();
+export const ConnectWalletButtons = ({ setOpen }) => {
+  const { authenticate, isWeb3Enabled, isAuthenticating, user, account } = useMoralis();
 
   const {
     isMetaMaskInstalled,
@@ -205,72 +69,89 @@ export const InjectedConnectorButton = ({ setOpen }) => {
     stopOnboarding,
   } = useMetaMaskOnboarding();
 
-  const [connecting, setConnecting] = useState(false);
-  useEffect(() => {
-    if (active || error) {
-      setConnecting(false);
-      stopOnboarding();
-    }
-  }, [active, error, stopOnboarding]);
+  const router = useRouter();
 
   useEffect(() => {
-    if (account && connecting) {
+    if (isWeb3Enabled) {
       setOpen(false);
+    }
+  }, [isWeb3Enabled, setOpen]);
+
+  useEffect(() => {
+    if (account && !isAuthenticating && isWeb3Enabled) {
       getProfile(account)
-        .then((profile) => {
+        .then(profile => {
           if (!router.pathname.includes('archive'))
-            // console.log("SEND");
             router.push("/archive");
         })
         .catch(error => {
-          // console.log("ERROR: ", error);
           router.push("/editprofile");
         });
     }
-    // TODO: Do this instead only when user is interacting with the connect wallet modal
-  }, [account, setOpen]);
+  }, [account, isWeb3Enabled, isAuthenticating]);
 
-  if (isWeb3Available) {
-    return (
+  const login = async (provider) => {
+    if (!isWeb3Enabled) {
+      await authenticate({ signingMessage: "Log in using Moralis", provider: provider })
+        .then((user) => {
+          console.log("logged in user:", user);
+          console.log(user!.get("ethAddress"));
+        })
+        .catch((error) => {
+          toast.error(error);
+          console.log(error);
+        });
+    }
+  }
+
+  if (!isWeb3Available) {
+    return <MetamaskOnboarding {...{ startOnboarding }}/>
+  }
+
+  return (
+    <>
       <HollowButtonContainer
-        className="w-full"
-        style={{ justifyContent: "center" }}
-        disabled={connecting}
-        onClick={() => {
-          setConnecting(true);
-          activate(Injected, undefined, true)
-            .then(() => {
-              cacheConnector(CachedConnector.Injected);
-            })
-            .catch((error) => {
-              // ignore the error if it's a user rejected request
-              if (error instanceof UserRejectedRequestError) {
-                setConnecting(false);
-              } else {
-                setError(error);
-              }
-            });
-        }}
+        disabled={isAuthenticating}
+        onClick={login}
       >
-        <InjectedButtonContent />
+        <MetamaskButton />
       </HollowButtonContainer>
-    );
-  } else
-    return (
-      <a href="https://metamask.io/download/">
-        <HollowButtonContainer className="w-full" onClick={startOnboarding}>
-          <InjectedButtonContent />
-        </HollowButtonContainer>
-      </a>
-    );
+      <HollowButtonContainer
+        disabled={isAuthenticating}
+        onClick={()=>login("walletconnect")}
+      >
+        <WalletConnectButton />
+      </HollowButtonContainer>
+    </>
+
+  );
 };
 
-const InjectedButtonContent = () => {
+const MetamaskButton = () => {
   return (
     <div className="flex flex-row w-full justify-left items-center">
       <Image src="/metamask.svg" height={32} width={32} alt={"Metamask"} />
       <div className="w-2" />
       Metamask
     </div>
-  );
-};
+  )
+}
+
+const MetamaskOnboarding = (startOnboarding) =>
+  <a href="https://metamask.io/download/" target="_blank" rel="noreferrer">
+    <HollowButtonContainer className="w-full" onClick={startOnboarding}>
+      <MetamaskButton />
+    </HollowButtonContainer>
+  </a>
+
+const WalletConnectButton = () =>
+  <div className="flex flex-row w-full justify-left items-center">
+    <Image
+      src="/walletconnect.svg"
+      height={32}
+      width={32}
+      alt={"WalletConnect"}
+    />
+    <div className="w-2" />
+    WalletConnect
+  </div>

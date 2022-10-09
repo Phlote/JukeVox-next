@@ -1,4 +1,3 @@
-import { useWeb3React } from "@web3-react/core";
 import cn from "classnames";
 import { CommentType, useComments } from "../../hooks/useComments";
 import { Heart } from "../../icons/Heart";

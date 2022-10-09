@@ -1,5 +1,4 @@
-import { useWeb3React } from "@web3-react/core";
-import React, { useEffect, useLayoutEffect } from "react";
+import React, { useEffect } from "react";
 import { Footer } from "../components/Footer";
 import { HollowInputContainer } from "../components/Hollow";
 import Layout from "../components/Layouts";
@@ -13,6 +12,7 @@ import { Submission } from "../types";
 import AboutUsContent from "../components/AboutUsContent";
 import HowItWorksContent from "../components/HowItWorksContent";
 import SubmissionScheduleContent from "../components/SubmissionScheduleContent";
+import { useMoralis } from "react-moralis";
 
 const Hero = ({ account, setOpen, setConnectWalletOpen }) => {
   return (
@@ -92,6 +92,7 @@ const RecentlyCurated = ({ account, setOpen, setConnectWalletOpen }) => {
     1280: { items: 3 },
     1700: { items: 4 },
   };
+  // TODO: Fetch number of items at a time for faster loading times
 
   let cosignedSubs = [];
   if (!(submissions.isLoading || submissions.isFetching) && !noResults) {
@@ -102,7 +103,6 @@ const RecentlyCurated = ({ account, setOpen, setConnectWalletOpen }) => {
       )
     )
   }
-  // console.log(cosignedSubs);
 
   return (
     <section className="flex items-center justify-center sm:py-20 sm:mt-5">
@@ -190,7 +190,7 @@ const Collaborators = () => {
 function Home() { // LANDING PAGE
   const [, setOpen] = useSubmissionFlowOpen();
 
-  const { account } = useWeb3React();
+  const { account } = useMoralis();
   const [, setConnectWalletOpen] = useConnectWalletModalOpen();
 
   return (
