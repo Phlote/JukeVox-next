@@ -35,12 +35,9 @@ export const SubmissionFlow: FC = (props) => {
   const onSubmit = async (submission: Submission) => {
     setLoading(true);
 
-    console.log(submission);
-    return '';
-
     try {
       if (!isWeb3Enabled) {
-        throw "Not isWeb3Enabled";
+        throw "Web3 is not enabled";
       }
       if (fileSelected) {
         submission.mediaFormat = fileSelected.type;
@@ -59,7 +56,8 @@ export const SubmissionFlow: FC = (props) => {
         },
       }
 
-      let contractResult = await fetch({ params: options });
+      // let contractResult = await fetch({ params: options });
+      // console.log(contractResult);
       // TEST: gotta see if this works
 
       const result = (await submit(submission, account)) as Submission;
