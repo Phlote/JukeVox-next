@@ -35,7 +35,10 @@ export const SubmissionFlow: FC = (props) => {
   const onSubmit = async (submission: Submission) => {
     setLoading(true);
 
+    console.log(submission);
+
     try {
+      console.log(isWeb3Enabled);
       if (!isWeb3Enabled) {
         throw "Web3 is not enabled";
       }
@@ -56,11 +59,15 @@ export const SubmissionFlow: FC = (props) => {
         },
       }
 
-      // let contractResult = await fetch({ params: options });
-      // console.log(contractResult);
+      console.log('Reaches here?');
+
+      let contractResult = await fetch({ params: options });
+      console.log(contractResult);
       // TEST: gotta see if this works
 
       const result = (await submit(submission, account)) as Submission;
+
+      console.log('Reaches here2?', result);
 
       setPage(1);
       queryClient.invalidateQueries("submissions");
