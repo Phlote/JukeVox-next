@@ -18,7 +18,7 @@ const submissionFlowOpen = atom<boolean>(false);
 export const useSubmissionFlowOpen = () => useAtom(submissionFlowOpen);
 
 export const SubmissionFlow: FC = (props) => {
-  const { account, isWeb3Enabled, enableWeb3, authenticate } = useMoralis();
+  const { account, isWeb3Enabled, enableWeb3, authenticate, isAuthenticated } = useMoralis();
   const { fetch: runContractFunction, data, error, isLoading, isFetching, } = useWeb3ExecuteFunction();
   const queryClient = useQueryClient();
 
@@ -36,10 +36,7 @@ export const SubmissionFlow: FC = (props) => {
   const onSubmit = async (submission: Submission) => {
     setLoading(true);
 
-    console.log(submission);
-
     try {
-      console.log(isWeb3Enabled);
       if (!isWeb3Enabled) {
         throw "Web3 is not enabled";
       }
@@ -50,21 +47,17 @@ export const SubmissionFlow: FC = (props) => {
         });
       }
 
-      console.log('Reaches here?');
-
-      await Moralis.enableWeb3();
+      console.log(submission.mediaURI);
 
       const options = {
         abi: CuratorABI,
         contractAddress: CuratorAddress,
-        functionName: "Submit",
+        functionName: "submit",
         params: {
-          ipfsURI: 'hello',
-          _isArtistSubmission: false, // Must be string
+          _ipfsURI: submission.mediaURI,
+          _isArtistSubmission: 'false', // Must be string
         },
       }
-
-      console.log(options);
 
       await runContractFunction({
         params: options,
@@ -77,11 +70,8 @@ export const SubmissionFlow: FC = (props) => {
       });
 
       console.log('contract result', error, data);
-      // TEST: gotta see if this works
 
       const result = (await submit(submission, account)) as Submission;
-
-      console.log('Reaches here2?', result);
 
       setPage(1);
       queryClient.invalidateQueries("submissions");

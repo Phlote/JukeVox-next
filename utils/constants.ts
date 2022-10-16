@@ -15,7 +15,7 @@ export enum SupportedChainId {
   // OPTIMISTIC_KOVAN = 69,
 
   POLYGON = 137,
-  // POLYGON_MUMBAI = 80001,
+  POLYGON_MUMBAI = 80001,
 }
 
 export const CHAIN_IDS_TO_NAMES = {
