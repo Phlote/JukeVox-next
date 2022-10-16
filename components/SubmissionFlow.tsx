@@ -10,15 +10,16 @@ import { uploadFiles } from "./FileUpload";
 import { useProfile } from "./Forms/ProfileSettingsForm";
 import { SubmissionForm } from "./Forms/SubmissionForm";
 import { HollowButton, HollowButtonContainer } from "./Hollow";
-import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
+import { useApiContract, useMoralis, useWeb3Contract, useWeb3ExecuteFunction } from "react-moralis";
 import { CuratorABI, CuratorAddress } from "../solidity/utils/Curator";
+import Moralis from "moralis-v1";
 
 const submissionFlowOpen = atom<boolean>(false);
 export const useSubmissionFlowOpen = () => useAtom(submissionFlowOpen);
 
 export const SubmissionFlow: FC = (props) => {
-  const { account, isWeb3Enabled } = useMoralis();
-  const { data, error, fetch, isFetching, isLoading } = useWeb3ExecuteFunction();
+  const { account, isWeb3Enabled, enableWeb3, authenticate } = useMoralis();
+  const { fetch: runContractFunction, data, error, isLoading, isFetching, } = useWeb3ExecuteFunction();
   const queryClient = useQueryClient();
 
   const [page, setPage] = useState<number>(0);
@@ -49,20 +50,33 @@ export const SubmissionFlow: FC = (props) => {
         });
       }
 
+      console.log('Reaches here?');
+
+      await Moralis.enableWeb3();
+
       const options = {
         abi: CuratorABI,
         contractAddress: CuratorAddress,
         functionName: "Submit",
         params: {
-          submitter: account,
-          ipfsURI: submission.mediaURI // needs to be the ipfs: url
+          ipfsURI: 'hello',
+          _isArtistSubmission: false, // Must be string
         },
       }
 
-      console.log('Reaches here?');
+      console.log(options);
 
-      let contractResult = await fetch({ params: options });
-      console.log(contractResult);
+      await runContractFunction({
+        params: options,
+        onError: (err) => {
+          console.error(err);
+        },
+        onSuccess: (res) => {
+          console.log(res);
+        },
+      });
+
+      console.log('contract result', error, data);
       // TEST: gotta see if this works
 
       const result = (await submit(submission, account)) as Submission;
