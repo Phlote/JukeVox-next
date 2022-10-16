@@ -26,13 +26,14 @@ import ZoraNFTERC721Drop_ABI from "@zoralabs/nft-drop-contracts/dist/artifacts/E
 import ZoraNFTReserveAuctionCoreEth_ABI from "@zoralabs/v3/dist/artifacts/ReserveAuctionCoreEth.sol/ReserveAuctionCoreEth.json";
 import { ethers } from "hardhat";
 import { config } from "hardhat";
+import { BytesLike } from "ethers";
 require("dotenv").config();
 
 // * Deployment Variables *
 
 // setting variables for API key, deployer key, contract address, desired network
 const API_KEY = process.env.ALCHEMY_KEY;
-const PRIVATE_KEY = process.env.DEPLOYER_KEY;
+const PRIVATE_KEY: BytesLike = process.env.DEPLOYER_KEY || "";
 const ZoraNFTCreatorProxy_ADDRESS_RINKEBY = "0x2d2acD205bd6d9D0B3E79990e093768375AD3a30";
 const ZoraNFTCreatorProxy_ADDRESS_MAINNET = "0xF74B146ce44CC162b601deC3BE331784DB111DC1";
 const ZoraNFTReserveAuctionCoreEth_ABI_ADDRESS_RINKEBY = "0x3feAf4c06211680e5969A86aDB1423Fc8AD9e994";
@@ -47,6 +48,7 @@ const proxyAddress = ZoraNFTCreatorProxy_ADDRESS_RINKEBY;
 // * Initiating Call *
 
 // instantiating ethers provider
+let network;
 const alchemyProvider = new ethers.providers.AlchemyProvider((network = "goerli"), API_KEY);
 
 // instantiating ethers signer
@@ -137,7 +139,7 @@ async function main() {
 
   //Address where you want to mint the NFT going for auction
   const adminMint = await ZoraNFTERC721Drop.adminMint(adminWallet, 1);
-  adminMintTxResult = await adminMint.wait();
+  const adminMintTxResult = await adminMint.wait();
   console.log("1/1 NFT has been minted to Deployer Wallet");
   console.log("Transaction hash =", adminMintTxResult.logs[0].transactionHash);
 
