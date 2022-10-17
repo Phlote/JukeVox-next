@@ -34,6 +34,7 @@ require("dotenv").config();
 // setting variables for API key, deployer key, contract address, desired network
 const API_KEY = process.env.ALCHEMY_KEY;
 const PRIVATE_KEY: BytesLike = process.env.DEPLOYER_KEY || "";
+
 const ZoraNFTCreatorProxy_ADDRESS_GOERLI = "0xb9583D05Ba9ba8f7F14CCEe3Da10D2bc0A72f519";
 const ZoraNFTCreatorProxy_ADDRESS_MAINNET = "0xF74B146ce44CC162b601deC3BE331784DB111DC1";
 const ZoraNFTReserveAuctionCoreEth_ABI_ADDRESS_GOERLI = "0x2506D9F5A2b0E1A2619bCCe01CD3e7C289A13163";
@@ -58,6 +59,7 @@ const signer = new ethers.Wallet(PRIVATE_KEY, alchemyProvider);
 const ZoraNFTCreatorProxy = new ethers.Contract(proxyAddress, ZoraNFTCreatorV1_ABI.abi, signer);
 
 // instantiating ZoraNFTReserveAuctionCoreEth contract to call later
+
 const ZoraNFTReserveAuctionCoreEth = new ethers.Contract(ZoraNFTReserveAuctionCoreEth_ABI_ADDRESS_GOERLI, ZoraNFTReserveAuctionCoreEth_ABI.abi, signer);
 
 // ========== Contract Call Setup ==========
