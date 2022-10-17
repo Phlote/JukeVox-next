@@ -17,6 +17,10 @@ import Moralis from "moralis-v1";
 const submissionFlowOpen = atom<boolean>(false);
 export const useSubmissionFlowOpen = () => useAtom(submissionFlowOpen);
 
+type Hotdrop = {
+  hash?: string
+}
+
 export const SubmissionFlow: FC = (props) => {
   const { account, isWeb3Enabled, enableWeb3, authenticate, isAuthenticated } = useMoralis();
   const { fetch: runContractFunction, data, error, isLoading, isFetching, } = useWeb3ExecuteFunction();
@@ -24,6 +28,7 @@ export const SubmissionFlow: FC = (props) => {
 
   const [page, setPage] = useState<number>(0);
   const [fileSelected, setFileSelected] = useState<File>();
+  const [contractRes, setContractRes] = useState<Hotdrop>({});
 
   const [open] = useSubmissionFlowOpen();
   useEffect(() => {
@@ -47,7 +52,8 @@ export const SubmissionFlow: FC = (props) => {
         });
       }
 
-      console.log(submission.mediaURI);
+      console.log(submission.mediaURI, fileSelected);
+      // https://ipfs.moralis.io:2053/ipfs/QmXHN1h5GFshiiUm2Wx7gjZjFxxyFUfU21TDwzJ1fQETSY
 
       const options = {
         abi: CuratorABI,
@@ -66,16 +72,17 @@ export const SubmissionFlow: FC = (props) => {
         },
         onSuccess: (res) => {
           console.log(res);
+          setContractRes(res);
         },
       });
 
-      console.log('contract result', error, data);
+      console.log('contract result', data);
 
-      const result = (await submit(submission, account)) as Submission;
+      // const result = (await submit(submission, account)) as Submission;
 
       setPage(1);
       queryClient.invalidateQueries("submissions");
-      await revalidate(profile?.data?.username, result.id);
+      // await revalidate(profile?.data?.username, result.id);
     } catch (e) {
       toast.error(e);
       console.error(e);
@@ -100,7 +107,15 @@ export const SubmissionFlow: FC = (props) => {
       )}
       {page === 1 && (
         <div className="flex flex-col items-center text-sm mt-8 gap-8">
-          <p>Congratulations! Your submission has been added</p>
+          <p className='w-full text-center'>Congratulations! Your submission has been added</p>
+          {
+            contractRes.hash && (
+              <div>
+                <p className='w-full text-center'>Here is the hash for your submission:</p>
+                <span className='w-full text-center text-[8px]'>{contractRes.hash}</span>
+              </div>
+            )
+          }
           {/* <a
             className="underline flex"
             rel="noreferrer"
@@ -129,7 +144,7 @@ export const SubmissionFlow: FC = (props) => {
             <Image src="/arrow.svg" alt={"link"} height={12} width={12} />
           </a> */}
 
-          <HollowButtonContainer className="w-1/2" onClick={() => setPage(0)}>
+          <HollowButtonContainer className="w-1/2" onClick={() => {setPage(0); }}>
             <HollowButton>Submit Another</HollowButton>
           </HollowButtonContainer>
         </div>
