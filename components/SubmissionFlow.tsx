@@ -24,7 +24,7 @@ type ContractRes = {
 }
 
 export const SubmissionFlow: FC = (props) => {
-  const { account, isWeb3Enabled, enableWeb3, authenticate, isAuthenticated } = useMoralis();
+  const { account, isWeb3Enabled } = useMoralis();
   const { fetch: runContractFunction, data, error, isLoading, isFetching, } = useWeb3ExecuteFunction();
   const queryClient = useQueryClient();
 
@@ -83,7 +83,7 @@ export const SubmissionFlow: FC = (props) => {
         },
         onSuccess: (res) => {
           console.log(res);
-          setContractRes(res);
+          setContractRes(res);// Need to store the hash on the db
         },
       });
 
