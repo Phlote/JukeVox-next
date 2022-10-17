@@ -17,8 +17,10 @@ import Moralis from "moralis-v1";
 const submissionFlowOpen = atom<boolean>(false);
 export const useSubmissionFlowOpen = () => useAtom(submissionFlowOpen);
 
-type Hotdrop = {
-  hash?: string
+type ContractRes = {
+  hash?: string,
+  code?: number,
+  message?: string
 }
 
 export const SubmissionFlow: FC = (props) => {
@@ -28,18 +30,27 @@ export const SubmissionFlow: FC = (props) => {
 
   const [page, setPage] = useState<number>(0);
   const [fileSelected, setFileSelected] = useState<File>();
-  const [contractRes, setContractRes] = useState<Hotdrop>({});
+  const [contractRes, setContractRes] = useState<ContractRes>({});
 
   const [open] = useSubmissionFlowOpen();
   useEffect(() => {
     if (!open) setPage(0);
   }, [open]);
 
-  const [loading, setLoading] = useState<boolean>(false);
+  useEffect(() => {
+    if (isFetching) setLoading('Signing Contract...');
+    if (isLoading) setLoading('User action required');
+  }, [isLoading, isFetching]);
+
+  console.log({ isLoading, isFetching });
+  // isLoading: user action required - (metamask popup open)
+  // isFetching: signing contract and getting results from it
+
+  const [loading, setLoading] = useState<boolean | string>(false);
   const profile = useProfile(account);
 
   const onSubmit = async (submission: Submission) => {
-    setLoading(true);
+    setLoading("Interface with wallet");
 
     try {
       if (!isWeb3Enabled) {
@@ -52,7 +63,6 @@ export const SubmissionFlow: FC = (props) => {
         });
       }
 
-      console.log(submission.mediaURI, fileSelected);
       // https://ipfs.moralis.io:2053/ipfs/QmXHN1h5GFshiiUm2Wx7gjZjFxxyFUfU21TDwzJ1fQETSY
 
       const options = {
@@ -68,7 +78,8 @@ export const SubmissionFlow: FC = (props) => {
       await runContractFunction({
         params: options,
         onError: (err) => {
-          console.error(err);
+          setContractRes(err);
+          throw err;
         },
         onSuccess: (res) => {
           console.log(res);
@@ -107,10 +118,10 @@ export const SubmissionFlow: FC = (props) => {
       )}
       {page === 1 && (
         <div className="flex flex-col items-center text-sm mt-8 gap-8">
-          <p className='w-full text-center'>Congratulations! Your submission has been added</p>
           {
-            contractRes.hash && (
+            contractRes.hash && ( // Is every submission an nft or only files?
               <div>
+                <p className='w-full text-center'>Congratulations! Your submission has been added</p>
                 <p className='w-full text-center'>Here is the hash for your submission:</p>
                 <span className='w-full text-center text-[8px]'>{contractRes.hash}</span>
               </div>
