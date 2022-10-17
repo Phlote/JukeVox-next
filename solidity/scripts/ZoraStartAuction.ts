@@ -34,16 +34,16 @@ require("dotenv").config();
 // setting variables for API key, deployer key, contract address, desired network
 const API_KEY = process.env.ALCHEMY_KEY;
 const PRIVATE_KEY: BytesLike = process.env.DEPLOYER_KEY || "";
-const ZoraNFTCreatorProxy_ADDRESS_RINKEBY = "0x2d2acD205bd6d9D0B3E79990e093768375AD3a30";
+const ZoraNFTCreatorProxy_ADDRESS_GOERLI = "0xb9583D05Ba9ba8f7F14CCEe3Da10D2bc0A72f519";
 const ZoraNFTCreatorProxy_ADDRESS_MAINNET = "0xF74B146ce44CC162b601deC3BE331784DB111DC1";
-const ZoraNFTReserveAuctionCoreEth_ABI_ADDRESS_RINKEBY = "0x3feAf4c06211680e5969A86aDB1423Fc8AD9e994";
+const ZoraNFTReserveAuctionCoreEth_ABI_ADDRESS_GOERLI = "0x2506D9F5A2b0E1A2619bCCe01CD3e7C289A13163";
 const ZoraNFTReserveAuctionCoreEth_ADDRESS_MAINNET = "0x5f7072E1fA7c01dfAc7Cf54289621AFAaD2184d0";
 
 // * Admin Wallet Address *
 const adminWallet = "0xb60D2E146903852A94271B9A71CF45aa94277eB5";
 
-// set proxyAddress = to rinkeby or mainnet variable
-const proxyAddress = ZoraNFTCreatorProxy_ADDRESS_RINKEBY;
+// set proxyAddress = to Goerli or mainnet variable
+const proxyAddress = ZoraNFTCreatorProxy_ADDRESS_GOERLI;
 
 // * Initiating Call *
 
@@ -58,7 +58,7 @@ const signer = new ethers.Wallet(PRIVATE_KEY, alchemyProvider);
 const ZoraNFTCreatorProxy = new ethers.Contract(proxyAddress, ZoraNFTCreatorV1_ABI.abi, signer);
 
 // instantiating ZoraNFTReserveAuctionCoreEth contract to call later
-const ZoraNFTReserveAuctionCoreEth = new ethers.Contract(ZoraNFTReserveAuctionCoreEth_ABI_ADDRESS_RINKEBY, ZoraNFTReserveAuctionCoreEth_ABI.abi, signer);
+const ZoraNFTReserveAuctionCoreEth = new ethers.Contract(ZoraNFTReserveAuctionCoreEth_ABI_ADDRESS_GOERLI, ZoraNFTReserveAuctionCoreEth_ABI.abi, signer);
 
 // ========== Contract Call Setup ==========
 
