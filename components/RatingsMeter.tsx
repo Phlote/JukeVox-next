@@ -6,7 +6,8 @@ import { toast } from "react-toastify";
 import { cosign } from "../controllers/cosigns";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { useProfile } from "./Forms/ProfileSettingsForm";
-import { useMoralis } from "react-moralis";
+import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
+import { CuratorABI, CuratorAddress } from "../solidity/utils/Curator";
 
 export const RatingsMeter: React.FC<{
   submissionId: number;
@@ -16,6 +17,8 @@ export const RatingsMeter: React.FC<{
   const { submissionId, submitterWallet, initialCosigns } = props;
 
   const { isWeb3Enabled, account } = useMoralis();
+  const { fetch: runContractFunction, data, error, isLoading, isFetching, } = useWeb3ExecuteFunction();
+
   const [cosigns, setCosigns] = React.useState<string[]>([]);
 
   React.useEffect(() => {
@@ -40,7 +43,30 @@ export const RatingsMeter: React.FC<{
         throw "Authentication failed";
       }
       const newCosigns = await cosign(submissionId, account);
-      if (newCosigns) setCosigns(newCosigns);
+      if (newCosigns) {
+        setCosigns(newCosigns);
+
+        const options = {
+          abi: CuratorABI,
+          contractAddress: CuratorAddress,
+          functionName: "curate",
+          params: {
+            _hotdrop: submissionId // need the hotdrop hash here from db
+          },
+        }
+
+        await runContractFunction({
+          params: options,
+          onError: (err) => {
+            setContractRes(err);
+            throw err;
+          },
+          onSuccess: (res) => {
+            console.log(res);
+            setContractRes(res);
+          },
+        });
+      }
     } catch (e) {
       console.error(e);
       toast.error(e.message);
