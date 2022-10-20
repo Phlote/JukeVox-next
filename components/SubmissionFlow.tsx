@@ -4,24 +4,17 @@ import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { revalidate } from "../controllers/revalidate";
 import { submit } from "../controllers/submissions";
-import { Submission } from "../types";
+import { ContractRes, Submission } from "../types";
 import { verifyUser } from "../utils/web3";
 import { uploadFiles } from "./FileUpload";
 import { useProfile } from "./Forms/ProfileSettingsForm";
 import { SubmissionForm } from "./Forms/SubmissionForm";
 import { HollowButton, HollowButtonContainer } from "./Hollow";
-import { useApiContract, useMoralis, useWeb3Contract, useWeb3ExecuteFunction } from "react-moralis";
+import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import { CuratorABI, CuratorAddress } from "../solidity/utils/Curator";
-import Moralis from "moralis-v1";
 
 const submissionFlowOpen = atom<boolean>(false);
 export const useSubmissionFlowOpen = () => useAtom(submissionFlowOpen);
-
-type ContractRes = {
-  hash?: string,
-  code?: number,
-  message?: string
-}
 
 export const SubmissionFlow: FC = (props) => {
   const { account, isWeb3Enabled } = useMoralis();

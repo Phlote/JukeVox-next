@@ -35,6 +35,12 @@ export interface SubmissionElasticSearchDocument {
   submission_time: string;
 }
 
+export type ContractRes = {
+  hash?: string,
+  code?: number,
+  message?: string
+}
+
 //TODO: will this be used for submission NFTs? I would imagine no, so its name should rename
 export interface CurationNFTMetadata {
   title: string;

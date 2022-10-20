@@ -1,13 +1,14 @@
 import { ethers } from "ethers";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { cosign } from "../controllers/cosigns";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { useProfile } from "./Forms/ProfileSettingsForm";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import { CuratorABI, CuratorAddress } from "../solidity/utils/Curator";
+import { ContractRes } from "../types";
 
 export const RatingsMeter: React.FC<{
   submissionId: number;
@@ -18,6 +19,7 @@ export const RatingsMeter: React.FC<{
 
   const { isWeb3Enabled, account } = useMoralis();
   const { fetch: runContractFunction, data, error, isLoading, isFetching, } = useWeb3ExecuteFunction();
+  const [contractRes, setContractRes] = useState<ContractRes>({});
 
   const [cosigns, setCosigns] = React.useState<string[]>([]);
 
