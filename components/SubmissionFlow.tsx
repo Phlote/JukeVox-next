@@ -88,11 +88,11 @@ export const SubmissionFlow: FC = (props) => {
 
       console.log('contract result', data);
 
-      // const result = (await submit(submission, account)) as Submission;
+      const result = (await submit(submission, account)) as Submission; // Comment these to test without submitting to DB
 
       setPage(1);
       queryClient.invalidateQueries("submissions");
-      // await revalidate(profile?.data?.username, result.id);
+      await revalidate(profile?.data?.username, result.id); // Comment these to test without submitting to DB
     } catch (e) {
       toast.error(e);
       console.error(e);
