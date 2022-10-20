@@ -167,7 +167,7 @@ export const ArchiveTableRow = styled.tr`
 `;
 
 export const ArchiveTableDataCell = styled.td`
-  ${tw`bg-phlote-container text-white h-14 items-center`}
+  ${tw`bg-phlote-container text-white h-14 items-center break-words`}
 
   &:first-child {
     border-radius: 999px 0 0 999px;
