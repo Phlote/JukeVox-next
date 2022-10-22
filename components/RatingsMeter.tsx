@@ -2,12 +2,13 @@ import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import { cosign } from "../controllers/cosigns";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { verifyUser } from "../utils/web3";
 import { useProfile } from "./Forms/ProfileSettingsForm";
+import ReactTooltip from "react-tooltip";
 
 export const RatingsMeter: React.FC<{
   submissionId: number;
@@ -18,6 +19,8 @@ export const RatingsMeter: React.FC<{
 
   const { account, library } = useWeb3React();
   const [cosigns, setCosigns] = React.useState<string[]>([]);
+
+  useEffect(() => ReactTooltip.rebuild() as () => (void),[]);
 
   React.useEffect(() => {
     if (initialCosigns) {
@@ -51,7 +54,7 @@ export const RatingsMeter: React.FC<{
   };
 
   return (
-    <div className={`flex gap-1 justify-center `}>
+    <div className={`flex gap-1 justify-center `} data-tip={!canCosign ? 'Connect your wallet to cosign.' : ''}>
       {Array(5)
         .fill(null)
         .map((_, idx) => {
@@ -104,6 +107,7 @@ interface Cosign {
 
 const Cosign: React.FC<Cosign> = (props) => {
   const { wallet } = props;
+
   if (!ethers.utils.isAddress(wallet)) {
     throw "Not a valid wallet";
   }
