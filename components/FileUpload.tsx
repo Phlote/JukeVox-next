@@ -96,8 +96,11 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   const [isHovering, setIsHovering] = useState<boolean>();
 
   useEffect(()=>{
-    isHovering ? onFocus() : onBlur();
-  }, [isHovering])
+    if (isDragActive){
+      onFocus();
+      onBlur();
+    }
+  }, [isDragActive])
 
   return (
     <HollowInputContainer
