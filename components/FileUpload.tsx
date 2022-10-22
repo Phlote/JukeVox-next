@@ -10,6 +10,12 @@ interface FileUploadProps {
   wallet: string;
   fileSelected: File;
   setFileSelected: React.Dispatch<React.SetStateAction<File>>;
+  onChange: (field: File) => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
+  closeOnSelect?: boolean;
+  error?: string;
+  touched?: boolean;
 }
 
 interface uploadFilesArguments {
@@ -21,8 +27,6 @@ export const uploadFiles = async (args: uploadFilesArguments) => {
 
   try {
     let id = acceptedFile.name + '' + Date.now();
-
-
 
     const uploadAudioFile = await supabase.storage
       .from("files")
@@ -51,6 +55,11 @@ export const uploadFiles = async (args: uploadFilesArguments) => {
 export const FileUpload: React.FC<FileUploadProps> = ({
   fileSelected,
   setFileSelected,
+  onFocus,
+  onBlur,
+  onChange,
+  error,
+  touched
 }) => {
   useEffect(() => ReactTooltip.rebuild() as () => (void),[]);
 
@@ -72,6 +81,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         });
       }
 
+      onChange(acceptedFiles[0]);
       setFileSelected(acceptedFiles[0]);
     },
     [setFileSelected]
@@ -84,6 +94,11 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   });
 
   const [isHovering, setIsHovering] = useState<boolean>();
+
+  useEffect(()=>{
+    isHovering ? onFocus() : onBlur();
+  }, [isHovering])
+
   return (
     <HollowInputContainer
       type="form"
@@ -99,6 +114,9 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         fileSelected={fileSelected}
         fileName={fileSelected?.name}
       />
+      {touched && error && (
+        <span className="text-red-600 ml-2">{error}</span>
+      )}
     </HollowInputContainer>
   );
 };
