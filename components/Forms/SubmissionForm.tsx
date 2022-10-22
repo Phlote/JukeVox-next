@@ -21,14 +21,13 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
   });
 
   const mediaURI = useField("mediaURI", form);
-  const mediaFile = useField("mediaFile", form);
   const mediaType = useField("mediaType", form);
   const artistName = useField("artistName", form);
   const mediaTitle = useField("mediaTitle", form);
   const marketplace = useField("marketplace", form);
   const artistWallet = useField("artistWallet", form);
   const tags = useField("tags", form);
-  
+
   const { account } = useWeb3React();
 
   return (
@@ -74,8 +73,6 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
 
       {mediaType.input.value === "File" ? (
             <FileUpload
-              {...mediaFile.input}
-              {...mediaFile.meta}
               wallet={account}
               fileSelected={fileSelected}
               setFileSelected={setFileSelected}
@@ -136,7 +133,10 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
             disabled={
               !(metamaskLoading
                 ? false
-                : valid)//TODO: do mediaType checks in the validator file
+                : (mediaType.input.value === "File" &&
+                    valid &&
+                    !!fileSelected) ||
+                  (mediaType.input.value === "Link" && valid))//TODO: do mediaType checks in the validator file
             }
           >
             {metamaskLoading ? "Waiting for Wallet..." : "Mint"}
