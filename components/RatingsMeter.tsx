@@ -44,30 +44,31 @@ export const RatingsMeter: React.FC<{
       if (!isWeb3Enabled) {
         throw "Authentication failed";
       }
+
+      const options = {
+        abi: CuratorABI,
+        contractAddress: CuratorAddress,
+        functionName: "curate",
+        params: {
+          _hotdrop: '0x1551c685483314616f53fa70e19d044d90332ce29475a4fa2e8ce9c453abf44d' // need the hotdrop hash here from db
+        },
+      }
+
+      await runContractFunction({
+        params: options,
+        onError: (err) => {
+          setContractRes(err);
+          throw err;
+        },
+        onSuccess: (res) => {
+          console.log(res);
+          setContractRes(res);
+        },
+      });
+
       const newCosigns = await cosign(submissionId, account);
       if (newCosigns) {
         setCosigns(newCosigns);
-
-        const options = {
-          abi: CuratorABI,
-          contractAddress: CuratorAddress,
-          functionName: "curate",
-          params: {
-            _hotdrop: submissionId // need the hotdrop hash here from db
-          },
-        }
-
-        await runContractFunction({
-          params: options,
-          onError: (err) => {
-            setContractRes(err);
-            throw err;
-          },
-          onSuccess: (res) => {
-            console.log(res);
-            setContractRes(res);
-          },
-        });
       }
     } catch (e) {
       console.error(e);
