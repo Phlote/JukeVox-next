@@ -36,7 +36,7 @@ contract Hotdrop is
     /*uint256 public ID_SUBMISSION = 1;*/
     uint256 public artistCosignerNFT = 0;
     uint256 public curatorCosignerNFT = 1;
-    uint256 public submitterCopyNFT = 2;
+    uint256 public submitterEditionNFT = 2;
     /*uint256 public ID_CURATION   = 1;*/
     /*uint256 public ID_COSIGN     = 2;*/
 
@@ -108,7 +108,7 @@ contract Hotdrop is
             submission.cosigners[totalSupply(curatorCosignerNFT)] = account;
         }
         else if(id == 2){
-            require(totalSupply(submitterCopyNFT) <= 1, "You cannot mint more");
+            require(totalSupply(submitterEditionNFT) <= 1, "You cannot mint more");
         }
         _mint(account, id, amount, data);
     }
