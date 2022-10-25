@@ -57,12 +57,6 @@ contract Hotdrop is
 
     Submission public submission;
 
-    /*
-        Add events:
-        - new mint
-        - new cosign
-
-    */
 
     modifier cosignerExists(address _cosigner) {
         bool allowed = true;

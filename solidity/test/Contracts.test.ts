@@ -88,7 +88,7 @@ describe("Contracts: ", function () {
     })
 
     describe("Hotdrop.sol",async function(){
-        it.only("check artist NFT is minted", async function(){
+        it("check artist NFT is minted", async function(){
             let _ipfsURI = "ipfs://QmTz1aAoS6MXfHpGZpJ9YAGH5wrDsAteN8UHmkHMxVoNJk/1337.json"
             let ArtistSubmission = false
             drop = await newHotdrop(curator, deployer, _ipfsURI,ArtistSubmission)
