@@ -88,6 +88,14 @@ describe("Contracts: ", function () {
     })
 
     describe("Hotdrop.sol",async function(){
+        it("check artist NFT is minted", async function(){
+            let _ipfsURI = "ipfs://QmTz1aAoS6MXfHpGZpJ9YAGH5wrDsAteN8UHmkHMxVoNJk/1337.json"
+            let ArtistSubmission = false
+            drop = await newHotdrop(curator, deployer, _ipfsURI,ArtistSubmission)
+            const _drop = await ethers.getContractAt("Hotdrop", drop as string)
+            expect(await _drop.totalSupply(2)).to.eq(1)
+        })
+
         it("Anyone can submit a hotdrop (artist + curator)", async function(){
             const artistURI= "www.aws.ca/urlOfHotDropArtist"
             const ArtistSubmission = true
