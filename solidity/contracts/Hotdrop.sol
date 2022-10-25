@@ -36,6 +36,7 @@ contract Hotdrop is
     /*uint256 public ID_SUBMISSION = 1;*/
     uint256 public artistCosignerNFT = 0;
     uint256 public curatorCosignerNFT = 1;
+    uint256 public submitterCopyNFT = 2;
     /*uint256 public ID_CURATION   = 1;*/
     /*uint256 public ID_COSIGN     = 2;*/
 
@@ -55,6 +56,13 @@ contract Hotdrop is
     }
 
     Submission public submission;
+
+    /*
+        Add events:
+        - new mint
+        - new cosign
+
+    */
 
     modifier cosignerExists(address _cosigner) {
         bool allowed = true;
@@ -98,12 +106,15 @@ contract Hotdrop is
 
     function mint(address account, uint256 id, uint256 amount, bytes memory data) public onlyOwner {
         if(id == 0){
-            require(totalSupply(artistCosignerNFT) < submission.cosigners.length, "can't mint more");
+            require(totalSupply(artistCosignerNFT) < submission.cosigners.length, "You cannot mint more");
             submission.cosigners[totalSupply(artistCosignerNFT)] = account;
         }
-        else{
-            require(totalSupply(curatorCosignerNFT) < submission.cosigners.length, "can't mint more");
+        else if(id == 1){
+            require(totalSupply(curatorCosignerNFT) < submission.cosigners.length, "You cannot mint more");
             submission.cosigners[totalSupply(curatorCosignerNFT)] = account;
+        }
+        else if(id == 2){
+            require(totalSupply(submitterCopyNFT) <= 1, "You cannot mint more");
         }
         _mint(account, id, amount, data);
     }

@@ -152,6 +152,8 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
             _isArtistSubmission,
             hotdrop
         );
+        bytes memory mintData = abi.encodePacked(hotdrop.totalSupply(hotdrop.submitterCopyNFT())+1);
+        hotdrop.mint(msg.sender,hotdrop.submitterCopyNFT(),1,mintData);
         return hotdrop;
     }
 
