@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, RefObject } from "react";
 
-export const useVideo = (videoEl) => {
+export const useVideo = (videoEl: RefObject<HTMLVideoElement>) => {
   const [video, setVideo] = useState(null);
   const [playing, setPlaying] = useState(false);
 
   const toggle = () => setPlaying(!playing);
+
+  const pause = () => videoEl.current?.pause();
 
   useEffect(() => {
     playing ? videoEl.current?.play() : videoEl.current?.pause();
@@ -17,5 +19,5 @@ export const useVideo = (videoEl) => {
     };
   }, [video]);
 
-  return [playing, toggle] as [boolean, () => void];
+  return [playing, toggle, pause] as [boolean, () => void, () => void];
 };

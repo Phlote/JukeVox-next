@@ -46,7 +46,7 @@ const SubmissionCard = ({ submission }) => {
           <div>
             <a
               href={submission.mediaURI}
-              className="text-3xl hover:opacity-50"
+              className="text-3xl hover:opacity-50 break-words"
             >
               {submission.mediaTitle}
             </a>
@@ -65,13 +65,13 @@ const SubmissionCard = ({ submission }) => {
 
         <div className="flex h-24">
           <div>
-            <h2 className="text-base opacity-60"> Artist</h2>
+            <h2 className="text-base opacity-60 break-words"> Artist</h2>
             <div className="h-2" />
             <a>{submission.artistName}</a>
           </div>
           <div className="flex-grow" />
           <div>
-            <h2 className="text-base opacity-60"> Curator</h2>
+            <h2 className="text-base opacity-60 break-words"> Curator</h2>
             <div className="h-2" />
             <Username
               username={submission.username}

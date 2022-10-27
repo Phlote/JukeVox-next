@@ -152,6 +152,8 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
             _isArtistSubmission,
             hotdrop
         );
+        bytes memory mintData = abi.encodePacked(hotdrop.totalSupply(hotdrop.submitterEditionNFT())+1);
+        hotdrop.mint(msg.sender,hotdrop.submitterEditionNFT(),1,mintData);
         return hotdrop;
     }
 
@@ -171,10 +173,10 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
             
            require(phloteToken.transferFrom(msg.sender, address(this),mintPrice));
             uint256 artistReward = mintPrice - _hotdrop.COSIGN_REWARD();
-            phloteToken.transfer(hotdropSubmitter, artistReward);
+            phloteToken.mint(hotdropSubmitter, artistReward);
 
             // send the remaining amount to treasury
-            phloteToken.transfer(treasury, mintPrice - artistReward);
+            phloteToken.mint(treasury, mintPrice - artistReward);
 
         }
 
@@ -182,13 +184,13 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
             require(_hotdrop.totalSupply(_hotdrop.curatorCosignerNFT()) < 5, "Sorry! We have reached the maximum cosigns on this record.");
             _hotdrop.cosign(msg.sender);
 
-            // send the reward to the original submitter
-            phloteToken.transferFrom(treasury, hotdropSubmitter, _hotdrop.COSIGN_REWARD());
+            // send the reward to the original submitter  
+            phloteToken.mint(hotdropSubmitter, _hotdrop.COSIGN_REWARD());
 
             //send cosign rewards to previous cosigners, to reward early cosigners
             for (uint256 i = 0; i < cosignNumber; i++) {
             
-                phloteToken.transferFrom(treasury, cosigners[i], _hotdrop.COSIGN_REWARD());
+                phloteToken.mint(cosigners[i], _hotdrop.COSIGN_REWARD());
             }
         }
         

@@ -36,10 +36,10 @@ const config: HardhatUserConfig = {
     currency: "USD",
   },
   networks: {
-      // rinkeby: {
-      //   url: `https://eth-rinkeby.alchemyapi.io/v2/${process.env.ALCHEMY_APIKEY}`,
-      //   accounts: [DEPLOYER_KEY],
-      // },
+      goerli: {
+        url: `https://eth-goerli.g.alchemy.com/v2/${process.env.ALCHEMY_GOERLI_APIKEY}`,
+        accounts: [DEPLOYER_KEY],
+      },
       mumbai: {
         url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.ALCHEMY_APIKEY}`,
         accounts: [DEPLOYER_KEY],

@@ -30,7 +30,7 @@ export const Username: React.FC<Username> = (props) => {
     return (
       <Link
         href={"/profile/[uuid]"}
-        as={`/profile/${username ? username : wallet}`}
+        as={`/profile/${wallet}`}
         passHref
       >
         <a
