@@ -45,7 +45,12 @@ export const validateSubmission = async (values: Submission) => {
       }
     }
   } else { // File
-    if (!values.mediaFile){
+    if (values.mediaFile) { // File is present
+      let isNameValid = /[^a-z0-9. _-]/i.test(values.mediaFile.name);
+      if (isNameValid){ // Non alphanumeric file name
+        errors.mediaFile = "File name must be alphanumeric.";
+      }
+    } else {
       errors.mediaFile = "File required.";
     }
   }

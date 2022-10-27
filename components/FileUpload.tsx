@@ -95,30 +95,25 @@ export const FileUpload: React.FC<FileUploadProps> = ({
 
   const [isHovering, setIsHovering] = useState<boolean>();
 
-  useEffect(()=>{
-    if (isDragActive){
-      onFocus();
-      onBlur();
-    }
-  }, [isDragActive])
-
   return (
     <HollowInputContainer
       type="form"
       {...getRootProps()}
+      onMouseUp={()=>{onFocus();onBlur();}} // Detects if users has interacted with button, if so set touched to true.
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
       data-tip='Max file size: 50mb'
     >
       <HollowInput {...getInputProps()} />
-      <DropzoneText
-        isHovering={isHovering}
-        isDragActive={isDragActive}
-        fileSelected={fileSelected}
-        fileName={fileSelected?.name}
-      />
-      {touched && error && (
+      {touched && error ? (
         <span className="text-red-600 ml-2">{error}</span>
+      ): (
+        <DropzoneText
+          isHovering={isHovering}
+          isDragActive={isDragActive}
+          fileSelected={fileSelected}
+          fileName={fileSelected?.name}
+        />
       )}
     </HollowInputContainer>
   );
