@@ -10,7 +10,7 @@ export default async function handler(
     const { submissionId, cosignerWallet } = request.body;
 
     const submissionsQuery = await supabase
-      .from("submissions")
+      .from('Curator_Submission_Table')
       .select()
       .match({ id: submissionId });
 
@@ -34,7 +34,7 @@ export default async function handler(
     } else updatedCosigns = [cosignerWallet];
 
     const { data, error } = await supabase
-      .from("submissions")
+      .from('Curator_Submission_Table')
       .upsert({ id, cosigns: updatedCosigns });
 
     if (error || data?.length === 0) throw error;

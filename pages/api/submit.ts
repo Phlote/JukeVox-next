@@ -35,7 +35,7 @@ export default async function handler(
     submissionWithSubmitterInfo.nftMetadata = uri;
 
     const submissionsInsert = await supabase
-      .from("submissions")
+      .from('Curator_Submission_Table')
       .insert([submissionWithSubmitterInfo]);
 
     if (submissionsInsert.error) throw submissionsInsert.error;

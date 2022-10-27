@@ -13,7 +13,7 @@ const addRootComments = async () => {
 
   supabase.from("comments").delete();
 
-  const submissions = await supabase.from("submissions").select();
+  const submissions = await supabase.from('Curator_Submission_Table').select();
   if (submissions.error) {
     console.error("error getting submissions");
     return;

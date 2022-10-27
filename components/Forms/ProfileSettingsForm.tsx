@@ -51,7 +51,7 @@ export const ProfileSettingsForm = ({ wallet }) => {
       if (error) throw error;
 
       const submissionsUpdate = await supabase
-        .from("submissions")
+        .from('Curator_Submission_Table')
         .update({ username })
         .match({ curatorWallet: wallet });
 

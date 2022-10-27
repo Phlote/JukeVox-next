@@ -9,7 +9,7 @@ export const getSubmissionsWithFilter = async (
   filters: Partial<Submission> = null,
   page?: number
 ) => {
-  if (!selectStatement) selectStatement = supabase.from("submissions").select();
+  if (!selectStatement) selectStatement = supabase.from('Curator_Submission_Table').select();
 
   if (filters) selectStatement = selectStatement.match(filters);
 
@@ -29,12 +29,12 @@ export const getSubmissionsWithFilter = async (
 };
 
 export const getSubmissionById = async (id: number) => {
-  return supabase.from('submissions').select().match({ id });
+  return supabase.from('Curator_Submission_Table').select().match({ id });
 }
 
 export const getProfileForWallet = async (wallet: string) => {
   const profilesQuery = await supabase
-    .from("profiles")
+    .from('Users_Table')
     .select()
     .match({ wallet });
 
@@ -51,7 +51,7 @@ export const getProfileForWallet = async (wallet: string) => {
   // get number of cosigns received
 
   const submissionsQuery = await supabase
-    .from("submissions")
+    .from('Curator_Submission_Table')
     .select()
     .match({ curatorWallet: wallet });
 
@@ -65,7 +65,7 @@ export const getProfileForWallet = async (wallet: string) => {
 
   // get number of cosigns given
 
-  const submissionsQueryAll = await supabase.from("submissions").select();
+  const submissionsQueryAll = await supabase.from('Curator_Submission_Table').select();
 
   const cosignsGiven = submissionsQueryAll.data
     .flatMap((submission: Submission) => submission.cosigns)

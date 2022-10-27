@@ -19,7 +19,7 @@ export default async function handler(
       await res.unstable_revalidate(`/profile/${username}`);
 
       const submissionsQuery = await supabase
-        .from("submissions")
+        .from('Curator_Submission_Table')
         .select()
         .match({ username });
 

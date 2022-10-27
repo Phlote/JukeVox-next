@@ -18,7 +18,7 @@ export const useCanComment = () => {
   React.useEffect(() => {
     const getWallet = async () => {
       const res = await supabase
-        .from("submissions")
+        .from('Curator_Submission_Table')
         .select()
         .match({ id: id.toString() });
 
