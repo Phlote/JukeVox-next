@@ -100,6 +100,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       type="form"
       {...getRootProps()}
       onMouseUp={()=>{onFocus();onBlur();}} // Detects if users has interacted with button, if so set touched to true.
+      // This mouseup also prevents the click at once, I tried many ways of detecting the interaction but none work 100%, need some light on this :TODO
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
       data-tip='Max file size: 50mb'
