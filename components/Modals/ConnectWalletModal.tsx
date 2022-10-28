@@ -62,6 +62,8 @@ export const ConnectWalletModal = () => {
 export const ConnectWalletButtons = ({ setOpen }) => {
   const { authenticate, isWeb3Enabled, isAuthenticating, user, account } = useMoralis();
 
+  // TODO: next-dev.js?3515:25 Warning: Expected server HTML to contain a matching <div> in <div>. ?
+
   const {
     isMetaMaskInstalled,
     isWeb3Available,

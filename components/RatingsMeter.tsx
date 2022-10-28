@@ -86,6 +86,7 @@ export const RatingsMeter: React.FC<{
             } else {
               return (
                 <div
+                  key={`${submissionId}-cosign-${idx}`}
                   className="h-6 w-6 relative"
                   onClick={(e) => e.stopPropagation()}
                 >

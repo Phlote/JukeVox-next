@@ -86,6 +86,7 @@ const RecentlyCurated = ({ account, setOpen, setConnectWalletOpen }) => {
     !submissions.isLoading &&
     !submissions.isFetching &&
     submissions.data?.pages[0].submissions.length === 0;
+  //TODO: This causes an error when fetching, right now I am just catching it and ignoring it.
 
   const responsive = {
     640: { items: 1 },
@@ -99,7 +100,7 @@ const RecentlyCurated = ({ account, setOpen, setConnectWalletOpen }) => {
   if (!(submissions.isLoading || submissions.isFetching) && !noResults) {
     submissions?.data?.pages.map((group, i) =>
       group?.submissions?.map((submission: Submission) => {
-          cosignedSubs.push(<SubmissionCard submission={submission} />)
+          cosignedSubs.push(<SubmissionCard key={i} submission={submission} />)
         }
       )
     )
