@@ -13,6 +13,7 @@ import AboutUsContent from "../components/AboutUsContent";
 import HowItWorksContent from "../components/HowItWorksContent";
 import SubmissionScheduleContent from "../components/SubmissionScheduleContent";
 import { useMoralis } from "react-moralis";
+import TempHowItWorks from "../components/TempHowItWorks";
 
 const Hero = ({ account, setOpen, setConnectWalletOpen }) => {
   return (
@@ -25,7 +26,7 @@ const Hero = ({ account, setOpen, setConnectWalletOpen }) => {
           <h1 className="text-6xl">Phlote</h1>
           <div className="h-16"></div>
           <p>
-            Decentralized music label run by a passionate community of music lovers.
+            Phlote delivers the best new genre-bending music from around the world to our members as exclusive music NFTs.
           </p>
           <div className="h-16"></div>
           <div className="w-80 mt-80 h-16 cursor-pointer hover:opacity-75 shadow-sm">
@@ -143,12 +144,9 @@ const RecentlyCurated = ({ account, setOpen, setConnectWalletOpen }) => {
       </div>
       {/* Mobile */}
       <div className="sm:hidden w-9/12 sm:w-8/12 2xl:w-full flex flex-col justify-center items-center pt-10 gap-4">
-        <h1 className="text-center italic text-5xl stroke-text">
-          Recently Curated
-        </h1>
-        <h3 className="text-center italic opacity-70 font-light">
-          These are some of the most wanted songs as voted on by the Phlote community.
-        </h3>
+        {/*<h1 className="text-center italic text-5xl stroke-text">*/}
+        {/*  Recently Curated*/}
+        {/*</h1>*/}
         <div className="w-[320px] lg:w-[670px] xl:w-[1100px] 2xl:w-[1400px] flex justify-center">
           <AliceCarousel
             responsive={responsive}
@@ -158,6 +156,9 @@ const RecentlyCurated = ({ account, setOpen, setConnectWalletOpen }) => {
             disableDotsControls
           />
         </div>
+        <h3 className="text-center italic opacity-70 font-light">
+          These are some of the most wanted songs as voted on by the Phlote community.
+        </h3>
       </div>
     </section>
   );
@@ -202,10 +203,11 @@ function Home() { // LANDING PAGE
       <div className="sm:hidden font-roboto"> {/* Mobile */}
         <Hero account={account} setOpen={setOpen} setConnectWalletOpen={setConnectWalletOpen} />
         <RecentlyCurated account={account} setOpen={setOpen} setConnectWalletOpen={setConnectWalletOpen} />
-        <AboutUsContent />
-        <HowItWorksContent />
-        <SubmissionScheduleContent />
-        <Collaborators />
+        <TempHowItWorks/>
+        {/*<AboutUsContent />*/}
+        {/*<HowItWorksContent />*/}
+        {/*<SubmissionScheduleContent />*/}
+        {/*<Collaborators />*/}
       </div>
     </>
   );

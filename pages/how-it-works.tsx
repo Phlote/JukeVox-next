@@ -1,14 +1,14 @@
 import React from "react";
 import { Footer } from "../components/Footer";
 import Layout from "../components/Layouts";
-import HowItWorksContent from "../components/HowItWorksContent";
-import SubmissionScheduleContent from "../components/SubmissionScheduleContent";
+import TempHowItWorks from "../components/TempHowItWorks";
 
 function HowItWorks() { // LANDING PAGE
   return (
     <div className="font-roboto">
-      <HowItWorksContent />
-      <SubmissionScheduleContent />
+      {/*<HowItWorksContent />*/}
+      {/*<SubmissionScheduleContent />*/}
+      <TempHowItWorks/>
     </div>
   );
 }
