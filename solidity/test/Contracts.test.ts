@@ -489,7 +489,7 @@ describe("Contracts: ", function () {
 
         })
 
-        it("set splits correctly", async function() {
+        it("should set splits correctly", async function() {
             let _ipfsURI = "ipfs://QmTz1aAoS6MXfHpGZpJ9YAGH5wrDsAteN8UHmkHMxVoNJk/1337.json"
             let ArtistSubmission = true
             drop = await newHotdrop(curator, user6, _ipfsURI,ArtistSubmission)
@@ -503,6 +503,19 @@ describe("Contracts: ", function () {
             //Case 3: correct splits
             expect(await curator.setHotDropSplits(_drop.address,70,30))
 
+        })
+
+        it.only("should set price correctly", async function() {
+            let _ipfsURI = "ipfs://QmTz1aAoS6MXfHpGZpJ9YAGH5wrDsAteN8UHmkHMxVoNJk/1337.json"
+            let ArtistSubmission = true
+            drop = await newHotdrop(curator, user6, _ipfsURI,ArtistSubmission)
+            const _drop = await ethers.getContractAt("Hotdrop", drop as string)
+            
+            expect(await _drop.publicPrice()).to.eq(10000000000000000n)
+            
+            await curator.setHotdropPrice(_drop.address, 30000000000000000n)
+
+            expect(await _drop.publicPrice()).to.eq(30000000000000000n)
         })
 
     }) 

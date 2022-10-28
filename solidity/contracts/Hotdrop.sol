@@ -134,6 +134,10 @@ contract Hotdrop is
         totalSupplyLeft = _amount;
     }
 
+    function setPrice(uint256 _price) external onlyOwner{
+        publicPrice = _price;
+    }
+
     function setSplits (uint256 _artist, uint256 _phlote) external onlyOwner {
         require(_artist + _phlote == 100, "The 2 splits must total 100");
         artistSplit = _artist;

@@ -139,6 +139,10 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
         _hotdrop.setURI(_newuri);
     }
 
+    function setHotdropPrice(Hotdrop _hotdrop, uint256 _price) public onlyOwner {
+        _hotdrop.setPrice(_price);
+    }
+
 
     /// @dev Give an address the `CURATOR` role.
     /// @param _newCurator The address of the curator who has enough PhloteVote tokes to curate for us.
