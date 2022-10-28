@@ -14,6 +14,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 
+import "hardhat/console.sol";
 
 /// @custom:security-contact nohackplz@phlote.xyz
 contract Hotdrop is
@@ -32,13 +33,25 @@ contract Hotdrop is
 
     IERC20 public phloteToken;
 
+    enum SaleState {
+        Disabled,
+        PublicSale
+    }
+
+    SaleState public saleState = SaleState.Disabled;
+
     // types of NFTs in this contract
-    /*uint256 public ID_SUBMISSION = 1;*/
     uint256 public artistCosignerNFT = 0;
     uint256 public curatorCosignerNFT = 1;
     uint256 public submitterEditionNFT = 2;
-    /*uint256 public ID_CURATION   = 1;*/
-    /*uint256 public ID_COSIGN     = 2;*/
+    uint256 public regularEditionNFT = 3;
+  
+
+    //Sale Variables
+    uint256 public publicPrice;
+    uint256 public artistSplit = 90;
+    uint256 public phloteSplit = 10;
+    uint256 public totalSupplyLeft;
 
     uint256 public COSIGN_REWARD = 15;
     uint256[5] public COSIGN_COSTS = [
@@ -49,6 +62,12 @@ contract Hotdrop is
         90
     ];
 
+    address payable artist;
+    address payable phloteTreasury = payable(0x14dC79964da2C08b23698B3D3cc7Ca32193d9955);
+
+    event SaleStateChanged(uint256 prevState,uint256 nextState, uint256 timeStamp);
+    event Mint(address minter, uint256 amount);
+
     struct Submission {
         address submitter;
         bool isArtistSubmission;
@@ -56,6 +75,11 @@ contract Hotdrop is
     }
 
     Submission public submission;
+
+    modifier whenSaleIsActive() {
+        require(saleState != SaleState.Disabled, "Sale is not active");
+        _;
+    }
 
 
     modifier cosignerExists(address _cosigner) {
@@ -83,11 +107,19 @@ contract Hotdrop is
         address[5] memory cosigners;
         submission = Submission(_submitter,_isArtistSubmission, cosigners);
         phloteToken = IERC20(0x8eF43798e0f8Bb4C7531e1e12D02894ac34F3A61);
+        totalSupplyLeft = 20; //the public supply
+        publicPrice = 10000000000000000;
+        artist = payable(_submitter);
         return;
     }
 
-    function setURI(string memory newuri) public onlyOwner {
-        _setURI(newuri);
+    
+    /*////////////////////////////////
+                Owner Only
+    ///////////////////////////////*/
+
+    function setURI(string memory _newuri) public onlyOwner {
+        _setURI(_newuri);
     }
 
     function pause() public onlyOwner {
@@ -96,6 +128,52 @@ contract Hotdrop is
 
     function unpause() public onlyOwner {
         _unpause();
+    }
+
+    function setTotalSupplyLeft(uint256 _amount) external onlyOwner{
+        totalSupplyLeft = _amount;
+    }
+
+    function setSplits (uint256 _artist, uint256 _phlote) external onlyOwner {
+        require(_artist + _phlote == 100, "The 2 splits must total 100");
+        artistSplit = _artist;
+        phloteSplit = _phlote;
+    }
+
+    function setWallets(address payable _artist, address payable _phlote) external onlyOwner {
+        artist = _artist;
+        phloteTreasury = _phlote;
+    }
+
+    function setSaleState(uint256 _state) public onlyOwner {
+        uint256 prevState = uint256(saleState);
+        saleState = SaleState(_state);
+        emit SaleStateChanged(prevState, _state, block.timestamp);
+    }
+
+    function emergencyWithdraw(address payable _to, uint256 _amount) external onlyOwner {
+        require(_to != address(0), "Cannot recover ETH to the 0 address");
+        _to.transfer(_amount);
+    }
+
+    /*////////////////////////////////
+                Minting
+    ///////////////////////////////*/
+
+    function saleMint(uint256 amount) external payable whenSaleIsActive {
+        require(amount <= totalSupplyLeft, "Minting would exceed cap");
+        require(publicPrice * amount == msg.value, "Value sent is not correct");
+        totalSupplyLeft -= amount;
+        if(totalSupplyLeft == 0){
+            uint256 balance = address(this).balance;
+            //send 90% of sale proceedings to phlote
+            artist.transfer(balance * artistSplit /100);
+            //send 10% of sale proceedings to phlote
+            phloteTreasury.transfer(balance * phloteSplit /100);
+        }
+        bytes memory mintData = abi.encodePacked(totalSupply(regularEditionNFT)+1);
+        _mint(msg.sender, regularEditionNFT, amount, mintData);
+        emit Mint(msg.sender, amount);
     }
 
     function mint(address account, uint256 id, uint256 amount, bytes memory data) public onlyOwner {
@@ -129,6 +207,11 @@ contract Hotdrop is
     override(ERC1155, ERC1155Supply) {
         super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
     }
+
+    
+    /*////////////////////////////////
+                Cosigns
+    ///////////////////////////////*/
 
     function cosign(address _cosigner) public cosignerExists(_cosigner) onlyOwner returns (uint256) {
         uint256 cosignType;

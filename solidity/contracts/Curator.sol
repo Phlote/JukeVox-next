@@ -18,6 +18,7 @@ import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
 import "./PhloteVote.sol";
 import "./Hotdrop.sol";
 
+import "hardhat/console.sol";
 
 /// @title A factor and manager for "Hotdrop" NFTs (Phlote user-submitted-content).
 /// @author Zachary Fogg <me@zfo.gg>
@@ -54,6 +55,7 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
         Hotdrop hotdrop,
         uint256 cosignEdition
     );
+
 
     modifier onlyOwner() {
         require(msg.sender == admin, "You do not have access to this function.");
@@ -121,6 +123,22 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
         curatorAdmin = _curatorAdmin;
     }
 
+    function setHotDropSaleState(Hotdrop _hotdrop, uint256 _state) public onlyOwner {
+        _hotdrop.setSaleState(_state);
+    }
+
+    function setHotDropTotalSupplyLeft(Hotdrop _hotdrop, uint256 _amount) public onlyOwner {
+        _hotdrop.setTotalSupplyLeft(_amount);
+    }
+
+    function setHotDropSplits(Hotdrop _hotdrop,uint256 _artist, uint256 _phlote) public onlyOwner{
+        _hotdrop.setSplits(_artist, _phlote);
+    }
+
+    function setHotdropURI(Hotdrop _hotdrop, string memory _newuri) public onlyOwner {
+        _hotdrop.setURI(_newuri);
+    }
+
 
     /// @dev Give an address the `CURATOR` role.
     /// @param _newCurator The address of the curator who has enough PhloteVote tokes to curate for us.
@@ -167,16 +185,21 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
         if(isArtistSubmission == true){
             require(_hotdrop.totalSupply(_hotdrop.artistCosignerNFT()) < 5, "Sorry! We have reached the maximum cosigns on this record.");
             uint256 mintPrice = _hotdrop.COSIGN_COSTS(cosignNumber);
-
+            require(phloteToken.balanceOf(msg.sender)>= mintPrice, "You do not have enough Phlote Tokens in your balance for this transaction");
             _hotdrop.cosign(msg.sender);
+
             // send the reward to the artist
-            
-           require(phloteToken.transferFrom(msg.sender, address(this),mintPrice));
+            require(phloteToken.transferFrom(msg.sender, address(this), mintPrice));
             uint256 artistReward = mintPrice - _hotdrop.COSIGN_REWARD();
             phloteToken.mint(hotdropSubmitter, artistReward);
 
             // send the remaining amount to treasury
             phloteToken.mint(treasury, mintPrice - artistReward);
+            
+            // if this is the 5th cosign, enable sale
+            if(_hotdrop.totalSupply(_hotdrop.artistCosignerNFT()) == 5){
+                _hotdrop.setSaleState(1);
+            }
 
         }
 
