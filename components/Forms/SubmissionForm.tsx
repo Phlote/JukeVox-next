@@ -136,7 +136,7 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
             disabled={
               !(metamaskLoading
                 ? false
-                : valid)//TODO: do mediaType checks in the validator file
+                : valid)
             }
           >
             {metamaskLoading ? "Waiting for Wallet..." : "Mint"}
