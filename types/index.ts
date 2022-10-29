@@ -14,6 +14,7 @@ export interface Submission {
   mediaTitle: string;
   mediaFormat: string;
   mediaURI: string;
+  mediaFile: File;
   marketplace: string;
   tags?: string[];
   cosigns?: string[];

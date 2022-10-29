@@ -23,7 +23,7 @@ export const urlIsDuplicate = async (mediaURI: string) => {
 
 export const validateSubmission = async (values: Submission) => {
   const errors: Record<string, string> = {};
-  if (values.mediaType !== "File") {
+  if (values.mediaType !== "File") { // Link
     if (!values.mediaURI) {
       errors.mediaURI = "Required";
     } else if (values.mediaURI) {
@@ -43,6 +43,15 @@ export const validateSubmission = async (values: Submission) => {
           errors.mediaURI = "Duplicate submission";
         }
       }
+    }
+  } else { // File
+    if (values.mediaFile) { // File is present
+      let isNameValid = /[^a-z0-9. _-]/i.test(values.mediaFile.name);
+      if (isNameValid){ // Non alphanumeric file name
+        errors.mediaFile = "File name must be alphanumeric.";
+      }
+    } else {
+      errors.mediaFile = "File required.";
     }
   }
   if (!values.mediaType) {
