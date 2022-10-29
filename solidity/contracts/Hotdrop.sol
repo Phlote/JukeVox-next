@@ -44,14 +44,14 @@ contract Hotdrop is
     uint256 public artistCosignerNFT = 0;
     uint256 public curatorCosignerNFT = 1;
     uint256 public submitterEditionNFT = 2;
-    uint256 public regularEditionNFT = 3;
-  
+    uint256 public regularEditionNFT = 3;  
 
     //Sale Variables
     uint256 public publicPrice;
     uint256 public artistSplit = 90;
     uint256 public phloteSplit = 10;
     uint256 public totalSupplyLeft;
+
 
     uint256 public COSIGN_REWARD = 15;
     uint256[5] public COSIGN_COSTS = [
@@ -80,7 +80,6 @@ contract Hotdrop is
         require(saleState != SaleState.Disabled, "Sale is not active");
         _;
     }
-
 
     modifier cosignerExists(address _cosigner) {
         bool allowed = true;

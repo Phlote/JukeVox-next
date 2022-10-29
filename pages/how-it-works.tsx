@@ -4,8 +4,7 @@ import { Footer } from "../components/Footer";
 import Layout from "../components/Layouts";
 import { useConnectWalletModalOpen } from "../components/Modals/ConnectWalletModal";
 import { useSubmissionFlowOpen } from "../components/SubmissionFlow";
-import HowItWorksContent from "../components/HowItWorksContent";
-import SubmissionScheduleContent from "../components/SubmissionScheduleContent";
+import TempHowItWorks from "../components/TempHowItWorks";
 
 function HowItWorks() { // LANDING PAGE
   const [, setOpen] = useSubmissionFlowOpen();
@@ -15,8 +14,9 @@ function HowItWorks() { // LANDING PAGE
 
   return (
     <div className="font-roboto">
-      <HowItWorksContent />
-      <SubmissionScheduleContent />
+      {/*<HowItWorksContent />*/}
+      {/*<SubmissionScheduleContent />*/}
+      <TempHowItWorks/>
     </div>
   );
 }
