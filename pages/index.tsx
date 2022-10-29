@@ -198,13 +198,13 @@ function Home() { // LANDING PAGE
   return (
     <>
       <div className="hidden sm:block font-roboto"> {/* Desktop */}
-        {/*<RecentlyCurated account={account} setOpen={setOpen} setConnectWalletOpen={setConnectWalletOpen} />*/}
+        <RecentlyCurated account={account} setOpen={setOpen} setConnectWalletOpen={setConnectWalletOpen} />
         {/*TODO: Try removing recentlyCurated to see if it stops the errors*/}
         {/*<Collaborators />*/}
       </div>
       <div className="sm:hidden font-roboto"> {/* Mobile */}
         <Hero account={account} setOpen={setOpen} setConnectWalletOpen={setConnectWalletOpen} />
-        {/*<RecentlyCurated account={account} setOpen={setOpen} setConnectWalletOpen={setConnectWalletOpen} />*/}
+        <RecentlyCurated account={account} setOpen={setOpen} setConnectWalletOpen={setConnectWalletOpen} />
         <TempHowItWorks/>
         {/*<AboutUsContent />*/}
         {/*<HowItWorksContent />*/}
