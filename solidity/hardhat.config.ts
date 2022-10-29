@@ -36,6 +36,9 @@ const config: HardhatUserConfig = {
     currency: "USD",
   },
   networks: {
+      hardhat: {
+        allowUnlimitedContractSize: true
+      },
       goerli: {
         url: `https://eth-goerli.g.alchemy.com/v2/${process.env.ALCHEMY_GOERLI_APIKEY}`,
         accounts: [DEPLOYER_KEY],

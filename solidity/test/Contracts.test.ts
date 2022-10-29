@@ -1,7 +1,7 @@
 import { ethers } from "hardhat";
 import { expect } from "chai";
 import hre from "hardhat";
-import { deploy } from "@openzeppelin/hardhat-upgrades/dist/utils";
+import { BigNumberish } from "ethers";
 
 describe("Contracts: ", function () {
     let deployer: any, user1: any, user2 : any, user3:any, user4:any, user5:any, user6:any, treasury:any;
@@ -10,6 +10,7 @@ describe("Contracts: ", function () {
     let drop: any;
     let usersArr: Array<any>;
     let phlote_MAX_SUPPLY = 14000000000000000000;
+    let phloteTreausry = "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955"
 
     //change these when changing the contract!!!
     //Contract configs:
@@ -298,5 +299,225 @@ describe("Contracts: ", function () {
         })
 
     })
+
+    describe("Marketplace Functionality: Curator.sol & Hotdrop.sol", async function(){
+        it("should be able to pause and unpause sale from curator.sol", async function(){
+            let _ipfsURI = "ipfs://QmTz1aAoS6MXfHpGZpJ9YAGH5wrDsAteN8UHmkHMxVoNJk/1337.json"
+            let ArtistSubmission = false
+            drop = await newHotdrop(curator, deployer, _ipfsURI,ArtistSubmission)
+            const _drop = await ethers.getContractAt("Hotdrop", drop as string)
+            expect(await _drop.saleState()).to.eq(0)
+            await curator.setHotDropSaleState(_drop.address,1)
+            expect(await _drop.saleState()).to.eq(1)
+        })
+
+        it("should toggle sale on immedietly once the record has 5 cosigns", async function(){
+            let _ipfsURI = "ipfs://QmTz1aAoS6MXfHpGZpJ9YAGH5wrDsAteN8UHmkHMxVoNJk/1337.json"
+            let ArtistSubmission = true
+            drop = await newHotdrop(curator, deployer, _ipfsURI,ArtistSubmission)
+            const _drop = await ethers.getContractAt("Hotdrop", drop as string)
+            await approveSignersTokens([0,1,2,3,4,5])
+            //curate 5 times
+            for(let i = 0;i<5;i++){
+                await curateSigners([i],drop);
+            }
+            
+            expect(await _drop.saleState()).to.eq(1)
+        })
+
+        it("should be able to purchase NFTs once a submission receives 5 co-signs",async function(){
+            let _ipfsURI = "ipfs://QmTz1aAoS6MXfHpGZpJ9YAGH5wrDsAteN8UHmkHMxVoNJk/1337.json"
+            let ArtistSubmission = true
+            drop = await newHotdrop(curator, deployer, _ipfsURI,ArtistSubmission)
+            const _drop = await ethers.getContractAt("Hotdrop", drop as string)
+            await approveSignersTokens([0,1,2,3,4,5])
+            //curate 5 times
+            for(let i = 0;i<5;i++){
+                await curateSigners([i],drop);
+            }
+
+            await _drop.connect(user1).saleMint(1,{
+                value: hre.ethers.BigNumber.from("10000000000000000"),
+            })
+            expect(await _drop.balanceOf(user1.address,3)).to.eq(1);
+            expect(await _drop.totalSupply(3)).to.eq(1);
+        })
+
+        it("should limit sale to totalSupplyLeft in hotdrop", async function(){
+            let _ipfsURI = "ipfs://QmTz1aAoS6MXfHpGZpJ9YAGH5wrDsAteN8UHmkHMxVoNJk/1337.json"
+            let ArtistSubmission = true
+            drop = await newHotdrop(curator, deployer, _ipfsURI,ArtistSubmission)
+            const _drop = await ethers.getContractAt("Hotdrop", drop as string)
+            await approveSignersTokens([0,1,2,3,4,5])
+            //curate 5 times
+            for(let i = 0;i<5;i++){
+                await curateSigners([i],drop);
+            }
+
+            for(let i = 1; i<=20;i++){
+                await _drop.connect(user1).saleMint(1,{
+                    value: hre.ethers.BigNumber.from("10000000000000000"),
+                })
+                expect(await _drop.balanceOf(user1.address,3)).to.eq(i);
+                expect(await _drop.totalSupply(3)).to.eq(i);
+            }
+            
+            await expect(_drop.connect(user2).saleMint(1,{
+                value: hre.ethers.BigNumber.from("10000000000000000"),
+            })).to.be.revertedWith("Minting would exceed cap")
+            
+        })
+
+        it("should fail if amount sent is not equal to cost", async function(){
+            let _ipfsURI = "ipfs://QmTz1aAoS6MXfHpGZpJ9YAGH5wrDsAteN8UHmkHMxVoNJk/1337.json"
+            let ArtistSubmission = true
+            drop = await newHotdrop(curator, deployer, _ipfsURI,ArtistSubmission)
+            const _drop = await ethers.getContractAt("Hotdrop", drop as string)
+            await approveSignersTokens([0,1,2,3,4,5])
+            //curate 5 times
+            for(let i = 0;i<5;i++){
+                await curateSigners([i],drop);
+            }
+
+            await expect(_drop.saleMint(9,{
+                value: hre.ethers.BigNumber.from("10000000000000000"),
+            })).to.be.revertedWith("Value sent is not correct");
+        })
+
+        it("Withdraws correctly at sell out", async function(){
+
+            let _ipfsURI = "ipfs://QmTz1aAoS6MXfHpGZpJ9YAGH5wrDsAteN8UHmkHMxVoNJk/1337.json"
+            let ArtistSubmission = true
+            drop = await newHotdrop(curator, user6, _ipfsURI,ArtistSubmission)
+            const _drop = await ethers.getContractAt("Hotdrop", drop as string)
+            await approveSignersTokens([0,1,2,3,4,5])
+            //curate 5 times
+            for(let i = 0;i<5;i++){
+                await curateSigners([i],drop);
+            }
+
+            const provider = ethers.provider;
+            let contractPrevBalance;
+
+            provider.getBalance(_drop.address).then((balance: BigNumberish) => {
+                // convert a currency unit from wei to ether
+                const balanceInEth = ethers.utils.formatEther(balance)
+                contractPrevBalance = balanceInEth;
+               })
+
+            let artistPrevBalance = await provider.getBalance(user6.address);
+
+            let phlotePrevBalance = await provider.getBalance(phloteTreausry);
+
+
+            await _drop.saleMint(19,{
+                value: hre.ethers.BigNumber.from("190000000000000000"),
+            })
+            expect(await _drop.totalSupply(3)).to.eq(19)
+
+            expect(await ethers.provider.getBalance(_drop.address)).to.eq("190000000000000000")
+            await _drop.saleMint(1,{
+                value: hre.ethers.BigNumber.from("10000000000000000"),
+            })
+            
+            expect(await ethers.provider.getBalance(user6.address)).to.eq(artistPrevBalance.add("180000000000000000"))
+            expect(await ethers.provider.getBalance(phloteTreausry)).to.eq(phlotePrevBalance.add("20000000000000000"))
+            expect(await ethers.provider.getBalance(_drop.address)).to.eq(0)            
+
+        })
+
+        it("should allow modifying totalsupplyleft and withdraw correctly at sell out ", async function(){
+            let _ipfsURI = "ipfs://QmTz1aAoS6MXfHpGZpJ9YAGH5wrDsAteN8UHmkHMxVoNJk/1337.json"
+            let ArtistSubmission = true
+            drop = await newHotdrop(curator, user6, _ipfsURI,ArtistSubmission)
+            const _drop = await ethers.getContractAt("Hotdrop", drop as string)
+            await approveSignersTokens([0,1,2,3,4,5])
+            //curate 5 times
+            for(let i = 0;i<5;i++){
+                await curateSigners([i],drop);
+            }
+
+            const provider = ethers.provider;
+            let contractPrevBalance;
+
+            provider.getBalance(_drop.address).then((balance: BigNumberish) => {
+                // convert a currency unit from wei to ether
+                const balanceInEth = ethers.utils.formatEther(balance)
+                contractPrevBalance = balanceInEth;
+               })
+
+            let artistPrevBalance = await provider.getBalance(user6.address);
+            let phlotePrevBalance = await provider.getBalance(phloteTreausry);
+
+
+            await _drop.saleMint(19,{
+                value: hre.ethers.BigNumber.from("190000000000000000"),
+            })
+            expect(await _drop.totalSupply(3)).to.eq(19)
+
+            expect(await ethers.provider.getBalance(_drop.address)).to.eq("190000000000000000")
+            await _drop.saleMint(1,{
+                value: hre.ethers.BigNumber.from("10000000000000000"),
+            })
+            
+            expect(await ethers.provider.getBalance(user6.address)).to.eq(artistPrevBalance.add("180000000000000000"))
+            expect(await ethers.provider.getBalance(phloteTreausry)).to.eq(phlotePrevBalance.add("20000000000000000"))
+            expect(await ethers.provider.getBalance(_drop.address)).to.eq(0)
+
+            //Add 10 more NFTs to be sold here
+            await curator.setHotDropTotalSupplyLeft(_drop.address,20);
+            let TotalSupplyAfterFirstMint = await _drop.totalSupply(3)
+            
+            //reset thier balances
+            artistPrevBalance = await provider.getBalance(user6.address);
+            phlotePrevBalance = await provider.getBalance(phloteTreausry);
+
+            await _drop.saleMint(19,{
+                value: hre.ethers.BigNumber.from("190000000000000000"),
+            })                                    
+            expect(await _drop.totalSupply(3)).to.eq(TotalSupplyAfterFirstMint.add(19))
+
+            expect(await ethers.provider.getBalance(_drop.address)).to.eq("190000000000000000")
+
+            await _drop.saleMint(1,{
+                value: hre.ethers.BigNumber.from("10000000000000000"),
+            })
+            
+            expect(await ethers.provider.getBalance(user6.address)).to.eq(artistPrevBalance.add("180000000000000000"))
+            expect(await ethers.provider.getBalance(phloteTreausry)).to.eq(phlotePrevBalance.add("20000000000000000"))
+            expect(await ethers.provider.getBalance(_drop.address)).to.eq(0)
+
+        })
+
+        it("should set splits correctly", async function() {
+            let _ipfsURI = "ipfs://QmTz1aAoS6MXfHpGZpJ9YAGH5wrDsAteN8UHmkHMxVoNJk/1337.json"
+            let ArtistSubmission = true
+            drop = await newHotdrop(curator, user6, _ipfsURI,ArtistSubmission)
+            const _drop = await ethers.getContractAt("Hotdrop", drop as string)
+            //Case 1: splits are <100
+            await expect(curator.setHotDropSplits(_drop.address, 10,40)).to.be.revertedWith("The 2 splits must total 100")
+
+            //Case 2: splits are > 100
+            await expect(curator.setHotDropSplits(_drop.address,90,40)).to.be.revertedWith("The 2 splits must total 100")
+
+            //Case 3: correct splits
+            expect(await curator.setHotDropSplits(_drop.address,70,30))
+
+        })
+
+        it.only("should set price correctly", async function() {
+            let _ipfsURI = "ipfs://QmTz1aAoS6MXfHpGZpJ9YAGH5wrDsAteN8UHmkHMxVoNJk/1337.json"
+            let ArtistSubmission = true
+            drop = await newHotdrop(curator, user6, _ipfsURI,ArtistSubmission)
+            const _drop = await ethers.getContractAt("Hotdrop", drop as string)
+            
+            expect(await _drop.publicPrice()).to.eq(10000000000000000n)
+            
+            await curator.setHotdropPrice(_drop.address, 30000000000000000n)
+
+            expect(await _drop.publicPrice()).to.eq(30000000000000000n)
+        })
+
+    }) 
 })
 
