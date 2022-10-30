@@ -8,7 +8,7 @@ import Hamburger from "../public/hamburger.svg";
 import { DropdownActions } from "./Dropdowns/DropdownActions";
 import { useConnectWalletModalOpen } from "./Modals/ConnectWalletModal";
 import { ShortenedWallet } from "./ShortenedWallet";
-import { clearCachedConnector } from "../utils/web3";
+import { clearCachedConnector, shortenHex } from "../utils/web3";
 import { useProfile } from "./Forms/ProfileSettingsForm";
 import { useMoralis } from "react-moralis";
 
@@ -59,7 +59,7 @@ const Account = (props) => {
       className="h-full w-full text-center flex flex-row"
       style={{ justifyContent: "center" }}
     >
-      <ShortenedWallet wallet={account} />
+      <span>{shortenHex(account, 5)}</span>
       <div className="w-2" />
       <AccountDropdown
         dropdownOpen={dropdownOpen}
