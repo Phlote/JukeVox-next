@@ -160,7 +160,7 @@ Profile.getLayout = function getLayout(page) {
 // params will contain the wallet for each generated page.
 export async function getStaticProps({ params }) {
   let { uuid } = params;
-  
+
   return {
     props: {
       submissions: await getSubmissionsWithFilter(null, { curatorWallet: uuid }),

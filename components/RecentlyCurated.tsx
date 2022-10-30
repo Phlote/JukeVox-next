@@ -36,16 +36,11 @@ export default function RecentlyCurated({ account, setOpen, setConnectWalletOpen
         <h3 className="hidden text-center italic lg:text-lg 2xl:text-2xl opacity-70">
           Artist submissions the receive 5 co-signs are minted every Tuesday on Zora.{" "}
         </h3>
-        <div className="w-[320px] lg:w-[670px] xl:w-[1100px] 2xl:w-[1400px] flex justify-center">
+        <div className="w-[320px] lg:w-[670px] xl:w-[1100px] 2xl:w-[1400px] flex justify-center space-x-5">
           {/*The Carousel causes the error*/}
-          {cosignedSubs && cosignedSubs.length !== 0 && <AliceCarousel
-              responsive={responsive}
-              mouseTracking
-              items={cosignedSubs}
-              controlsStrategy="alternate"
-              disableDotsControls
-              disableButtonsControls
-          />}
+          {cosignedSubs[0]}
+          {cosignedSubs[1]}
+          {cosignedSubs[2]}
         </div>
         <div className="h-2"></div>
         <h3 className="text-center italic opacity-70 font-light lg:text-lg 2xl:text-2xl">
@@ -70,13 +65,8 @@ export default function RecentlyCurated({ account, setOpen, setConnectWalletOpen
         {/*  Recently Curated*/}
         {/*</h1>*/}
         <div className="w-[320px] lg:w-[670px] xl:w-[1100px] 2xl:w-[1400px] flex justify-center">
-          {cosignedSubs && cosignedSubs.length !== 0 && <AliceCarousel
-              responsive={responsive}
-              mouseTracking
-              items={cosignedSubs}
-              controlsStrategy="alternate"
-              disableDotsControls
-          />}
+
+          {cosignedSubs[0]}
         </div>
         <h3 className="text-center italic opacity-70 font-light">
           These are some of the most wanted songs as voted on by the Phlote community.
