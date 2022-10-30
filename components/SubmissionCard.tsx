@@ -41,6 +41,61 @@ const SubmissionCard = ({ submission }) => {
           />
         )}
       </div>
+      <SubmissionCardDetails>
+        <div className="flex h-12 items-center">
+          <div>
+            <a
+              href={submission.mediaURI}
+              className="text-3xl hover:opacity-50 break-words"
+            >
+              {submission.mediaTitle}
+            </a>
+          </div>
+          <div className="flex-grow" />
+          <div className="flex items-center">
+            {submission.mediaFormat?.includes("video") && (
+              <PlayButtonVideo el={videoEl} />
+            )}
+            {submission.mediaFormat?.includes("audio") && (
+              <PlayButtonAudio url={submission.mediaURI} />
+            )}
+          </div>
+        </div>
+        <div className="h-8" />
+
+        <div className="flex h-24">
+          <div>
+            <h2 className="text-base opacity-60 break-words"> Artist</h2>
+            <div className="h-2" />
+            <a>{submission.artistName}</a>
+          </div>
+          <div className="flex-grow" />
+          <div>
+            <h2 className="text-base opacity-60 break-words"> Curator</h2>
+            <div className="h-2" />
+            
+          </div>
+        </div>
+        <div className="h-8" />
+        <div className="flex">
+          <div className="flex flex-1 items-center gap-2">
+            <TwitterShareButton
+              className="w-24"
+              url={`${
+                process.env.NEXT_PUBLIC_URL ??
+                process.env.NEXT_PUBLIC_VERCEL_URL
+              }/submission/${submission.id}`}
+              title={`Have you heard ${submission.mediaTitle}? It's a 💎`}
+            >
+              <TwitterIcon size={32} round />
+            </TwitterShareButton>
+            {/*<CommentBubble />*/}
+          </div>
+          <div className="flex flex-10 justify-center items-center">
+            <RatingsMeter submissionId={submission.id} submitterWallet={submission.wallet} initialCosigns={submission.cosigns}/>
+          </div>
+        </div>
+        </SubmissionCardDetails>
     </div>
   )
 }
