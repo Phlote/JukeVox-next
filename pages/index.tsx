@@ -90,7 +90,7 @@ const RecentlyCurated = ({ account, setOpen, setConnectWalletOpen }) => {
   useEffect(() => {
     const cosSubs = [];
     subs?.data?.map((submission: Submission) => {
-      cosSubs.push(<SubmissionCard submission={submission} />)
+        cosSubs.push(<SubmissionCard submission={submission} />)
       }
     )
     console.log(subs, cosSubs);
@@ -120,14 +120,15 @@ const RecentlyCurated = ({ account, setOpen, setConnectWalletOpen }) => {
           Artist submissions the receive 5 co-signs are minted every Tuesday on Zora.{" "}
         </h3>
         <div className="w-[320px] lg:w-[670px] xl:w-[1100px] 2xl:w-[1400px] flex justify-center">
-          {/*<AliceCarousel*/}
-          {/*  responsive={responsive}*/}
-          {/*  mouseTracking*/}
-          {/*  items={cosignedSubs}*/}
-          {/*  controlsStrategy="alternate"*/}
-          {/*  disableDotsControls*/}
-          {/*  disableButtonsControls*/}
-          {/*/>*/}
+          {/*The Carousel causes the error*/}
+          {cosignedSubs && cosignedSubs.length !== 0 && <AliceCarousel
+              responsive={responsive}
+              mouseTracking
+              items={cosignedSubs}
+              controlsStrategy="alternate"
+              disableDotsControls
+              disableButtonsControls
+          />}
         </div>
         <div className="h-2"></div>
         <h3 className="text-center italic opacity-70 font-light lg:text-lg 2xl:text-2xl">
@@ -152,13 +153,13 @@ const RecentlyCurated = ({ account, setOpen, setConnectWalletOpen }) => {
         {/*  Recently Curated*/}
         {/*</h1>*/}
         <div className="w-[320px] lg:w-[670px] xl:w-[1100px] 2xl:w-[1400px] flex justify-center">
-          {/*<AliceCarousel*/}
-          {/*  responsive={responsive}*/}
-          {/*  mouseTracking*/}
-          {/*  items={cosignedSubs}*/}
-          {/*  controlsStrategy="alternate"*/}
-          {/*  disableDotsControls*/}
-          {/*/>*/}
+          {cosignedSubs && cosignedSubs.length !== 0 && <AliceCarousel
+              responsive={responsive}
+              mouseTracking
+              items={cosignedSubs}
+              controlsStrategy="alternate"
+              disableDotsControls
+          />}
         </div>
         <h3 className="text-center italic opacity-70 font-light">
           These are some of the most wanted songs as voted on by the Phlote community.
