@@ -16,6 +16,8 @@ import { useMoralis } from "react-moralis";
 import TempHowItWorks from "../components/TempHowItWorks";
 import { supabase } from "../lib/supabase";
 import submissionCard from "../components/SubmissionCard";
+import { getProfileForWallet, getSubmissionsWithFilter } from "../utils/supabase";
+import RecentlyCurated from "../components/RecentlyCurated";
 
 const Hero = ({ account, setOpen, setConnectWalletOpen }) => {
   return (
@@ -73,102 +75,6 @@ const Hero = ({ account, setOpen, setConnectWalletOpen }) => {
   );
 }
 
-const RecentlyCurated = ({ account, setOpen, setConnectWalletOpen }) => {
-  const [selectedFilters, setFilters] = useSearchFilters();
-  const [subs, setSubs] = useState<any>([])
-  const [cosignedSubs, setCosignedSubs] = useState<any>([])
-
-  async function getSubs() {
-    const submissions = await supabase
-      .from("submissions")
-      .select()
-      .match({ noOfCosigns: 5 });
-    console.log(submissions);
-    setSubs(submissions);
-  }
-
-  useEffect(() => {
-    const cosSubs = [];
-    subs?.data?.map((submission: Submission) => {
-        cosSubs.push(<SubmissionCard submission={submission} />)
-      }
-    )
-    console.log(subs, cosSubs);
-    setCosignedSubs(cosSubs);
-  }, [subs]);
-
-  useEffect(() => {
-    getSubs();
-  }, []);
-
-  const responsive = {
-    640: { items: 1 },
-    1024: { items: 2 },
-    1280: { items: 3 },
-    1700: { items: 4 },
-  };
-  // TODO: Fetch number of items at a time for faster loading times
-
-  return (
-    <section className="flex items-center justify-center sm:py-20 sm:mt-5">
-      {/* Desktop */}
-      <div className="hidden sm:flex w-full flex-col justify-center items-center pt-10 gap-4">
-        <h1 className="hidden text-center italic lg:text-xl 2xl:text-4xl">
-          Decentralized music label run by a passionate community of music lovers.{" "}
-        </h1>
-        <h3 className="hidden text-center italic lg:text-lg 2xl:text-2xl opacity-70">
-          Artist submissions the receive 5 co-signs are minted every Tuesday on Zora.{" "}
-        </h3>
-        <div className="w-[320px] lg:w-[670px] xl:w-[1100px] 2xl:w-[1400px] flex justify-center">
-          {/*The Carousel causes the error*/}
-          {cosignedSubs && cosignedSubs.length !== 0 && <AliceCarousel
-              responsive={responsive}
-              mouseTracking
-              items={cosignedSubs}
-              controlsStrategy="alternate"
-              disableDotsControls
-              disableButtonsControls
-          />}
-        </div>
-        <div className="h-2"></div>
-        <h3 className="text-center italic opacity-70 font-light lg:text-lg 2xl:text-2xl">
-          Community Curated by Team Phlote
-        </h3>
-        <div className="h-2"></div>
-        <div className="w-80 h-16 cursor-pointer hover:opacity-75 shadow-sm">
-          <HollowInputContainer
-            style={{ justifyContent: "center", border: "1px solid white" }}
-            onClick={() => {
-              if (account) setOpen(true);
-              else setConnectWalletOpen(true);
-            }}
-          >
-            {account ? "Submit music to Phlote" : "Connect"}
-          </HollowInputContainer>
-        </div>
-      </div>
-      {/* Mobile */}
-      <div className="sm:hidden w-9/12 sm:w-8/12 2xl:w-full flex flex-col justify-center items-center pt-10 gap-4">
-        {/*<h1 className="text-center italic text-5xl stroke-text">*/}
-        {/*  Recently Curated*/}
-        {/*</h1>*/}
-        <div className="w-[320px] lg:w-[670px] xl:w-[1100px] 2xl:w-[1400px] flex justify-center">
-          {cosignedSubs && cosignedSubs.length !== 0 && <AliceCarousel
-              responsive={responsive}
-              mouseTracking
-              items={cosignedSubs}
-              controlsStrategy="alternate"
-              disableDotsControls
-          />}
-        </div>
-        <h3 className="text-center italic opacity-70 font-light">
-          These are some of the most wanted songs as voted on by the Phlote community.
-        </h3>
-      </div>
-    </section>
-  );
-}
-
 const Collaborators = () => {
   return (
     <section className="flex items-center justify-center py-20 mt-20 lg:mt-38">
@@ -193,7 +99,7 @@ const Collaborators = () => {
   );
 }
 
-function Home() { // LANDING PAGE
+function Home({ submissions }) {
   const [, setOpen] = useSubmissionFlowOpen();
 
   const { account } = useMoralis();
@@ -202,13 +108,13 @@ function Home() { // LANDING PAGE
   return (
     <>
       <div className="hidden sm:block font-roboto"> {/* Desktop */}
-        <RecentlyCurated account={account} setOpen={setOpen} setConnectWalletOpen={setConnectWalletOpen} />
+        <RecentlyCurated {...{ account, setOpen, setConnectWalletOpen, submissions }}/>
         {/*TODO: Try removing recentlyCurated to see if it stops the errors*/}
         {/*<Collaborators />*/}
       </div>
       <div className="sm:hidden font-roboto"> {/* Mobile */}
         <Hero account={account} setOpen={setOpen} setConnectWalletOpen={setConnectWalletOpen} />
-        <RecentlyCurated account={account} setOpen={setOpen} setConnectWalletOpen={setConnectWalletOpen} />
+        <RecentlyCurated {...{ account, setOpen, setConnectWalletOpen, submissions }}/>
         <TempHowItWorks />
         {/*<AboutUsContent />*/}
         {/*<HowItWorksContent />*/}
@@ -231,3 +137,19 @@ Home.getLayout = function getLayout(page) {
 };
 
 export default Home;
+
+export async function getStaticProps<GetStaticProps>() {
+  console.log('runs?');
+  const submissions = await supabase
+    .from("submissions")
+    .select()
+    .match({ noOfCosigns: 5 });
+
+  console.log(submissions);
+
+  return {
+    props: {
+      submissions: submissions
+    }
+  };
+}
