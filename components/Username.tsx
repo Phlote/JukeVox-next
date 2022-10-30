@@ -18,7 +18,7 @@ export const Username: React.FC<Username> = (props) => {
   if (username) content = username;
   // otherwise check if we have a valid wallet
   else if (validWallet) {
-    content = <ShortenedWallet wallet={wallet} />;
+    content = wallet;
   }
 
   if (!content) throw "<Username/> is being used wrong";
