@@ -73,7 +73,11 @@ const SubmissionCard = ({ submission }) => {
           <div>
             <h2 className="text-base opacity-60 break-words"> Curator</h2>
             <div className="h-2" />
-            
+            <Username
+              username={submission.username}
+              wallet={submission.curatorWallet}
+              linkToProfile
+            />
           </div>
         </div>
         <div className="h-8" />
