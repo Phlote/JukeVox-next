@@ -109,7 +109,7 @@ const RecentlyCurated = ({ account, setOpen, setConnectWalletOpen }) => {
   };
   // TODO: Fetch number of items at a time for faster loading times
 
-  return '';
+  return <div>Test</div>;
 
   return (
     <section className="flex items-center justify-center sm:py-20 sm:mt-5">
