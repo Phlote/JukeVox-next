@@ -152,13 +152,13 @@ const RecentlyCurated = ({ account, setOpen, setConnectWalletOpen }) => {
         {/*  Recently Curated*/}
         {/*</h1>*/}
         <div className="w-[320px] lg:w-[670px] xl:w-[1100px] 2xl:w-[1400px] flex justify-center">
-          <AliceCarousel
-            responsive={responsive}
-            mouseTracking
-            items={cosignedSubs}
-            controlsStrategy="alternate"
-            disableDotsControls
-          />
+          {/*<AliceCarousel*/}
+          {/*  responsive={responsive}*/}
+          {/*  mouseTracking*/}
+          {/*  items={cosignedSubs}*/}
+          {/*  controlsStrategy="alternate"*/}
+          {/*  disableDotsControls*/}
+          {/*/>*/}
         </div>
         <h3 className="text-center italic opacity-70 font-light">
           These are some of the most wanted songs as voted on by the Phlote community.
