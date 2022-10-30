@@ -52,7 +52,6 @@ export const useSubmissionSearch = () => {
     fetchSubmissions,
     {
       getNextPageParam: (lastPage, pages) => {
-        if (!lastPage) throw `lastPage undefined`;
         return lastPage.nextPage;
       },
       refetchOnWindowFocus: false,

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Footer } from "../components/Footer";
 import { HollowInputContainer } from "../components/Hollow";
 import Layout from "../components/Layouts";
@@ -14,6 +14,8 @@ import HowItWorksContent from "../components/HowItWorksContent";
 import SubmissionScheduleContent from "../components/SubmissionScheduleContent";
 import { useMoralis } from "react-moralis";
 import TempHowItWorks from "../components/TempHowItWorks";
+import { supabase } from "../lib/supabase";
+import submissionCard from "../components/SubmissionCard";
 
 const Hero = ({ account, setOpen, setConnectWalletOpen }) => {
   return (
@@ -26,7 +28,8 @@ const Hero = ({ account, setOpen, setConnectWalletOpen }) => {
           <h1 className="text-6xl">Phlote</h1>
           <div className="h-16"></div>
           <p>
-            Phlote delivers the best new genre-bending music from around the world to our members as exclusive music NFTs.
+            Phlote delivers the best new genre-bending music from around the world to our members as exclusive music
+            NFTs.
           </p>
           <div className="h-16"></div>
           <div className="w-80 mt-80 h-16 cursor-pointer hover:opacity-75 shadow-sm">
@@ -72,21 +75,31 @@ const Hero = ({ account, setOpen, setConnectWalletOpen }) => {
 
 const RecentlyCurated = ({ account, setOpen, setConnectWalletOpen }) => {
   const [selectedFilters, setFilters] = useSearchFilters();
+  const [subs, setSubs] = useState<any>([])
+  const [cosignedSubs, setCosignedSubs] = useState<any>([])
+
+  async function getSubs() {
+    const submissions = await supabase
+      .from("submissions")
+      .select()
+      .match({ noOfCosigns: 5 });
+    console.log(submissions);
+    setSubs(submissions);
+  }
 
   useEffect(() => {
-    setFilters({ noOfCosigns: 5 });
+    const cosSubs = [];
+    subs?.data?.map((submission: Submission) => {
+      cosSubs.push(<SubmissionCard submission={submission} />)
+      }
+    )
+    console.log(subs, cosSubs);
+    setCosignedSubs(cosSubs);
+  }, [subs]);
 
-    return ()=>{ // Clean up filters so it doesn't pass along to /Feed
-      setFilters({});
-    }
+  useEffect(() => {
+    getSubs();
   }, []);
-
-  const submissions = useSubmissionSearch();
-  const noResults =
-    !submissions.isLoading &&
-    !submissions.isFetching &&
-    submissions.data?.pages[0].submissions.length === 0;
-  //TODO: This causes an error when fetching, right now I am just catching it and ignoring it.
 
   const responsive = {
     640: { items: 1 },
@@ -95,16 +108,6 @@ const RecentlyCurated = ({ account, setOpen, setConnectWalletOpen }) => {
     1700: { items: 4 },
   };
   // TODO: Fetch number of items at a time for faster loading times
-
-  let cosignedSubs = [];
-  if (!(submissions.isLoading || submissions.isFetching) && !noResults) {
-    submissions?.data?.pages.map((group, i) =>
-      group?.submissions?.map((submission: Submission) => {
-          cosignedSubs.push(<SubmissionCard key={i} submission={submission} />)
-        }
-      )
-    )
-  }
 
   return (
     <section className="flex items-center justify-center sm:py-20 sm:mt-5">
@@ -205,7 +208,7 @@ function Home() { // LANDING PAGE
       <div className="sm:hidden font-roboto"> {/* Mobile */}
         <Hero account={account} setOpen={setOpen} setConnectWalletOpen={setConnectWalletOpen} />
         <RecentlyCurated account={account} setOpen={setOpen} setConnectWalletOpen={setConnectWalletOpen} />
-        <TempHowItWorks/>
+        <TempHowItWorks />
         {/*<AboutUsContent />*/}
         {/*<HowItWorksContent />*/}
         {/*<SubmissionScheduleContent />*/}
