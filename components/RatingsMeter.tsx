@@ -50,7 +50,7 @@ export const RatingsMeter: React.FC<{
         contractAddress: CuratorAddress,
         functionName: "curate",
         params: {
-          _hotdrop: '0x1551c685483314616f53fa70e19d044d90332ce29475a4fa2e8ce9c453abf44d' // need the hotdrop hash here from db
+          _hotdrop: '0xd32c2d6b29a9cc0cfca49c1c3a152854809d1caab565e812093439322601aa94' // need the hotdrop hash here from db
         },
       }
 
