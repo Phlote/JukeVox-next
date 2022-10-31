@@ -33,7 +33,7 @@ export const SubmissionFlow: FC = (props) => {
 
   const [open] = useSubmissionFlowOpen();
   useEffect(() => {
-    if (!open) setPage(1);
+    if (!open) setPage(0);
   }, [open]);
 
   useEffect(() => {
