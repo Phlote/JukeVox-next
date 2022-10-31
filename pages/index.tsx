@@ -12,8 +12,8 @@ import { Submission } from "../types";
 import AboutUsContent from "../components/AboutUsContent";
 import HowItWorksContent from "../components/HowItWorksContent";
 import SubmissionScheduleContent from "../components/SubmissionScheduleContent";
-import { useMoralis } from "react-moralis";
 import TempHowItWorks from "../components/TempHowItWorks";
+import { useMoralis } from "react-moralis";
 import { supabase } from "../lib/supabase";
 import submissionCard from "../components/SubmissionCard";
 import { getProfileForWallet, getSubmissionsWithFilter } from "../utils/supabase";
@@ -30,8 +30,7 @@ const Hero = ({ account, setOpen, setConnectWalletOpen }) => {
           <h1 className="text-6xl">Phlote</h1>
           <div className="h-16"></div>
           <p>
-            Phlote delivers the best new genre-bending music from around the world to our members as exclusive music
-            NFTs.
+            Phlote delivers the best new genre-bending music from around the world to our members as exclusive music NFTs.
           </p>
           <div className="h-16"></div>
           <div className="w-80 mt-80 h-16 cursor-pointer hover:opacity-75 shadow-sm">
@@ -109,7 +108,6 @@ function Home({ submissions }) {
     <>
       <div className="hidden sm:block font-roboto"> {/* Desktop */}
         <RecentlyCurated {...{ account, setOpen, setConnectWalletOpen, submissions }}/>
-        {/*TODO: Try removing recentlyCurated to see if it stops the errors*/}
         {/*<Collaborators />*/}
       </div>
       <div className="sm:hidden font-roboto"> {/* Mobile */}
