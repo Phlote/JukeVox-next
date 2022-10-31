@@ -9,7 +9,6 @@ export default function RecentlyCurated({ account, setOpen, setConnectWalletOpen
   const [cosignedSubs, setCosignedSubs] = useState<any>([])
 
   useEffect(() => {
-    console.log(submissions);
     const cosSubs = [];
     submissions?.data?.map((submission: Submission) => {
         cosSubs.push(<SubmissionCard submission={submission} />)
