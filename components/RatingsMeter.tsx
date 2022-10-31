@@ -11,6 +11,8 @@ import { CuratorABI, CuratorAddress } from "../solidity/utils/Curator";
 import { ContractRes } from "../types";
 import { PhloteVoteABI, PhloteVoteAddress } from "../solidity/utils/PhloteVote";
 
+const phloteTokenCosts = [50, 60, 70, 80, 90];
+
 export const RatingsMeter: React.FC<{
   submissionId: number;
   submitterWallet: string;
@@ -46,38 +48,39 @@ export const RatingsMeter: React.FC<{
       if (!isWeb3Enabled) {
         throw "Authentication failed";
       }
+      
+      if (true) { // TODO: Is artist submission? Gotta fetch this from new DB
+        const optionsApproval = {
+          abi: PhloteVoteABI,
+          contractAddress: PhloteVoteAddress,
+          functionName: "approve",
+          params: {
+            spender: CuratorAddress,
+            amount: phloteTokenCosts[cosigns.length]
+          },
+        }
 
-      const optionsApproval = {
-        abi: PhloteVoteABI,
-        contractAddress: PhloteVoteAddress,
-        functionName: "approve",
-        params: {
-          spender: account,
-          amount: 50
-        },
+        await runContractFunction({
+          params: optionsApproval,
+          onError: (err) => {
+            setApprovalRes(err);
+            throw err;
+          },
+          onSuccess: (res) => {
+            console.log(res);
+            setApprovalRes(res);
+          },
+        });
       }
-
-      await runContractFunction({
-        params: optionsApproval,
-        onError: (err) => {
-          setApprovalRes(err);
-          throw err;
-        },
-        onSuccess: (res) => {
-          console.log(res);
-          setApprovalRes(res);
-        },
-      });
 
       const optionsContract = {
         abi: CuratorABI,
         contractAddress: CuratorAddress,
         functionName: "curate",
         params: {
-          _hotdrop: '0x95a0bbad0684d7316baef66b075c7acae0b0b8eb' // need the hotdrop hash here from db
+          _hotdrop: '0xb3727e8fa83e7a913a8c13bad9c2b70f83279782' // need the hotdrop hash here from db
         },
       }
-      // Todo: make sure curation works on an artist curation too
 
       await runContractFunction({
         params: optionsContract,
