@@ -38,6 +38,8 @@ export default function Profile(props) {
     return <div>Loading...</div>;
   }
 
+  return <div></div>;
+
   return (
     <div className="flex flex-col ">
       <div className="flex justify-center">
