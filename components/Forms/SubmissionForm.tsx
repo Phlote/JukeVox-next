@@ -1,4 +1,3 @@
-import { useWeb3React } from "@web3-react/core";
 import Image from "next/image";
 import React, { useState } from "react";
 import { useField, useForm } from "react-final-form-hooks";
@@ -12,6 +11,7 @@ import {
 import { HollowTagsInput } from "../Hollow/HollowTagsInput";
 import { validateSubmission } from "./validators";
 import {FileUpload} from "../FileUpload";
+import { useMoralis } from "react-moralis";
 
 export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFileSelected}) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
@@ -28,7 +28,7 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
   const artistWallet = useField("artistWallet", form);
   const tags = useField("tags", form);
 
-  const { account } = useWeb3React();
+  const { account } = useMoralis();
 
   return (
     <div className="grid grid-cols-1 gap-3 md:my-8">

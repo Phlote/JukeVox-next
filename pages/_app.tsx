@@ -1,9 +1,9 @@
-import { Web3ReactProvider } from "@web3-react/core";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { ReactElement, ReactNode, useEffect } from "react";
+import { MoralisProvider } from "react-moralis";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -58,7 +58,7 @@ const NextWeb3App = ({ Component, pageProps }: AppPropsWithLayout) => {
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </Head>
       <QueryClientProvider client={queryClient}>
-        <Web3ReactProvider getLibrary={getLibrary}>
+        <MoralisProvider serverUrl={process.env.NEXT_PUBLIC_MORALIS_SERVER_URL} appId={process.env.NEXT_PUBLIC_MORALIS_APP_ID}>
           {getLayout(<Component {...pageProps} />)}
           <ToastContainer
             position="top-right"
@@ -71,7 +71,7 @@ const NextWeb3App = ({ Component, pageProps }: AppPropsWithLayout) => {
             draggable
             pauseOnHover
           />
-        </Web3ReactProvider>
+        </MoralisProvider>
       </QueryClientProvider>
       <ReactTooltip type="dark" effect="solid" place="left" backgroundColor='#000000'/>
     </>

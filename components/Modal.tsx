@@ -62,7 +62,7 @@ export const MobileModal: React.FC<ModalProps> = ({
 };
 
 const ModalContainer = styled.div`
-  ${tw`absolute text-white p-4 bg-phlote-ff-modal overflow-y-scroll overflow-x-hidden`}
+  ${tw`absolute text-white p-4 bg-phlote-ff-modal overflow-y-hidden overflow-x-hidden`}
   width: ${(props) => (props.width ? props.width : "60rem")};
   height: ${(props) => (props.height ? props.height : "32rem")};
   border-radius: 100px;

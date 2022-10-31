@@ -4,6 +4,8 @@ import { SupportedChainId } from "../../utils/constants";
 import { HollowButton, HollowButtonContainer } from "../Hollow";
 import { Modal } from "../Modal";
 
+// UNUSED
+
 export const RinkebyPromptModal = () => {
   const [open, setOpen] = useState<boolean>(false);
   const { active, chainId, library } = useWeb3React();

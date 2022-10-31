@@ -1,4 +1,3 @@
-import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import Image from "next/image";
 import Link from "next/link";
@@ -6,8 +5,8 @@ import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import { cosign } from "../controllers/cosigns";
 import { useIsCurator } from "../hooks/useIsCurator";
-import { verifyUser } from "../utils/web3";
 import { useProfile } from "./Forms/ProfileSettingsForm";
+import { useMoralis } from "react-moralis";
 import ReactTooltip from "react-tooltip";
 
 export const RatingsMeter: React.FC<{
@@ -17,7 +16,7 @@ export const RatingsMeter: React.FC<{
 }> = (props) => {
   const { submissionId, submitterWallet, initialCosigns } = props;
 
-  const { account, library } = useWeb3React();
+  const { isWeb3Enabled, account } = useMoralis();
   const [cosigns, setCosigns] = React.useState<string[]>([]);
 
   useEffect(() => ReactTooltip.rebuild() as () => (void),[]);
@@ -40,8 +39,7 @@ export const RatingsMeter: React.FC<{
     e.stopPropagation();
     setCosigns([...cosigns, "pending"]);
     try {
-      const authenticated = await verifyUser(account, library);
-      if (!authenticated) {
+      if (!isWeb3Enabled) {
         throw "Authentication failed";
       }
       const newCosigns = await cosign(submissionId, account);
@@ -88,6 +86,7 @@ export const RatingsMeter: React.FC<{
             } else {
               return (
                 <div
+                  key={`${submissionId}-cosign-${idx}`}
                   className="h-6 w-6 relative"
                   onClick={(e) => e.stopPropagation()}
                 >

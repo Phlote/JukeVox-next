@@ -3,6 +3,8 @@ import { useWeb3React } from "@web3-react/core";
 //import useTokenBalance from "../hooks/web3/useTokenBalance";
 import { balanceToString } from "../utils/web3";
 
+// UNUSED
+
 type TokenBalanceProps = {
   tokenAddress: string;
   symbol: string;

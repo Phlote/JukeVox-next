@@ -1,18 +1,14 @@
-import { useWeb3React } from "@web3-react/core";
-import React, { useEffect, useLayoutEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Footer } from "../components/Footer";
 import { HollowInputContainer } from "../components/Hollow";
 import Layout from "../components/Layouts";
 import { useConnectWalletModalOpen } from "../components/Modals/ConnectWalletModal";
 import { useSubmissionFlowOpen } from "../components/SubmissionFlow";
-import { useSearchFilters, useSubmissionSearch } from "../hooks/useSubmissions";
-import SubmissionCard from "../components/SubmissionCard";
-import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
-import { Submission } from "../types";
-import AboutUsContent from "../components/AboutUsContent";
-import HowItWorksContent from "../components/HowItWorksContent";
-import SubmissionScheduleContent from "../components/SubmissionScheduleContent";
+import TempHowItWorks from "../components/TempHowItWorks";
+import { useMoralis } from "react-moralis";
+import { supabase } from "../lib/supabase";
+import RecentlyCurated from "../components/RecentlyCurated";
 
 const Hero = ({ account, setOpen, setConnectWalletOpen }) => {
   return (
@@ -25,7 +21,7 @@ const Hero = ({ account, setOpen, setConnectWalletOpen }) => {
           <h1 className="text-6xl">Phlote</h1>
           <div className="h-16"></div>
           <p>
-            Decentralized music label run by a passionate community of music lovers.
+            Phlote delivers the best new genre-bending music from around the world to our members as exclusive music NFTs.
           </p>
           <div className="h-16"></div>
           <div className="w-80 mt-80 h-16 cursor-pointer hover:opacity-75 shadow-sm">
@@ -69,100 +65,6 @@ const Hero = ({ account, setOpen, setConnectWalletOpen }) => {
   );
 }
 
-const RecentlyCurated = ({ account, setOpen, setConnectWalletOpen }) => {
-  const [selectedFilters, setFilters] = useSearchFilters();
-
-  useEffect(() => {
-    setFilters({ noOfCosigns: 5 });
-
-    return ()=>{ // Clean up filters so it doesn't pass along to /Feed
-      setFilters({});
-    }
-  }, []);
-
-  const submissions = useSubmissionSearch();
-  const noResults =
-    !submissions.isLoading &&
-    !submissions.isFetching &&
-    submissions.data?.pages[0].submissions.length === 0;
-
-  const responsive = {
-    640: { items: 1 },
-    1024: { items: 2 },
-    1280: { items: 3 },
-    1700: { items: 4 },
-  };
-
-  let cosignedSubs = [];
-  if (!(submissions.isLoading || submissions.isFetching) && !noResults) {
-    submissions?.data?.pages.map((group, i) =>
-      group?.submissions?.map((submission: Submission) => {
-          cosignedSubs.push(<SubmissionCard submission={submission} />)
-        }
-      )
-    )
-  }
-  // console.log(cosignedSubs);
-
-  return (
-    <section className="flex items-center justify-center sm:py-20 sm:mt-5">
-      {/* Desktop */}
-      <div className="hidden sm:flex w-full flex-col justify-center items-center pt-10 gap-4">
-        <h1 className="hidden text-center italic lg:text-xl 2xl:text-4xl">
-          Decentralized music label run by a passionate community of music lovers.{" "}
-        </h1>
-        <h3 className="hidden text-center italic lg:text-lg 2xl:text-2xl opacity-70">
-          Artist submissions the receive 5 co-signs are minted every Tuesday on Zora.{" "}
-        </h3>
-        <div className="w-[320px] lg:w-[670px] xl:w-[1100px] 2xl:w-[1400px] flex justify-center">
-          <AliceCarousel
-            responsive={responsive}
-            mouseTracking
-            items={cosignedSubs}
-            controlsStrategy="alternate"
-            disableDotsControls
-            disableButtonsControls
-          />
-        </div>
-        <div className="h-2"></div>
-        <h3 className="text-center italic opacity-70 font-light lg:text-lg 2xl:text-2xl">
-          Community Curated by Team Phlote
-        </h3>
-        <div className="h-2"></div>
-        <div className="w-80 h-16 cursor-pointer hover:opacity-75 shadow-sm">
-          <HollowInputContainer
-            style={{ justifyContent: "center", border: "1px solid white" }}
-            onClick={() => {
-              if (account) setOpen(true);
-              else setConnectWalletOpen(true);
-            }}
-          >
-            {account ? "Submit music to Phlote" : "Connect"}
-          </HollowInputContainer>
-        </div>
-      </div>
-      {/* Mobile */}
-      <div className="sm:hidden w-9/12 sm:w-8/12 2xl:w-full flex flex-col justify-center items-center pt-10 gap-4">
-        <h1 className="text-center italic text-5xl stroke-text">
-          Recently Curated
-        </h1>
-        <h3 className="text-center italic opacity-70 font-light">
-          These are some of the most wanted songs as voted on by the Phlote community.
-        </h3>
-        <div className="w-[320px] lg:w-[670px] xl:w-[1100px] 2xl:w-[1400px] flex justify-center">
-          <AliceCarousel
-            responsive={responsive}
-            mouseTracking
-            items={cosignedSubs}
-            controlsStrategy="alternate"
-            disableDotsControls
-          />
-        </div>
-      </div>
-    </section>
-  );
-}
-
 const Collaborators = () => {
   return (
     <section className="flex items-center justify-center py-20 mt-20 lg:mt-38">
@@ -187,25 +89,26 @@ const Collaborators = () => {
   );
 }
 
-function Home() { // LANDING PAGE
+function Home({ submissions }) {
   const [, setOpen] = useSubmissionFlowOpen();
 
-  const { account } = useWeb3React();
+  const { account } = useMoralis();
   const [, setConnectWalletOpen] = useConnectWalletModalOpen();
 
   return (
     <>
       <div className="hidden sm:block font-roboto"> {/* Desktop */}
-        <RecentlyCurated account={account} setOpen={setOpen} setConnectWalletOpen={setConnectWalletOpen} />
+        <RecentlyCurated {...{ account, setOpen, setConnectWalletOpen, submissions }}/>
         {/*<Collaborators />*/}
       </div>
       <div className="sm:hidden font-roboto"> {/* Mobile */}
         <Hero account={account} setOpen={setOpen} setConnectWalletOpen={setConnectWalletOpen} />
-        <RecentlyCurated account={account} setOpen={setOpen} setConnectWalletOpen={setConnectWalletOpen} />
-        <AboutUsContent />
-        <HowItWorksContent />
-        <SubmissionScheduleContent />
-        <Collaborators />
+        <RecentlyCurated {...{ account, setOpen, setConnectWalletOpen, submissions }}/>
+        <TempHowItWorks />
+        {/*<AboutUsContent />*/}
+        {/*<HowItWorksContent />*/}
+        {/*<SubmissionScheduleContent />*/}
+        {/*<Collaborators />*/}
       </div>
     </>
   );
@@ -223,3 +126,16 @@ Home.getLayout = function getLayout(page) {
 };
 
 export default Home;
+
+export async function getStaticProps<GetStaticProps>() {
+  const submissions = await supabase
+    .from("submissions")
+    .select()
+    .match({ noOfCosigns: 5 });
+
+  return {
+    props: {
+      submissions: submissions
+    }
+  };
+}

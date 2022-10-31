@@ -1,10 +1,10 @@
-import { useWeb3React } from "@web3-react/core";
 import cn from "classnames";
 import { CommentType, useComments } from "../../hooks/useComments";
 import { Heart } from "../../icons/Heart";
 import ThumbsUpFilled from "../../icons/ThumbsUpFilled";
 import ThumbsUpOutlined from "../../icons/ThumbsUpOutlined";
 import { supabase } from "../../lib/supabase";
+import { useMoralis } from "react-moralis";
 
 type StatusType = "upvoted" | "unvoted" | "downvoted";
 
@@ -72,7 +72,7 @@ const VoteButtons = ({
   config = { type: "thumbs", canDownvote: true },
 }: Props): JSX.Element | null => {
   // const { user } = useUser();
-  const { account } = useWeb3React();
+  const { account } = useMoralis();
   const { mutateComments } = useComments();
   const status = resolveStatus(comment.userVoteValue);
 

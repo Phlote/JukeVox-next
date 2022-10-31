@@ -1,7 +1,6 @@
-import { useWeb3React } from "@web3-react/core";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { useOnClickOut } from "../hooks/useOnClickOut";
 import useEagerConnect from "../hooks/web3/useEagerConnect";
@@ -9,14 +8,22 @@ import Hamburger from "../public/hamburger.svg";
 import { DropdownActions } from "./Dropdowns/DropdownActions";
 import { useConnectWalletModalOpen } from "./Modals/ConnectWalletModal";
 import { ShortenedWallet } from "./ShortenedWallet";
-import { clearCachedConnector } from "../utils/web3";
+import { clearCachedConnector, shortenHex } from "../utils/web3";
 import { useProfile } from "./Forms/ProfileSettingsForm";
+import { useMoralis } from "react-moralis";
 
 const Account = (props) => {
-  const { active, error, activate, chainId, account, setError, deactivate } =
-    useWeb3React();
+  const { account, isWeb3Enabled, isAuthenticated, enableWeb3 } = useMoralis();
 
-  useEagerConnect();
+  useEffect(() => {
+    if (isAuthenticated) enableWeb3();
+    /**
+     * -> isAuthenticated means being authenticated to your moralis server (this can be via a metamask signature)
+     * -> isWeb3Enabled means that you have access to the web3 address and can use web3 functionalities
+     * Due to that, isAuthenticated can be true even if isWeb3Enabled is false.
+     * On page refresh, isWeb3Enabled is false, therefore we must enable it if the user already authenticated again.
+     */
+  }, [isAuthenticated])
 
   // manage connecting state for injected connector
 
@@ -38,7 +45,7 @@ const Account = (props) => {
   //   );
   // }
 
-  if (typeof account !== "string") {
+  if (!isWeb3Enabled) {
     return (
       <div className="w-full h-full text-center" onClick={() => setOpen(true)}>
         Connect
@@ -52,7 +59,7 @@ const Account = (props) => {
       className="h-full w-full text-center flex flex-row"
       style={{ justifyContent: "center" }}
     >
-      <ShortenedWallet wallet={account} />
+      <span>{shortenHex(account, 5)}</span>
       <div className="w-2" />
       <AccountDropdown
         dropdownOpen={dropdownOpen}
@@ -64,7 +71,7 @@ const Account = (props) => {
 };
 
 const AccountDropdown = (props) => {
-  const { deactivate } = useWeb3React();
+  const { logout } = useMoralis();
 
   const router = useRouter();
 
@@ -100,7 +107,13 @@ const AccountDropdown = (props) => {
             <div
               className="cursor-pointer m-4 text-center text-xl hover:opacity-50 flex items-center"
               onClick={() => {
-                deactivate();
+                logout()
+                  .then((user) => {
+                    console.log("logged out user:", user);
+                  })
+                  .catch((error) => {
+                    console.error(error);
+                  });
                 clearCachedConnector();
                 setDropdownOpen(false);
               }}
