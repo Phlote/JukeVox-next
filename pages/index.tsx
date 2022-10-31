@@ -4,19 +4,10 @@ import { HollowInputContainer } from "../components/Hollow";
 import Layout from "../components/Layouts";
 import { useConnectWalletModalOpen } from "../components/Modals/ConnectWalletModal";
 import { useSubmissionFlowOpen } from "../components/SubmissionFlow";
-import { useSearchFilters, useSubmissionSearch } from "../hooks/useSubmissions";
-import SubmissionCard from "../components/SubmissionCard";
-import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
-import { Submission } from "../types";
-import AboutUsContent from "../components/AboutUsContent";
-import HowItWorksContent from "../components/HowItWorksContent";
-import SubmissionScheduleContent from "../components/SubmissionScheduleContent";
 import TempHowItWorks from "../components/TempHowItWorks";
 import { useMoralis } from "react-moralis";
 import { supabase } from "../lib/supabase";
-import submissionCard from "../components/SubmissionCard";
-import { getProfileForWallet, getSubmissionsWithFilter } from "../utils/supabase";
 import RecentlyCurated from "../components/RecentlyCurated";
 
 const Hero = ({ account, setOpen, setConnectWalletOpen }) => {
@@ -137,13 +128,10 @@ Home.getLayout = function getLayout(page) {
 export default Home;
 
 export async function getStaticProps<GetStaticProps>() {
-  console.log('runs?');
   const submissions = await supabase
     .from("submissions")
     .select()
     .match({ noOfCosigns: 5 });
-
-  console.log(submissions);
 
   return {
     props: {
