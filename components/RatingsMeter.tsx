@@ -9,6 +9,7 @@ import { useProfile } from "./Forms/ProfileSettingsForm";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import { CuratorABI, CuratorAddress } from "../solidity/utils/Curator";
 import { ContractRes } from "../types";
+import { PhloteVoteABI, PhloteVoteAddress } from "../solidity/utils/PhloteVote";
 
 export const RatingsMeter: React.FC<{
   submissionId: number;
@@ -20,6 +21,7 @@ export const RatingsMeter: React.FC<{
   const { isWeb3Enabled, account } = useMoralis();
   const { fetch: runContractFunction, data, error, isLoading, isFetching, } = useWeb3ExecuteFunction();
   const [contractRes, setContractRes] = useState<ContractRes>({});
+  const [approvalRes, setApprovalRes] = useState<ContractRes>({});
 
   const [cosigns, setCosigns] = React.useState<string[]>([]);
 
@@ -45,17 +47,40 @@ export const RatingsMeter: React.FC<{
         throw "Authentication failed";
       }
 
-      const options = {
-        abi: CuratorABI,
-        contractAddress: CuratorAddress,
-        functionName: "curate",
+      const optionsApproval = {
+        abi: PhloteVoteABI,
+        contractAddress: PhloteVoteAddress,
+        functionName: "approve",
         params: {
-          _hotdrop: '0x594e811F00693244Af2931ade8eea8aba68A1811' // need the hotdrop hash here from db
+          spender: account,
+          amount: 50
         },
       }
 
       await runContractFunction({
-        params: options,
+        params: optionsApproval,
+        onError: (err) => {
+          setApprovalRes(err);
+          throw err;
+        },
+        onSuccess: (res) => {
+          console.log(res);
+          setApprovalRes(res);
+        },
+      });
+
+      const optionsContract = {
+        abi: CuratorABI,
+        contractAddress: CuratorAddress,
+        functionName: "curate",
+        params: {
+          _hotdrop: '0x95a0bbad0684d7316baef66b075c7acae0b0b8eb' // need the hotdrop hash here from db
+        },
+      }
+      // Todo: make sure curation works on an artist curation too
+
+      await runContractFunction({
+        params: optionsContract,
         onError: (err) => {
           setContractRes(err);
           throw err;
