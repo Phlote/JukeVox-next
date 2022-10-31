@@ -41,7 +41,6 @@ export const SubmissionFlow: FC = (props) => {
     if (isLoading) setLoading('User action required');
   }, [isLoading, isFetching]);
 
-  console.log({ isLoading, isFetching });
   // isLoading: user action required - (metamask popup open)
   // isFetching: signing contract and getting results from it
 
