@@ -1,9 +1,6 @@
-import { useWeb3React } from "@web3-react/core";
-import React, { useEffect } from "react";
+import React from "react";
 import { Footer } from "../components/Footer";
 import Layout from "../components/Layouts";
-import { useConnectWalletModalOpen } from "../components/Modals/ConnectWalletModal";
-import { useSubmissionFlowOpen } from "../components/SubmissionFlow";
 import AboutUsContent from "../components/AboutUsContent";
 
 let TempAboutUs = ()=>
@@ -14,11 +11,6 @@ let TempAboutUs = ()=>
   </section>
 
 function AboutUs() { // LANDING PAGE
-  const [, setOpen] = useSubmissionFlowOpen();
-
-  const { account } = useWeb3React();
-  const [, setConnectWalletOpen] = useConnectWalletModalOpen();
-
   return (
     <div className="font-roboto">
       {/*<AboutUsContent />*/}

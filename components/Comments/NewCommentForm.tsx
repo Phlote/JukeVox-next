@@ -1,6 +1,5 @@
 // import { useSignInModal } from '@lib/components/comments/SignInModal';
 
-import { useWeb3React } from "@web3-react/core";
 import cn from "classnames";
 import cuid from "cuid";
 import { useEffect, useRef, useState } from "react";
@@ -10,6 +9,7 @@ import autosize from "../../utils/autosize";
 import punctuationRegex from "../../utils/regex/punctuationRegex";
 import { useProfile } from "../Forms/ProfileSettingsForm";
 import Avatar from "./Avatar";
+import { useMoralis } from "react-moralis";
 
 interface Props {
   parentId?: number | null;
@@ -27,7 +27,7 @@ const NewCommentForm = ({
   const [content, setContent] = useState<string>("");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { account } = useWeb3React();
+  const { account } = useMoralis();
   const profile = useProfile(account);
   const { mutateGlobalCount, rootId, mutateComments } = useComments();
   // const { open, isOpen } = useModal({

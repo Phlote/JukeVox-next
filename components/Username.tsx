@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 import Link from "next/link";
 import { useProfile } from "./Forms/ProfileSettingsForm";
 import { ShortenedWallet } from "./ShortenedWallet";
+import { shortenHex } from "../utils/web3";
 interface Username {
   wallet?: string;
   username?: string;
@@ -21,7 +22,7 @@ export const Username: React.FC<Username> = (props) => {
   // otherwise check if we have a valid wallet
   else if (validWallet) {
     if (profileQuery?.data?.username) content = profileQuery.data.username;
-    else content = <ShortenedWallet wallet={wallet} />;
+    else content = shortenHex(wallet, 5);
   }
 
   if (!content) throw "<Username/> is being used wrong";

@@ -1,4 +1,3 @@
-import { useWeb3React } from "@web3-react/core";
 import { atom, useAtom } from "jotai";
 import React, { FC, useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
@@ -11,12 +10,15 @@ import { uploadFiles } from "./FileUpload";
 import { useProfile } from "./Forms/ProfileSettingsForm";
 import { SubmissionForm } from "./Forms/SubmissionForm";
 import { HollowButton, HollowButtonContainer } from "./Hollow";
+import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
+import { CuratorABI, CuratorAddress } from "../solidity/utils/Curator";
 
 const submissionFlowOpen = atom<boolean>(false);
 export const useSubmissionFlowOpen = () => useAtom(submissionFlowOpen);
 
 export const SubmissionFlow: FC = (props) => {
-  const { account, library } = useWeb3React();
+  const { account, isWeb3Enabled } = useMoralis();
+  const { data, error, fetch, isFetching, isLoading } = useWeb3ExecuteFunction();
   const queryClient = useQueryClient();
 
   const [page, setPage] = useState<number>(0);
@@ -32,10 +34,10 @@ export const SubmissionFlow: FC = (props) => {
 
   const onSubmit = async (submission: Submission) => {
     setLoading(true);
+
     try {
-      const authenticated = await verifyUser(account, library);
-      if (!authenticated) {
-        throw "Not Authenticated";
+      if (!isWeb3Enabled) {
+        throw "Web3 is not enabled";
       }
       if (fileSelected) {
         submission.mediaFormat = fileSelected.type;
@@ -43,6 +45,20 @@ export const SubmissionFlow: FC = (props) => {
           acceptedFile: fileSelected,
         });
       }
+
+      const options = {
+        abi: CuratorABI,
+        contractAddress: CuratorAddress,
+        functionName: "Submit",
+        params: {
+          submitter: account,
+          ipfsURI: submission.mediaURI // needs to be the ipfs: url
+        },
+      }
+
+      // let contractResult = await fetch({ params: options });
+      // console.log(contractResult);
+      // TEST: gotta see if this works
 
       const result = (await submit(submission, account)) as Submission;
 

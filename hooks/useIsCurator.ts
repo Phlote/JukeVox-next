@@ -1,9 +1,9 @@
-import { useWeb3React } from "@web3-react/core";
 import { useQuery } from "react-query";
 import { nextApiRequest } from "../utils/";
+import { useMoralis } from "react-moralis";
 
 export const useIsCurator = () => {
-  const { account } = useWeb3React();
+  const { account } = useMoralis();
 
   const cacheKey = ["is-curator", account];
   const query = useQuery(

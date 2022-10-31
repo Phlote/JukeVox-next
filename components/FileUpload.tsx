@@ -22,8 +22,6 @@ export const uploadFiles = async (args: uploadFilesArguments) => {
   try {
     let id = acceptedFile.name + '' + Date.now();
 
-
-
     const uploadAudioFile = await supabase.storage
       .from("files")
       .upload(id, acceptedFile, {

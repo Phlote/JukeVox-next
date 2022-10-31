@@ -1,4 +1,3 @@
-import { useWeb3React } from "@web3-react/core";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -9,10 +8,11 @@ import {
 } from "../components/Forms/ProfileSettingsForm";
 import { HollowButton, HollowButtonContainer } from "../components/Hollow";
 import Layout from "../components/Layouts";
+import { useMoralis } from "react-moralis";
 
 function ProfileEdit() {
   const router = useRouter();
-  const { account } = useWeb3React();
+  const { account } = useMoralis();
   const profileQuery = useProfile(account);
 
   return (

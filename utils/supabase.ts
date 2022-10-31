@@ -11,7 +11,14 @@ export const getSubmissionsWithFilter = async (
 ) => {
   if (!selectStatement) selectStatement = supabase.from("submissions").select();
 
-  if (filters) selectStatement = selectStatement.match(filters);
+  if (filters) {
+    if (typeof filters.curatorWallet !== 'undefined') {
+      selectStatement = selectStatement.ilike('curatorWallet', filters.curatorWallet.toLowerCase()); // Support old uppercase implementation
+      // TODO: Make this more general, if this function is used with a curatorWallet and other filters the other filters would be ignored
+    } else {
+      selectStatement = selectStatement.match(filters);
+    }
+  }
 
   if (page !== undefined) {
     const { from, to } = getPagination(page);
@@ -33,10 +40,11 @@ export const getSubmissionById = async (id: number) => {
 }
 
 export const getProfileForWallet = async (wallet: string) => {
+  wallet = wallet.toLowerCase();  // Support old uppercase implementation
   const profilesQuery = await supabase
     .from("profiles")
     .select()
-    .match({ wallet });
+    .ilike('wallet', wallet);
 
   if (profilesQuery.error) throw profilesQuery.error;
 
@@ -53,7 +61,7 @@ export const getProfileForWallet = async (wallet: string) => {
   const submissionsQuery = await supabase
     .from("submissions")
     .select()
-    .match({ curatorWallet: wallet });
+    .ilike('curatorWallet', wallet); // ilike is case-insensitive
 
   if (submissionsQuery.error) throw submissionsQuery.error;
 
@@ -70,7 +78,7 @@ export const getProfileForWallet = async (wallet: string) => {
   const cosignsGiven = submissionsQueryAll.data
     .flatMap((submission: Submission) => submission.cosigns)
     .filter((c) => !!c)
-    .reduce((acc, c) => (c === wallet ? acc + 1 : acc), 0);
+    .reduce((acc, c) => (c.toLowerCase() === wallet ? acc + 1 : acc), 0);
 
   return {
     ...profileMeta,
