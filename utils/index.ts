@@ -22,60 +22,27 @@ export function nextApiRequest(
 
 export const submissionToElasticSearchDocument = (submission: Submission) => {
   const {
-    id,
+    submissionID,
     mediaType,
     artistName,
-    artistWallet,
-    curatorWallet,
+    submitterWallet,
     mediaTitle,
     mediaURI,
-    marketplace,
     tags,
     submissionTime,
     username,
   } = submission;
   return {
-    supabase_id: id,
+    supabase_id: submissionID,
     media_type: mediaType,
     artist_name: artistName,
-    artist_wallet: artistWallet,
-    curator_wallet: curatorWallet,
+    curator_wallet: submitterWallet,
     media_title: mediaTitle,
     media_uri: mediaURI,
-    marketplace,
     tags,
     submission_time: submissionTime,
     username,
   } as SubmissionElasticSearchDocument;
-};
-
-export const cleanSubmission = (submission: Submission) => {
-  const cleaned = { ...submission };
-  if (!!submission.mediaURI) {
-    if (submission.mediaURI.includes("opensea")) {
-      cleaned.marketplace = "OpenSea";
-    }
-    if (submission.mediaURI.includes("catalog")) {
-      cleaned.marketplace = "Catalog";
-    }
-    if (submission.mediaURI.includes("zora")) {
-      cleaned.marketplace = "Zora";
-    }
-    if (submission.mediaURI.includes("foundation")) {
-      cleaned.marketplace = "Foundation";
-    }
-    if (submission.mediaURI.includes("spotify")) {
-      cleaned.marketplace = "Spotify";
-    }
-    if (submission.mediaURI.includes("soundcloud")) {
-      cleaned.marketplace = "Soundcloud";
-    }
-    if (submission.mediaURI.includes("youtu")) {
-      cleaned.marketplace = "Youtube";
-    }
-  }
-
-  return cleaned;
 };
 
 export function asyncDebounce(func, wait) {

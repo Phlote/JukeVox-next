@@ -10,11 +10,11 @@ import { useMoralis } from "react-moralis";
 import ReactTooltip from "react-tooltip";
 
 export const RatingsMeter: React.FC<{
-  submissionId: number;
+  submissionID: number;
   submitterWallet: string;
   initialCosigns: string[];
 }> = (props) => {
-  const { submissionId, submitterWallet, initialCosigns } = props;
+  const { submissionID, submitterWallet, initialCosigns } = props;
 
   const { isWeb3Enabled, account } = useMoralis();
   const [cosigns, setCosigns] = React.useState<string[]>([]);
@@ -42,7 +42,7 @@ export const RatingsMeter: React.FC<{
       if (!isWeb3Enabled) {
         throw "Authentication failed";
       }
-      const newCosigns = await cosign(submissionId, account);
+      const newCosigns = await cosign(submissionID, account);
       if (newCosigns) setCosigns(newCosigns);
     } catch (e) {
       console.error(e);
@@ -59,7 +59,7 @@ export const RatingsMeter: React.FC<{
           if (idx > cosigns.length - 1) {
             return (
               <button
-                key={`${submissionId}-cosign-${idx}`}
+                key={`${submissionID}-cosign-${idx}`}
                 onClick={onCosign}
                 className={`h-6 w-6 relative ${
                   canCosign ? "hover:opacity-25 cursor-pointer" : undefined
@@ -78,7 +78,7 @@ export const RatingsMeter: React.FC<{
               return (
                 <div
                   className="h-6 w-6 opacity-25 relative"
-                  key={`${submissionId}-cosign-${idx}`}
+                  key={`${submissionID}-cosign-${idx}`}
                 >
                   <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
                 </div>
@@ -86,7 +86,7 @@ export const RatingsMeter: React.FC<{
             } else {
               return (
                 <div
-                  key={`${submissionId}-cosign-${idx}`}
+                  key={`${submissionID}-cosign-${idx}`}
                   className="h-6 w-6 relative"
                   onClick={(e) => e.stopPropagation()}
                 >

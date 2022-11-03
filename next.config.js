@@ -10,6 +10,7 @@ module.exports = {
     domains: [
       "alytqvwillylytpmdjai.supabase.co",
       "erirxjohgmjhfdmzlqsa.supabase.co",
+      "goekxcdbwpktmthbsbih.supabase.co",
     ],
     minimumCacheTTL: 60,
   },

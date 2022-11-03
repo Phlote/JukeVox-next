@@ -7,17 +7,17 @@ export default async function handler(
   response: NextApiResponse
 ) {
   try {
-    const { submissionId, cosignerWallet } = request.body;
+    const { submissionID, cosignerWallet } = request.body;
 
     const submissionsQuery = await supabase
       .from('Curator_Submission_Table')
       .select()
-      .match({ id: submissionId });
+      .match({ id: submissionID });
 
     if (!submissionsQuery.data || submissionsQuery.data.length === 0)
       throw "Invalid Submission ID";
 
-    const { id, cosigns, curatorWallet } = submissionsQuery
+    const { id, cosigns, submitterWallet } = submissionsQuery
       .data[0] as Submission;
 
     if (cosigns && cosigns?.length === 5) throw "Max 5 cosigns per submission";
@@ -25,7 +25,7 @@ export default async function handler(
     if (cosigns && cosigns?.includes(cosignerWallet))
       throw "You are not allowed to cosign a submission more than once!";
 
-    if (curatorWallet === cosignerWallet)
+    if (submitterWallet === cosignerWallet)
       throw "You are not allowed to cosign your own submission!";
 
     let updatedCosigns: string[];

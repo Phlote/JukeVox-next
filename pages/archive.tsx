@@ -86,9 +86,9 @@ function Archive({ query }) {
             <ArchiveTableHeader label="Date" />
             <ArchiveTableHeader label="Artist" />
             <ArchiveTableHeader label="Title" />
+            {/*// TODO: CURATOR/ARTIST SEPARATION*/}
             <ArchiveTableHeader label="Media Type" filterKey="mediaType" />
-            <ArchiveTableHeader label="Platform" filterKey="marketplace" />
-            <ArchiveTableHeader label="Curator" filterKey="curatorWallet" />
+            <ArchiveTableHeader label="Curator" filterKey="submitterWallet" />
             <ArchiveTableHeader label="Co-Signs" filterKey="noOfCosigns" />
           </tr>
         </thead>
@@ -98,7 +98,7 @@ function Archive({ query }) {
           {submissions?.data?.pages.map((group, i) => (
             <React.Fragment key={i}>
               {group?.submissions?.map((submission) => (
-                <ArchiveEntry key={submission.id} submission={submission} />
+                <ArchiveEntry key={submission.submissionID} submission={submission} />
               ))}
             </React.Fragment>
           ))}
@@ -124,26 +124,26 @@ function Archive({ query }) {
 
 const ArchiveEntry: React.FC<{ submission: Submission }> = ({ submission }) => {
   const {
-    id,
+    submissionID,
     submissionTime,
-    curatorWallet,
+    submitterWallet,
     artistName,
     mediaTitle,
+    // TODO: CURATOR/ARTIST SEPARATION
     mediaType,
     mediaURI,
-    marketplace,
     cosigns,
     username,
   } = submission;
   const router = useRouter();
 
   return (
-    <CommentsContextProvider threadId={submission.id}>
-      <React.Fragment key={id}>
+    <CommentsContextProvider threadId={submission.submissionID}>
+      <React.Fragment key={submissionID}>
         <ArchiveTableRow
           className="hover:opacity-80 cursor-pointer"
           onClick={() => {
-            router.push(`/submission/${id}`);
+            router.push(`/submission/${submissionID}`);
           }}
         >
           <ArchiveTableDataCell>
@@ -166,21 +166,18 @@ const ArchiveEntry: React.FC<{ submission: Submission }> = ({ submission }) => {
               {mediaTitle}
             </a>
           </ArchiveTableDataCell>
+          {/*    // TODO: CURATOR/ARTIST SEPARATION*/}
           <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
-          <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
           <ArchiveTableDataCell>
             <Username
               username={username}
-              wallet={curatorWallet}
+              wallet={submitterWallet}
               linkToProfile
             />
           </ArchiveTableDataCell>
           <ArchiveTableDataCell>
-            <RatingsMeter
-              submissionId={id}
-              submitterWallet={curatorWallet}
-              initialCosigns={cosigns}
-            />
+            {/* TODO: CURATOR/ARTIST SEPARATION */}
+            {/*<RatingsMeter submissionID={submissionID} submitterWallet={submitterWallet} initialCosigns={cosigns} />*/}
           </ArchiveTableDataCell>
         </ArchiveTableRow>
         <tr className="h-4" />

@@ -1,5 +1,4 @@
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
-import { cleanSubmission } from ".";
 import { UserProfile } from "../components/Forms/ProfileSettingsForm";
 import { supabase } from "../lib/supabase";
 import { Submission } from "../types";
@@ -12,9 +11,9 @@ export const getSubmissionsWithFilter = async (
   if (!selectStatement) selectStatement = supabase.from('Curator_Submission_Table').select();
 
   if (filters) {
-    if (typeof filters.curatorWallet !== 'undefined') {
-      selectStatement = selectStatement.ilike('curatorWallet', filters.curatorWallet.toLowerCase()); // Support old uppercase implementation
-      // TODO: Make this more general, if this function is used with a curatorWallet and other filters the other filters would be ignored
+    if (typeof filters.submitterWallet !== 'undefined') {
+      selectStatement = selectStatement.ilike('submitterWallet', filters.submitterWallet.toLowerCase()); // Support old uppercase implementation
+      // TODO: Make this more general, if this function is used with a submitterWallet and other filters the other filters would be ignored
     } else {
       selectStatement = selectStatement.match(filters);
     }
@@ -32,7 +31,7 @@ export const getSubmissionsWithFilter = async (
   const { data, error } = await selectStatement;
   if (error) throw error;
 
-  return data.map(cleanSubmission);
+  return data;
 };
 
 export const getSubmissionById = async (id: number) => {
@@ -61,7 +60,7 @@ export const getProfileForWallet = async (wallet: string) => {
   const submissionsQuery = await supabase
     .from('Curator_Submission_Table')
     .select()
-    .ilike('curatorWallet', wallet); // ilike is case-insensitive
+    .ilike('submitterWallet', wallet); // ilike is case-insensitive
 
   if (submissionsQuery.error) throw submissionsQuery.error;
 

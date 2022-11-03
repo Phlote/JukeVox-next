@@ -21,9 +21,9 @@ const addRootComments = async () => {
 
   const comments = submissions.data.map((s: Submission) => {
     return {
-      threadId: s.id,
+      threadId: s.submissionID,
       slug: `submission-root-${cuid.slug()}`,
-      authorId: s.curatorWallet,
+      authorId: s.submitterWallet,
       isApproved: true,
     };
   });

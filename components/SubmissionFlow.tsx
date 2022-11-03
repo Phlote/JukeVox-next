@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import { revalidate } from "../controllers/revalidate";
 import { submit } from "../controllers/submissions";
 import { Submission } from "../types";
-import { verifyUser } from "../utils/web3";
 import { uploadFiles } from "./FileUpload";
 import { useProfile } from "./Forms/ProfileSettingsForm";
 import { SubmissionForm } from "./Forms/SubmissionForm";
@@ -40,10 +39,13 @@ export const SubmissionFlow: FC = (props) => {
         throw "Web3 is not enabled";
       }
       if (fileSelected) {
-        submission.mediaFormat = fileSelected.type;
+        // TODO: CURATOR/ARTIST SEPARATION
+        // submission.mediaFormat = fileSelected.type;
         submission.mediaURI = await uploadFiles({
           acceptedFile: fileSelected,
         });
+      } else {
+        submission.mediaURI = JSON.stringify([submission.mediaURI]).replace('[', '{').replace(']', '}');
       }
 
       const options = {
@@ -64,7 +66,7 @@ export const SubmissionFlow: FC = (props) => {
 
       setPage(1);
       queryClient.invalidateQueries("submissions");
-      await revalidate(profile?.data?.username, result.id);
+      await revalidate(profile?.data?.username, result.submissionID);
     } catch (e) {
       toast.error(e);
       console.error(e);

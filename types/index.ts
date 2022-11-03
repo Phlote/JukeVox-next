@@ -5,16 +5,14 @@ export interface UserNonce {
 
 type MediaType = "File" | "Link";
 export interface Submission {
-  id: number;
+  submissionID: number;
   submissionTime: string;
   mediaType: MediaType;
   artistName: string;
-  artistWallet: string;
-  curatorWallet: string;
+  submitterWallet: string;
   mediaTitle: string;
   mediaFormat: string;
   mediaURI: string;
-  marketplace: string;
   tags?: string[];
   cosigns?: string[];
   noOfCosigns?: number;
@@ -26,11 +24,9 @@ export interface SubmissionElasticSearchDocument {
   supabase_id: number;
   media_type: MediaType;
   artist_name: string;
-  artist_wallet: string;
   curator_wallet: string;
   media_title: string;
   media_uri: string;
-  marketplace: string;
   tags?: string[];
   submission_time: string;
 }
@@ -43,11 +39,9 @@ export interface CurationNFTMetadata {
   properties: {
     mediaType: MediaType;
     artistName: string;
-    artistWallet: string;
-    curatorWallet: string;
+    submitterWallet: string;
     mediaTitle: string;
     mediaURI: string;
-    marketplace: string;
     tags?: {
       name: string;
       value: string[];

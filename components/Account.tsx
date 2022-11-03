@@ -3,12 +3,10 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { useOnClickOut } from "../hooks/useOnClickOut";
-import useEagerConnect from "../hooks/web3/useEagerConnect";
 import Hamburger from "../public/hamburger.svg";
 import { DropdownActions } from "./Dropdowns/DropdownActions";
 import { useConnectWalletModalOpen } from "./Modals/ConnectWalletModal";
-import { ShortenedWallet } from "./ShortenedWallet";
-import { clearCachedConnector, shortenHex } from "../utils/web3";
+import { shortenHex } from "../utils/web3";
 import { useProfile } from "./Forms/ProfileSettingsForm";
 import { useMoralis } from "react-moralis";
 
@@ -114,7 +112,6 @@ const AccountDropdown = (props) => {
                   .catch((error) => {
                     console.error(error);
                   });
-                clearCachedConnector();
                 setDropdownOpen(false);
               }}
             >
