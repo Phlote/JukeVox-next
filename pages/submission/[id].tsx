@@ -20,15 +20,16 @@ export default function SubmissionPage(props: {
 
   useEffect(() => {
     if (submission) {
-      let prevId = submission.submissionID - 1;
-      let nextId = submission.submissionID + 1;
+      //TODO: cant increment and decrement, must fetch from db
+      // let prevId = submission.submissionID - 1;
+      // let nextId = submission.submissionID + 1;
 
-      getSubmissionById(prevId).then(v => {
-        setPrev(v.data.length > 0);
-      });
-      getSubmissionById(nextId).then(v => {
-        setNext(v.data.length > 0);
-      });
+      // getSubmissionById(prevId).then(v => {
+      //   setPrev(v.data.length > 0);
+      // });
+      // getSubmissionById(nextId).then(v => {
+      //   setNext(v.data.length > 0);
+      // });
     }
   }, [submission]);
 
@@ -80,17 +81,18 @@ SubmissionPage.getLayout = function getLayout(page) {
 };
 
 export async function getStaticProps({ params }) {
-  const { submissionID } = params;
-
+  const { id } = params;
   const submissionsQuery = await supabase
     .from('Curator_Submission_Table')
     .select()
-    .match({ submissionID });
+    .match({ submissionID: id });
+  
 
   if (submissionsQuery.error) throw submissionsQuery.error;
 
   const submission = submissionsQuery.data[0] as Submission;
   let submissionFileType = null;
+
   if (submission.mediaType === "File") {
     try {
       const response = await fetch(submission.mediaURI, { method: "HEAD" });
@@ -111,18 +113,17 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-  console.log('paths ID 1');
+  //console.log('paths ID 1');
   const submissionsQuery = await supabase.from('Curator_Submission_Table').select();
-  console.log('paths ID 2');
+  //console.log('paths ID 2');
   if (submissionsQuery.error) throw submissionsQuery.error;
-  console.log('paths ID 3');
-  // console.log(submissionsQuery.data[0].submissionID.toString());
+  //console.log('paths ID 3');
+  
 
   const paths = submissionsQuery.data.map(({ submissionID }) => ({
     params: {
-      id: submissionID.toString(),
+      id: submissionID,
     },
   }));
-
   return { paths, fallback: true };
 }

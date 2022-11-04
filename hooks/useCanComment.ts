@@ -22,7 +22,7 @@ export const useCanComment = () => {
         .select()
         .match({ id: id.toString() });
 
-      setWallet(res.data[0].submitterWallet);
+      // setWallet(res.data[0].submitterWallet);
     };
     getWallet();
   }, [id]);

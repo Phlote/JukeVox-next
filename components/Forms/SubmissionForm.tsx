@@ -26,7 +26,7 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
   const mediaTitle = useField("mediaTitle", form);
   const tags = useField("tags", form);
 
-  console.log(mediaURI);
+  //console.log(mediaURI);
 
   const { account } = useMoralis();
 
