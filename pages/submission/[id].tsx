@@ -20,8 +20,8 @@ export default function SubmissionPage(props: {
 
   useEffect(() => {
     if (submission) {
-      let prevId = submission.id - 1;
-      let nextId = submission.id + 1;
+      let prevId = submission.submissionID - 1;
+      let nextId = submission.submissionID + 1;
 
       getSubmissionById(prevId).then(v => {
         setPrev(v.data.length > 0);
@@ -38,13 +38,13 @@ export default function SubmissionPage(props: {
   }
 
   return (
-    <CommentsContextProvider threadId={submission.id}>
+    <CommentsContextProvider threadId={submission.submissionID}>
       <div className="min-w-full mt-32">
         <div className="flex justify-center min-w-full mb-8">
           <div className="my-auto sm:left-10 w-8 h-8 sm:w-32 sm:h-32">
             {next &&
                 <a
-                    href={`/submission/${submission.id + 1}`}
+                    href={`/submission/${submission.submissionID + 1}`}
                 >
                     <ArrowLeft className="m-0 w-8 h-8 sm:w-32 sm:h-32 sm:m-0 sm:w-auto" />
                 </a>
@@ -54,7 +54,7 @@ export default function SubmissionPage(props: {
           <div className="my-auto sm:right-10 w-8 h-8 sm:w-32 sm:h-32">
             {prev &&
                 <a
-                    href={`/submission/${submission.id - 1}`}
+                    href={`/submission/${submission.submissionID - 1}`}
                 >
                     <ArrowRight className="m-0 w-8 h-8 sm:w-32 sm:h-32 sm:m-0 sm:w-auto" />
                 </a>
@@ -80,12 +80,12 @@ SubmissionPage.getLayout = function getLayout(page) {
 };
 
 export async function getStaticProps({ params }) {
-  const { id } = params;
+  const { submissionID } = params;
 
   const submissionsQuery = await supabase
     .from('Curator_Submission_Table')
     .select()
-    .match({ id });
+    .match({ submissionID });
 
   if (submissionsQuery.error) throw submissionsQuery.error;
 
@@ -111,13 +111,16 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
+  console.log('paths ID 1');
   const submissionsQuery = await supabase.from('Curator_Submission_Table').select();
-
+  console.log('paths ID 2');
   if (submissionsQuery.error) throw submissionsQuery.error;
+  console.log('paths ID 3');
+  // console.log(submissionsQuery.data[0].submissionID.toString());
 
-  const paths = submissionsQuery.data.map(({ id }) => ({
+  const paths = submissionsQuery.data.map(({ submissionID }) => ({
     params: {
-      id: id.toString(),
+      id: submissionID.toString(),
     },
   }));
 

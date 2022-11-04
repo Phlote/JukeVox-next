@@ -22,7 +22,7 @@ export const storeSubmissionOnIPFS = async (
   imageUrl = defaultSubmissionImage
 ) => {
   await initializeMoralis();
-  const { artistName, artistWallet, curatorWallet, mediaTitle, mediaURI } =
+  const { artistName, submitterWallet, mediaTitle, mediaURI } =
     submission;
 
   const nftMetadata = {
@@ -32,8 +32,7 @@ export const storeSubmissionOnIPFS = async (
     external_url: mediaURI,
     attributes: [
       { trait_type: "string", value: artistName },
-      { trait_type: "string", value: artistWallet },
-      { trait_type: "string", value: curatorWallet },
+      { trait_type: "string", value: submitterWallet },
       { trait_type: "string", value: mediaTitle },
       { trait_type: "string", value: mediaURI },
     ],

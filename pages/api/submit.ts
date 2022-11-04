@@ -16,12 +16,12 @@ export default async function handler(
 
   try {
     const submissionWithSubmitterInfo = {
-      curatorWallet: wallet,
+      submitterWallet: wallet,
       ...submission,
     };
 
     const profileQuery = await supabase
-      .from("profiles")
+      .from("Users_Table")
       .select()
       .match({ wallet });
 
@@ -30,9 +30,9 @@ export default async function handler(
       submissionWithSubmitterInfo.username = username;
     }
 
-    const uri = await storeSubmissionOnIPFS(submissionWithSubmitterInfo);
-    console.log("uri: ", uri);
-    submissionWithSubmitterInfo.nftMetadata = uri;
+    // TODO: CURATOR/ARTIST SEPARATION
+    // const uri = await storeSubmissionOnIPFS(submissionWithSubmitterInfo);
+    // submissionWithSubmitterInfo.nftMetadata = uri;
 
     const submissionsInsert = await supabase
       .from('Curator_Submission_Table')
@@ -44,9 +44,9 @@ export default async function handler(
 
     await supabase.from("comments").insert([
       {
-        threadId: submissionRes.id,
+        threadId: submissionRes.submissionID,
         slug: `submission-root-${cuid.slug()}`,
-        authorId: submissionRes.curatorWallet,
+        authorId: submissionRes.submitterWallet,
         isApproved: true,
       },
     ]);

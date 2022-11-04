@@ -73,8 +73,8 @@ export default function Profile(props) {
             <ArchiveTableHeader label="Date" />
             <ArchiveTableHeader label="Artist" />
             <ArchiveTableHeader label="Title" />
+            {/* TODO: CURATOR/ARTIST SEPARATION */}
             <ArchiveTableHeader label="Media Type" filterKey={"mediaType"} />
-            <ArchiveTableHeader label="Platform" filterKey="marketplace" />
             <ArchiveTableHeader label="Co-Signs" />
           </tr>
         </thead>
@@ -85,12 +85,12 @@ export default function Profile(props) {
             {submissions?.map((submission) => {
               const {
                 id,
-                curatorWallet,
+                submitterWallet,
                 artistName,
                 mediaTitle,
+                // TODO: CURATOR/ARTIST SEPARATION
                 mediaType,
                 mediaURI,
-                marketplace,
                 submissionTime,
                 cosigns,
               } = submission;
@@ -119,15 +119,12 @@ export default function Profile(props) {
                         {mediaTitle}
                       </a>
                     </ArchiveTableDataCell>
+                    {/*    // TODO: CURATOR/ARTIST SEPARATION */}
                     <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
-                    <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
 
                     <ArchiveTableDataCell>
-                      <RatingsMeter
-                        initialCosigns={cosigns}
-                        submissionId={id}
-                        submitterWallet={curatorWallet}
-                      />
+                      {/* TODO: CURATOR/ARTIST SEPARATION */}
+                      {/*<RatingsMeter initialCosigns={cosigns} submissionID={id} submitterWallet={submitterWallet} />*/}
                     </ArchiveTableDataCell>
                   </ArchiveTableRow>
                   <tr className="h-4" />
@@ -159,11 +156,13 @@ Profile.getLayout = function getLayout(page) {
 
 // params will contain the wallet for each generated page.
 export async function getStaticProps({ params }) {
+  console.log('props UUID');
   let { uuid } = params;
+  console.log(uuid);
 
   return {
     props: {
-      submissions: await getSubmissionsWithFilter(null, { curatorWallet: uuid }),
+      submissions: await getSubmissionsWithFilter(null, { submitterWallet: uuid }),
       profile: await getProfileForWallet(uuid),
     },
     revalidate: 60,
@@ -171,13 +170,14 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
+  console.log('paths UUID');
   const submissionsQuery = await supabase.from('Curator_Submission_Table').select();
 
   if (submissionsQuery.error) throw submissionsQuery.error;
 
   // IDEA: should we have two pages for each user?
   const UUIDs = submissionsQuery.data.map((submission: Submission) => {
-    return submission.curatorWallet; // Make sure to generate lower case links as a default
+    return submission.submitterWallet; // Make sure to generate lower case links as a default
     // Supabase db still has many uppercase links, thus this is necessary
   });
 

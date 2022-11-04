@@ -75,7 +75,7 @@ const SubmissionCard = ({ submission }) => {
             <div className="h-2" />
             <Username
               username={submission.username}
-              wallet={submission.curatorWallet}
+              wallet={submission.submitterWallet}
               linkToProfile
             />
           </div>
@@ -88,7 +88,7 @@ const SubmissionCard = ({ submission }) => {
               url={`${
                 process.env.NEXT_PUBLIC_URL ??
                 process.env.NEXT_PUBLIC_VERCEL_URL
-              }/submission/${submission.id}`}
+              }/submission/${submission.submissionID}`}
               title={`Have you heard ${submission.mediaTitle}? It's a 💎`}
             >
               <TwitterIcon size={32} round />
@@ -96,7 +96,8 @@ const SubmissionCard = ({ submission }) => {
             {/*<CommentBubble />*/}
           </div>
           <div className="flex flex-10 justify-center items-center">
-            <RatingsMeter submissionId={submission.id} submitterWallet={submission.wallet} initialCosigns={submission.cosigns}/>
+            {/* TODO: CURATOR/ARTIST SEPARATION */}
+            {/*<RatingsMeter submissionID={submission.id} submitterWallet={submission.wallet} initialCosigns={submission.cosigns}/>*/}
           </div>
         </div>
         </SubmissionCardDetails>
