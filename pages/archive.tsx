@@ -75,6 +75,7 @@ function Archive({ query }) {
 
   return (
     <div className="flex flex-col h-full">
+          {console.log(submissions.data.pages[0].submissions[0])}
       <table className="table-fixed w-full text-center mt-8 ">
         <thead
           style={{
