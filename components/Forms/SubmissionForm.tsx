@@ -11,10 +11,12 @@ import {
 import { HollowTagsInput } from "../Hollow/HollowTagsInput";
 import { validateSubmission } from "./validators";
 import { FileUpload } from "../FileUpload";
+import { Toggle } from "../Dropdowns/Toggle";
 import { useMoralis } from "react-moralis";
 
 export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFileSelected }) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+  const [artist, setArtist] = useState(false);
   const { form, handleSubmit, valid } = useForm({
     onSubmit,
     validate: validateSubmission,
@@ -24,50 +26,20 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
   const mediaType = useField("mediaType", form);
   const artistName = useField("artistName", form);
   const mediaTitle = useField("mediaTitle", form);
+  const playlist = useField("playlist", form);
   const tags = useField("tags", form);
 
   const { account } = useMoralis();
 
   return (
     <div className="grid grid-cols-1 gap-3 md:my-8">
-      <HollowInputContainer
-        onClick={() => setDropdownOpen(!dropdownOpen)}
-        type="form"
-      >
-        <div className="flex flex-row w-full">
-          <HollowInput
-            value={mediaType.input.value}
-            className="flex-grow"
-            type="text"
-            placeholder="Media Type"
-            readOnly
-          />
-          {(mediaType.meta.touched || mediaType.meta.visited) &&
-            mediaType.meta.error && (
-              <span className="text-red-600 ml-2">{mediaType.meta.error}</span>
-            )}
-          <div className="w-2" />
-          <Image
-            className={dropdownOpen ? "-rotate-90" : "rotate-90"}
-            src={"/chevron.svg"}
-            alt="dropdown"
-            height={16}
-            width={16}
-          />
-        </div>
-      </HollowInputContainer>
+      {/*Toggle*/}
 
-      {dropdownOpen && (
-        <HollowInputContainer style={{ borderRadius: "60px" }}>
-          <DropdownChecklist
-            {...mediaType.input}
-            close={() => setDropdownOpen(false)}
-            fields={["File", "Link"]}
-            closeOnSelect
-            borders
-          />
-        </HollowInputContainer>
-      )}
+      <span className="flex justify-between">
+        <span>{mediaType.input.value === "File" ? "Artist" : "Curator"}</span>
+        <Toggle {...mediaType.input} fields={['Link', 'File']} setURI={mediaURI.input.onChange}
+                setFileSelected={setFileSelected} />
+      </span>
 
       {mediaType.input.value === "File" ? (
         <FileUpload
@@ -101,6 +73,45 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
           <span className="text-red-600 ml-2">{mediaTitle.meta.error}</span>
         )}
       </HollowInputContainer>
+
+      <HollowInputContainer
+        onClick={() => setDropdownOpen(!dropdownOpen)}
+        type="form"
+      >
+        <div className="flex flex-row w-full">
+          <HollowInput
+            value={playlist.input.value}
+            className="flex-grow"
+            type="text"
+            placeholder="Playlist"
+            readOnly
+          />
+          {(playlist.meta.touched || playlist.meta.visited) &&
+            playlist.meta.error && (
+              <span className="text-red-600 ml-2">{playlist.meta.error}</span>
+            )}
+          <div className="w-2" />
+          <Image
+            className={dropdownOpen ? "-rotate-90" : "rotate-90"}
+            src={"/chevron.svg"}
+            alt="dropdown"
+            height={16}
+            width={16}
+          />
+        </div>
+      </HollowInputContainer>
+
+      {dropdownOpen && (
+        <HollowInputContainer style={{ borderRadius: "60px" }}>
+          <DropdownChecklist
+            {...playlist.input}
+            close={() => setDropdownOpen(false)}
+            fields={["Secret Radio"]}
+            closeOnSelect
+            borders
+          />
+        </HollowInputContainer>
+      )}
 
       <HollowTagsInput {...tags.input} />
       <div className="flex justify-center items-center">

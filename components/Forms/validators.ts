@@ -51,7 +51,9 @@ export const validateSubmission = async (values: Submission) => {
   if (!values.mediaTitle) {
     errors.mediaTitle = "Required";
   }
-
+  // if (!values.playlist) {
+  //   errors.marketplace = "Required"; // Should the playlist be required or optional?
+  // }
   return errors;
 };
 
