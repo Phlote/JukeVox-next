@@ -27,7 +27,7 @@ export const RatingsMeter: React.FC<{
     }
   }, [initialCosigns]);
 
-  const {data: {isCurator}} = useIsCurator();
+  const isCurator = useIsCurator()?.data?.isCurator;
 
   const canCosign = account &&
     isCurator &&
