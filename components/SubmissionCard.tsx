@@ -7,6 +7,7 @@ import tw from "twin.macro";
 import styled from "styled-components";
 import { RatingsMeter } from "./RatingsMeter";
 import { CommentBubble } from "./Comments/CommentBubble";
+import { Submission } from "../types";
 
 const SubmissionCardDetails = styled.div`
   ${tw`p-4 bg-phlote-ff-modal`}
@@ -20,7 +21,7 @@ const SubmissionCardDetails = styled.div`
   }
 `;
 
-const SubmissionCard = ({ submission }) => {
+const SubmissionCard = ({ submission }: { submission: Submission }) => {
 
   const videoEl = useRef(null);
 
@@ -97,10 +98,11 @@ const SubmissionCard = ({ submission }) => {
           </div>
           <div className="flex flex-10 justify-center items-center">
             {/* TODO: CURATOR/ARTIST SEPARATION */}
-            <RatingsMeter submissionID={submission.id} submitterWallet={submission.wallet} initialCosigns={submission.cosigns}/>
+            <RatingsMeter submissionID={submission.submissionID} submitterWallet={submission.submitterWallet}
+                          initialCosigns={submission.cosigns} />
           </div>
         </div>
-        </SubmissionCardDetails>
+      </SubmissionCardDetails>
     </div>
   )
 }

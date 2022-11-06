@@ -84,11 +84,11 @@ export const SubmissionFlow: FC = (props) => {
 
       console.log('contract result', data);
 
-      // const result = (await submit(submission, account)) as Submission;
+      const result = (await submit(submission, account)) as Submission;
 
       setPage(1);
-      queryClient.invalidateQueries("submissions");
-      // await revalidate(profile?.data?.username, result.submissionID);
+      await queryClient.invalidateQueries("submissions");
+      await revalidate(profile?.data?.username, result.submissionID);
     } catch (e) {
       toast.error(e);
       console.error(e);

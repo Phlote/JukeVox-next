@@ -84,7 +84,7 @@ export default function Profile(props) {
             <tr className="h-4" />
             {submissions?.map((submission) => {
               const {
-                id,
+                submissionID,
                 submitterWallet,
                 artistName,
                 mediaTitle,
@@ -93,7 +93,7 @@ export default function Profile(props) {
                 mediaURI,
                 submissionTime,
                 cosigns,
-              } = submission;
+              } = submission as Submission;
 
               return (
                 <>
@@ -101,7 +101,7 @@ export default function Profile(props) {
                     key={`${submissionTime}`}
                     className="hover:opacity-80 cursor-pointer"
                     onClick={() => {
-                      router.push(`/submission/${id}`);
+                      router.push(`/submission/${submissionID}`);
                     }}
                   >
                     <ArchiveTableDataCell>
@@ -124,7 +124,7 @@ export default function Profile(props) {
 
                     <ArchiveTableDataCell>
                       {/* TODO: CURATOR/ARTIST SEPARATION */}
-                      <RatingsMeter initialCosigns={cosigns} submissionID={id} submitterWallet={submitterWallet} />
+                      <RatingsMeter initialCosigns={cosigns} submissionID={submissionID} submitterWallet={submitterWallet} />
                     </ArchiveTableDataCell>
                   </ArchiveTableRow>
                   <tr className="h-4" />
