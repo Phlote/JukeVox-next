@@ -49,13 +49,6 @@ export const ProfileSettingsForm = ({ wallet }) => {
       );
       if (error) throw error;
 
-      const submissionsUpdate = await supabase
-        .from('Curator_Submission_Table')
-        .update({ username })
-        .match({ submitterWallet: wallet });
-
-      if (submissionsUpdate.error) console.error(submissionsUpdate.error);
-
       await queryClient.invalidateQueries(["profile", wallet]);
       await revalidate(username);
       toast.success("Submitted!");
