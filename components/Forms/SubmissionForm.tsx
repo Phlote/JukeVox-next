@@ -26,8 +26,6 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
   const mediaTitle = useField("mediaTitle", form);
   const tags = useField("tags", form);
 
-  //console.log(mediaURI);
-
   const { account } = useMoralis();
 
   return (
@@ -118,7 +116,7 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
                 (mediaType.input.value === "Link" && valid))//TODO: do mediaType checks in the validator file
             }
           >
-            {metamaskLoading ? "Waiting for Wallet..." : "Mint"}
+            {metamaskLoading ? metamaskLoading : "Mint"}
           </HollowButton>
           <Image src="/favicon.svg" height={16} width={16} alt={"Gem"} />
         </HollowButtonContainer>

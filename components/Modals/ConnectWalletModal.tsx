@@ -2,6 +2,7 @@ import { atom, useAtom } from "jotai";
 import Image from "next/image";
 import React, { useEffect } from "react";
 import useMetaMaskOnboarding from "../../hooks/web3/useMetaMaskOnboarding";
+import { WalletConnect } from "../../utils/connectors";
 import { HollowButtonContainer } from "../Hollow";
 import { Modal } from "../Modal";
 import { useRouter } from "next/router";
@@ -15,10 +16,11 @@ export const useConnectWalletModalOpen = () => useAtom(connectWalletModalOpenAto
 
 export const ConnectWalletModal = () => {
   const [open, setOpen] = useConnectWalletModalOpen();
-  const { hasAuthError, authError, chainId } = useMoralis();
+  const { hasAuthError, authError, enableWeb3, chainId } = useMoralis();
 
   const isUnsupportedChainId = authError instanceof UnsupportedChainIdError;
   // TODO: Throw error for unsupported blockchains?
+  // If not connected to ChainId 80001 (Testnet polygon) throw this error
 
   React.useEffect(() => {
     if (isUnsupportedChainId) setOpen(true);
@@ -44,14 +46,6 @@ export const ConnectWalletModal = () => {
         <div className="flex-grow w-full flex justify-center items-center">
           <div className="w-3/4 grid grid-cols-1 gap-4">
             <ConnectWalletButtons setOpen={setOpen} />
-
-            {isUnsupportedChainId && (
-              <p className="text-red-500">
-                {
-                  "Your wallet is connected to the wrong network, please connect it to Polygon"
-                }
-              </p>
-            )}
           </div>
         </div>
       </div>
@@ -61,8 +55,6 @@ export const ConnectWalletModal = () => {
 
 export const ConnectWalletButtons = ({ setOpen }) => {
   const { authenticate, isWeb3Enabled, isAuthenticating, user, account } = useMoralis();
-
-  // TODO: next-dev.js?3515:25 Warning: Expected server HTML to contain a matching <div> in <div>. ?
 
   const {
     isMetaMaskInstalled,
@@ -94,7 +86,7 @@ export const ConnectWalletButtons = ({ setOpen }) => {
 
   const login = async (provider) => {
     if (!isWeb3Enabled) {
-      await authenticate({ signingMessage: "Log in using Moralis", provider: provider })
+      await authenticate({ signingMessage: "Log in using Moralis", provider: provider, chainId: 80001 })
         .then((user) => {
           console.log("logged in user:", user);
           console.log(user!.get("ethAddress"));
@@ -107,7 +99,7 @@ export const ConnectWalletButtons = ({ setOpen }) => {
   }
 
   if (!isWeb3Available) {
-    return <MetamaskOnboarding {...{ startOnboarding }}/>
+    return <MetamaskOnboarding {...{ startOnboarding }} />
   }
 
   return (
@@ -120,7 +112,7 @@ export const ConnectWalletButtons = ({ setOpen }) => {
       </HollowButtonContainer>
       <HollowButtonContainer
         disabled={isAuthenticating}
-        onClick={()=>login("walletconnect")}
+        onClick={() => login("walletconnect")}
       >
         <WalletConnectButton />
       </HollowButtonContainer>

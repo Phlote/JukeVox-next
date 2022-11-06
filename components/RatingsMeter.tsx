@@ -1,13 +1,18 @@
 import { ethers } from "ethers";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { cosign } from "../controllers/cosigns";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { useProfile } from "./Forms/ProfileSettingsForm";
-import { useMoralis } from "react-moralis";
 import ReactTooltip from "react-tooltip";
+import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
+import { CuratorABI, CuratorAddress } from "../solidity/utils/Curator";
+import { ContractRes } from "../types";
+import { PhloteVoteABI, PhloteVoteAddress } from "../solidity/utils/PhloteVote";
+
+const phloteTokenCosts = [50, 60, 70, 80, 90];
 
 export const RatingsMeter: React.FC<{
   submissionID: number;
@@ -17,11 +22,15 @@ export const RatingsMeter: React.FC<{
   const { submissionID, submitterWallet, initialCosigns } = props;
 
   const { isWeb3Enabled, account } = useMoralis();
+  const { fetch: runContractFunction, data, error, isLoading, isFetching, } = useWeb3ExecuteFunction();
+  const [contractRes, setContractRes] = useState<ContractRes>({});
+  const [approvalRes, setApprovalRes] = useState<ContractRes>({});
+
   const [cosigns, setCosigns] = React.useState<string[]>([]);
 
   useEffect(() => ReactTooltip.rebuild() as () => (void),[]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (initialCosigns) {
       setCosigns(initialCosigns);
     }
@@ -54,9 +63,56 @@ export const RatingsMeter: React.FC<{
       if (!isWeb3Enabled) {
         throw "Authentication failed";
       }
-      console.log(submissionID);
+
+      if (true) { // TODO: Is artist submission? Gotta fetch this from new DB
+        const optionsApproval = {
+          abi: PhloteVoteABI,
+          contractAddress: PhloteVoteAddress,
+          functionName: "approve",
+          params: {
+            spender: CuratorAddress,
+            amount: phloteTokenCosts[cosigns.length]
+          },
+        }
+
+        await runContractFunction({
+          params: optionsApproval,
+          onError: (err) => {
+            setApprovalRes(err);
+            throw err;
+          },
+          onSuccess: (res) => {
+            console.log(res);
+            setApprovalRes(res);
+          },
+        });
+      }
+
+      const optionsContract = {
+        abi: CuratorABI,
+        contractAddress: CuratorAddress,
+        functionName: "curate",
+        params: {
+          _hotdrop: '0xb3727e8fa83e7a913a8c13bad9c2b70f83279782' // need the hotdrop hash here from db
+        },
+      }
+
+      await runContractFunction({
+        params: optionsContract,
+        onError: (err) => {
+          setContractRes(err);
+          throw err;
+        },
+        onSuccess: (res) => {
+          console.log(res);
+          setContractRes(res);
+        },
+      });
+
       const newCosigns = await cosign(submissionID, account);
-      if (newCosigns) setCosigns(newCosigns);
+      if (newCosigns) {
+        setCosigns(newCosigns);
+      }
     } catch (e) {
       console.error(e);
       toast.error(e.message);

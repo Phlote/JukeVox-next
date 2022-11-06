@@ -4,7 +4,7 @@ import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { revalidate } from "../controllers/revalidate";
 import { submit } from "../controllers/submissions";
-import { Submission } from "../types";
+import { ContractRes, Submission } from "../types";
 import { uploadFiles } from "./FileUpload";
 import { useProfile } from "./Forms/ProfileSettingsForm";
 import { SubmissionForm } from "./Forms/SubmissionForm";
@@ -17,22 +17,31 @@ export const useSubmissionFlowOpen = () => useAtom(submissionFlowOpen);
 
 export const SubmissionFlow: FC = (props) => {
   const { account, isWeb3Enabled } = useMoralis();
-  const { data, error, fetch, isFetching, isLoading } = useWeb3ExecuteFunction();
+  const { fetch: runContractFunction, data, error, isLoading, isFetching, } = useWeb3ExecuteFunction();
   const queryClient = useQueryClient();
 
   const [page, setPage] = useState<number>(0);
   const [fileSelected, setFileSelected] = useState<File>();
+  const [contractRes, setContractRes] = useState<ContractRes>({});
 
   const [open] = useSubmissionFlowOpen();
   useEffect(() => {
     if (!open) setPage(0);
   }, [open]);
 
-  const [loading, setLoading] = useState<boolean>(false);
+  useEffect(() => {
+    if (isFetching) setLoading('Signing Contract...');
+    if (isLoading) setLoading('User action required');
+  }, [isLoading, isFetching]);
+
+  // isLoading: user action required - (metamask popup open)
+  // isFetching: signing contract and getting results from it
+
+  const [loading, setLoading] = useState<boolean | string>(false);
   const profile = useProfile(account);
 
   const onSubmit = async (submission: Submission) => {
-    setLoading(true);
+    setLoading("Interface with wallet");
 
     try {
       if (!isWeb3Enabled) {
@@ -48,25 +57,37 @@ export const SubmissionFlow: FC = (props) => {
         submission.mediaURI = JSON.stringify([submission.mediaURI]).replace('[', '{').replace(']', '}');
       }
 
+      // https://ipfs.moralis.io:2053/ipfs/QmXHN1h5GFshiiUm2Wx7gjZjFxxyFUfU21TDwzJ1fQETSY
+
       const options = {
         abi: CuratorABI,
         contractAddress: CuratorAddress,
-        functionName: "Submit",
+        functionName: "submit",
         params: {
-          submitter: account,
-          ipfsURI: submission.mediaURI // needs to be the ipfs: url
+          _ipfsURI: submission.mediaURI,
+          _isArtistSubmission: 'false', // Must be string
         },
       }
 
-      // let contractResult = await fetch({ params: options });
-      // console.log(contractResult);
-      // TEST: gotta see if this works
+      await runContractFunction({
+        params: options,
+        onError: (err) => {
+          setContractRes(err);
+          throw err;
+        },
+        onSuccess: (res) => {
+          console.log(res);
+          setContractRes(res);// Need to store the hash on the db
+        },
+      });
 
-      const result = (await submit(submission, account)) as Submission;
+      console.log('contract result', data);
+
+      // const result = (await submit(submission, account)) as Submission;
 
       setPage(1);
       queryClient.invalidateQueries("submissions");
-      await revalidate(profile?.data?.username, result.submissionID);
+      // await revalidate(profile?.data?.username, result.submissionID);
     } catch (e) {
       toast.error(e);
       console.error(e);
@@ -91,7 +112,15 @@ export const SubmissionFlow: FC = (props) => {
       )}
       {page === 1 && (
         <div className="flex flex-col items-center text-sm mt-8 gap-8">
-          <p>Congratulations! Your submission has been added</p>
+          {
+            contractRes.hash && ( // Is every submission an nft or only files?
+              <div>
+                <p className='w-full text-center'>Congratulations! Your submission has been added</p>
+                <p className='w-full text-center'>Here is the hash for your submission:</p>
+                <span className='w-full text-center text-[8px]'>{contractRes.hash}</span>
+              </div>
+            )
+          }
           {/* <a
             className="underline flex"
             rel="noreferrer"

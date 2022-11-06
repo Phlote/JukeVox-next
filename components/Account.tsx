@@ -8,13 +8,21 @@ import { DropdownActions } from "./Dropdowns/DropdownActions";
 import { useConnectWalletModalOpen } from "./Modals/ConnectWalletModal";
 import { shortenHex } from "../utils/web3";
 import { useProfile } from "./Forms/ProfileSettingsForm";
-import { useMoralis } from "react-moralis";
+import { useChain, useMoralis } from "react-moralis";
 
 const Account = (props) => {
   const { account, isWeb3Enabled, isAuthenticated, enableWeb3 } = useMoralis();
+  const { switchNetwork, chainId, chain } = useChain();
+
 
   useEffect(() => {
-    if (isAuthenticated) enableWeb3();
+    if (isAuthenticated){
+      enableWeb3().then(e=>{
+        if (chainId !== '0x13881') { //TODO: Get this value from somewhere else
+          switchNetwork('0x13881').then(r => console.log(r));
+        }
+      })
+    }
     /**
      * -> isAuthenticated means being authenticated to your moralis server (this can be via a metamask signature)
      * -> isWeb3Enabled means that you have access to the web3 address and can use web3 functionalities
