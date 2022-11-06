@@ -4,6 +4,7 @@ import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { revalidate } from "../controllers/revalidate";
 import { submit } from "../controllers/submissions";
+import { shortenHex, verifyUser } from "../utils/web3";
 import { ContractRes, Submission } from "../types";
 import { uploadFiles } from "./FileUpload";
 import { useProfile } from "./Forms/ProfileSettingsForm";
@@ -116,8 +117,12 @@ export const SubmissionFlow: FC = (props) => {
             contractRes.hash && ( // Is every submission an nft or only files?
               <div>
                 <p className='w-full text-center'>Congratulations! Your submission has been added</p>
-                <p className='w-full text-center'>Here is the hash for your submission:</p>
-                <span className='w-full text-center text-[8px]'>{contractRes.hash}</span>
+                <p className='w-full text-center'>Check it out on Polygon!</p>
+                <br/>
+                <p className='w-full text-center'>
+                  <a rel='noreferrer' target='_blank' href={`https://mumbai.polygonscan.com/tx/${contractRes.hash}`} className='underline w-full text-center'>{shortenHex(contractRes.hash)}</a>
+                  {/*TESTNET TRANSACTION URL, must change to https://mumbai.polygonscan.com/address/ when out of testnet*/}
+                </p>
               </div>
             )
           }
