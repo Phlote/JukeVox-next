@@ -7,18 +7,19 @@ export default async function handler(
   response: NextApiResponse
 ) {
   try {
-    console.log(request.body);
     const { submissionID, cosignerWallet } = request.body;
 
     const submissionsQuery = await supabase
       .from('Curator_Submission_Table')
       .select()
-      .match({ id: submissionID });
+      .match({ submissionID }); // Here the submissionID is made sure to be valid and corresponding to an existing submission
 
     if (!submissionsQuery.data || submissionsQuery.data.length === 0)
       throw "Invalid Submission ID";
 
-    const { id, cosigns, submitterWallet } = submissionsQuery
+    console.log(submissionsQuery);
+
+    const { submissionID: verifiedId, cosigns, submitterWallet } = submissionsQuery
       .data[0] as Submission;
 
     if (cosigns && cosigns?.length === 5) throw "Max 5 cosigns per submission";
@@ -36,7 +37,7 @@ export default async function handler(
 
     const { data, error } = await supabase
       .from('Curator_Submission_Table')
-      .upsert({ id, cosigns: updatedCosigns });
+      .update({ submissionID: verifiedId, cosigns: updatedCosigns, noOfCosigns: updatedCosigns.length });
 
     if (error || data?.length === 0) throw error;
 

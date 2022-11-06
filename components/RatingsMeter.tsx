@@ -54,6 +54,7 @@ export const RatingsMeter: React.FC<{
       if (!isWeb3Enabled) {
         throw "Authentication failed";
       }
+      console.log(submissionID);
       const newCosigns = await cosign(submissionID, account);
       if (newCosigns) setCosigns(newCosigns);
     } catch (e) {
