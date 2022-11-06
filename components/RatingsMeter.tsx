@@ -27,13 +27,25 @@ export const RatingsMeter: React.FC<{
     }
   }, [initialCosigns]);
 
-  const isCuratorQuery = useIsCurator();
+  const {data: {isCurator}} = useIsCurator();
 
   const canCosign = account &&
-    isCuratorQuery?.data?.isCurator &&
+    isCurator &&
     !cosigns.includes("pending") &&
     !cosigns.includes(account) &&
     submitterWallet?.toLowerCase() !== account.toLowerCase();
+
+  let cantCosignMessage = '';
+  if (account){
+    if (!isCurator){
+      cantCosignMessage = 'Need phlote tokens to cosign.';
+    }
+    if (submitterWallet?.toLowerCase() === account.toLowerCase()){
+      cantCosignMessage = "Can't cosign own submission."
+    }
+  } else {
+    cantCosignMessage = 'Connect your wallet to cosign.';
+  }
 
   const onCosign = async (e) => {
     e.stopPropagation();
@@ -52,7 +64,7 @@ export const RatingsMeter: React.FC<{
   };
 
   return (
-    <div className={`flex gap-1 justify-center `} data-tip={!canCosign ? 'Connect your wallet to cosign.' : ''}>
+    <div className={`flex gap-1 justify-center `} data-tip={cantCosignMessage}>
       {Array(5)
         .fill(null)
         .map((_, idx) => {
