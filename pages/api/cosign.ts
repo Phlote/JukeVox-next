@@ -7,6 +7,7 @@ export default async function handler(
   response: NextApiResponse
 ) {
   try {
+    console.log(request.body);
     const { submissionID, cosignerWallet } = request.body;
 
     const submissionsQuery = await supabase

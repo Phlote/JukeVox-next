@@ -113,12 +113,8 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-  //console.log('paths ID 1');
   const submissionsQuery = await supabase.from('Curator_Submission_Table').select();
-  //console.log('paths ID 2');
   if (submissionsQuery.error) throw submissionsQuery.error;
-  //console.log('paths ID 3');
-  
 
   const paths = submissionsQuery.data.map(({ submissionID }) => ({
     params: {

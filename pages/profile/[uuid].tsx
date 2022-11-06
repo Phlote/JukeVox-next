@@ -156,9 +156,7 @@ Profile.getLayout = function getLayout(page) {
 
 // params will contain the wallet for each generated page.
 export async function getStaticProps({ params }) {
-  console.log('props UUID');
   let { uuid } = params;
-  console.log(uuid);
 
   return {
     props: {
@@ -170,7 +168,6 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-  console.log('paths UUID');
   const submissionsQuery = await supabase.from('Curator_Submission_Table').select();
 
   if (submissionsQuery.error) throw submissionsQuery.error;
