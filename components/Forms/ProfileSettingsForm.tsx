@@ -58,6 +58,7 @@ export const ProfileSettingsForm = ({ wallet }) => {
       }
     } catch (e) {
       toast.error(e);
+      console.error(e);
     } finally {
       setSubmitting(false);
     }
