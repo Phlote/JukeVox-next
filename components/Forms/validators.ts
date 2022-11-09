@@ -15,7 +15,7 @@ function cleanUrl(url: string) {
 
 export const urlIsDuplicate = async (mediaURI: string) => {
   const query = await supabase
-    .from('Curator_Submission_Table')
+    .from('Curator_Submission_Table')// Curator submissions only
     .select()
     .ilike("mediaURI", `%${cleanUrl(mediaURI)}%`);
   return query.data.length > 0;

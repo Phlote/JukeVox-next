@@ -10,6 +10,7 @@ import { getProfile } from "../../controllers/profiles";
 import { useMoralis } from "react-moralis";
 import { UnsupportedChainIdError } from "@web3-react/core";
 import { toast } from "react-toastify";
+import { revalidate } from "../../controllers/revalidate";
 
 const connectWalletModalOpenAtom = atom<boolean>(false);
 export const useConnectWalletModalOpen = () => useAtom(connectWalletModalOpenAtom);
@@ -90,6 +91,7 @@ export const ConnectWalletButtons = ({ setOpen }) => {
         .then((user) => {
           console.log("logged in user:", user);
           console.log(user!.get("ethAddress"));
+          revalidate(account);
         })
         .catch((error) => {
           toast.error(error);

@@ -88,7 +88,7 @@ export const SubmissionFlow: FC = (props) => {
 
       setPage(1);
       await queryClient.invalidateQueries("submissions");
-      await revalidate(profile?.data?.username, result.submissionID);
+      await revalidate(account ,result.submissionID);
     } catch (e) {
       toast.error(e);
       console.error(e);

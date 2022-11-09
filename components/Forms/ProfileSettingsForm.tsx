@@ -5,7 +5,6 @@ import { useField, useForm } from "react-final-form-hooks";
 import { useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { getProfile } from "../../controllers/profiles";
-import { revalidate } from "../../controllers/revalidate";
 import { supabase } from "../../lib/supabase";
 import {
   HollowButton,
@@ -50,7 +49,6 @@ export const ProfileSettingsForm = ({ wallet }) => {
       if (error) throw error;
 
       await queryClient.invalidateQueries(["profile", wallet]);
-      await revalidate(username);
       toast.success("Submitted!");
 
       if (minutesBetweenDateAndNow(data[0].createdAt) < 2) { // Only send email on profile creation
