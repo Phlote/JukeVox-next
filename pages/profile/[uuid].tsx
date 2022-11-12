@@ -173,7 +173,7 @@ export async function getStaticPaths() {
 
   // IDEA: should we have two pages for each user?
   const UUIDs = submissionsQuery.data.map((submission: Submission) => {
-    return submission.submitterWallet; // Make sure to generate lower case links as a default
+    return submission.submitterWallet.toString(); // Make sure to generate lower case links as a default
     // Supabase db still has many uppercase links, thus this is necessary
   });
 
