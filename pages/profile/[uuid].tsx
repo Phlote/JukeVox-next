@@ -124,7 +124,7 @@ export default function Profile(props) {
 
                     <ArchiveTableDataCell>
                       {/* TODO: CURATOR/ARTIST SEPARATION */}
-                      <RatingsMeter initialCosigns={cosigns} submissionID={submissionID} submitterWallet={submitterWallet} />
+                      <RatingsMeter initialCosigns={cosigns} submissionID={submissionID} submitterWallet={submitterWallet} isArtist={isArtist}/>
                     </ArchiveTableDataCell>
                   </ArchiveTableRow>
                   <tr className="h-4" />

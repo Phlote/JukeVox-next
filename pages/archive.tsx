@@ -178,7 +178,7 @@ const ArchiveEntry: React.FC<{ submission: Submission }> = ({ submission }) => {
           </ArchiveTableDataCell>
           <ArchiveTableDataCell>
             {/* TODO: CURATOR/ARTIST SEPARATION */}
-            <RatingsMeter submissionID={submissionID} submitterWallet={submitterWallet} initialCosigns={cosigns} />
+            <RatingsMeter submissionID={submissionID} submitterWallet={submitterWallet} initialCosigns={cosigns} isArtist={isArtist}/>
           </ArchiveTableDataCell>
         </ArchiveTableRow>
         <tr className="h-4" />

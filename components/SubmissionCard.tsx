@@ -99,7 +99,7 @@ const SubmissionCard = ({ submission }: { submission: Submission }) => {
           <div className="flex flex-10 justify-center items-center">
             {/* TODO: CURATOR/ARTIST SEPARATION */}
             <RatingsMeter submissionID={submission.submissionID} submitterWallet={submission.submitterWallet}
-                          initialCosigns={submission.cosigns} />
+                          initialCosigns={submission.cosigns} isArtist={submission.isArtist}/>
           </div>
         </div>
       </SubmissionCardDetails>

@@ -18,8 +18,9 @@ export const RatingsMeter: React.FC<{
   submissionID: number;
   submitterWallet: string;
   initialCosigns: string[];
+  isArtist: boolean;
 }> = (props) => {
-  const { submissionID, submitterWallet, initialCosigns } = props;
+  const { submissionID, submitterWallet, initialCosigns, isArtist } = props;
 
   const { isWeb3Enabled, account } = useMoralis();
   const { fetch: runContractFunction, data, error, isLoading, isFetching, } = useWeb3ExecuteFunction();
@@ -28,7 +29,7 @@ export const RatingsMeter: React.FC<{
 
   const [cosigns, setCosigns] = React.useState<string[]>([]);
 
-  useEffect(() => ReactTooltip.rebuild() as () => (void),[]);
+  useEffect(() => ReactTooltip.rebuild() as () => (void), []);
 
   useEffect(() => {
     if (initialCosigns) {
@@ -45,11 +46,11 @@ export const RatingsMeter: React.FC<{
     submitterWallet?.toLowerCase() !== account.toLowerCase();
 
   let cantCosignMessage = '';
-  if (account){
-    if (!isCurator){
+  if (account) {
+    if (!isCurator) {
       cantCosignMessage = 'Need phlote tokens to cosign.';
     }
-    if (submitterWallet?.toLowerCase() === account.toLowerCase()){
+    if (submitterWallet?.toLowerCase() === account.toLowerCase()) {
       cantCosignMessage = "Can't cosign own submission."
     }
   } else {
@@ -64,7 +65,7 @@ export const RatingsMeter: React.FC<{
         throw "Authentication failed";
       }
 
-      if (true) { // TODO: Is artist submission? Gotta fetch this from new DB
+      if (isArtist) {
         const optionsApproval = {
           abi: PhloteVoteABI,
           contractAddress: PhloteVoteAddress,
@@ -75,17 +76,17 @@ export const RatingsMeter: React.FC<{
           },
         }
 
-        // await runContractFunction({
-        //   params: optionsApproval,
-        //   onError: (err) => {
-        //     setApprovalRes(err);
-        //     throw err;
-        //   },
-        //   onSuccess: (res) => {
-        //     console.log(res);
-        //     setApprovalRes(res);
-        //   },
-        // });
+        await runContractFunction({
+          params: optionsApproval,
+          onError: (err) => {
+            setApprovalRes(err);
+            throw err;
+          },
+          onSuccess: (res) => {
+            console.log(res);
+            setApprovalRes(res);
+          },
+        });
       }
 
       const optionsContract = {
@@ -97,17 +98,17 @@ export const RatingsMeter: React.FC<{
         },
       }
 
-      // await runContractFunction({
-      //   params: optionsContract,
-      //   onError: (err) => {
-      //     setContractRes(err);
-      //     throw err;
-      //   },
-      //   onSuccess: (res) => {
-      //     console.log(res);
-      //     setContractRes(res);
-      //   },
-      // });
+      await runContractFunction({
+        params: optionsContract,
+        onError: (err) => {
+          setContractRes(err);
+          throw err;
+        },
+        onSuccess: (res) => {
+          console.log(res);
+          setContractRes(res);
+        },
+      });
 
       const newCosigns = await cosign(submissionID, account);
       if (newCosigns) {
