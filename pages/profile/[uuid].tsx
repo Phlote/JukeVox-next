@@ -74,7 +74,7 @@ export default function Profile(props) {
             <ArchiveTableHeader label="Artist" />
             <ArchiveTableHeader label="Title" />
             {/* TODO: CURATOR/ARTIST SEPARATION */}
-            <ArchiveTableHeader label="Media Type" filterKey={"mediaType"} />
+            <ArchiveTableHeader label="Type" filterKey={"isArtist"} />
             <ArchiveTableHeader label="Co-Signs" />
           </tr>
         </thead>
@@ -89,7 +89,7 @@ export default function Profile(props) {
                 artistName,
                 mediaTitle,
                 // TODO: CURATOR/ARTIST SEPARATION
-                mediaType,
+                isArtist,
                 mediaURI,
                 submissionTime,
                 cosigns,
@@ -120,7 +120,7 @@ export default function Profile(props) {
                       </a>
                     </ArchiveTableDataCell>
                     {/*    // TODO: CURATOR/ARTIST SEPARATION */}
-                    <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
+                    <ArchiveTableDataCell>{isArtist ? 'Artist' : 'Curator'}</ArchiveTableDataCell>
 
                     <ArchiveTableDataCell>
                       {/* TODO: CURATOR/ARTIST SEPARATION */}
@@ -167,7 +167,7 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-  const submissionsQuery = await supabase.from('Curator_Submission_Table').select();
+  const submissionsQuery = await supabase.from('submissions').select();
 
   if (submissionsQuery.error) throw submissionsQuery.error;
 

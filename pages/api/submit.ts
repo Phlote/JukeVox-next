@@ -12,31 +12,65 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  const { submission, wallet } = request.body;
+  const { submission, wallet, type } = request.body;
+
+  console.log({ submission });
 
   try {
-    const submissionWithSubmitterInfo = {
+    const submissionWithSubmitterInfo:
+      {
+        submitterWallet: string
+        mediaTitle: string
+        mediaURI: string[]
+        artistName: string
+        mediaFormat?: string
+        playlistIDs?: string[]
+        username?: string
+      } = {
       submitterWallet: wallet,
-      ...submission,
+      mediaTitle: submission.mediaTitle,
+      mediaURI: [submission.mediaURI],
+      artistName: submission.artistName,
     };
 
-    const profileQuery = await supabase
-      .from("Users_Table")
-      .select()
-      .match({ wallet });
+    // const profileQuery = await supabase
+    //   .from("Users_Table")
+    //   .select()
+    //   .match({ wallet });
+    //
+    // if (profileQuery.data.length > 0) {
+    //   const { username } = profileQuery.data[0];
+    //   submissionWithSubmitterInfo.username = username;
+    // }
 
-    if (profileQuery.data.length > 0) {
-      const { username } = profileQuery.data[0];
-      submissionWithSubmitterInfo.username = username;
+    const playlistsQuery = await supabase
+      .from("Playlists_Table")
+      .select()
+      .match({ playlistName: submission.playlist });
+
+    if (playlistsQuery.data.length > 0) {
+      submissionWithSubmitterInfo.playlistIDs = [playlistsQuery.data[0].playlistID];
     }
 
     // TODO: CURATOR/ARTIST SEPARATION
-    // const uri = await storeSubmissionOnIPFS(submissionWithSubmitterInfo);
-    // submissionWithSubmitterInfo.nftMetadata = uri;
 
-    const submissionsInsert = await supabase
-      .from('Curator_Submission_Table')
-      .insert([submissionWithSubmitterInfo]);
+    let submissionsInsert = await (async () => {
+      if (type === 'File') {
+        // submissionWithSubmitterInfo.nftMetadata = await storeSubmissionOnIPFS(submissionWithSubmitterInfo); do we need this?
+
+        submissionWithSubmitterInfo.mediaFormat = submission.mediaFormat;
+
+        return supabase
+          .from('Artist_Submission_Table')
+          .insert([submissionWithSubmitterInfo]);
+      } else {
+        return supabase
+          .from('Curator_Submission_Table')
+          .insert([submissionWithSubmitterInfo]);
+      }
+    })();
+
+    console.log({ submissionsInsert });
 
     if (submissionsInsert.error) throw submissionsInsert.error;
 

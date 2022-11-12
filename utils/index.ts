@@ -23,7 +23,7 @@ export function nextApiRequest(
 export const submissionToElasticSearchDocument = (submission: Submission) => {
   const {
     submissionID,
-    mediaType,
+    isArtist,
     artistName,
     submitterWallet,
     mediaTitle,
@@ -34,7 +34,7 @@ export const submissionToElasticSearchDocument = (submission: Submission) => {
   } = submission;
   return {
     supabase_id: submissionID,
-    media_type: mediaType,
+    is_artist: isArtist,
     artist_name: artistName,
     curator_wallet: submitterWallet,
     media_title: mediaTitle,

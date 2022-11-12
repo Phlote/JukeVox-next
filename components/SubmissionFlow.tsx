@@ -12,6 +12,7 @@ import { SubmissionForm } from "./Forms/SubmissionForm";
 import { HollowButton, HollowButtonContainer } from "./Hollow";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import { CuratorABI, CuratorAddress } from "../solidity/utils/Curator";
+import { sub } from "mcl-wasm";
 
 const submissionFlowOpen = atom<boolean>(false);
 export const useSubmissionFlowOpen = () => useAtom(submissionFlowOpen);
@@ -43,14 +44,15 @@ export const SubmissionFlow: FC = (props) => {
 
   const onSubmit = async (submission: Submission) => {
     setLoading("Interface with wallet");
+    console.log(submission);
 
     try {
       if (!isWeb3Enabled) {
         throw "Web3 is not enabled";
       }
-      if (fileSelected) {
-        // TODO: CURATOR/ARTIST SEPARATION
-        // submission.mediaFormat = fileSelected.type;
+      if (submission.mediaType === 'File' && fileSelected) {
+
+        submission.mediaFormat = fileSelected.type;
         submission.mediaURI = await uploadFiles({
           acceptedFile: fileSelected,
         });
@@ -70,25 +72,25 @@ export const SubmissionFlow: FC = (props) => {
         },
       }
 
-      await runContractFunction({
-        params: options,
-        onError: (err) => {
-          setContractRes(err);
-          throw err;
-        },
-        onSuccess: (res) => {
-          console.log(res);
-          setContractRes(res);// Need to store the hash on the db
-        },
-      });
+      // await runContractFunction({
+      //   params: options,
+      //   onError: (err) => {
+      //     setContractRes(err);
+      //     throw err;
+      //   },
+      //   onSuccess: (res) => {
+      //     console.log(res);
+      //     setContractRes(res);// Need to store the hash on the db
+      //   },
+      // });
 
       console.log('contract result', data);
 
-      const result = (await submit(submission, account)) as Submission;
+      const result = (await submit(submission, account, submission.mediaType)) as Submission;
 
       setPage(1);
       await queryClient.invalidateQueries("submissions");
-      await revalidate(account ,result.submissionID);
+      await revalidate(account, result.submissionID);
     } catch (e) {
       toast.error(e);
       console.error(e);
@@ -118,9 +120,10 @@ export const SubmissionFlow: FC = (props) => {
               <div>
                 <p className='w-full text-center'>Congratulations! Your submission has been added</p>
                 <p className='w-full text-center'>Check it out on Polygon!</p>
-                <br/>
+                <br />
                 <p className='w-full text-center'>
-                  <a rel='noreferrer' target='_blank' href={`https://mumbai.polygonscan.com/tx/${contractRes.hash}`} className='underline w-full text-center'>{shortenHex(contractRes.hash)}</a>
+                  <a rel='noreferrer' target='_blank' href={`https://mumbai.polygonscan.com/tx/${contractRes.hash}`}
+                     className='underline w-full text-center'>{shortenHex(contractRes.hash)}</a>
                   {/*TESTNET TRANSACTION URL, must change to https://mumbai.polygonscan.com/address/ when out of testnet*/}
                 </p>
               </div>

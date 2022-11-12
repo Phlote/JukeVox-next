@@ -75,17 +75,17 @@ export const RatingsMeter: React.FC<{
           },
         }
 
-        await runContractFunction({
-          params: optionsApproval,
-          onError: (err) => {
-            setApprovalRes(err);
-            throw err;
-          },
-          onSuccess: (res) => {
-            console.log(res);
-            setApprovalRes(res);
-          },
-        });
+        // await runContractFunction({
+        //   params: optionsApproval,
+        //   onError: (err) => {
+        //     setApprovalRes(err);
+        //     throw err;
+        //   },
+        //   onSuccess: (res) => {
+        //     console.log(res);
+        //     setApprovalRes(res);
+        //   },
+        // });
       }
 
       const optionsContract = {
@@ -97,17 +97,17 @@ export const RatingsMeter: React.FC<{
         },
       }
 
-      await runContractFunction({
-        params: optionsContract,
-        onError: (err) => {
-          setContractRes(err);
-          throw err;
-        },
-        onSuccess: (res) => {
-          console.log(res);
-          setContractRes(res);
-        },
-      });
+      // await runContractFunction({
+      //   params: optionsContract,
+      //   onError: (err) => {
+      //     setContractRes(err);
+      //     throw err;
+      //   },
+      //   onSuccess: (res) => {
+      //     console.log(res);
+      //     setContractRes(res);
+      //   },
+      // });
 
       const newCosigns = await cosign(submissionID, account);
       if (newCosigns) {

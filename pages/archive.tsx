@@ -88,7 +88,7 @@ function Archive({ query }) {
             <ArchiveTableHeader label="Artist" />
             <ArchiveTableHeader label="Title" />
             {/*// TODO: CURATOR/ARTIST SEPARATION*/}
-            <ArchiveTableHeader label="Media Type" filterKey="mediaType" />
+            <ArchiveTableHeader label="Type" filterKey="isArtist" />
             <ArchiveTableHeader label="Curator" filterKey="submitterWallet" />
             <ArchiveTableHeader label="Co-Signs" filterKey="noOfCosigns" />
           </tr>
@@ -131,7 +131,7 @@ const ArchiveEntry: React.FC<{ submission: Submission }> = ({ submission }) => {
     artistName,
     mediaTitle,
     // TODO: CURATOR/ARTIST SEPARATION
-    mediaType,
+    isArtist,
     mediaURI,
     cosigns,
     username,
@@ -168,7 +168,7 @@ const ArchiveEntry: React.FC<{ submission: Submission }> = ({ submission }) => {
             </a>
           </ArchiveTableDataCell>
           {/*    // TODO: CURATOR/ARTIST SEPARATION*/}
-          <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
+          <ArchiveTableDataCell>{isArtist ? 'Artist' : 'Curator'}</ArchiveTableDataCell>
           <ArchiveTableDataCell>
             <Username
               username={username}

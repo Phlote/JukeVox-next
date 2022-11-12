@@ -10,7 +10,7 @@ export default async function handler(
     const { submissionID, cosignerWallet } = request.body;
 
     const submissionsQuery = await supabase
-      .from('Curator_Submission_Table')
+      .from('submissions')
       .select()
       .match({ submissionID }); // Here the submissionID is made sure to be valid and corresponding to an existing submission
 

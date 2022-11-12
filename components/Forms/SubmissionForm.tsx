@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useField, useForm } from "react-final-form-hooks";
 import { DropdownChecklist } from "../Dropdowns/DropdownChecklist";
 import {
@@ -13,6 +13,7 @@ import { validateSubmission } from "./validators";
 import { FileUpload } from "../FileUpload";
 import { Toggle } from "../Dropdowns/Toggle";
 import { useMoralis } from "react-moralis";
+import { usePlaylists } from "../../hooks/usePlaylists";
 
 export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFileSelected }) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
@@ -20,6 +21,9 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
   const { form, handleSubmit, valid } = useForm({
     onSubmit,
     validate: validateSubmission,
+    initialValues: {
+      mediaType: 'Link'
+    }
   });
 
   const mediaURI = useField("mediaURI", form);
@@ -29,7 +33,8 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
   const playlist = useField("playlist", form);
   const tags = useField("tags", form);
 
-  const { account } = useMoralis();
+  const { account, isWeb3Enabled } = useMoralis();
+  const playlists = usePlaylists(isWeb3Enabled);
 
   return (
     <div className="grid grid-cols-1 gap-3 md:my-8">
@@ -106,7 +111,8 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
           <DropdownChecklist
             {...playlist.input}
             close={() => setDropdownOpen(false)}
-            fields={["Secret Radio"]}
+            // @ts-ignore
+            fields={playlists.map(p => p.name)}
             closeOnSelect
             borders
           />

@@ -22,7 +22,7 @@ const SubmissionCardDetails = styled.div`
 `;
 
 const SubmissionCard = ({ submission }: { submission: Submission }) => {
-
+  console.log(submission);
   const videoEl = useRef(null);
 
   return (

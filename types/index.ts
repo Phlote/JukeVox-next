@@ -3,11 +3,9 @@ export interface UserNonce {
   nonce: number;
 }
 
-type MediaType = "File" | "Link";
 export interface Submission {
   submissionID: number;
   submissionTime: string;
-  mediaType: MediaType;
   artistName: string;
   submitterWallet: string;
   mediaTitle: string;
@@ -18,11 +16,13 @@ export interface Submission {
   noOfCosigns?: number;
   username: string;
   nftMetadata: string;
+  isArtist: boolean;
+  mediaType?: 'File' | 'Link';
 }
 
 export interface SubmissionElasticSearchDocument {
   supabase_id: number;
-  media_type: MediaType;
+  is_artist: boolean;
   artist_name: string;
   curator_wallet: string;
   media_title: string;
@@ -43,7 +43,7 @@ export interface CurationNFTMetadata {
   description: string;
   image: string;
   properties: {
-    mediaType: MediaType;
+    isArist: boolean;
     artistName: string;
     submitterWallet: string;
     mediaTitle: string;

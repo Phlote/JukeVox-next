@@ -82,18 +82,30 @@ SubmissionPage.getLayout = function getLayout(page) {
 
 export async function getStaticProps({ params }) {
   const { id } = params;
-  const submissionsQuery = await supabase
-    .from('Curator_Submission_Table')
+
+  const isArtistQuery = await supabase
+    .from('submissions')
     .select()
     .match({ submissionID: id });
-  
+
+  if (isArtistQuery.error) throw isArtistQuery.error;
+
+  const isArtist = isArtistQuery.data[0].isArtist;
+
+  let tableName = 'Curator_Submission_Table';
+  if (isArtist) tableName = 'Artist_Submission_Table';
+
+  const submissionsQuery = await supabase
+    .from(tableName)
+    .select()
+    .match({ submissionID: id });
 
   if (submissionsQuery.error) throw submissionsQuery.error;
 
   const submission = submissionsQuery.data[0] as Submission;
   let submissionFileType = null;
 
-  if (submission.mediaType === "File") {
+  if (submission.isArtist) {
     try {
       const response = await fetch(submission.mediaURI, { method: "HEAD" });
       submissionFileType = response.headers.get("content-type");
@@ -113,13 +125,16 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-  const submissionsQuery = await supabase.from('Curator_Submission_Table').select();
+  const submissionsQuery = await supabase.from('submissions').select();
   if (submissionsQuery.error) throw submissionsQuery.error;
 
   const paths = submissionsQuery.data.map(({ submissionID }) => ({
     params: {
-      id: submissionID,
+      id: submissionID
     },
   }));
+
+  console.log(paths);
+
   return { paths, fallback: true };
 }

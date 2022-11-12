@@ -13,7 +13,7 @@ export default async function handler(
   const { searchTerm, filters, page } = request.body;
 
   try {
-    let query = supabase.from('Curator_Submission_Table').select();
+    let query = supabase.from('submissions').select();
 
     if (searchTerm && searchTerm.length > 0) {
       const res = await nodeElasticClient.search(
