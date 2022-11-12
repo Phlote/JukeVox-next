@@ -129,7 +129,7 @@ export default Home;
 
 export async function getStaticProps<GetStaticProps>() {
   const submissions = await supabase
-    .from("Curator_Submission_Table")
+    .from("submissions")
     .select()
     .match({ noOfCosigns: 5 });
 

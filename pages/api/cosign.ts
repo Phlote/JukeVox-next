@@ -19,7 +19,7 @@ export default async function handler(
 
     console.log(submissionsQuery);
 
-    const { submissionID: verifiedId, cosigns, submitterWallet } = submissionsQuery
+    const { submissionID: verifiedId, cosigns, submitterWallet, isArtist } = submissionsQuery
       .data[0] as Submission;
 
     if (cosigns && cosigns?.length === 5) throw "Max 5 cosigns per submission";
@@ -35,8 +35,11 @@ export default async function handler(
       updatedCosigns = [...cosigns, cosignerWallet];
     } else updatedCosigns = [cosignerWallet];
 
+    let tableName = 'Curator_Submission_Table';
+    if (isArtist) tableName = 'Artist_Submission_Table';
+
     const { data, error } = await supabase
-      .from('Curator_Submission_Table')
+      .from(tableName)
       .update({ submissionID: verifiedId, cosigns: updatedCosigns, noOfCosigns: updatedCosigns.length });
 
     if (error || data?.length === 0) throw error;
