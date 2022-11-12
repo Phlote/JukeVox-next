@@ -28,7 +28,7 @@ const CommentsList = ({
   useInfiniteScroll = false,
 }: Props): JSX.Element => {
   const {
-    rootComment,
+    // rootComment,
     comments,
     remainingCount,
     count,
@@ -75,7 +75,7 @@ const CommentsList = ({
     );
   }
 
-  if (!isLoadingInitialData && !rootComment) {
+  if (!isLoadingInitialData /* && !rootComment*/) {
     return (
       <div className="text-center text-red-600 dark:text-red-400 px-3 sm:px-6">
         This post does not exist.
