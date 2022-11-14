@@ -44,7 +44,6 @@ export const SubmissionFlow: FC = (props) => {
 
   const onSubmit = async (submission: Submission) => {
     setLoading("Interface with wallet");
-    console.log(submission);
 
     try {
       if (!isWeb3Enabled) {
@@ -72,21 +71,29 @@ export const SubmissionFlow: FC = (props) => {
         },
       }
 
-      await runContractFunction({
+      const submitTransaction = await runContractFunction({
         params: options,
         onError: (err) => {
           setContractRes(err);
           throw err;
         },
         onSuccess: (res) => {
-          console.log(res);
-          setContractRes(res);// Need to store the hash on the db
+          console.info(res);
         },
       });
 
-      console.log('contract result', data);
+      // @ts-ignore
+      const contractResult = await submitTransaction.wait();
+
+      submission.hotdropAddress = contractResult.events[0].address;
+
+      console.log('contract result', contractResult);
+
+      console.log(submission);
 
       const result = (await submit(submission, account, submission.mediaType)) as Submission;
+
+      console.log('DB', result);
 
       setPage(1);
       await queryClient.invalidateQueries("submissions");

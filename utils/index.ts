@@ -26,6 +26,7 @@ export const submissionToElasticSearchDocument = (submission: Submission) => {
     isArtist,
     artistName,
     submitterWallet,
+    hotdropAddress,
     mediaTitle,
     mediaURI,
     tags,
@@ -42,6 +43,7 @@ export const submissionToElasticSearchDocument = (submission: Submission) => {
     tags,
     submission_time: submissionTime,
     username,
+    hotdrop_address: hotdropAddress
   } as SubmissionElasticSearchDocument;
 };
 

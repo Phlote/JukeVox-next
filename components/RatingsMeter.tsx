@@ -15,12 +15,14 @@ import { PhloteVoteABI, PhloteVoteAddress } from "../solidity/utils/PhloteVote";
 const phloteTokenCosts = [50, 60, 70, 80, 90];
 
 export const RatingsMeter: React.FC<{
+  // TODO: Use submission interface instead
   submissionID: number;
   submitterWallet: string;
   initialCosigns: string[];
   isArtist: boolean;
+  hotdropAddress: string;
 }> = (props) => {
-  const { submissionID, submitterWallet, initialCosigns, isArtist } = props;
+  const { submissionID, submitterWallet, initialCosigns, isArtist, hotdropAddress } = props;
 
   const { isWeb3Enabled, account } = useMoralis();
   const { fetch: runContractFunction, data, error, isLoading, isFetching, } = useWeb3ExecuteFunction();
@@ -75,7 +77,7 @@ export const RatingsMeter: React.FC<{
           functionName: "approve",
           params: {
             spender: CuratorAddress,
-            amount: phloteTokenCosts[cosigns.length]*10
+            amount: phloteTokenCosts[cosigns.length]
           },
         }
 
@@ -100,7 +102,7 @@ export const RatingsMeter: React.FC<{
         contractAddress: CuratorAddress,
         functionName: "curate",
         params: {
-          _hotdrop: '0xb3727e8fa83e7a913a8c13bad9c2b70f83279782' // need the hotdrop hash here from db
+          _hotdrop: hotdropAddress
         },
       }
 

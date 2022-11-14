@@ -17,6 +17,7 @@ export default async function handler(
   console.log({ submission });
 
   try {
+    // TODO: Why is this not typed as a Submission?
     const submissionWithSubmitterInfo:
       {
         submitterWallet: string
@@ -26,11 +27,13 @@ export default async function handler(
         mediaFormat?: string
         playlistIDs?: string[]
         username?: string
+        hotdropAddress: string
       } = {
       submitterWallet: wallet,
       mediaTitle: submission.mediaTitle,
       mediaURI: [submission.mediaURI],
       artistName: submission.artistName,
+      hotdropAddress: submission.hotdropAddress
     };
 
     // const profileQuery = await supabase

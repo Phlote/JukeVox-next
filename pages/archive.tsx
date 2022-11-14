@@ -64,6 +64,7 @@ function Archive({ query }) {
   }, [searchBarContent, selectedFilters]);
 
   const submissions = useSubmissionSearch();
+  console.log(submissions);
   const noResults =
     !submissions.isLoading &&
     !submissions.isFetching &&
@@ -130,7 +131,7 @@ const ArchiveEntry: React.FC<{ submission: Submission }> = ({ submission }) => {
     submitterWallet,
     artistName,
     mediaTitle,
-    // TODO: CURATOR/ARTIST SEPARATION
+    hotdropAddress,
     isArtist,
     mediaURI,
     cosigns,
@@ -177,8 +178,8 @@ const ArchiveEntry: React.FC<{ submission: Submission }> = ({ submission }) => {
             />
           </ArchiveTableDataCell>
           <ArchiveTableDataCell>
-            {/* TODO: CURATOR/ARTIST SEPARATION */}
-            <RatingsMeter submissionID={submissionID} submitterWallet={submitterWallet} initialCosigns={cosigns} isArtist={isArtist}/>
+            {/* TODO: improve props declaration destructure */}
+            <RatingsMeter hotdropAddress={hotdropAddress} submissionID={submissionID} submitterWallet={submitterWallet} initialCosigns={cosigns} isArtist={isArtist}/>
           </ArchiveTableDataCell>
         </ArchiveTableRow>
         <tr className="h-4" />

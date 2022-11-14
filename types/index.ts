@@ -4,6 +4,7 @@ export interface UserNonce {
 }
 
 export interface Submission {
+  hotdropAddress: string;
   submissionID: number;
   submissionTime: string;
   artistName: string;
@@ -29,6 +30,7 @@ export interface SubmissionElasticSearchDocument {
   media_uri: string;
   tags?: string[];
   submission_time: string;
+  hotdrop_address: string;
 }
 
 export type ContractRes = {

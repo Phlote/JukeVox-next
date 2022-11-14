@@ -88,7 +88,7 @@ export default function Profile(props) {
                 submitterWallet,
                 artistName,
                 mediaTitle,
-                // TODO: CURATOR/ARTIST SEPARATION
+                hotdropAddress,
                 isArtist,
                 mediaURI,
                 submissionTime,
@@ -124,7 +124,7 @@ export default function Profile(props) {
 
                     <ArchiveTableDataCell>
                       {/* TODO: CURATOR/ARTIST SEPARATION */}
-                      <RatingsMeter initialCosigns={cosigns} submissionID={submissionID} submitterWallet={submitterWallet} isArtist={isArtist}/>
+                      <RatingsMeter hotdropAddress={hotdropAddress} initialCosigns={cosigns} submissionID={submissionID} submitterWallet={submitterWallet} isArtist={isArtist}/>
                     </ArchiveTableDataCell>
                   </ArchiveTableRow>
                   <tr className="h-4" />
