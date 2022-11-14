@@ -27,7 +27,7 @@ export const RatingsMeter: React.FC<{
   const [contractRes, setContractRes] = useState<ContractRes>({});
   const [approvalRes, setApprovalRes] = useState<ContractRes>({});
 
-  const [cosigns, setCosigns] = React.useState<string[]>([]);
+  const [cosigns, setCosigns] = useState<string[]>([]);
 
   useEffect(() => ReactTooltip.rebuild() as () => (void), []);
 
@@ -37,7 +37,8 @@ export const RatingsMeter: React.FC<{
     }
   }, [initialCosigns]);
 
-  const isCurator = useIsCurator()?.data?.isCurator;
+  const isCuratorData = useIsCurator();
+  const isCurator = isCuratorData.data?.isCurator;
 
   const canCosign = account &&
     isCurator &&
@@ -65,6 +66,8 @@ export const RatingsMeter: React.FC<{
         throw "Authentication failed";
       }
 
+      console.log('PHLOTE TOKEN AMMOUNT', phloteTokenCosts[cosigns.length]);
+
       if (isArtist) {
         const optionsApproval = {
           abi: PhloteVoteABI,
@@ -72,11 +75,11 @@ export const RatingsMeter: React.FC<{
           functionName: "approve",
           params: {
             spender: CuratorAddress,
-            amount: phloteTokenCosts[cosigns.length]
+            amount: phloteTokenCosts[cosigns.length]*10
           },
         }
 
-        await runContractFunction({
+        const approvalTransaction = await runContractFunction({
           params: optionsApproval,
           onError: (err) => {
             setApprovalRes(err);
@@ -87,6 +90,9 @@ export const RatingsMeter: React.FC<{
             setApprovalRes(res);
           },
         });
+
+        // @ts-ignore
+        await approvalTransaction.wait();
       }
 
       const optionsContract = {

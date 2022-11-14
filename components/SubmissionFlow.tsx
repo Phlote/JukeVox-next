@@ -50,8 +50,8 @@ export const SubmissionFlow: FC = (props) => {
       if (!isWeb3Enabled) {
         throw "Web3 is not enabled";
       }
-      if (submission.mediaType === 'File' && fileSelected) {
-
+      const isFile = submission.mediaType === 'File';
+      if (isFile && fileSelected) {
         submission.mediaFormat = fileSelected.type;
         submission.mediaURI = await uploadFiles({
           acceptedFile: fileSelected,
@@ -68,21 +68,21 @@ export const SubmissionFlow: FC = (props) => {
         functionName: "submit",
         params: {
           _ipfsURI: submission.mediaURI,
-          _isArtistSubmission: 'false', // Must be string
+          _isArtistSubmission: isFile,
         },
       }
 
-      // await runContractFunction({
-      //   params: options,
-      //   onError: (err) => {
-      //     setContractRes(err);
-      //     throw err;
-      //   },
-      //   onSuccess: (res) => {
-      //     console.log(res);
-      //     setContractRes(res);// Need to store the hash on the db
-      //   },
-      // });
+      await runContractFunction({
+        params: options,
+        onError: (err) => {
+          setContractRes(err);
+          throw err;
+        },
+        onSuccess: (res) => {
+          console.log(res);
+          setContractRes(res);// Need to store the hash on the db
+        },
+      });
 
       console.log('contract result', data);
 
