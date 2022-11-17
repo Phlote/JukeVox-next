@@ -37,7 +37,7 @@ export const validateSubmission = async (values: Submission) => {
       if (!!url && url?.protocol !== "http:" && url?.protocol !== "https:") {
         errors.mediaURI = "Only http or https";
       }
-      if (!errors.mediaURI && process.env.NODE_ENV === "production") {
+      if (!errors.mediaURI && process.env.NODE_ENV !== "production") { //TODO: Should run on both envs and urlIsDuplicate is causing problems
         if (await urlIsDuplicate(url.href)) {
           //Second if so that it only fetches when other errors are not present
           errors.mediaURI = "Duplicate submission";
