@@ -15,7 +15,7 @@ function cleanUrl(url: string) {
 
 export const urlIsDuplicate = async (mediaURI: string) => {
   const query = await supabase
-    .from("submissions")
+    .from('Curator_Submission_Table')// Only curator submissions have urls
     .select()
     .ilike("mediaURI", `%${cleanUrl(mediaURI)}%`);
   return query.data.length > 0;
@@ -45,31 +45,21 @@ export const validateSubmission = async (values: Submission) => {
       }
     }
   }
-  if (!values.mediaType) {
-    errors.mediaType = "Required";
-  }
   if (!values.artistName) {
     errors.artistName = "Required";
   }
   if (!values.mediaTitle) {
     errors.mediaTitle = "Required";
   }
-  if (!values.marketplace) {
-    errors.marketplace = "Required";
-  }
-
-  if (values.artistWallet) {
-    if (!ethers.utils.isAddress(values.artistWallet)) {
-      errors.artistWallet = "Invalid ETH Address";
-    }
-  }
-
+  // if (!values.playlist) {
+  //   errors.marketplace = "Required"; // Should the playlist be required or optional?
+  // }
   return errors;
 };
 
 // TODO memoize?
 export const usernameTaken = async (username: string, wallet: string) => {
-  const query = await supabase.from("profiles").select().match({ username });
+  const query = await supabase.from("Users_Table").select().match({ username });
   return query.data.length > 0 && query.data[0].wallet !== wallet;
 };
 

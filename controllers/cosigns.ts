@@ -1,11 +1,11 @@
 import { nextApiRequest } from "../utils";
 
 export const cosign = async (
-  submissionId: number,
+  submissionID: number,
   cosignerWallet: string
 ): Promise<string[]> => {
   const { cosigns } = await nextApiRequest("cosign", "POST", {
-    submissionId,
+    submissionID,
     cosignerWallet,
   });
   return cosigns;

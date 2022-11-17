@@ -4,67 +4,100 @@ import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { revalidate } from "../controllers/revalidate";
 import { submit } from "../controllers/submissions";
-import { Submission } from "../types";
-import { verifyUser } from "../utils/web3";
+import { shortenHex, verifyUser } from "../utils/web3";
+import { ContractRes, Submission } from "../types";
 import { uploadFiles } from "./FileUpload";
 import { useProfile } from "./Forms/ProfileSettingsForm";
 import { SubmissionForm } from "./Forms/SubmissionForm";
 import { HollowButton, HollowButtonContainer } from "./Hollow";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import { CuratorABI, CuratorAddress } from "../solidity/utils/Curator";
+import { sub } from "mcl-wasm";
 
 const submissionFlowOpen = atom<boolean>(false);
 export const useSubmissionFlowOpen = () => useAtom(submissionFlowOpen);
 
 export const SubmissionFlow: FC = (props) => {
   const { account, isWeb3Enabled } = useMoralis();
-  const { data, error, fetch, isFetching, isLoading } = useWeb3ExecuteFunction();
+  const { fetch: runContractFunction, data, error, isLoading, isFetching, } = useWeb3ExecuteFunction();
   const queryClient = useQueryClient();
 
   const [page, setPage] = useState<number>(0);
   const [fileSelected, setFileSelected] = useState<File>();
+  const [contractRes, setContractRes] = useState<ContractRes>({});
 
   const [open] = useSubmissionFlowOpen();
   useEffect(() => {
     if (!open) setPage(0);
   }, [open]);
 
-  const [loading, setLoading] = useState<boolean>(false);
+  useEffect(() => {
+    if (isFetching) setLoading('Signing Contract...');
+    if (isLoading) setLoading('User action required');
+  }, [isLoading, isFetching]);
+
+  // isLoading: user action required - (metamask popup open)
+  // isFetching: signing contract and getting results from it
+
+  const [loading, setLoading] = useState<boolean | string>(false);
   const profile = useProfile(account);
 
   const onSubmit = async (submission: Submission) => {
-    setLoading(true);
+    setLoading("Interface with wallet");
 
     try {
       if (!isWeb3Enabled) {
         throw "Web3 is not enabled";
       }
-      if (fileSelected) {
+      const isFile = submission.mediaType === 'File';
+      if (isFile && fileSelected) {
         submission.mediaFormat = fileSelected.type;
         submission.mediaURI = await uploadFiles({
           acceptedFile: fileSelected,
         });
+      } else {
+        submission.mediaURI = JSON.stringify([submission.mediaURI]).replace('[', '{').replace(']', '}');
       }
+
+      // https://ipfs.moralis.io:2053/ipfs/QmXHN1h5GFshiiUm2Wx7gjZjFxxyFUfU21TDwzJ1fQETSY
 
       const options = {
         abi: CuratorABI,
         contractAddress: CuratorAddress,
-        functionName: "Submit",
+        functionName: "submit",
         params: {
-          submitter: account,
-          ipfsURI: submission.mediaURI // needs to be the ipfs: url
+          _ipfsURI: submission.mediaURI,
+          _isArtistSubmission: isFile,
         },
       }
 
-      // let contractResult = await fetch({ params: options });
-      // console.log(contractResult);
-      // TEST: gotta see if this works
+      const submitTransaction = await runContractFunction({
+        params: options,
+        onError: (err) => {
+          setContractRes(err);
+          throw err;
+        },
+        onSuccess: (res) => {
+          console.info(res);
+        },
+      });
 
-      const result = (await submit(submission, account)) as Submission;
+      // @ts-ignore
+      const contractResult = await submitTransaction.wait();
+
+      submission.hotdropAddress = contractResult.events[0].address;
+
+      console.log('contract result', contractResult);
+
+      console.log(submission);
+
+      const result = (await submit(submission, account, submission.mediaType)) as Submission;
+
+      console.log('DB', result);
 
       setPage(1);
-      queryClient.invalidateQueries("submissions");
-      await revalidate(profile?.data?.username, result.id);
+      await queryClient.invalidateQueries("submissions");
+      await revalidate(account, result.submissionID);
     } catch (e) {
       toast.error(e);
       console.error(e);
@@ -89,7 +122,20 @@ export const SubmissionFlow: FC = (props) => {
       )}
       {page === 1 && (
         <div className="flex flex-col items-center text-sm mt-8 gap-8">
-          <p>Congratulations! Your submission has been added</p>
+          {
+            contractRes.hash && ( // Is every submission an nft or only files?
+              <div>
+                <p className='w-full text-center'>Congratulations! Your submission has been added</p>
+                <p className='w-full text-center'>Check it out on Polygon!</p>
+                <br />
+                <p className='w-full text-center'>
+                  <a rel='noreferrer' target='_blank' href={`https://mumbai.polygonscan.com/tx/${contractRes.hash}`}
+                     className='underline w-full text-center'>{shortenHex(contractRes.hash)}</a>
+                  {/*TESTNET TRANSACTION URL, must change to https://mumbai.polygonscan.com/address/ when out of testnet*/}
+                </p>
+              </div>
+            )
+          }
           {/* <a
             className="underline flex"
             rel="noreferrer"

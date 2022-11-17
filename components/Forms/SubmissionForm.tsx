@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useField, useForm } from "react-final-form-hooks";
 import { DropdownChecklist } from "../Dropdowns/DropdownChecklist";
 import {
@@ -10,73 +10,48 @@ import {
 } from "../Hollow";
 import { HollowTagsInput } from "../Hollow/HollowTagsInput";
 import { validateSubmission } from "./validators";
-import {FileUpload} from "../FileUpload";
+import { FileUpload } from "../FileUpload";
+import { Toggle } from "../Dropdowns/Toggle";
 import { useMoralis } from "react-moralis";
+import { usePlaylists } from "../../hooks/usePlaylists";
 
-export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFileSelected}) => {
+export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFileSelected }) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+  const [artist, setArtist] = useState(false);
   const { form, handleSubmit, valid } = useForm({
     onSubmit,
     validate: validateSubmission,
+    initialValues: {
+      mediaType: 'Link'
+    }
   });
 
   const mediaURI = useField("mediaURI", form);
   const mediaType = useField("mediaType", form);
   const artistName = useField("artistName", form);
   const mediaTitle = useField("mediaTitle", form);
-  const marketplace = useField("marketplace", form);
-  const artistWallet = useField("artistWallet", form);
+  const playlist = useField("playlist", form);
   const tags = useField("tags", form);
 
-  const { account } = useMoralis();
+  const { account, isWeb3Enabled } = useMoralis();
+  const playlists = usePlaylists(isWeb3Enabled);
 
   return (
     <div className="grid grid-cols-1 gap-3 md:my-8">
-      <HollowInputContainer
-        onClick={() => setDropdownOpen(!dropdownOpen)}
-        type="form"
-      >
-        <div className="flex flex-row w-full">
-          <HollowInput
-            value={mediaType.input.value}
-            className="flex-grow"
-            type="text"
-            placeholder="Media Type"
-            readOnly
-          />
-          {(mediaType.meta.touched || mediaType.meta.visited) &&
-            mediaType.meta.error && (
-              <span className="text-red-600 ml-2">{mediaType.meta.error}</span>
-            )}
-          <div className="w-2" />
-          <Image
-            className={dropdownOpen ? "-rotate-90" : "rotate-90"}
-            src={"/chevron.svg"}
-            alt="dropdown"
-            height={16}
-            width={16}
-          />
-        </div>
-      </HollowInputContainer>
+      {/*Toggle*/}
 
-      {dropdownOpen && (
-        <HollowInputContainer style={{ borderRadius: "60px" }}>
-          <DropdownChecklist
-            {...mediaType.input}
-            close={() => setDropdownOpen(false)}
-            fields={["File", "Link"]}
-            closeOnSelect
-            borders
-          />
-        </HollowInputContainer>
-      )}
+      <span className="flex justify-between">
+        <span>{mediaType.input.value === "File" ? "Artist" : "Curator"}</span>
+        <Toggle {...mediaType.input} fields={['Link', 'File']} setURI={mediaURI.input.onChange}
+                setFileSelected={setFileSelected} />
+      </span>
 
       {mediaType.input.value === "File" ? (
-            <FileUpload
-              wallet={account}
-              fileSelected={fileSelected}
-              setFileSelected={setFileSelected}
-            />
+        <FileUpload
+          wallet={account}
+          fileSelected={fileSelected}
+          setFileSelected={setFileSelected}
+        />
       ) : (
         <HollowInputContainer type="form">
           <HollowInput {...mediaURI.input} type="text" placeholder="Link" />
@@ -104,27 +79,46 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
         )}
       </HollowInputContainer>
 
-      <HollowInputContainer type="form">
-        <HollowInput
-          {...marketplace.input}
-          type="text"
-          placeholder="Marketplace/Platform"
-        />
-        {marketplace.meta.touched && marketplace.meta.error && (
-          <span className="text-red-600 ml-2">{marketplace.meta.error}</span>
-        )}
+      <HollowInputContainer
+        onClick={() => setDropdownOpen(!dropdownOpen)}
+        type="form"
+      >
+        <div className="flex flex-row w-full">
+          <HollowInput
+            value={playlist.input.value}
+            className="flex-grow"
+            type="text"
+            placeholder="Playlist"
+            readOnly
+          />
+          {(playlist.meta.touched || playlist.meta.visited) &&
+            playlist.meta.error && (
+              <span className="text-red-600 ml-2">{playlist.meta.error}</span>
+            )}
+          <div className="w-2" />
+          <Image
+            className={dropdownOpen ? "-rotate-90" : "rotate-90"}
+            src={"/chevron.svg"}
+            alt="dropdown"
+            height={16}
+            width={16}
+          />
+        </div>
       </HollowInputContainer>
 
-      <HollowInputContainer type="form">
-        <HollowInput
-          {...artistWallet.input}
-          type="text"
-          placeholder="Artist Wallet Address (Optional)"
-        />
-        {artistWallet.meta.touched && artistWallet.meta.error && (
-          <span className="ml-2 text-red-600">{artistWallet.meta.error}</span>
-        )}
-      </HollowInputContainer>
+      {dropdownOpen && (
+        <HollowInputContainer style={{ borderRadius: "60px" }}>
+          <DropdownChecklist
+            {...playlist.input}
+            close={() => setDropdownOpen(false)}
+            // @ts-ignore
+            fields={playlists.map(p => p.name)}
+            closeOnSelect
+            borders
+          />
+        </HollowInputContainer>
+      )}
+
       <HollowTagsInput {...tags.input} />
       <div className="flex justify-center items-center">
         <HollowButtonContainer onClick={handleSubmit}>
@@ -134,12 +128,12 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
               !(metamaskLoading
                 ? false
                 : (mediaType.input.value === "File" &&
-                    valid &&
-                    !!fileSelected) ||
-                  (mediaType.input.value === "Link" && valid))//TODO: do mediaType checks in the validator file
+                  valid &&
+                  !!fileSelected) ||
+                (mediaType.input.value === "Link" && valid))//TODO: do mediaType checks in the validator file
             }
           >
-            {metamaskLoading ? "Waiting for Wallet..." : "Mint"}
+            {metamaskLoading ? metamaskLoading : "Mint"}
           </HollowButton>
           <Image src="/favicon.svg" height={16} width={16} alt={"Gem"} />
         </HollowButtonContainer>

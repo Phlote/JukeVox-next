@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { Injected, WalletConnect } from "../../utils/connectors";
 import { CachedConnector, getCachedConnector } from "../../utils/web3";
 
+// UNUSED
+
 export default function useEagerConnect() {
   const { activate, active } = useWeb3React();
 

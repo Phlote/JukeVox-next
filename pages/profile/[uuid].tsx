@@ -73,8 +73,8 @@ export default function Profile(props) {
             <ArchiveTableHeader label="Date" />
             <ArchiveTableHeader label="Artist" />
             <ArchiveTableHeader label="Title" />
-            <ArchiveTableHeader label="Media Type" filterKey={"mediaType"} />
-            <ArchiveTableHeader label="Platform" filterKey="marketplace" />
+            {/* TODO: CURATOR/ARTIST SEPARATION */}
+            <ArchiveTableHeader label="Type" filterKey={"isArtist"} />
             <ArchiveTableHeader label="Co-Signs" />
           </tr>
         </thead>
@@ -84,16 +84,16 @@ export default function Profile(props) {
             <tr className="h-4" />
             {submissions?.map((submission) => {
               const {
-                id,
-                curatorWallet,
+                submissionID,
+                submitterWallet,
                 artistName,
                 mediaTitle,
-                mediaType,
+                hotdropAddress,
+                isArtist,
                 mediaURI,
-                marketplace,
                 submissionTime,
                 cosigns,
-              } = submission;
+              } = submission as Submission;
 
               return (
                 <>
@@ -101,7 +101,7 @@ export default function Profile(props) {
                     key={`${submissionTime}`}
                     className="hover:opacity-80 cursor-pointer"
                     onClick={() => {
-                      router.push(`/submission/${id}`);
+                      router.push(`/submission/${submissionID}`);
                     }}
                   >
                     <ArchiveTableDataCell>
@@ -119,15 +119,12 @@ export default function Profile(props) {
                         {mediaTitle}
                       </a>
                     </ArchiveTableDataCell>
-                    <ArchiveTableDataCell>{mediaType}</ArchiveTableDataCell>
-                    <ArchiveTableDataCell>{marketplace}</ArchiveTableDataCell>
+                    {/*    // TODO: CURATOR/ARTIST SEPARATION */}
+                    <ArchiveTableDataCell>{isArtist ? 'Artist' : 'Curator'}</ArchiveTableDataCell>
 
                     <ArchiveTableDataCell>
-                      <RatingsMeter
-                        initialCosigns={cosigns}
-                        submissionId={id}
-                        submitterWallet={curatorWallet}
-                      />
+                      {/* TODO: CURATOR/ARTIST SEPARATION */}
+                      <RatingsMeter hotdropAddress={hotdropAddress} initialCosigns={cosigns} submissionID={submissionID} submitterWallet={submitterWallet} isArtist={isArtist}/>
                     </ArchiveTableDataCell>
                   </ArchiveTableRow>
                   <tr className="h-4" />
@@ -163,21 +160,20 @@ export async function getStaticProps({ params }) {
 
   return {
     props: {
-      submissions: await getSubmissionsWithFilter(null, { curatorWallet: uuid }),
+      submissions: await getSubmissionsWithFilter(null, { submitterWallet: uuid }),
       profile: await getProfileForWallet(uuid),
-    },
-    revalidate: 60,
+    }
   };
 }
 
 export async function getStaticPaths() {
-  const submissionsQuery = await supabase.from("submissions").select();
+  const submissionsQuery = await supabase.from('submissions').select();
 
   if (submissionsQuery.error) throw submissionsQuery.error;
 
   // IDEA: should we have two pages for each user?
   const UUIDs = submissionsQuery.data.map((submission: Submission) => {
-    return submission.curatorWallet; // Make sure to generate lower case links as a default
+    return submission.submitterWallet.toString(); // Make sure to generate lower case links as a default
     // Supabase db still has many uppercase links, thus this is necessary
   });
 

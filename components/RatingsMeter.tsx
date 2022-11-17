@@ -1,39 +1,64 @@
 import { ethers } from "ethers";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { cosign } from "../controllers/cosigns";
 import { useIsCurator } from "../hooks/useIsCurator";
 import { useProfile } from "./Forms/ProfileSettingsForm";
-import { useMoralis } from "react-moralis";
 import ReactTooltip from "react-tooltip";
+import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
+import { CuratorABI, CuratorAddress } from "../solidity/utils/Curator";
+import { ContractRes } from "../types";
+import { PhloteVoteABI, PhloteVoteAddress } from "../solidity/utils/PhloteVote";
+
+const phloteTokenCosts = [50, 60, 70, 80, 90];
 
 export const RatingsMeter: React.FC<{
-  submissionId: number;
+  // TODO: Use submission interface instead
+  submissionID: number;
   submitterWallet: string;
   initialCosigns: string[];
+  isArtist: boolean;
+  hotdropAddress: string;
 }> = (props) => {
-  const { submissionId, submitterWallet, initialCosigns } = props;
+  const { submissionID, submitterWallet, initialCosigns, isArtist, hotdropAddress } = props;
 
   const { isWeb3Enabled, account } = useMoralis();
-  const [cosigns, setCosigns] = React.useState<string[]>([]);
+  const { fetch: runContractFunction, data, error, isLoading, isFetching, } = useWeb3ExecuteFunction();
+  const [contractRes, setContractRes] = useState<ContractRes>({});
+  const [approvalRes, setApprovalRes] = useState<ContractRes>({});
 
-  useEffect(() => ReactTooltip.rebuild() as () => (void),[]);
+  const [cosigns, setCosigns] = useState<string[]>([]);
 
-  React.useEffect(() => {
+  useEffect(() => ReactTooltip.rebuild() as () => (void), []);
+
+  useEffect(() => {
     if (initialCosigns) {
       setCosigns(initialCosigns);
     }
   }, [initialCosigns]);
 
-  const isCuratorQuery = useIsCurator();
+  const isCuratorData = useIsCurator();
+  const isCurator = isCuratorData.data?.isCurator;
 
   const canCosign = account &&
-    isCuratorQuery?.data?.isCurator &&
+    isCurator &&
     !cosigns.includes("pending") &&
     !cosigns.includes(account) &&
     submitterWallet?.toLowerCase() !== account.toLowerCase();
+
+  let cantCosignMessage = '';
+  if (account) {
+    if (!isCurator) {
+      cantCosignMessage = 'Need phlote tokens to cosign.';
+    }
+    if (submitterWallet?.toLowerCase() === account.toLowerCase()) {
+      cantCosignMessage = "Can't cosign own submission."
+    }
+  } else {
+    cantCosignMessage = 'Connect your wallet to cosign.';
+  }
 
   const onCosign = async (e) => {
     e.stopPropagation();
@@ -42,8 +67,61 @@ export const RatingsMeter: React.FC<{
       if (!isWeb3Enabled) {
         throw "Authentication failed";
       }
-      const newCosigns = await cosign(submissionId, account);
-      if (newCosigns) setCosigns(newCosigns);
+
+      console.log('PHLOTE TOKEN AMMOUNT', phloteTokenCosts[cosigns.length]);
+
+      if (isArtist) {
+        const optionsApproval = {
+          abi: PhloteVoteABI,
+          contractAddress: PhloteVoteAddress,
+          functionName: "approve",
+          params: {
+            spender: CuratorAddress,
+            amount: phloteTokenCosts[cosigns.length]
+          },
+        }
+
+        const approvalTransaction = await runContractFunction({
+          params: optionsApproval,
+          onError: (err) => {
+            setApprovalRes(err);
+            throw err;
+          },
+          onSuccess: (res) => {
+            console.log(res);
+            setApprovalRes(res);
+          },
+        });
+
+        // @ts-ignore
+        await approvalTransaction.wait();
+      }
+
+      const optionsContract = {
+        abi: CuratorABI,
+        contractAddress: CuratorAddress,
+        functionName: "curate",
+        params: {
+          _hotdrop: hotdropAddress
+        },
+      }
+
+      await runContractFunction({
+        params: optionsContract,
+        onError: (err) => {
+          setContractRes(err);
+          throw err;
+        },
+        onSuccess: (res) => {
+          console.log(res);
+          setContractRes(res);
+        },
+      });
+
+      const newCosigns = await cosign(submissionID, account);
+      if (newCosigns) {
+        setCosigns(newCosigns);
+      }
     } catch (e) {
       console.error(e);
       toast.error(e.message);
@@ -52,14 +130,14 @@ export const RatingsMeter: React.FC<{
   };
 
   return (
-    <div className={`flex gap-1 justify-center `} data-tip={!canCosign ? 'Connect your wallet to cosign.' : ''}>
+    <div className={`flex gap-1 justify-center `} data-tip={cantCosignMessage}>
       {Array(5)
         .fill(null)
         .map((_, idx) => {
           if (idx > cosigns.length - 1) {
             return (
               <button
-                key={`${submissionId}-cosign-${idx}`}
+                key={`${submissionID}-cosign-${idx}`}
                 onClick={onCosign}
                 className={`h-6 w-6 relative ${
                   canCosign ? "hover:opacity-25 cursor-pointer" : undefined
@@ -78,7 +156,7 @@ export const RatingsMeter: React.FC<{
               return (
                 <div
                   className="h-6 w-6 opacity-25 relative"
-                  key={`${submissionId}-cosign-${idx}`}
+                  key={`${submissionID}-cosign-${idx}`}
                 >
                   <Image src="/blue_diamond.png" alt="cosigned" layout="fill" />
                 </div>
@@ -86,7 +164,7 @@ export const RatingsMeter: React.FC<{
             } else {
               return (
                 <div
-                  key={`${submissionId}-cosign-${idx}`}
+                  key={`${submissionID}-cosign-${idx}`}
                   className="h-6 w-6 relative"
                   onClick={(e) => e.stopPropagation()}
                 >

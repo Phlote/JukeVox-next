@@ -1,10 +1,14 @@
 import Image from "next/image";
 import React from "react";
 import Clock from "./Clock";
+import { useRouter } from "next/router";
 
 export const Footer: React.FC = (props) => {
+
+  let { pathname } = useRouter(); // TODO: Find a CSS only solution for footer position
+
   return (
-    <div className="grid-cols-3 gap-4 relative h-14 bottom-0 w-screen bg-phlote-container sm:grid hidden">
+    <div className={`${pathname === '/' ? 'relative' : 'absolute bottom-0'} grid-cols-3 gap-4 h-14 w-screen bg-phlote-container sm:grid hidden`}>
       <div className="my-auto ml-8">
         <Clock />
       </div>

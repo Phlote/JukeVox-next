@@ -13,7 +13,7 @@ const addRootComments = async () => {
 
   supabase.from("comments").delete();
 
-  const submissions = await supabase.from("submissions").select();
+  const submissions = await supabase.from('Curator_Submission_Table').select();
   if (submissions.error) {
     console.error("error getting submissions");
     return;
@@ -21,9 +21,9 @@ const addRootComments = async () => {
 
   const comments = submissions.data.map((s: Submission) => {
     return {
-      threadId: s.id,
+      threadId: s.submissionID,
       slug: `submission-root-${cuid.slug()}`,
-      authorId: s.curatorWallet,
+      authorId: s.submitterWallet,
       isApproved: true,
     };
   });

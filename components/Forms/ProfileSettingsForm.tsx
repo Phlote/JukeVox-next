@@ -5,7 +5,6 @@ import { useField, useForm } from "react-final-form-hooks";
 import { useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { getProfile } from "../../controllers/profiles";
-import { revalidate } from "../../controllers/revalidate";
 import { supabase } from "../../lib/supabase";
 import {
   HollowButton,
@@ -15,8 +14,6 @@ import {
 } from "../Hollow";
 import { validateProfileSettings } from "./validators";
 import { sendEmail } from "../../controllers/sendEmail";
-import { verifyUser } from "../../utils/web3";
-import { cosign } from "../../controllers/cosigns";
 import { minutesBetweenDateAndNow } from "../../utils/numbers";
 
 export interface UserProfile {
@@ -37,8 +34,9 @@ export const ProfileSettingsForm = ({ wallet }) => {
   const onSubmit = async (formData: Partial<UserProfile>) => {
     setSubmitting(true);
     try {
+      console.log(wallet);
       const { username, city, twitter, email } = formData;
-      const { data, error } = await supabase.from("profiles").upsert(
+      const { data, error } = await supabase.from("Users_Table").upsert(
         {
           wallet,
           email: email?.trim(),
@@ -50,22 +48,15 @@ export const ProfileSettingsForm = ({ wallet }) => {
       );
       if (error) throw error;
 
-      const submissionsUpdate = await supabase
-        .from("submissions")
-        .update({ username })
-        .match({ curatorWallet: wallet });
-
-      if (submissionsUpdate.error) console.error(submissionsUpdate.error);
-
       await queryClient.invalidateQueries(["profile", wallet]);
-      await revalidate(username);
       toast.success("Submitted!");
 
-      if (minutesBetweenDateAndNow(data[0].created_at) < 2) { // Only send email on profile creation
+      if (minutesBetweenDateAndNow(data[0].createdAt) < 2) { // Only send email on profile creation
         await sendEmail(email, username, "Welcome to Phlote", `Welcome to Phlote ${username}`);
       }
     } catch (e) {
       toast.error(e);
+      console.error(e);
     } finally {
       setSubmitting(false);
     }
@@ -150,7 +141,7 @@ const ProfilePictureUpload = ({ wallet, initialImageURL }) => {
   const onDrop = useCallback(
     async (acceptedFiles) => {
       setUpdating(true);
-      const updateTime = Date.now();
+      const updateTime = new Date().toISOString();
       try {
         const uploadProfilePic = await supabase.storage
           .from("profile-pics")
@@ -168,7 +159,7 @@ const ProfilePictureUpload = ({ wallet, initialImageURL }) => {
 
         setImageURL(`${publicURLQuery.publicURL}?cacheBust=${updateTime}`);
 
-        const profileUpsert = await supabase.from("profiles").upsert(
+        const profileUpsert = await supabase.from("Users_Table").upsert(
           {
             wallet,
             profilePic: publicURLQuery.publicURL,

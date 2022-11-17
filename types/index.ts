@@ -3,36 +3,40 @@ export interface UserNonce {
   nonce: number;
 }
 
-type MediaType = "File" | "Link";
 export interface Submission {
-  id: number;
+  hotdropAddress: string;
+  submissionID: number;
   submissionTime: string;
-  mediaType: MediaType;
   artistName: string;
-  artistWallet: string;
-  curatorWallet: string;
+  submitterWallet: string;
   mediaTitle: string;
   mediaFormat: string;
   mediaURI: string;
-  marketplace: string;
   tags?: string[];
   cosigns?: string[];
   noOfCosigns?: number;
   username: string;
   nftMetadata: string;
+  isArtist: boolean;
+  mediaType?: 'File' | 'Link';
 }
 
 export interface SubmissionElasticSearchDocument {
   supabase_id: number;
-  media_type: MediaType;
+  is_artist: boolean;
   artist_name: string;
-  artist_wallet: string;
   curator_wallet: string;
   media_title: string;
   media_uri: string;
-  marketplace: string;
   tags?: string[];
   submission_time: string;
+  hotdrop_address: string;
+}
+
+export type ContractRes = {
+  hash?: string,
+  code?: number,
+  message?: string
 }
 
 //TODO: will this be used for submission NFTs? I would imagine no, so its name should rename
@@ -41,13 +45,11 @@ export interface CurationNFTMetadata {
   description: string;
   image: string;
   properties: {
-    mediaType: MediaType;
+    isArist: boolean;
     artistName: string;
-    artistWallet: string;
-    curatorWallet: string;
+    submitterWallet: string;
     mediaTitle: string;
     mediaURI: string;
-    marketplace: string;
     tags?: {
       name: string;
       value: string[];

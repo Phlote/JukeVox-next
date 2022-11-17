@@ -1,7 +1,6 @@
 // pages/api/revalidate.js
 
 import { NextApiRequest, NextApiResponse } from "next";
-import { supabase } from "../../lib/supabase";
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,33 +10,18 @@ export default async function handler(
   // if (req.query.secret !== process.env.MY_SECRET_TOKEN) {
   //   return res.status(401).json({ message: 'Invalid token' })
   // }
-  const { username, submissionId } = req.body;
+  const { wallet, submissionID } = req.body;
 
   try {
-    if (username) {
-      console.log(`Revalidating: /profile/${username}`);
-      await res.unstable_revalidate(`/profile/${username}`);
+    if (wallet) {
+      console.log(`Revalidating: /profile/${wallet}`);
+      await res.unstable_revalidate(`/profile/${wallet}`);
+    } else console.log("wallet not provided or was falsy");
 
-      const submissionsQuery = await supabase
-        .from("submissions")
-        .select()
-        .match({ username });
-
-      if (submissionsQuery.error) throw submissionsQuery.error;
-
-      // update all the submission pages for that user
-      await Promise.all(
-        submissionsQuery.data.map(async ({ id }) => {
-          console.log(`Revalidating: /submission/${id}`);
-          await res.unstable_revalidate(`/submission/${id}`);
-        })
-      );
-    } else console.log("username not provided or was falsy");
-
-    if (submissionId) {
-      console.log(`Revalidating: /submission/${submissionId}`);
-      await res.unstable_revalidate(`/submission/${submissionId}`);
-    } else console.log("submissionId not provided or was falsy");
+    if (submissionID) {
+      console.log(`Revalidating: /submission/${submissionID}`);
+      await res.unstable_revalidate(`/submission/${submissionID}`);
+    } else console.log("submissionID not provided or was falsy");
 
     return res.json({ revalidated: true });
   } catch (err) {

@@ -20,15 +20,16 @@ export default function SubmissionPage(props: {
 
   useEffect(() => {
     if (submission) {
-      let prevId = submission.id - 1;
-      let nextId = submission.id + 1;
+      //TODO: cant increment and decrement, must fetch from db
+      // let prevId = submission.submissionID - 1;
+      // let nextId = submission.submissionID + 1;
 
-      getSubmissionById(prevId).then(v => {
-        setPrev(v.data.length > 0);
-      });
-      getSubmissionById(nextId).then(v => {
-        setNext(v.data.length > 0);
-      });
+      // getSubmissionById(prevId).then(v => {
+      //   setPrev(v.data.length > 0);
+      // });
+      // getSubmissionById(nextId).then(v => {
+      //   setNext(v.data.length > 0);
+      // });
     }
   }, [submission]);
 
@@ -38,13 +39,13 @@ export default function SubmissionPage(props: {
   }
 
   return (
-    <CommentsContextProvider threadId={submission.id}>
+    <CommentsContextProvider threadId={submission.submissionID}>
       <div className="min-w-full mt-32">
         <div className="flex justify-center min-w-full mb-8">
           <div className="my-auto sm:left-10 w-8 h-8 sm:w-32 sm:h-32">
             {next &&
                 <a
-                    href={`/submission/${submission.id + 1}`}
+                    href={`/submission/${submission.submissionID + 1}`}
                 >
                     <ArrowLeft className="m-0 w-8 h-8 sm:w-32 sm:h-32 sm:m-0 sm:w-auto" />
                 </a>
@@ -54,7 +55,7 @@ export default function SubmissionPage(props: {
           <div className="my-auto sm:right-10 w-8 h-8 sm:w-32 sm:h-32">
             {prev &&
                 <a
-                    href={`/submission/${submission.id - 1}`}
+                    href={`/submission/${submission.submissionID - 1}`}
                 >
                     <ArrowRight className="m-0 w-8 h-8 sm:w-32 sm:h-32 sm:m-0 sm:w-auto" />
                 </a>
@@ -82,16 +83,29 @@ SubmissionPage.getLayout = function getLayout(page) {
 export async function getStaticProps({ params }) {
   const { id } = params;
 
-  const submissionsQuery = await supabase
-    .from("submissions")
+  const isArtistQuery = await supabase
+    .from('submissions')
     .select()
-    .match({ id });
+    .match({ submissionID: id });
+
+  if (isArtistQuery.error) throw isArtistQuery.error;
+
+  const isArtist = isArtistQuery.data[0].isArtist;
+
+  let tableName = 'Curator_Submission_Table';
+  if (isArtist) tableName = 'Artist_Submission_Table';
+
+  const submissionsQuery = await supabase
+    .from(tableName)
+    .select()
+    .match({ submissionID: id });
 
   if (submissionsQuery.error) throw submissionsQuery.error;
 
   const submission = submissionsQuery.data[0] as Submission;
   let submissionFileType = null;
-  if (submission.mediaType === "File") {
+
+  if (submission.isArtist) {
     try {
       const response = await fetch(submission.mediaURI, { method: "HEAD" });
       submissionFileType = response.headers.get("content-type");
@@ -111,15 +125,16 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-  const submissionsQuery = await supabase.from("submissions").select();
-
+  const submissionsQuery = await supabase.from('submissions').select();
   if (submissionsQuery.error) throw submissionsQuery.error;
 
-  const paths = submissionsQuery.data.map(({ id }) => ({
+  const paths = submissionsQuery.data.map(({ submissionID }) => ({
     params: {
-      id: id.toString(),
+      id: submissionID
     },
   }));
+
+  console.log(paths);
 
   return { paths, fallback: true };
 }

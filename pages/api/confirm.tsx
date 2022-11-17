@@ -4,6 +4,8 @@ import { supabase } from "../../lib/supabase";
 import { UserNonce } from "../../types";
 import { PHLOTE_SIGNATURE_REQUEST_MESSAGE } from "../../utils/constants";
 
+// UNUSED
+
 export default async function confirm(
   req: NextApiRequest,
   res: NextApiResponse

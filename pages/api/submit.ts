@@ -12,31 +12,68 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  const { submission, wallet } = request.body;
+  const { submission, wallet, type } = request.body;
+
+  console.log({ submission });
 
   try {
-    const submissionWithSubmitterInfo = {
-      curatorWallet: wallet,
-      ...submission,
+    // TODO: Why is this not typed as a Submission?
+    const submissionWithSubmitterInfo:
+      {
+        submitterWallet: string
+        mediaTitle: string
+        mediaURI: string[]
+        artistName: string
+        mediaFormat?: string
+        playlistIDs?: string[]
+        username?: string
+        hotdropAddress: string
+      } = {
+      submitterWallet: wallet,
+      mediaTitle: submission.mediaTitle,
+      mediaURI: [submission.mediaURI],
+      artistName: submission.artistName,
+      hotdropAddress: submission.hotdropAddress
     };
 
-    const profileQuery = await supabase
-      .from("profiles")
-      .select()
-      .match({ wallet });
+    // const profileQuery = await supabase
+    //   .from("Users_Table")
+    //   .select()
+    //   .match({ wallet });
+    //
+    // if (profileQuery.data.length > 0) {
+    //   const { username } = profileQuery.data[0];
+    //   submissionWithSubmitterInfo.username = username;
+    // }
 
-    if (profileQuery.data.length > 0) {
-      const { username } = profileQuery.data[0];
-      submissionWithSubmitterInfo.username = username;
+    const playlistsQuery = await supabase
+      .from("Playlists_Table")
+      .select()
+      .match({ playlistName: submission.playlist });
+
+    if (playlistsQuery.data.length > 0) {
+      submissionWithSubmitterInfo.playlistIDs = [playlistsQuery.data[0].playlistID];
     }
 
-    const uri = await storeSubmissionOnIPFS(submissionWithSubmitterInfo);
-    console.log("uri: ", uri);
-    submissionWithSubmitterInfo.nftMetadata = uri;
+    // TODO: CURATOR/ARTIST SEPARATION
 
-    const submissionsInsert = await supabase
-      .from("submissions")
-      .insert([submissionWithSubmitterInfo]);
+    let submissionsInsert = await (async () => {
+      if (type === 'File') {
+        // submissionWithSubmitterInfo.nftMetadata = await storeSubmissionOnIPFS(submissionWithSubmitterInfo); do we need this?
+
+        submissionWithSubmitterInfo.mediaFormat = submission.mediaFormat;
+
+        return supabase
+          .from('Artist_Submission_Table')
+          .insert([submissionWithSubmitterInfo]);
+      } else {
+        return supabase
+          .from('Curator_Submission_Table')
+          .insert([submissionWithSubmitterInfo]);
+      }
+    })();
+
+    console.log({ submissionsInsert });
 
     if (submissionsInsert.error) throw submissionsInsert.error;
 
@@ -44,9 +81,9 @@ export default async function handler(
 
     await supabase.from("comments").insert([
       {
-        threadId: submissionRes.id,
+        threadId: submissionRes.submissionID,
         slug: `submission-root-${cuid.slug()}`,
-        authorId: submissionRes.curatorWallet,
+        authorId: submissionRes.submitterWallet,
         isApproved: true,
       },
     ]);

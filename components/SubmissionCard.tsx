@@ -7,6 +7,7 @@ import tw from "twin.macro";
 import styled from "styled-components";
 import { RatingsMeter } from "./RatingsMeter";
 import { CommentBubble } from "./Comments/CommentBubble";
+import { Submission } from "../types";
 
 const SubmissionCardDetails = styled.div`
   ${tw`p-4 bg-phlote-ff-modal`}
@@ -20,8 +21,8 @@ const SubmissionCardDetails = styled.div`
   }
 `;
 
-const SubmissionCard = ({ submission }) => {
-
+const SubmissionCard = ({ submission }: { submission: Submission }) => {
+  console.log(submission);
   const videoEl = useRef(null);
 
   return (
@@ -75,7 +76,7 @@ const SubmissionCard = ({ submission }) => {
             <div className="h-2" />
             <Username
               username={submission.username}
-              wallet={submission.curatorWallet}
+              wallet={submission.submitterWallet}
               linkToProfile
             />
           </div>
@@ -88,7 +89,7 @@ const SubmissionCard = ({ submission }) => {
               url={`${
                 process.env.NEXT_PUBLIC_URL ??
                 process.env.NEXT_PUBLIC_VERCEL_URL
-              }/submission/${submission.id}`}
+              }/submission/${submission.submissionID}`}
               title={`Have you heard ${submission.mediaTitle}? It's a 💎`}
             >
               <TwitterIcon size={32} round />
@@ -96,10 +97,12 @@ const SubmissionCard = ({ submission }) => {
             {/*<CommentBubble />*/}
           </div>
           <div className="flex flex-10 justify-center items-center">
-            <RatingsMeter submissionId={submission.id} submitterWallet={submission.wallet} initialCosigns={submission.cosigns}/>
+            {/* TODO: CURATOR/ARTIST SEPARATION */}
+            <RatingsMeter hotdropAddress={submission.hotdropAddress} submissionID={submission.submissionID} submitterWallet={submission.submitterWallet}
+                          initialCosigns={submission.cosigns} isArtist={submission.isArtist}/>
           </div>
         </div>
-        </SubmissionCardDetails>
+      </SubmissionCardDetails>
     </div>
   )
 }
