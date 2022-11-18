@@ -132,7 +132,7 @@ const AccountDropdown = (props) => {
                 width={24}
               />
             </div>
-            {profile?.data && (
+            {profile?.data?.username && (
               <>
                 <div className="w-4" />
                 <div

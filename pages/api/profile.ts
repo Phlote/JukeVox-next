@@ -8,6 +8,6 @@ export default async function handler(
   const { wallet } = request.query;
 
   const profile = await getProfileForWallet(wallet as string);
-  console.log(profile);
+  
   response.status(200).send(profile);
 }

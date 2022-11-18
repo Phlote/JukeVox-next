@@ -41,7 +41,7 @@ export default function Profile(props) {
   return (
     <div className="flex flex-col ">
       <div className="flex justify-center">
-        {profile?.data ? (
+        {profile?.data?.username ? (
             <>
               <div className="flex-grow"></div>
               <UserStatsBar profile={profile.data} />

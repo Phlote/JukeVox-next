@@ -11,6 +11,7 @@ import { useMoralis } from "react-moralis";
 import { UnsupportedChainIdError } from "@web3-react/core";
 import { toast } from "react-toastify";
 import { revalidate } from "../../controllers/revalidate";
+import { supabase } from "../../lib/supabase";
 
 const connectWalletModalOpenAtom = atom<boolean>(false);
 export const useConnectWalletModalOpen = () => useAtom(connectWalletModalOpenAtom);
@@ -76,8 +77,12 @@ export const ConnectWalletButtons = ({ setOpen }) => {
     if (account && !isAuthenticating && isWeb3Enabled) {
       getProfile(account)
         .then(profile => {
-          if (typeof profile === 'undefined'){
+          if (typeof profile === 'undefined') {
             router.push("/editprofile");
+            supabase // TODO: Improve this, error catching, separate async function...
+              .from("Users_Table")
+              .upsert({ wallet: account }, { onConflict: "wallet" })
+              .then(r=>console.log(r));
           } else if (!router.pathname.includes('archive'))
             router.push("/archive");
         })
