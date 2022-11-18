@@ -112,7 +112,7 @@ export default function Profile(props) {
                       <a
                         rel="noreferrer"
                         target="_blank"
-                        href={mediaURI}
+                        href={mediaURI[0].replace(/["{}]/g,'')}
                         className="underline"
                         onClick={(e) => e.stopPropagation()}
                       >

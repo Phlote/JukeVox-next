@@ -64,7 +64,6 @@ function Archive({ query }) {
   }, [searchBarContent, selectedFilters]);
 
   const submissions = useSubmissionSearch();
-  console.log(submissions);
   const noResults =
     !submissions.isLoading &&
     !submissions.isFetching &&
@@ -76,7 +75,6 @@ function Archive({ query }) {
 
   return (
     <div className="flex flex-col h-full">
-          {/* {console.log(submissions.data.pages[0].submissions[0])} */}
       <table className="table-fixed w-full text-center mt-8 ">
         <thead
           style={{
@@ -161,7 +159,7 @@ const ArchiveEntry: React.FC<{ submission: Submission }> = ({ submission }) => {
             <a
               rel="noreferrer"
               target="_blank"
-              href={mediaURI}
+              href={mediaURI[0].replace(/["{}]/g,'')} // TODO: figure out what is wrong with the values from the db
               className="hover:opacity-50"
               onClick={(e) => e.stopPropagation()}
             >

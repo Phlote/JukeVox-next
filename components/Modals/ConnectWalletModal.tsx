@@ -76,7 +76,9 @@ export const ConnectWalletButtons = ({ setOpen }) => {
     if (account && !isAuthenticating && isWeb3Enabled) {
       getProfile(account)
         .then(profile => {
-          if (!router.pathname.includes('archive'))
+          if (typeof profile === 'undefined'){
+            router.push("/editprofile");
+          } else if (!router.pathname.includes('archive'))
             router.push("/archive");
         })
         .catch(error => {
