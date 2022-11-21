@@ -21,6 +21,24 @@ export interface Submission {
   mediaType?: 'File' | 'Link';
 }
 
+export interface OldSubmission {
+  hotdropAddress: string;
+  submissionID: number;
+  submissionTime: string;
+  artistName: string;
+  submitterWallet: string;
+  mediaTitle: string;
+  mediaFormat: string;
+  mediaURI: string;
+  tags?: string[];
+  cosigns?: string[];
+  noOfCosigns?: number;
+  username: string;
+  nftMetadata: string;
+  isArtist: boolean;
+  mediaType?: 'File' | 'Link';
+}
+
 export interface SubmissionElasticSearchDocument {
   supabase_id: number;
   is_artist: boolean;
