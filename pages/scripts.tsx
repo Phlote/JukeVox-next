@@ -6,7 +6,7 @@ import { HollowButton, HollowButtonContainer } from "../components/Hollow";
 import React, { useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { supabase, oldSupabase } from "../lib/supabase";
-import { Submission } from "../types";
+import { OldSubmission, Submission } from "../types";
 
 const migrateSubmissions = async () => {
   console.log(supabase,oldSupabase);
@@ -21,23 +21,20 @@ const migrateSubmissions = async () => {
 
   console.log(oldSubmissions);
 
-  const curatorSubs = oldSubmissions.data.map((s: Submission) => {
-    const { mediaType, artistName, curatorWallet } = s;
+  const curatorSubs = oldSubmissions.data.map((s: OldSubmission) => {
+    const { mediaType, artistName, curatorWallet, cosigns, mediaTitle, mediaURI, noOfCosigns, submissionTime, tags, mediaFormat } = s;
     if (mediaType !== 'File') {
       return {
-        submissionTime: string,
-        artistName: string,
-        submitterWallet: string,
-        mediaTitle: string,
-        mediaFormat: string,
-        mediaURI: string,
-        tags: string,
-        cosigns: string,
-        noOfCosigns: number,
-        username: string,
-        nftMetadata: string,
-        isArtist: boolean,
-        mediaType: 'File' | 'Link'
+        submissionTime: submissionTime,
+        artistName: artistName,
+        submitterWallet: curatorWallet,
+        mediaTitle: mediaTitle,
+        mediaFormat: mediaFormat,
+        mediaURI: mediaURI,// Make this an array and fix the other mediaURI problems
+        tags: tags,
+        cosigns: cosigns,
+        noOfCosigns: noOfCosigns,
+        isArtist: false,
       };
     }
   });
@@ -59,7 +56,7 @@ function Scripts() {
         className="lg:w-1/4  w-full"
         onClick={handleSubmit}
       >
-        <HollowButton>Submit</HollowButton>
+        <HollowButton>Migrate submissions</HollowButton>
       </HollowButtonContainer>
     </div>
   )

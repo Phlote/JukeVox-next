@@ -22,21 +22,21 @@ export interface Submission {
 }
 
 export interface OldSubmission {
-  hotdropAddress: string;
-  submissionID: number;
+  id: number;
   submissionTime: string;
+  mediaType: "File" | "Link";
   artistName: string;
-  submitterWallet: string;
+  artistWallet: string;
+  curatorWallet: string;
   mediaTitle: string;
   mediaFormat: string;
   mediaURI: string;
+  marketplace: string;
   tags?: string[];
   cosigns?: string[];
   noOfCosigns?: number;
   username: string;
   nftMetadata: string;
-  isArtist: boolean;
-  mediaType?: 'File' | 'Link';
 }
 
 export interface SubmissionElasticSearchDocument {
