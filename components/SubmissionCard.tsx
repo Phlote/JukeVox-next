@@ -46,7 +46,7 @@ const SubmissionCard = ({ submission }: { submission: Submission }) => {
         <div className="flex h-12 items-center">
           <div>
             <a
-              href={submission.mediaURI[0].replace(/["{}]/g,'')}
+              href={submission.mediaURI}
               className="text-3xl hover:opacity-50 break-words"
             >
               {submission.mediaTitle}

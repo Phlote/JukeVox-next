@@ -22,7 +22,7 @@ export default async function handler(
       {
         submitterWallet: string
         mediaTitle: string
-        mediaURI: string[]
+        mediaURI: string
         artistName: string
         mediaFormat?: string
         playlistIDs?: string[]
@@ -31,7 +31,7 @@ export default async function handler(
       } = {
       submitterWallet: wallet,
       mediaTitle: submission.mediaTitle,
-      mediaURI: [submission.mediaURI],
+      mediaURI: submission.mediaURI,
       artistName: submission.artistName,
       hotdropAddress: submission.hotdropAddress
     };

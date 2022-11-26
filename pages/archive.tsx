@@ -159,7 +159,7 @@ const ArchiveEntry: React.FC<{ submission: Submission }> = ({ submission }) => {
             <a
               rel="noreferrer"
               target="_blank"
-              href={mediaURI[0].replace(/["{}]/g,'')} // TODO: figure out what is wrong with the values from the db
+              href={mediaURI}
               className="hover:opacity-50"
               onClick={(e) => e.stopPropagation()}
             >

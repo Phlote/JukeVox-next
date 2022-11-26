@@ -11,6 +11,7 @@ export interface Submission {
   submitterWallet: string;
   mediaTitle: string;
   mediaFormat: string;
+  rawURI: string;
   mediaURI: string;
   tags?: string[];
   cosigns?: string[];

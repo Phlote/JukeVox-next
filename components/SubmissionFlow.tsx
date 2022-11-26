@@ -55,8 +55,6 @@ export const SubmissionFlow: FC = (props) => {
         submission.mediaURI = await uploadFiles({
           acceptedFile: fileSelected,
         });
-      } else {
-        submission.mediaURI = JSON.stringify([submission.mediaURI]).replace('[', '{').replace(']', '}');
       }
 
       // https://ipfs.moralis.io:2053/ipfs/QmXHN1h5GFshiiUm2Wx7gjZjFxxyFUfU21TDwzJ1fQETSY

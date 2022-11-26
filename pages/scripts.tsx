@@ -1,10 +1,7 @@
-import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import "react-toastify/dist/ReactToastify.css";
 import { HollowButton, HollowButtonContainer } from "../components/Hollow";
 import React, { useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
 import { supabase, oldSupabase } from "../lib/supabase";
 import { OldSubmission, Submission } from "../types";
 
@@ -13,15 +10,16 @@ const migrateSubmissions = async () => {
 
   const currentDB = supabase;
 
-  const newSubmissions = await currentDB.from('Curator_Submission_Table').select();
+  const curatorSubs = await currentDB.from('Curator_Submission_Table').select();
+  const artistSubs = await currentDB.from('Artist_Submission_Table').select();
 
-  console.log(newSubmissions);
+  console.log({ curatorSubs, artistSubs });
 
   const oldSubmissions = await oldSupabase.from('submissions').select();
 
   console.log(oldSubmissions);
 
-  const curatorSubs = oldSubmissions.data.map((s: OldSubmission) => {
+  const curatorSubmissions = oldSubmissions.data.map((s: OldSubmission) => {
     const { mediaType, artistName, curatorWallet, cosigns, mediaTitle, mediaURI, noOfCosigns, submissionTime, tags, mediaFormat } = s;
     if (mediaType !== 'File') {
       return {
