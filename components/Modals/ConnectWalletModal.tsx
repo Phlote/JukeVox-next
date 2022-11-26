@@ -83,8 +83,8 @@ export const ConnectWalletButtons = ({ setOpen }) => {
               .from("Users_Table")
               .upsert({ wallet: account }, { onConflict: "wallet" })
               .then(r=>console.log(r));
-          } else if (!router.pathname.includes('archive'))
-            router.push("/archive");
+           }// else if (!router.pathname.includes('archive'))
+          //   router.push("/archive"); // This was redirecting the user every time there was a refresh, even when following an external link to the page
         })
         .catch(error => {
           router.push("/editprofile");
