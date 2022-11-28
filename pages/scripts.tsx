@@ -16,11 +16,11 @@ const missingUsers = [
   '0x64d857617eB0D31e0385944BD85729BF278ea41d',
 ]
 
-function valueMatchesValues(value,values){
-  return values.some(v=>v===value);
+export function valueMatchesValues(value, values) {
+  return values.some(v => v === value);
 }
 
-const migrateSubmissions = async () => {
+export const migrateSubmissions = async () => {
   const currentDB = supabase;
 
   const curatorSubs = await currentDB.from('Curator_Submission_Table').select();
@@ -80,7 +80,18 @@ const migrateSubmissions = async () => {
 
   let artistSubmissions = oldSubmissions.data.filter(s => s.mediaType === 'File' && s.mediaURI && s.curatorWallet !== '0xe3974e016f09e0572b2ccdbdb66ce011f9061880');
   artistSubmissions = artistSubmissions.map((s: OldSubmission) => {
-    const { mediaType, artistName, curatorWallet, cosigns, mediaTitle, mediaURI, noOfCosigns, submissionTime, tags, mediaFormat } = s;
+    const {
+      mediaType,
+      artistName,
+      curatorWallet,
+      cosigns,
+      mediaTitle,
+      mediaURI,
+      noOfCosigns,
+      submissionTime,
+      tags,
+      mediaFormat
+    } = s;
     return {
       submissionTime: submissionTime,
       artistName: artistName,
