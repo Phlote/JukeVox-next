@@ -11,6 +11,7 @@ export interface Submission {
   submitterWallet: string;
   mediaTitle: string;
   mediaFormat: string;
+  rawURI: string;
   mediaURI: string;
   tags?: string[];
   cosigns?: string[];
@@ -19,6 +20,24 @@ export interface Submission {
   nftMetadata: string;
   isArtist: boolean;
   mediaType?: 'File' | 'Link';
+}
+
+export interface OldSubmission {
+  id: number;
+  submissionTime: string;
+  mediaType: "File" | "Link";
+  artistName: string;
+  artistWallet: string;
+  curatorWallet: string;
+  mediaTitle: string;
+  mediaFormat: string;
+  mediaURI: string;
+  marketplace: string;
+  tags?: string[];
+  cosigns?: string[];
+  noOfCosigns?: number;
+  username: string;
+  nftMetadata: string;
 }
 
 export interface SubmissionElasticSearchDocument {
