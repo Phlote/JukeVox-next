@@ -121,7 +121,10 @@ export const ConnectWalletButtons = ({ setOpen }) => {
       </HollowButtonContainer>
       <HollowButtonContainer
         disabled={isAuthenticating}
-        onClick={() => login("walletconnect")}
+        onClick={() => {
+          localStorage.clear();
+          login("walletconnect");
+        }}
       >
         <WalletConnectButton />
       </HollowButtonContainer>

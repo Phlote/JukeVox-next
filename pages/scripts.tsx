@@ -5,6 +5,8 @@ import React, { useEffect } from "react";
 import { supabase, oldSupabase } from "../lib/supabase";
 import { OldSubmission, Submission } from "../types";
 
+// TODO: Remove this path from the website
+
 const missingUsers = [
   '0x14e5D778c77574106f8241303C9Ec5F418A82085',
   '0x68DCe5c8C8E5743D4d87eD70244565aFf29C81eA',

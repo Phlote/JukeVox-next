@@ -115,6 +115,7 @@ const AccountDropdown = (props) => {
               onClick={() => {
                 logout()
                   .then((user) => {
+                    localStorage.clear();
                     console.log("logged out user:", user);
                   })
                   .catch((error) => {
