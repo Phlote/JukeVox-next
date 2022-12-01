@@ -45,15 +45,6 @@ export const migrateSubmissions = async () => {
     }
   })
 
-  let usersWithoutProfiles = oldUsersWithoutProfiles.data.filter(u => u.username !== 'Ghostflow' && u.username !== 'hallway' && u.email !== 'theocarraraleao@gmail.com'); // Create a view for users with profiles on old db
-  usersWithoutProfiles = usersWithoutProfiles.map(u => {
-    const { address, city, created_at, email, profilePic, twitter, updateTime, username } = u;
-    return {
-      wallet: address,
-      createdAt: created_at,
-    }
-  })
-
   let curatorSubmissions = oldSubmissions.data.filter(s => s.mediaType !== 'File' && s.mediaURI && !valueMatchesValues(s.curatorWallet, missingUsers));
   curatorSubmissions = curatorSubmissions.map((s: OldSubmission) => {
     const { artistName, curatorWallet, cosigns, mediaTitle, mediaURI, noOfCosigns, submissionTime, tags, username } = s;
@@ -72,11 +63,20 @@ export const migrateSubmissions = async () => {
     };
   });
 
-  let missingWallets = oldSubmissions.data.filter(cs => {
-    return !(usersWithoutProfiles.some(uwp => uwp.wallet === cs.curatorWallet));
-  }); //TODO: Figure out what wallets are present in submissions from the users from old db
+  let curatorSubsWallets = [...new Set(curatorSubmissions.map(o => o.submitterWallet))];
 
-  console.log(missingWallets);
+  let usersWithoutProfiles = curatorSubsWallets.map(w => {
+    return {
+      wallet: w,
+    }
+  })
+  console.log(usersWithoutProfiles);
+
+  // let missingWallets = oldSubmissions.data.filter(cs => {
+  //   return !(usersWithoutProfiles.some(uwp => uwp.wallet === cs.curatorWallet));
+  // }); //TODO: Figure out what wallets are present in submissions from the users from old db
+  //
+  // console.log(missingWallets);
 
   let artistSubmissions = oldSubmissions.data.filter(s => s.mediaType === 'File' && s.mediaURI && s.curatorWallet !== '0xe3974e016f09e0572b2ccdbdb66ce011f9061880');
   artistSubmissions = artistSubmissions.map((s: OldSubmission) => {
@@ -122,10 +122,10 @@ export const migrateSubmissions = async () => {
   // }))
 
   // const { data, error } = await supabase.from("Artist_Submission_Table").insert(artistSubmissions);
-  // const { data, error } = await supabase.from("Curator_Submission_Table").insert(curatorSubmissions);
+  const { data, error } = await supabase.from("Curator_Submission_Table").insert(curatorSubmissions);
   // const { data, error } = await supabase.from("Users_Table").insert(usersWithProfiles); // gotta migrate users first
   // const { data, error } = await supabase.from("Users_Table").upsert(usersWithoutProfiles, {onConflict: "wallet"}).select();
-  // console.log(data, error);
+  console.log(data, error);
 };
 
 
