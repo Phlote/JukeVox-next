@@ -123,6 +123,7 @@ export const ConnectWalletButtons = ({ setOpen }) => {
         disabled={isAuthenticating}
         onClick={() => {
           localStorage.clear();
+          console.log('localstorage clear');
           login("walletconnect");
         }}
       >
