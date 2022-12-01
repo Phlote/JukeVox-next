@@ -23,7 +23,7 @@ const Account = (props) => {
         console.log(provider.constructor.name.toLowerCase());
         console.log(provider.constructor.name.toLowerCase().includes('walletconnect'));
         console.log("END");
-        if (provider.constructor.name.toLowerCase().includes('walletconnect')) {
+        if (provider.constructor.name.toLowerCase() === 'b') {
           enableWeb3({ provider: 'walletconnect', chainId: 80001 }).then(e => {
             console.log('enableWeb3 using wallet connect');
           })
