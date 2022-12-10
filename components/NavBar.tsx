@@ -44,8 +44,8 @@ export const NavBarDesktop = (props) => {
 
   return (
     <div className="pb-4 flex-none w-screen px-12 absolute top-0">
-      <div className="py-2 flex justify-center items-center">
-        <p className="text-center">phlote.xyz is going through maintenance. You may experience issues during usage.</p>
+      <div className="py-2 flex justify-center items-center backdrop-blur-md">
+        <p className="text-center">We are currently performing maintenance over the holidays. More information soon.</p>
       </div>
       <div className="relative flex flex-row gap-4" style={{ height: 70 }}>
         <Link href="/" passHref>

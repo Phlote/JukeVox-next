@@ -12,6 +12,7 @@ import "tailwindcss/tailwind.css";
 import { gaPageview } from "../lib/ga";
 import "../styles/globals.css";
 import getLibrary from "../utils/getLibrary";
+import Overlay from "../components/Overlay";
 
 const queryClient = new QueryClient();
 
@@ -60,6 +61,7 @@ const NextWeb3App = ({ Component, pageProps }: AppPropsWithLayout) => {
       <QueryClientProvider client={queryClient}>
         <MoralisProvider serverUrl={process.env.NEXT_PUBLIC_MORALIS_SERVER_URL} appId={process.env.NEXT_PUBLIC_MORALIS_APP_ID}>
           {getLayout(<Component {...pageProps} />)}
+          <Overlay/>
           <ToastContainer
             position="top-right"
             autoClose={5000}
