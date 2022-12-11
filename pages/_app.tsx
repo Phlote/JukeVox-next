@@ -61,7 +61,6 @@ const NextWeb3App = ({ Component, pageProps }: AppPropsWithLayout) => {
       <QueryClientProvider client={queryClient}>
         <MoralisProvider serverUrl={process.env.NEXT_PUBLIC_MORALIS_SERVER_URL} appId={process.env.NEXT_PUBLIC_MORALIS_APP_ID}>
           {getLayout(<Component {...pageProps} />)}
-          <Overlay/>
           <ToastContainer
             position="top-right"
             autoClose={5000}

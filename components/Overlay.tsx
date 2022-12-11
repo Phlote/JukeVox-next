@@ -3,12 +3,14 @@ import React, { useEffect, useState } from 'react';
 const newsletterLink = 'https://view.flodesk.com/pages/636bef21e224ff21ae4bf3c3?_gl=1*r0c6et*_ga*MTg2ODIwMDI4Mi4xNjY4NjAyMTMz*_ga_SHJDGKPK06*MTY3MDYyOTU0OS4zNC4xLjE2NzA2Mjk2ODYuMC4wLjA';
 
 const Overlay = () => {
-  const [isMaintenance, setIsMaintenance] = useState(()=>{
-    let  saved = typeof window === 'undefined' ? true : localStorage.getItem("hasUserClosedMaintenanceOverlay");
-    return !saved;
-  });
+  const [isMaintenance, setIsMaintenance] = useState(true);
   const [countdown, setCountdown] = useState(5);
-  const [canClick, setCanClick] = useState(false);
+  const [canClick, setCanClick] = useState(false); // false
+
+  useEffect(()=>{
+    let saved = typeof window === 'undefined' ? true : localStorage.getItem("hasUserClosedMaintenanceOverlay");
+    setIsMaintenance(!saved);
+  }, []);
 
   useEffect(() => {
     if (isMaintenance) {
@@ -20,8 +22,10 @@ const Overlay = () => {
   }, [countdown]);
 
   const closeOverlay = () => {
-    canClick && setIsMaintenance(false);
-    typeof window !== "undefined" && localStorage.setItem('hasUserClosedMaintenanceOverlay', "true");
+    if (canClick){
+      setIsMaintenance(false);
+      typeof window !== "undefined" && localStorage.setItem('hasUserClosedMaintenanceOverlay', "true");
+    }
   }
 
   if (isMaintenance){
