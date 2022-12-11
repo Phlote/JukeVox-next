@@ -12,6 +12,7 @@ import "tailwindcss/tailwind.css";
 import { gaPageview } from "../lib/ga";
 import "../styles/globals.css";
 import getLibrary from "../utils/getLibrary";
+import Overlay from "../components/Overlay";
 
 const queryClient = new QueryClient();
 

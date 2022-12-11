@@ -18,6 +18,11 @@ const missingUsers = [
   '0x64d857617eB0D31e0385944BD85729BF278ea41d',
 ]
 
+const alreadyPresentUsernames = [
+  'Ghostflow',
+  'hallway',
+]
+
 export function valueMatchesValues(value, values) {
   return values.some(v => v === value);
 }
@@ -28,105 +33,33 @@ export const migrateSubmissions = async () => {
   const curatorSubs = await currentDB.from('Curator_Submission_Table').select();
   const artistSubs = await currentDB.from('Artist_Submission_Table').select();
 
-  const oldUsersWithProfiles = await oldSupabase.from('users_table').select();
-  const oldUsersWithoutProfiles = await oldSupabase.from('users').select();
-  const oldSubmissions = await oldSupabase.from('submissions').select();
+  const newUserProfiles = await currentDB.from('Users_Table').select();
 
-  let usersWithProfiles = oldUsersWithProfiles.data.filter(u => u.username !== 'Ghostflow' && u.username !== 'hallway' && u.email !== 'theocarraraleao@gmail.com'); // Create a view for users with profiles on old db
-  usersWithProfiles = usersWithProfiles.map(u => {
-    const { address, city, created_at, email, profilePic, twitter, updateTime, username } = u;
-    return {
-      wallet: address,
-      city: city,
-      email: email,
-      username: username,
-      profilePic: profilePic,
-      twitter: twitter,
-      createdAt: created_at,
-      updateTime: typeof updateTime === 'number' ? new Date(updateTime).toISOString() : null
-    }
+  // const oldUsersWithProfiles = await oldSupabase.from('users_table').select();
+  // const oldProfiles = await oldSupabase.from('profiles').select();
+  // const oldUsersWithoutProfiles = await oldSupabase.from('users').select();
+  // const oldSubmissions = await oldSupabase.from('submissions').select();
+
+  console.log(curatorSubs);
+  console.log(newUserProfiles);
+
+  let missingUsers = curatorSubs.data.filter(u=>{
+    return !(newUserProfiles.data.some(s => s.wallet === u.submitterWallet));
   })
 
-  let curatorSubmissions = oldSubmissions.data.filter(s => s.mediaType !== 'File' && s.mediaURI && !valueMatchesValues(s.curatorWallet, missingUsers));
-  curatorSubmissions = curatorSubmissions.map((s: OldSubmission) => {
-    const { artistName, curatorWallet, cosigns, mediaTitle, mediaURI, noOfCosigns, submissionTime, tags, username } = s;
-    return {
-      submissionTime: submissionTime,
-      artistName: artistName,
-      submitterWallet: curatorWallet,
-      mediaTitle: mediaTitle,
-      mediaURI: mediaURI,
-      // @ts-ignore
-      tags: JSON.parse(tags),
-      cosigns: cosigns,
-      noOfCosigns: noOfCosigns || 0,
-      isArtist: false,
-      username
-    };
-  });
+  let missingUserWallets = [...new Set(missingUsers.map(s => s.submitterWallet))];
 
-  let curatorSubsWallets = [...new Set(curatorSubmissions.map(o => o.submitterWallet))];
+  console.log(missingUserWallets);
 
-  let usersWithoutProfiles = curatorSubsWallets.map(w => {
-    return {
-      wallet: w,
-    }
-  })
-  console.log(usersWithoutProfiles);
+  let missingUsersToAdd = missingUserWallets.map(u => ({ wallet: u }))
 
-  // let missingWallets = oldSubmissions.data.filter(cs => {
-  //   return !(usersWithoutProfiles.some(uwp => uwp.wallet === cs.curatorWallet));
-  // }); //TODO: Figure out what wallets are present in submissions from the users from old db
-  //
-  // console.log(missingWallets);
-
-  let artistSubmissions = oldSubmissions.data.filter(s => s.mediaType === 'File' && s.mediaURI && s.curatorWallet !== '0xe3974e016f09e0572b2ccdbdb66ce011f9061880');
-  artistSubmissions = artistSubmissions.map((s: OldSubmission) => {
-    const {
-      mediaType,
-      artistName,
-      curatorWallet,
-      cosigns,
-      mediaTitle,
-      mediaURI,
-      noOfCosigns,
-      submissionTime,
-      tags,
-      mediaFormat
-    } = s;
-    return {
-      submissionTime: submissionTime,
-      artistName: artistName,
-      submitterWallet: curatorWallet,
-      mediaTitle: mediaTitle,
-      mediaFormat: mediaFormat,
-      mediaURI: mediaURI,
-      // @ts-ignore
-      tags: JSON.parse(tags),
-      cosigns: cosigns,
-      noOfCosigns: noOfCosigns || 0,
-      isArtist: true,
-    };
-  });
-
-  console.log(usersWithoutProfiles);
-
-  console.log(curatorSubmissions);
-
-  console.log(artistSubmissions);
-
-  // artistSubmissions.map((s=>{
-  //   if (typeof(s.noOfCosigns) !== "number") console.log(s);
-  // }))
-  //
-  // curatorSubmissions.map((s=>{
-  //   if (typeof(s.noOfCosigns) !== "number") console.log(s);
-  // }))
+  console.log(missingUsersToAdd);
 
   // const { data, error } = await supabase.from("Artist_Submission_Table").insert(artistSubmissions);
-  const { data, error } = await supabase.from("Curator_Submission_Table").insert(curatorSubmissions);
-  // const { data, error } = await supabase.from("Users_Table").insert(usersWithProfiles); // gotta migrate users first
-  // const { data, error } = await supabase.from("Users_Table").upsert(usersWithoutProfiles, {onConflict: "wallet"}).select();
+  // const { data, error } = await supabase.from("Curator_Submission_Table").insert(curatorSubmissions);
+  const { data, error } = await supabase.from("Users_Table").insert(missingUsersToAdd); // gotta migrate users first
+  // const { data, error } = await supabase.from("Users_Table_duplicate")
+  //   .upsert(missingUsers, {onConflict: "wallet"}).select();
   console.log(data, error);
 };
 

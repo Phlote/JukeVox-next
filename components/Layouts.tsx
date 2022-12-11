@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { ConnectWalletModal } from "./Modals/ConnectWalletModal";
 import { MobileSubmissionModal } from "./Modals/MobileSubmissionModal";
 import { NavBarDesktop, NavBarMobileWeb } from "./NavBar";
 import { SubmitSidenav } from "./SideNav";
+import Overlay from "./Overlay";
 
 export default function Layout({ children }) {
   return (
     <div className="absolute inset-0">
+      <Overlay/>
       <BackgroundWithBlurs />
       <div className="hidden sm:block">
         <SubmitSidenav />
