@@ -9,6 +9,7 @@ import { HollowButtonContainer, HollowInputContainer } from "./Hollow";
 import { SearchBar } from "./SearchBar";
 import { useSubmissionFlowOpen } from "./SubmissionFlow";
 import { useMoralis } from "react-moralis";
+import BETABlog from "../pages/BETABlog";
 
 export const NavBarMobileWeb = () => {
   const [, setOpen] = useSubmissionFlowOpen();
@@ -45,7 +46,7 @@ export const NavBarDesktop = (props) => {
   return (
     <div className="pb-4 flex-none w-screen px-12 absolute top-0">
       <div className="py-2 flex justify-center items-center backdrop-blur-md">
-        <p className="text-center">We are currently performing maintenance over the holidays. More information soon.</p>
+        <p className="text-center cursor-pointer text-xl text-red-500 hover:text-blue-600"><Link href ={"BETABlog"} passHref><b>Announcement:<u>We&apos;re live in BETA! Read More about it here...</u></b></Link></p>
       </div>
       <div className="relative flex flex-row gap-4" style={{ height: 70 }}>
         <Link href="/" passHref>
