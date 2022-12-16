@@ -50,7 +50,7 @@ export default function RecentlyCurated({ account, setOpen, setConnectWalletOpen
 
   return (
     <section className="flex items-center justify-center sm:py-20 sm:mt-5">
-      <div className="my-auto sm:left-10 w-8 h-8 sm:w-32 sm:h-32">
+      <div className="w-8 h-8 sm:w-32 sm:h-32">
         <button onClick={slidePrev} disabled={prev} className='disabled:opacity-30 transition'>
           <ArrowLeft className="m-0 w-8 h-8 sm:w-32 sm:h-32 sm:m-0 sm:w-auto" />
         </button>
@@ -110,7 +110,7 @@ export default function RecentlyCurated({ account, setOpen, setConnectWalletOpen
           These are some of the most wanted songs as voted on by the Phlote community.
         </h3>
       </div>
-      <div className="my-auto sm:right-10 w-8 h-8 sm:w-32 sm:h-32">
+      <div className="w-8 h-8 sm:w-32 sm:h-32">
         <button onClick={slideNext} disabled={next} className='disabled:opacity-30 transition'>
           <ArrowRight className="m-0 w-8 h-8 sm:w-32 sm:h-32 sm:m-0 sm:w-auto" />
         </button>
