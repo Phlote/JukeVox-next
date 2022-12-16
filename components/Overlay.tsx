@@ -31,7 +31,6 @@ const Overlay = () => {
   }
 
   if (isMaintenance) {
-    console.log('render');
     return (
       <div
         className='fixed top-0 left-0 right-0 bottom-0 z-30 backdrop-blur-md flex flex-col space-y-5 justify-center items-center'>
@@ -49,7 +48,6 @@ const Overlay = () => {
       </div>
     );
   } else {
-    console.log('dont render');
     return null;
   }
 };

@@ -21,11 +21,11 @@ const SubmissionCardDetails = styled.div`
   }
 `;
 
-const SubmissionCard = ({ submission }: { submission: Submission }) => {
+const SubmissionCard = ({ submission, key }: { submission: Submission, key?: number }) => {
   const videoEl = useRef(null);
 
   return (
-    <div className="flex flex-col w-80 h-[480px]">
+    <div className="flex flex-col w-80 h-[480px]" key={key}>
       <div className="w-full h-60 relative">
         {submission.mediaFormat === "video/quicktime" ? (
           <video
