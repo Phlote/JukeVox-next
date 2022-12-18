@@ -9,33 +9,29 @@ import { useConnectWalletModalOpen } from "./Modals/ConnectWalletModal";
 import { shortenHex } from "../utils/web3";
 import { useProfile } from "./Forms/ProfileSettingsForm";
 import { useChain, useMoralis } from "react-moralis";
+import Moralis from "moralis-v1/types";
 
 const Account = (props) => {
   const { account, isWeb3Enabled, isAuthenticated, enableWeb3, provider } = useMoralis();
   const { switchNetwork, chainId, chain } = useChain();
 
-
   useEffect(() => {
-    if (isAuthenticated) {
-      if (provider) {
-        console.log("PROVIDER");
-        console.log(provider);
-        console.log(provider.constructor.name.toLowerCase());
-        console.log(provider.constructor.name.toLowerCase().includes('walletconnect'));
-        console.log("END");
-        if (provider.constructor.name.toLowerCase() === 'b') {
-          enableWeb3({ provider: 'walletconnect', chainId: 80001 }).then(e => {
-            console.log('enableWeb3 using wallet connect');
-          })
-        } else {
-          enableWeb3().then(e => {
-            if (chainId !== '0x13881') { //TODO: Get this value from somewhere else
-              console.log('enableWeb3 using Metamask');
+    /*
+     *  We need to check for provider here!!!!
+     *  Otherwise it will always default to metamask login
+     */
 
-              switchNetwork('0x13881').then(r => console.log(r));
-            }
-          })
-        }
+    if (isAuthenticated) {
+      if (window && !localStorage.getItem("walletconnect")) {
+        enableWeb3().then((e) => {
+          if (chainId !== "0x13881") {
+            //TODO: Get this value from somewhere else
+            switchNetwork("0x13881").then((r) => console.log(r));
+          }
+        });
+      } else {
+        enableWeb3({ provider: "walletconnect", chainId: 80001 }).then((e) => {
+        });
       }
     }
     /**
@@ -44,7 +40,7 @@ const Account = (props) => {
      * Due to that, isAuthenticated can be true even if isWeb3Enabled is false.
      * On page refresh, isWeb3Enabled is false, therefore we must enable it if the user already authenticated again.
      */
-  }, [isAuthenticated])
+  }, [isAuthenticated]);
 
   // manage connecting state for injected connector
 
@@ -75,18 +71,10 @@ const Account = (props) => {
   }
 
   return (
-    <div
-      ref={ref}
-      className="h-full w-full text-center flex flex-row"
-      style={{ justifyContent: "center" }}
-    >
+    <div ref={ref} className="h-full w-full text-center flex flex-row" style={{ justifyContent: "center" }}>
       <span>{shortenHex(account, 5)}</span>
       <div className="w-2" />
-      <AccountDropdown
-        dropdownOpen={dropdownOpen}
-        setDropdownOpen={setDropdownOpen}
-        wallet={account}
-      />
+      <AccountDropdown dropdownOpen={dropdownOpen} setDropdownOpen={setDropdownOpen} wallet={account} />
     </div>
   );
 };
@@ -109,13 +97,7 @@ const AccountDropdown = (props) => {
   return (
     <>
       <div className="hidden sm:block" onClick={onClickHandler}>
-        <Image
-          className={dropdownOpen ? "-rotate-90" : "rotate-90"}
-          src={"/chevron.svg"}
-          alt="dropdown"
-          height={16}
-          width={16}
-        />
+        <Image className={dropdownOpen ? "-rotate-90" : "rotate-90"} src={"/chevron.svg"} alt="dropdown" height={16} width={16} />
       </div>
 
       <div className="block sm:hidden" onClick={onClickHandler}>
@@ -130,8 +112,10 @@ const AccountDropdown = (props) => {
               onClick={() => {
                 logout()
                   .then((user) => {
+                    if (typeof window !== "undefined") {
+                      localStorage.setItem("isWalletConnected", "false");
+                    }
                     localStorage.clear();
-                    console.log("logged out user:", user);
                   })
                   .catch((error) => {
                     console.error(error);
@@ -141,12 +125,7 @@ const AccountDropdown = (props) => {
             >
               Disconnect
               <div className="w-4" />
-              <Image
-                src="/exit.svg"
-                alt={"disconnect"}
-                height={24}
-                width={24}
-              />
+              <Image src="/exit.svg" alt={"disconnect"} height={24} width={24} />
             </div>
             {profile?.data?.username && (
               <>
@@ -157,9 +136,7 @@ const AccountDropdown = (props) => {
                     setDropdownOpen(false);
                   }}
                 >
-                  <div className="cursor-pointer m-4 text-center text-xl hover:opacity-50 flex items-center">
-                    Edit Profile
-                  </div>
+                  <div className="cursor-pointer m-4 text-center text-xl hover:opacity-50 flex items-center">Edit Profile</div>
                 </div>
               </>
             )}

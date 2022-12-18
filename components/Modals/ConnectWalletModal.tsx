@@ -56,7 +56,7 @@ export const ConnectWalletModal = () => {
 };
 
 export const ConnectWalletButtons = ({ setOpen }) => {
-  const { authenticate, isWeb3Enabled, isAuthenticating, user, account } = useMoralis();
+  const { authenticate,isWeb3Enabled, isAuthenticating, user, account } = useMoralis();
 
   const {
     isMetaMaskInstalled,
@@ -96,8 +96,6 @@ export const ConnectWalletButtons = ({ setOpen }) => {
     if (!isWeb3Enabled) {
       await authenticate({ signingMessage: "Log in using Moralis", provider: provider, chainId: 80001 })
         .then((user) => {
-          console.log("logged in user:", user);
-          console.log(user!.get("ethAddress"));
           revalidate(account);
         })
         .catch((error) => {
@@ -115,7 +113,7 @@ export const ConnectWalletButtons = ({ setOpen }) => {
     <>
       <HollowButtonContainer
         disabled={isAuthenticating}
-        onClick={login}
+        onClick={()=>login('')}
       >
         <MetamaskButton />
       </HollowButtonContainer>
@@ -123,7 +121,6 @@ export const ConnectWalletButtons = ({ setOpen }) => {
         disabled={isAuthenticating}
         onClick={() => {
           localStorage.clear();
-          console.log('localstorage clear');
           login("walletconnect");
         }}
       >
