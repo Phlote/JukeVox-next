@@ -10,8 +10,8 @@ export interface Submission {
   artistName: string;
   submitterWallet: string;
   mediaTitle: string;
-  mediaFormat: string;
-  rawURI: string;
+  mediaFormat?: string;
+  rawURI?: string;
   mediaURI: string;
   tags?: string[];
   cosigns?: string[];

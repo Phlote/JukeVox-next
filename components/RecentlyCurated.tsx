@@ -23,11 +23,13 @@ export default function RecentlyCurated({ account, setOpen, setConnectWalletOpen
 
   const slideNext = () => {
     let nextEl = document.getElementsByClassName('alice-carousel__next-btn-item')[0];
+    // @ts-ignore
     nextEl.click(); // The way specified in the docs wouldn't animate...
   };
 
   const slidePrev = () => {
     let prevEl = document.getElementsByClassName('alice-carousel__prev-btn-item')[0];
+    // @ts-ignore
     prevEl.click();
   };
 
