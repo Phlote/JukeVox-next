@@ -9,7 +9,7 @@ describe("Contracts: ", function () {
     let curator:any;
     let drop: any;
     let usersArr: Array<any>;
-    let phlote_MAX_SUPPLY = 14000000000000000000;
+    let phlote_MAX_SUPPLY = 14000000000000000000000000000000n;
     let phloteTreausry = "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955"
 
     //change these when changing the contract!!!
@@ -29,13 +29,14 @@ describe("Contracts: ", function () {
     //deployer will always be approved, enter the other ids you want to approve
     //if you only want deployer to be approved, send empty array input
     async function approveSignersTokens(ids: Array<number>){
-        await phloteVote.approve(curator.address, 1000);
+        await phloteVote.approve(curator.address, 15000000000000000000000n);
         if(ids.length> usersArr.length){
             return "your array of signers has > length than actual number of users in usersArr";
         }
         for(let i = 0; i<ids.length;i++){
             const userToApprove = usersArr[ids[i]];
-            await phloteVote.connect(userToApprove).approve(curator.address, 1000);
+            console.log(await phloteVote.balanceOf(userToApprove.address))
+            await phloteVote.connect(userToApprove).approve(curator.address, 150000000000000000000n);
         }
     }
 
@@ -57,14 +58,14 @@ describe("Contracts: ", function () {
     });
 
     beforeEach(async function () {
-        let amountToMint = 1400000;
+        let amountToMint = phlote_MAX_SUPPLY;
         const PhloteVote = await hre.ethers.getContractFactory("PhloteVote");
         phloteVote = await PhloteVote.deploy(amountToMint);
         await phloteVote.deployed();
         //disperse tokens to all 5 users
         for(let i = 0;i<usersArr.length;i++){
             const userToApprove = usersArr[i];
-            await phloteVote.transfer(userToApprove.address,1000)
+            await phloteVote.transfer(userToApprove.address,1500000000000000000000n)
         }
 
     
@@ -139,21 +140,23 @@ describe("Contracts: ", function () {
             expect(await curator.submit(artistURI,ArtistSubmission));
         })
 
-        it("should fails if you dont have curatorMinimumToken",async function(){
+        it.only("should fail if you dont have curatorMinimumToken",async function(){
             let _ipfsURI = "ipfs://QmTz1aAoS6MXfHpGZpJ9YAGH5wrDsAteN8UHmkHMxVoNJk/1337.json"
             let ArtistSubmission = true
             await curator.setCuratorTokenMinimum(1001);
             drop = await newHotdrop(curator, user1, _ipfsURI,ArtistSubmission)
+            await approveSignersTokens([0,1,2])
             await expect(curator.connect(user2).curate(drop)).to.be.revertedWith('Your Phlote balance is too low.')        
         })
-
+        
         it("should fail if submitter of hotdrop attempts to cosign their own record",async function(){
             let _ipfsURI = "ipfs://QmTz1aAoS6MXfHpGZpJ9YAGH5wrDsAteN8UHmkHMxVoNJk/1337.json"
             let ArtistSubmission = true
             const hotdrop = await newHotdrop(curator, user1, _ipfsURI,ArtistSubmission)
             const _drop = await ethers.getContractAt("Hotdrop", hotdrop as string)
             const [submitterAddress, submissionIsArtistSubmission,submissionCosigners] = await _drop.submissionDetails()
-            await expect(curator.connect(user1).curate(drop)).to.be.revertedWith("You cannot vote for your own track");
+            console.log(await phloteVote.balanceOf(user1.address))
+            await expect(curator.connect(user1).curate(hotdrop)).to.be.revertedWith("You cannot vote for your own track");
         })
 
 
@@ -505,7 +508,7 @@ describe("Contracts: ", function () {
 
         })
 
-        it.only("should set price correctly", async function() {
+        it("should set price correctly", async function() {
             let _ipfsURI = "ipfs://QmTz1aAoS6MXfHpGZpJ9YAGH5wrDsAteN8UHmkHMxVoNJk/1337.json"
             let ArtistSubmission = true
             drop = await newHotdrop(curator, user6, _ipfsURI,ArtistSubmission)

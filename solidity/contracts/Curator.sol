@@ -256,4 +256,3 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
 }
 
 // vim: set fdm=marker:
-

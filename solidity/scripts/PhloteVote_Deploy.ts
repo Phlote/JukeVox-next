@@ -3,7 +3,7 @@ import { ethers } from "hardhat";
 async function main() {
 
   const PhloteVote = await ethers.getContractFactory("PhloteVote");
-  const phloteVote = await PhloteVote.deploy();
+  const phloteVote = await PhloteVote.deploy(15000000000000000000000000000n);
 
   await phloteVote.deployed();
 

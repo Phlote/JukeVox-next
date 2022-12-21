@@ -53,13 +53,13 @@ contract Hotdrop is
     uint256 public totalSupplyLeft;
 
 
-    uint256 public COSIGN_REWARD = 15;
+    uint256 public COSIGN_REWARD = 15000000000000000000;
     uint256[5] public COSIGN_COSTS = [
-        50,
-        60,
-        70,
-        80,
-        90
+        50000000000000000000,
+        60000000000000000000,
+        70000000000000000000,
+        80000000000000000000,
+        90000000000000000000
     ];
 
     address payable artist;
