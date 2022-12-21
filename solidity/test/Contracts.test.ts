@@ -67,14 +67,12 @@ describe("Contracts: ", function () {
             const userToApprove = usersArr[i];
             await phloteVote.transfer(userToApprove.address,1500000000000000000000n)
         }
-
-    
         
 
         const Curator = await hre.ethers.getContractFactory("Curator");
-        curator = await Curator.deploy();
+        curator = await Curator.deploy(phloteVote.address,treasury.address,deployer.address);
         await curator.deployed();
-        await curator.initialize(phloteVote.address,treasury.address,deployer.address)
+        //await curator.initialize(phloteVote.address,treasury.address,deployer.address)
 
         await phloteVote.transfer(treasury.address,1000)
         await phloteVote.connect(treasury).approve(curator.address, 1000);
@@ -140,7 +138,7 @@ describe("Contracts: ", function () {
             expect(await curator.submit(artistURI,ArtistSubmission));
         })
 
-        it.only("should fail if you dont have curatorMinimumToken",async function(){
+        it("should fail if you dont have curatorMinimumToken",async function(){
             let _ipfsURI = "ipfs://QmTz1aAoS6MXfHpGZpJ9YAGH5wrDsAteN8UHmkHMxVoNJk/1337.json"
             let ArtistSubmission = true
             await curator.setCuratorTokenMinimum(1001);
