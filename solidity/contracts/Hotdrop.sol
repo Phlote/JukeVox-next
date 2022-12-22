@@ -31,8 +31,6 @@ contract Hotdrop is
     /*using SafeERC20 for PhloteVote;*/
     using Address for address payable;
 
-    IERC20 public phloteToken;
-
     enum SaleState {
         Disabled,
         PublicSale
@@ -105,7 +103,6 @@ contract Hotdrop is
     {
         address[5] memory cosigners;
         submission = Submission(_submitter,_isArtistSubmission, cosigners);
-        phloteToken = IERC20(0x8eF43798e0f8Bb4C7531e1e12D02894ac34F3A61);
         totalSupplyLeft = 20; //the public supply
         publicPrice = 10000000000000000;
         artist = payable(_submitter);

@@ -4,20 +4,18 @@ import '@openzeppelin/hardhat-upgrades';
 let phloteTokenAddress: any, treasuryAddress: any, curatorAdminAddress:any, curator:any;
 
 //Ensure you have the correct addresses
-phloteTokenAddress = "0x52D2a6Ba271D97fEBC5fd49f5D3a624Fb17F4BF2"
+phloteTokenAddress = "0x50281Df3EADA2bC85E72A488CFbbC8e38fef8aC7"
 treasuryAddress = "0x941c72afb4B02C2efCB6DDaEdC032Ec15F6ec5f7"
 curatorAdminAddress = "0xb60D2E146903852A94271B9A71CF45aa94277eB5"
 
 async function main() {
   const Curator = await ethers.getContractFactory("Curator");
   console.log("deploying Curator...");
-  // const proxy = await upgrades.deployProxy(Curator,[phloteTokenAddress,treasuryAddress, curatorAdminAddress]);
-  // await proxy.deployed();
   const curator = await Curator.deploy(phloteTokenAddress,treasuryAddress, curatorAdminAddress);
 
   await curator.deployed();
 
-  console.log(`Proxy was deployed to ${curator.address}`);
+  console.log(`curator was deployed to ${curator.address}`);
 
 }
 

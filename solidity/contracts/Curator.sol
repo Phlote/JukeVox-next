@@ -77,9 +77,10 @@ contract Curator is Pausable {
         curatorTokenMinimum = _curatorTokenMinimum;
     }
 
-    function setAddresses(address _treasury, address _curatorAdmin) public onlyOwner {
+    function setAddresses(address _treasury, address _curatorAdmin, PhloteVote _phloteToken) public onlyOwner {
         treasury = _treasury;
         curatorAdmin = _curatorAdmin;
+        phloteToken = _phloteToken;
     }
 
     function setHotDropSaleState(Hotdrop _hotdrop, uint256 _state) public onlyOwner {
