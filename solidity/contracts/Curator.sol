@@ -51,7 +51,7 @@ contract Curator is Pausable {
     /// @param _phloteToken Phlote's ERC20 DAO token.
     constructor(PhloteVote _phloteToken, address _treasury, address _curatorAdmin) public {
         admin = msg.sender;
-        curatorTokenMinimum = 50;
+        curatorTokenMinimum = 50000000000000000000;
         
         phloteToken = _phloteToken;
         treasury = _treasury;
@@ -102,7 +102,6 @@ contract Curator is Pausable {
         _hotdrop.setPrice(_price);
     }
 
-
     /// @dev Create an NFT ("Hotdrop") of your musical internet findings that may be curated in the future.
     /// @param _ipfsURI The ipfs://Qm... URI of the metadata for this submission.
     /// @return hotdrop The address of the new Hotdrop contract that was deployed from this submission.
@@ -134,15 +133,17 @@ contract Curator is Pausable {
             uint256 mintPrice = _hotdrop.COSIGN_COSTS(cosignNumber);
             require(phloteToken.balanceOf(msg.sender)>= mintPrice, "You do not have enough Phlote Tokens in your balance for this transaction");
             _hotdrop.cosign(msg.sender);
+            
 
             // send the reward to the artist
             require(phloteToken.transferFrom(msg.sender, address(this), mintPrice));
+ 
             uint256 artistReward = mintPrice - _hotdrop.COSIGN_REWARD();
             phloteToken.mint(hotdropSubmitter, artistReward);
 
             // send the remaining amount to treasury
             phloteToken.mint(treasury, mintPrice - artistReward);
-            
+
             // if this is the 5th cosign, enable sale
             if(_hotdrop.totalSupply(_hotdrop.artistCosignerNFT()) == 5){
                 _hotdrop.setSaleState(1);
@@ -163,7 +164,6 @@ contract Curator is Pausable {
                 phloteToken.mint(cosigners[i], _hotdrop.COSIGN_REWARD());
             }
         }
-        
         emit Cosign(
             msg.sender,
             _hotdrop,
