@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { supabase } from "../../lib/supabase";
-import { Submission } from "../../types";
+import { ArtistSubmission, CuratorSubmission } from "../../types";
 
 export default async function handler(
   request: NextApiRequest,
@@ -20,7 +20,7 @@ export default async function handler(
     console.log(submissionsQuery);
 
     const { submissionID: verifiedId, cosigns, submitterWallet, isArtist } = submissionsQuery
-      .data[0] as Submission;
+      .data[0] as ArtistSubmission | CuratorSubmission;
 
     if (cosigns && cosigns?.length === 5) throw "Max 5 cosigns per submission";
 

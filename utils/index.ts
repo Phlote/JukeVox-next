@@ -1,5 +1,5 @@
 import debounce from "lodash.debounce";
-import { Submission, SubmissionElasticSearchDocument } from "../types";
+import { GenericSubmission, SubmissionElasticSearchDocument } from "../types";
 
 export function nextApiRequest(
   path: string,
@@ -20,7 +20,7 @@ export function nextApiRequest(
   });
 }
 
-export const submissionToElasticSearchDocument = (submission: Submission) => {
+export const submissionToElasticSearchDocument = (submission: GenericSubmission) => {
   const {
     submissionID,
     isArtist,
@@ -29,7 +29,6 @@ export const submissionToElasticSearchDocument = (submission: Submission) => {
     hotdropAddress,
     mediaTitle,
     mediaURI,
-    tags,
     submissionTime,
     username,
   } = submission;
@@ -40,7 +39,6 @@ export const submissionToElasticSearchDocument = (submission: Submission) => {
     curator_wallet: submitterWallet,
     media_title: mediaTitle,
     media_uri: mediaURI,
-    tags,
     submission_time: submissionTime,
     username,
     hotdrop_address: hotdropAddress

@@ -102,7 +102,7 @@ const CommentsContext = createContext<CommentsContextInterface>({
 });
 
 interface CommentsContextProviderProps {
-  threadId: number | null;
+  threadId: string | null;
   [propName: string]: any;
 }
 

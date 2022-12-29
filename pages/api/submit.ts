@@ -2,7 +2,7 @@ import cuid from "cuid";
 import { NextApiRequest, NextApiResponse } from "next";
 import { nodeElasticClient } from "../../lib/elastic-app-search";
 import { supabase } from "../../lib/supabase";
-import { Submission } from "../../types";
+import { GenericSubmission, CuratorSubmission, ArtistSubmission } from "../../types";
 import { submissionToElasticSearchDocument } from "../../utils";
 import { storeSubmissionOnIPFS } from "../../utils/moralis";
 
@@ -12,28 +12,20 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  const { submission, wallet, type } = request.body;
+  const { submission, wallet } = request.body;
 
   console.log({ submission });
 
   try {
     // TODO: Why is this not typed as a Submission?
-    const submissionWithSubmitterInfo:
-      {
-        submitterWallet: string
-        mediaTitle: string
-        mediaURI: string
-        artistName: string
-        mediaFormat?: string
-        playlistIDs?: string[]
-        username?: string
-        hotdropAddress: string
-      } = {
+    const submissionWithSubmitterInfo: ArtistSubmission | CuratorSubmission = {
       submitterWallet: wallet,
       mediaTitle: submission.mediaTitle,
       mediaURI: submission.mediaURI,
       artistName: submission.artistName,
-      hotdropAddress: submission.hotdropAddress
+      hotdropAddress: submission.hotdropAddress,
+      submissionID: submission.submissionID,
+      isArtist: submission.isArtist
     };
 
     // const profileQuery = await supabase
@@ -58,7 +50,7 @@ export default async function handler(
     // TODO: CURATOR/ARTIST SEPARATION
 
     let submissionsInsert = await (async () => {
-      if (type === 'File') {
+      if (submissionWithSubmitterInfo.isArtist) {
         // submissionWithSubmitterInfo.nftMetadata = await storeSubmissionOnIPFS(submissionWithSubmitterInfo); do we need this?
 
         submissionWithSubmitterInfo.mediaFormat = submission.mediaFormat;
@@ -77,7 +69,7 @@ export default async function handler(
 
     if (submissionsInsert.error) throw submissionsInsert.error;
 
-    const submissionRes = submissionsInsert.data[0] as Submission;
+    const submissionRes = submissionsInsert.data[0] as ArtistSubmission | CuratorSubmission;
 
     await supabase.from("comments").insert([
       {
@@ -97,7 +89,7 @@ export default async function handler(
   }
 }
 
-const indexSubmission = async (submission: Submission) => {
+const indexSubmission = async (submission: GenericSubmission) => {
   const document = submissionToElasticSearchDocument(submission);
   const res = await nodeElasticClient.indexDocuments(ELASTIC_ENGINE_NAME, [
     document,

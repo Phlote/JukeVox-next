@@ -3,7 +3,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { HollowButton, HollowButtonContainer } from "../components/Hollow";
 import React, { useEffect } from "react";
 import { supabase, oldSupabase } from "../lib/supabase";
-import { OldSubmission, Submission } from "../types";
+import { ArtistSubmission, CuratorSubmission } from "../types";
+import { PostgrestResponse } from "@supabase/postgrest-js";
 
 // TODO: Remove this path from the website
 
@@ -30,8 +31,8 @@ export function valueMatchesValues(value, values) {
 export const migrateSubmissions = async () => {
   const currentDB = supabase;
 
-  const curatorSubs = await currentDB.from('Curator_Submission_Table').select();
-  const artistSubs = await currentDB.from('Artist_Submission_Table').select();
+  const curatorSubs: PostgrestResponse<CuratorSubmission> = await currentDB.from('Curator_Submission_Table').select();
+  const artistSubs: PostgrestResponse<ArtistSubmission> = await currentDB.from('Artist_Submission_Table').select();
 
   const newUserProfiles = await currentDB.from('Users_Table').select();
 
@@ -41,26 +42,27 @@ export const migrateSubmissions = async () => {
   // const oldSubmissions = await oldSupabase.from('submissions').select();
 
   console.log(curatorSubs);
+  console.log(artistSubs);
   console.log(newUserProfiles);
 
-  let missingUsers = curatorSubs.data.filter(u=>{
-    return !(newUserProfiles.data.some(s => s.wallet === u.submitterWallet));
-  })
-
-  let missingUserWallets = [...new Set(missingUsers.map(s => s.submitterWallet))];
-
-  console.log(missingUserWallets);
-
-  let missingUsersToAdd = missingUserWallets.map(u => ({ wallet: u }))
-
-  console.log(missingUsersToAdd);
+  // let missingUsers = curatorSubs.data.filter(u=>{
+  //   return !(newUserProfiles.data.some(s => s.wallet === u.submitterWallet));
+  // })
+  //
+  // let missingUserWallets = [...new Set(missingUsers.map(s => s.submitterWallet))];
+  //
+  // console.log(missingUserWallets);
+  //
+  // let missingUsersToAdd = missingUserWallets.map(u => ({ wallet: u }))
+  //
+  // console.log(missingUsersToAdd);
 
   // const { data, error } = await supabase.from("Artist_Submission_Table").insert(artistSubmissions);
   // const { data, error } = await supabase.from("Curator_Submission_Table").insert(curatorSubmissions);
-  const { data, error } = await supabase.from("Users_Table").insert(missingUsersToAdd); // gotta migrate users first
+  // const { data, error } = await supabase.from("Users_Table").insert(missingUsersToAdd); // gotta migrate users first
   // const { data, error } = await supabase.from("Users_Table_duplicate")
   //   .upsert(missingUsers, {onConflict: "wallet"}).select();
-  console.log(data, error);
+  // console.log(data, error);
 };
 
 

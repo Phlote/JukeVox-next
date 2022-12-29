@@ -1,5 +1,5 @@
 import Moralis from "moralis/node";
-import { Submission } from "../types";
+import { ArtistSubmission, CuratorSubmission } from "../types";
 
 let initialized: boolean;
 
@@ -18,7 +18,7 @@ const defaultSubmissionImage =
   "ipfs://Qmb8Jmabe5agSBxjScYQ9cyZvbBopMRUvnFg3SpJTA4jp6";
 
 export const storeSubmissionOnIPFS = async (
-  submission: Submission,
+  submission: ArtistSubmission | CuratorSubmission,
   imageUrl = defaultSubmissionImage
 ) => {
   await initializeMoralis();

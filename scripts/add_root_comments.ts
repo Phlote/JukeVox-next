@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import cuid from "cuid";
-import { Submission } from "../types";
+import { ArtistSubmission, CuratorSubmission } from "../types";
 
 const addRootComments = async () => {
   const { NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY } =
@@ -19,7 +19,7 @@ const addRootComments = async () => {
     return;
   }
 
-  const comments = submissions.data.map((s: Submission) => {
+  const comments = submissions.data.map((s: ArtistSubmission | CuratorSubmission) => {
     return {
       threadId: s.submissionID,
       slug: `submission-root-${cuid.slug()}`,

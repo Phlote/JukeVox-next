@@ -1,14 +1,14 @@
-import { Submission } from "../types";
+import { GenericSubmission } from "../types";
 import { nextApiRequest } from "../utils";
 
 interface SearchResults {
-  submissions: Submission[];
+  submissions: GenericSubmission[];
   nextPage: number;
 }
 
 export const searchSubmissions = async (
   searchTerm: string,
-  filters: Partial<Submission>,
+  filters: Partial<GenericSubmission>,
   page: number
 ): Promise<SearchResults> => {
   const results = await nextApiRequest("search", "POST", {
