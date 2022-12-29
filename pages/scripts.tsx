@@ -5,7 +5,6 @@ import React, { useEffect } from "react";
 import { supabase, oldSupabase } from "../lib/supabase";
 import { ArtistSubmission, CuratorSubmission } from "../types";
 import { PostgrestResponse } from "@supabase/postgrest-js";
-import { Curator } from "../solidity/typechain";
 
 // TODO: Remove this path from the website
 

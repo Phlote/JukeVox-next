@@ -102,7 +102,7 @@ export async function getStaticProps({ params }) {
 
   if (submissionsQuery.error) throw submissionsQuery.error;
 
-  const submission = submissionsQuery.data[0] as Submission;
+  const submission = submissionsQuery.data[0] as ArtistSubmission | CuratorSubmission;
   let submissionFileType = null;
 
   if (submission.isArtist) {
