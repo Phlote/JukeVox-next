@@ -31,7 +31,6 @@ const SubmissionCard = ({ submission }: { submission: GenericSubmission }) => {
       .from("Artist_Submission_Table")
       .select()
       .match({ submissionID: submission.submissionID });
-    console.log(artistSubmission.data[0].mediaFormat);
     setMediaFormat(artistSubmission.data[0].mediaFormat);
   }
 
