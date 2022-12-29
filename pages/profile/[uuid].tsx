@@ -1,4 +1,3 @@
-import { ethers } from "ethers";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Layout, { ArchiveLayout } from "../../components/Layouts";
@@ -13,7 +12,7 @@ import { UserStatsBar } from "../../components/UserStatsBar";
 import { useIsCurator } from "../../hooks/useIsCurator";
 import useENSName from "../../hooks/web3/useENSName";
 import { supabase } from "../../lib/supabase";
-import { Submission } from "../../types";
+import { GenericSubmission } from "../../types";
 import {
   getProfileForWallet,
   getSubmissionsWithFilter,
@@ -93,7 +92,7 @@ export default function Profile(props) {
                 mediaURI,
                 submissionTime,
                 cosigns,
-              } = submission as Submission;
+              } = submission as GenericSubmission;
 
               return (
                 <>
@@ -172,7 +171,7 @@ export async function getStaticPaths() {
   if (submissionsQuery.error) throw submissionsQuery.error;
 
   // IDEA: should we have two pages for each user?
-  const UUIDs = submissionsQuery.data.map((submission: Submission) => {
+  const UUIDs = submissionsQuery.data.map((submission: GenericSubmission) => {
     return submission.submitterWallet.toString(); // Make sure to generate lower case links as a default
     // Supabase db still has many uppercase links, thus this is necessary
   });

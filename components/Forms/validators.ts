@@ -33,7 +33,6 @@ export const validateSubmission = async (values: Submission) => {
       } catch (_) {
         errors.mediaURI = "Invalid URL";
       }
-      console.log(url);
       if (!!url && url?.protocol !== "http:" && url?.protocol !== "https:") {
         errors.mediaURI = "Only http or https";
       }
