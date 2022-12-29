@@ -2,12 +2,13 @@ import Image from "next/image";
 import { PlayButtonAudio, PlayButtonVideo } from "./PlayButton";
 import { Username } from "./Username";
 import { TwitterIcon, TwitterShareButton } from "next-share";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import tw from "twin.macro";
 import styled from "styled-components";
 import { RatingsMeter } from "./RatingsMeter";
 import { CommentBubble } from "./Comments/CommentBubble";
-import { Submission } from "../types";
+import { GenericSubmission } from "../types";
+import { supabase } from "../lib/supabase";
 
 const SubmissionCardDetails = styled.div`
   ${tw`p-4 bg-phlote-ff-modal`}
@@ -21,13 +22,29 @@ const SubmissionCardDetails = styled.div`
   }
 `;
 
-const SubmissionCard = ({ submission }: { submission: Submission }) => {
+const SubmissionCard = ({ submission }: { submission: GenericSubmission }) => {
   const videoEl = useRef(null);
+  const [mediaFormat, setMediaFormat] = useState('');
+
+  const setMediaFormatFromSubId = async ()=>{
+    const artistSubmission = await supabase
+      .from("Artist_Submission_Table")
+      .select()
+      .match({ submissionID: submission.submissionID });
+    console.log(artistSubmission.data[0].mediaFormat);
+    setMediaFormat(artistSubmission.data[0].mediaFormat);
+  }
+
+  useEffect(()=>{
+    if (submission.isArtist){
+      setMediaFormatFromSubId();
+    }
+  })
 
   return (
     <div className="flex flex-col w-80 h-[480px]">
       <div className="w-full h-60 relative">
-        {submission.mediaFormat === "video/quicktime" ? (
+        {mediaFormat === "video/quicktime" ? (
           <video
             className="absolute bottom-0"
             src={submission.mediaURI}
@@ -53,10 +70,10 @@ const SubmissionCard = ({ submission }: { submission: Submission }) => {
           </div>
           <div className="flex-grow" />
           <div className="flex items-center">
-            {submission.mediaFormat?.includes("video") && (
+            {mediaFormat?.includes("video") && (
               <PlayButtonVideo el={videoEl} />
             )}
-            {submission.mediaFormat?.includes("audio") && (
+            {mediaFormat?.includes("audio") && (
               <PlayButtonAudio url={submission.mediaURI} />
             )}
           </div>

@@ -5,10 +5,10 @@ import { useSearchTerm } from "../components/SearchBar";
 import { searchSubmissions } from "../controllers/search";
 import { getSubmissions } from "../controllers/submissions";
 import { gaEvent } from "../lib/ga";
-import { Submission } from "../types";
+import { ArtistSubmission, CuratorSubmission } from "../types";
 
 export const useSubmissions = (
-  filters: Partial<Submission> = {},
+  filters: Partial<ArtistSubmission | CuratorSubmission> = {},
   wallet: string = undefined
 ) => {
   const { data } = useQuery(
@@ -19,7 +19,7 @@ export const useSubmissions = (
   return data ?? [];
 };
 
-const searchFiltersAtom = atom<Partial<Submission>>({});
+const searchFiltersAtom = atom<Partial<ArtistSubmission | CuratorSubmission>>({});
 export const useSearchFilters = () => useAtom(searchFiltersAtom);
 
 export const useTrackSearchQueries = () => {

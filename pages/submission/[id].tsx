@@ -4,13 +4,13 @@ import CommentSection from "../../components/Comments/CommentSection";
 import Layout from "../../components/Layouts";
 import { CommentsContextProvider } from "../../hooks/useComments";
 import { supabase } from "../../lib/supabase";
-import { Submission } from "../../types";
+import { ArtistSubmission, CuratorSubmission } from "../../types";
 import SubmissionCard from "../../components/SubmissionCard";
 import { getSubmissionById } from "../../utils/supabase";
 import { ArrowLeft, ArrowRight } from "../../icons/Arrows";
 
 export default function SubmissionPage(props: {
-  submission: Submission;
+  submission: ArtistSubmission | CuratorSubmission;
   submissionFileType: string | null;
 }) {
   const { submission, submissionFileType } = props;
@@ -55,7 +55,7 @@ export default function SubmissionPage(props: {
           <div className="my-auto sm:right-10 w-8 h-8 sm:w-32 sm:h-32">
             {prev &&
                 <a
-                    href={`/submission/${submission.submissionID - 1}`}
+                    // href={`/submission/${submission.submissionID - 1}`} TODO: submission id is no longer an order
                 >
                     <ArrowRight className="m-0 w-8 h-8 sm:w-32 sm:h-32 sm:m-0 sm:w-auto" />
                 </a>
