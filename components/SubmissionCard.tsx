@@ -10,6 +10,8 @@ import { CommentBubble } from "./Comments/CommentBubble";
 import { GenericSubmission } from "../types";
 import { supabase } from "../lib/supabase";
 
+import { MintingModal } from "./Modals/MintingModal";
+
 const SubmissionCardDetails = styled.div`
   ${tw`p-4 bg-phlote-ff-modal`}
   border-radius: 0px;
@@ -22,7 +24,12 @@ const SubmissionCardDetails = styled.div`
   }
 `;
 
+
 const SubmissionCard = ({ submission }: { submission: GenericSubmission }) => {
+  const [isModalOpen, setModalOpen] = useState(false);
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
+
   const videoEl = useRef(null);
   const [mediaFormat, setMediaFormat] = useState('');
 
@@ -41,6 +48,7 @@ const SubmissionCard = ({ submission }: { submission: GenericSubmission }) => {
   })
 
   return (
+    <div>
     <div className="flex flex-col w-80 h-[480px]">
       <div className="w-full h-60 relative">
         {mediaFormat === "video/quicktime" ? (
@@ -79,7 +87,7 @@ const SubmissionCard = ({ submission }: { submission: GenericSubmission }) => {
         </div>
         <div className="h-8" />
 
-        <div className="flex h-24">
+        <div className="flex h-16">
           <div>
             <h2 className="text-base opacity-60 break-words"> Artist</h2>
             <div className="h-2" />
@@ -95,7 +103,16 @@ const SubmissionCard = ({ submission }: { submission: GenericSubmission }) => {
               linkToProfile
             />
           </div>
+          
         </div>
+        <div className="flex h-12">
+            <button 
+            className="bg-neutral-700 text-white rounded-lg px-8 py-2 text-base font-medium hover:bg-stone-300 focus:outline-none focus:ring-2 focus:ring-white-300"
+            id="open-btn"
+            onClick={openModal}>Mint</button>
+          </div>
+
+
         <div className="h-8" />
         <div className="flex">
           <div className="flex flex-1 items-center gap-2">
@@ -119,7 +136,8 @@ const SubmissionCard = ({ submission }: { submission: GenericSubmission }) => {
         </div>
       </SubmissionCardDetails>
     </div>
-  )
-}
+    {isModalOpen? <MintingModal isOpen={isModalOpen} onClose={closeModal}>{submission}</MintingModal>:null}
+  </div>
+)}
 
 export default SubmissionCard;
