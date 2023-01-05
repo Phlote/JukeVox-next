@@ -1,16 +1,52 @@
 import React, {useState } from "react";
+import { HotdropABI } from "../../solidity/utils/Hotdrop";
+import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
+
 
 export const MintingModal = ({children,isOpen,onClose}) => {
   const [showModal, setShowModal] = useState(isOpen);
+  const { isWeb3Enabled, account } = useMoralis();
+  const { fetch: runContractFunction, data, error, isLoading, isFetching, } = useWeb3ExecuteFunction();
 
 
   const closeModal = () => {
     setShowModal(false);
     onClose();
   };
- 
-  const mintNFT = () => {
-    console.log("lets mint you one")
+
+  const options = {
+    abi: HotdropABI,
+    contractAddress: children.hotdropAddress,
+    functionName: "saleMint",
+    params: {
+      amount: 1,
+    },
+    msgValue: '10000000000000000'
+  }
+
+  const mintNFT = async () => {
+    if (!isWeb3Enabled) {
+      throw "Authentication failed";
+    }
+
+    console.log("hotdrop address: ",children.hotdropAddress)
+
+    const submitTransaction = await runContractFunction({
+      params: options,
+      onError: (err) => {
+        console.log(err)
+      },
+      onSuccess: (res) => {
+        console.log(res);
+      },
+    });
+
+    // @ts-ignore
+    const contractResult = await submitTransaction.wait();
+
+    console.log('contract result', contractResult);
+
+
   }
 
   return (
