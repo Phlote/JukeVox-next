@@ -9,7 +9,7 @@ import Overlay from "./Overlay";
 export default function Layout({ children }) {
   return (
     <div className="absolute inset-0">
-      <Overlay/>
+      {/*<Overlay/>*/}
       <BackgroundWithBlurs />
       <div className="hidden sm:block">
         <SubmitSidenav />
