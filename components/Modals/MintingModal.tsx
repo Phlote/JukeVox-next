@@ -1,13 +1,43 @@
-import React, {useState } from "react";
+import React, {useEffect, useState } from "react";
 import { HotdropABI } from "../../solidity/utils/Hotdrop";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
+import web3 from "web3";
 
 
 export const MintingModal = ({children,isOpen,onClose}) => {
   const [showModal, setShowModal] = useState(isOpen);
+  const [totalMints,setTotalMints] =useState(0)
   const { isWeb3Enabled, account } = useMoralis();
   const { fetch: runContractFunction, data, error, isLoading, isFetching, } = useWeb3ExecuteFunction();
+  
+  const Web3 = require('web3');
+  const web3 = new Web3(`wss://polygon-mumbai.g.alchemy.com/v2/Ffd05GrDEBTQR-htVV9V_hYCLV2HLj9U`);
+  const hotdropContract = new web3.eth.Contract(HotdropABI,children.hotdropAddress);
 
+  useEffect(() => {
+    async function fetchContractData() {
+      const data = await loadContractData(children.hotdropAddress);
+    }
+    fetchContractData();
+    hotdropContractListener();
+  }, []);
+
+  const loadContractData = async(address) => {
+    const contractInfo = await hotdropContract.methods.totalSupply(3).call()
+    setTotalMints(contractInfo)
+  }
+
+  // TODO: update TotalMint() to update with every sale
+  function hotdropContractListener(){
+    // hotdropContract.events.QueuePilot({}, (error: { message: any; },data: any) => {
+    //   if(error){
+    //     //console.log(error.message)
+    //   }
+    //   else{
+             
+    //   }
+    // })
+  }
 
   const closeModal = () => {
     setShowModal(false);
@@ -76,6 +106,8 @@ export const MintingModal = ({children,isOpen,onClose}) => {
                     <li><span className="text-2xl font-bold">Song contract address:</span> {children.hotdropAddress == "" ? "This song does not have a contract address...": children.hotdropAddress}</li>
                 </ol>
             </p>
+            <span className="text-2xl font-bold">Units Sold So far:</span> {totalMints}
+
             </div>
             {/*footer*/}
             <div className="flex items-center justify-between p-6 rounded-b">
