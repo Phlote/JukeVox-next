@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSearchFilters } from "../hooks/useSubmissions";
-import { Submission } from "../types";
+import { GenericSubmission } from "../types";
 import SubmissionCard from "./SubmissionCard";
 import AliceCarousel from "react-alice-carousel";
 import { HollowInputContainer } from "./Hollow";
@@ -35,7 +35,7 @@ export default function RecentlyCurated({ account, setOpen, setConnectWalletOpen
 
   useEffect(() => {
     const cosSubs = [];
-    submissions?.data?.map((submission: Submission, i) => {
+    submissions?.data?.map((submission: GenericSubmission, i) => {
         cosSubs.push(<SubmissionCard key={i} submission={submission} />)
       }
     )

@@ -1,11 +1,11 @@
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 import { UserProfile } from "../components/Forms/ProfileSettingsForm";
 import { supabase } from "../lib/supabase";
-import { Submission } from "../types";
+import { GenericSubmission } from "../types";
 
 export const getSubmissionsWithFilter = async (
   selectStatement: PostgrestFilterBuilder<any> = null,
-  filters: Partial<Submission> = null,
+  filters: Partial<GenericSubmission> = null,
   page?: number
 ) => {
   if (!selectStatement) selectStatement = supabase.from('submissions').select();
@@ -64,7 +64,7 @@ export const getProfileForWallet = async (wallet: string) => {
 
   if (submissionsQuery.error) throw submissionsQuery.error;
 
-  const submissions = submissionsQuery.data as Submission[];
+  const submissions = submissionsQuery.data as GenericSubmission[];
   const cosignsReceived = submissions.reduce(
     (acc, curr) => acc + (curr?.cosigns?.length ?? 0),
     0
@@ -75,7 +75,7 @@ export const getProfileForWallet = async (wallet: string) => {
   const submissionsQueryAll = await supabase.from('submissions').select();
 
   const cosignsGiven = submissionsQueryAll.data
-    .flatMap((submission: Submission) => submission.cosigns)
+    .flatMap((submission: GenericSubmission) => submission.cosigns)
     .filter((c) => !!c)
     .reduce((acc, c) => (c.toLowerCase() === wallet ? acc + 1 : acc), 0);
 

@@ -1,14 +1,14 @@
-import { Submission } from "../types";
+import { GenericSubmission } from "../types";
 import { nextApiRequest } from "../utils";
 
 export const getSubmissions = async (
-  filters: Partial<Submission> = {}
-): Promise<Submission[]> => {
+  filters: Partial<GenericSubmission> = {}
+): Promise<GenericSubmission[]> => {
   return nextApiRequest(`get-submissions`, "POST", {
     filters,
-  }) as Promise<Submission[]>;
+  }) as Promise<GenericSubmission[]>;
 };
 
-export const submit = async (submission: Submission, wallet: string, type: string) => {
+export const submit = async (submission: GenericSubmission, wallet: string, type: string) => {
   return await nextApiRequest(`submit`, "POST", { submission, wallet, type });
 };

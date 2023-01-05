@@ -9,13 +9,13 @@ describe("Contracts: ", function () {
     let curator:any;
     let drop: any;
     let usersArr: Array<any>;
-    let phlote_MAX_SUPPLY = 14000000000000000000;
+    let phlote_MAX_SUPPLY = 14000000000000000000000000000000n;
     let phloteTreausry = "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955"
 
     //change these when changing the contract!!!
     //Contract configs:
-    let mintCosts = [50,60,70,80,90]
-    let cosignReward = 15;
+    let mintCosts = [50000000000000000000n, 60000000000000000000n, 70000000000000000000n, 80000000000000000000n, 90000000000000000000n];
+    let cosignReward = 15000000000000000000n;
 
     //create hotdrop with given input
     async function newHotdrop(curatorContract: any, _user:any, _ipfsURI: string, _isArtist: boolean) {
@@ -29,13 +29,14 @@ describe("Contracts: ", function () {
     //deployer will always be approved, enter the other ids you want to approve
     //if you only want deployer to be approved, send empty array input
     async function approveSignersTokens(ids: Array<number>){
-        await phloteVote.approve(curator.address, 1000);
+        await phloteVote.approve(curator.address, 15000000000000000000000n);
         if(ids.length> usersArr.length){
             return "your array of signers has > length than actual number of users in usersArr";
         }
         for(let i = 0; i<ids.length;i++){
             const userToApprove = usersArr[ids[i]];
-            await phloteVote.connect(userToApprove).approve(curator.address, 1000);
+           
+            await phloteVote.connect(userToApprove).approve(curator.address, 1400000000000000000000n);
         }
     }
 
@@ -57,23 +58,21 @@ describe("Contracts: ", function () {
     });
 
     beforeEach(async function () {
-        let amountToMint = 1400000;
+        let amountToMint = phlote_MAX_SUPPLY;
         const PhloteVote = await hre.ethers.getContractFactory("PhloteVote");
         phloteVote = await PhloteVote.deploy(amountToMint);
         await phloteVote.deployed();
         //disperse tokens to all 5 users
         for(let i = 0;i<usersArr.length;i++){
             const userToApprove = usersArr[i];
-            await phloteVote.transfer(userToApprove.address,1000)
+            await phloteVote.transfer(userToApprove.address,1500000000000000000000n)
         }
-
-    
         
 
         const Curator = await hre.ethers.getContractFactory("Curator");
-        curator = await Curator.deploy();
+        curator = await Curator.deploy(phloteVote.address,treasury.address,deployer.address);
         await curator.deployed();
-        await curator.initialize(phloteVote.address,treasury.address,deployer.address)
+        //await curator.initialize(phloteVote.address,treasury.address,deployer.address)
 
         await phloteVote.transfer(treasury.address,1000)
         await phloteVote.connect(treasury).approve(curator.address, 1000);
@@ -139,21 +138,24 @@ describe("Contracts: ", function () {
             expect(await curator.submit(artistURI,ArtistSubmission));
         })
 
-        it("should fails if you dont have curatorMinimumToken",async function(){
+        it("should fail if you dont have curatorMinimumToken",async function(){
             let _ipfsURI = "ipfs://QmTz1aAoS6MXfHpGZpJ9YAGH5wrDsAteN8UHmkHMxVoNJk/1337.json"
             let ArtistSubmission = true
-            await curator.setCuratorTokenMinimum(1001);
+            await curator.setCuratorTokenMinimum(50000000000000000000n);
             drop = await newHotdrop(curator, user1, _ipfsURI,ArtistSubmission)
+            await approveSignersTokens([0,1,2])
+            console.log(await phloteVote.balanceOf(user2.address))
             await expect(curator.connect(user2).curate(drop)).to.be.revertedWith('Your Phlote balance is too low.')        
         })
-
+        
         it("should fail if submitter of hotdrop attempts to cosign their own record",async function(){
             let _ipfsURI = "ipfs://QmTz1aAoS6MXfHpGZpJ9YAGH5wrDsAteN8UHmkHMxVoNJk/1337.json"
             let ArtistSubmission = true
             const hotdrop = await newHotdrop(curator, user1, _ipfsURI,ArtistSubmission)
             const _drop = await ethers.getContractAt("Hotdrop", hotdrop as string)
             const [submitterAddress, submissionIsArtistSubmission,submissionCosigners] = await _drop.submissionDetails()
-            await expect(curator.connect(user1).curate(drop)).to.be.revertedWith("You cannot vote for your own track");
+            console.log(await phloteVote.balanceOf(user1.address))
+            await expect(curator.connect(user1).curate(hotdrop)).to.be.revertedWith("You cannot vote for your own track");
         })
 
 
@@ -212,7 +214,7 @@ describe("Contracts: ", function () {
                 let PhloteVotePrevSupply = await phloteVote.totalSupply();
                 const prevBalance = await phloteVote.balanceOf(usersArr[i].address);
                 await curateSigners([i],drop);
-                expect(await phloteVote.balanceOf(usersArr[i].address)).to.eq(prevBalance - mintCosts[i]);
+                expect(await phloteVote.balanceOf(usersArr[i].address)).to.eq(prevBalance.sub(mintCosts[i]));
                 expect(await phloteVote.balanceOf(artistAddress)).to.eq(artistPrevBalance.add(mintCosts[i] - cosignReward));
                 expect(await phloteVote.balanceOf(treasury.address)).to.eq(treasuryPrevBalance.add(cosignReward));
                 expect(await phloteVote.totalSupply()).to.eq(PhloteVotePrevSupply.add(mintCosts[i]));
@@ -250,8 +252,9 @@ describe("Contracts: ", function () {
                 
                 // get balances of each address before each new cosign, so we can compare balances to it after cosign
                 for(let numberOfCosigner = 0; numberOfCosigner<=i; numberOfCosigner++){
-                    cosignersListBalances[numberOfCosigner] =  (await phloteVote.balanceOf(usersArr[numberOfCosigner].address)).toNumber();
+                    cosignersListBalances[numberOfCosigner] = await phloteVote.balanceOf(usersArr[numberOfCosigner].address);
                 }
+
                 
                 await curateSigners([i],drop);
                 
@@ -259,12 +262,12 @@ describe("Contracts: ", function () {
                 expect(await phloteVote.balanceOf(curatorAddress)).to.eq(curatorPrevBalance.add(cosignReward));
                 //insure correct amount is minted from phloteVote on each cosign (cosignReward * (i + 1))
                 // Because on cosign where i = 0: -15 (reward to submitter), i = 1: -15 (reward to submitter) + -15 (reward to previous cosigner) etc... 
-                expect(await phloteVote.totalSupply()).to.eq(PhloteVotePrevSupply.add(cosignReward * (i + 1)));
+                expect(await phloteVote.totalSupply()).to.eq(PhloteVotePrevSupply.add(cosignReward * (BigInt(i + 1))));
                 
                 // check tokens were distributed to previous cosigners and NOT current cosigner, check from end to beginning 
                 for(let j = i; j<0; j--){
                     const balance = cosignersListBalances[j]
-                   expect(await phloteVote.balanceOf(cosignersList[j])).to.eq(balance + (cosignReward * (j + 1)));
+                   expect(await phloteVote.balanceOf(cosignersList[j])).to.eq(BigInt(balance) + (cosignReward * BigInt(j + 1)));
                 }
                 if(i != 0){
                     // check that current cosigner balance was never changed, and hasnt been set in our array (aka unchanged still)
@@ -277,28 +280,30 @@ describe("Contracts: ", function () {
             }
             //should fail here, just extra check
             await expect(curator.connect(user6).curate(drop)).to.be.revertedWith("Sorry! We have reached the maximum cosigns on this record.");
-
         })
     })
 
-    describe("PhloteVote.sol", async function(){
-        it("should only allow minting until max supply and fail to mint more", async function(){
-            const currSupply = await phloteVote.totalSupply()
-            await phloteVote.setMAXSUPPLY(currSupply.add(1000))
-            await phloteVote.mint(deployer.address, currSupply.add(1000))
-            expect(await phloteVote.MAX_SUPPLY()).to.eq(await phloteVote.totalSupply())
-            await expect(phloteVote.mint(deployer.address, currSupply.add(1000))).to.be.revertedWith("You have reached your maximum Supply for mint")
-        })
+    /*
+    * No longer implemeneting MaxSupply
+    */
+    // describe("PhloteVote.sol", async function(){
+    //     it("should only allow minting until max supply and fail to mint more", async function(){
+    //         const currSupply = await phloteVote.totalSupply()
+    //         await phloteVote.setMAXSUPPLY(currSupply.add(1000))
+    //         await phloteVote.mint(deployer.address, currSupply.add(1000))
+    //         expect(await phloteVote.MAX_SUPPLY()).to.eq(await phloteVote.totalSupply())
+    //         await expect(phloteVote.mint(deployer.address, currSupply.add(1000))).to.be.revertedWith("You have reached your maximum Supply for mint")
+    //     })
 
-        it("should mint the difference between max supply and mint amount if greater than max_Supply and stop there",async function(){
-            const currSupply = await phloteVote.totalSupply()
-            await phloteVote.setMAXSUPPLY(currSupply.add(1000))
-            await phloteVote.mint(deployer.address, currSupply.add(100000))
-            expect(await phloteVote.MAX_SUPPLY()).to.eq(await phloteVote.totalSupply())
-            await expect(phloteVote.mint(deployer.address, currSupply.add(1000))).to.be.revertedWith("You have reached your maximum Supply for mint")
-        })
+    //     it("should mint the difference between max supply and mint amount if greater than max_Supply and stop there",async function(){
+    //         const currSupply = await phloteVote.totalSupply()
+    //         await phloteVote.setMAXSUPPLY(currSupply.add(1000))
+    //         await phloteVote.mint(deployer.address, currSupply.add(100000))
+    //         expect(await phloteVote.MAX_SUPPLY()).to.eq(await phloteVote.totalSupply())
+    //         await expect(phloteVote.mint(deployer.address, currSupply.add(1000))).to.be.revertedWith("You have reached your maximum Supply for mint")
+    //     })
 
-    })
+    // })
 
     describe("Marketplace Functionality: Curator.sol & Hotdrop.sol", async function(){
         it("should be able to pause and unpause sale from curator.sol", async function(){
@@ -505,7 +510,7 @@ describe("Contracts: ", function () {
 
         })
 
-        it.only("should set price correctly", async function() {
+        it("should set price correctly", async function() {
             let _ipfsURI = "ipfs://QmTz1aAoS6MXfHpGZpJ9YAGH5wrDsAteN8UHmkHMxVoNJk/1337.json"
             let ArtistSubmission = true
             drop = await newHotdrop(curator, user6, _ipfsURI,ArtistSubmission)

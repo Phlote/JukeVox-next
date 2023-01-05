@@ -19,7 +19,7 @@ npx hardhat test
 - Before Deploying, please make sure constructor arguments are correct. Arguments `[Phlote Token Address, Treasury Address, Curator Admin Address]` are inside of `Curator_Initial_Deploy.ts`.
 
 ```
-npx hardhat run scripts/Curator_Initial_Deploy.ts --network <Name as written in hardhat.config file>
+npx hardhat run scripts/Curator_Deploy.ts --network <Name as written in hardhat.config file>
 ```
 > - Default network is mumbai. If no --network flag is provided, it will use 'mumbai'
 > - It will console log the address it was deployed to on completion.

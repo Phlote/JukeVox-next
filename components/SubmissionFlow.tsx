@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { revalidate } from "../controllers/revalidate";
 import { submit } from "../controllers/submissions";
 import { shortenHex, verifyUser } from "../utils/web3";
-import { ContractRes, Submission } from "../types";
+import { ArtistSubmission, ContractRes, CuratorSubmission } from "../types";
 import { uploadFiles } from "./FileUpload";
 import { useProfile } from "./Forms/ProfileSettingsForm";
 import { SubmissionForm } from "./Forms/SubmissionForm";
@@ -42,7 +42,7 @@ export const SubmissionFlow: FC = (props) => {
   const [loading, setLoading] = useState<boolean | string>(false);
   const profile = useProfile(account);
 
-  const onSubmit = async (submission: Submission) => {
+  const onSubmit = async (submission: ArtistSubmission | CuratorSubmission) => {
     setLoading("Interface with wallet");
 
     try {
@@ -50,7 +50,7 @@ export const SubmissionFlow: FC = (props) => {
         throw "Web3 is not enabled";
       }
       const isFile = submission.mediaType === 'File';
-      if (isFile && fileSelected) {
+      if (isFile && fileSelected && submission.isArtist) {
         submission.mediaFormat = fileSelected.type;
         submission.mediaURI = await uploadFiles({
           acceptedFile: fileSelected,
@@ -89,9 +89,15 @@ export const SubmissionFlow: FC = (props) => {
 
       console.log(submission);
 
-      const result = (await submit(submission, account, submission.mediaType)) as Submission;
+      const result =
+        submission.isArtist ?
+          (await submit(submission, account, submission.mediaType)) as ArtistSubmission
+          :
+          (await submit(submission, account, submission.mediaType)) as CuratorSubmission;
 
       console.log('DB', result);
+
+      // TODO: Throw error when result throws error instead of moving forward and showing success page.
 
       setPage(1);
       await queryClient.invalidateQueries("submissions");

@@ -16,7 +16,7 @@ const phloteTokenCosts = [50, 60, 70, 80, 90];
 
 export const RatingsMeter: React.FC<{
   // TODO: Use submission interface instead
-  submissionID: number;
+  submissionID: string;
   submitterWallet: string;
   initialCosigns: string[];
   isArtist: boolean;

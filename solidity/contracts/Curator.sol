@@ -1,19 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/AccessControlEnumerableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-
-import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
 
 import "@openzeppelin/contracts/interfaces/IERC1155.sol";
 
 import "@openzeppelin/contracts/interfaces/IERC20.sol";
 
-import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
 
 import "./PhloteVote.sol";
 import "./Hotdrop.sol";
@@ -25,12 +18,7 @@ import "hardhat/console.sol";
 /// @notice This contract's events should be indexed for use by front-ends.
 /// @dev Please check the tests for this contract when making changes!
 /// @custom:security-contact nohackplz@phlote.xyz
-contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableUpgradeable {
-    using SafeMathUpgradeable for uint256;
-    using StringsUpgradeable for uint256;
-    using CountersUpgradeable for CountersUpgradeable.Counter;
-
-    using AddressUpgradeable for address payable;
+contract Curator is Pausable {
 
     address public admin;
 
@@ -39,9 +27,6 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
     uint256 public curatorTokenMinimum;
 
     address public curatorAdmin;
-
-    bytes32 public constant CURATOR       = keccak256("CURATOR");
-    bytes32 public constant CURATOR_ADMIN = keccak256("CURATOR_ADMIN");
 
     event Submit(
         address indexed submitter,
@@ -62,51 +47,25 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
         _;
     }
 
-    /// @dev The constructor function. It also calls the upgrade function.
+    /// @dev The constructor function.
     /// @param _phloteToken Phlote's ERC20 DAO token.
-    function initialize(PhloteVote _phloteToken, address _treasury, address _curatorAdmin) public initializer {
-        __Pausable_init();
-        __AccessControlEnumerable_init();
-
+    constructor(PhloteVote _phloteToken, address _treasury, address _curatorAdmin) public {
         admin = msg.sender;
-        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(CURATOR_ADMIN, msg.sender);
-        _setRoleAdmin(CURATOR, CURATOR_ADMIN);
-        _grantRole(CURATOR, msg.sender);
-        curatorTokenMinimum = 50;
-
-        _onUpgrade(_phloteToken, _treasury, _curatorAdmin);
-        /*if (vote.allowance(address(this)) < vote.MAX_SUPPLY()) {*/
-            /*vote.approve(address(this), vote.MAX_SUPPLY());*/
-        /*}*/
-    }
-
-    /// @dev The upgrade function. To be called by the constructor as well.
-    /// @param _phloteToken's ERC20 DAO token.
-    function onUpgrade(PhloteVote _phloteToken, address _treasury, address _curatorAdmin) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        _onUpgrade(_phloteToken, _treasury, _curatorAdmin);
-    }
-
-    /// @dev The upgrade function. To be called by the constructor as well.
-    /// @param _phloteToken Phlote's ERC20 DAO token.
-    function _onUpgrade(PhloteVote _phloteToken, address _treasury, address _curatorAdmin) private {
-        /*require(_vote.owner() == address(this), "_vote not owned by Curator");*/
+        curatorTokenMinimum = 50000000000000000000;
+        
         phloteToken = _phloteToken;
         treasury = _treasury;
-
-        // revoke the old curator admin and grant the new one (if changed).
-        revokeRole(CURATOR_ADMIN, curatorAdmin);
         curatorAdmin = _curatorAdmin;
-        grantRole(CURATOR_ADMIN, curatorAdmin);
     }
 
+
     /// @dev To allow functionality via contract owner action.
-    function pause() public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function pause() public onlyOwner {
         _pause();
     }
 
     /// @dev To disallow functionality via contract owner action.
-    function unpause() public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function unpause() public onlyOwner {
         _unpause();
     }
 
@@ -118,9 +77,10 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
         curatorTokenMinimum = _curatorTokenMinimum;
     }
 
-    function setAddresses(address _treasury, address _curatorAdmin) public onlyOwner {
+    function setAddresses(address _treasury, address _curatorAdmin, PhloteVote _phloteToken) public onlyOwner {
         treasury = _treasury;
         curatorAdmin = _curatorAdmin;
+        phloteToken = _phloteToken;
     }
 
     function setHotDropSaleState(Hotdrop _hotdrop, uint256 _state) public onlyOwner {
@@ -142,23 +102,6 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
     function setHotdropPrice(Hotdrop _hotdrop, uint256 _price) public onlyOwner {
         _hotdrop.setPrice(_price);
     }
-
-
-    /// @dev Give an address the `CURATOR` role.
-    /// @param _newCurator The address of the curator who has enough PhloteVote tokes to curate for us.
-    function grantCuratorRole(address _newCurator) public onlyRole(CURATOR_ADMIN) {
-        require(phloteToken.balanceOf(_newCurator) >= curatorTokenMinimum, "too few Phlote tokens");
-        grantRole(CURATOR, _newCurator);
-    }
-
-
-
-    /// @dev Revoke an address's `CURATOR` role.
-    /// @param _oldCurator The address of the curator to disallow from Phlote curation.
-    function revokeCuratorRole(address _oldCurator) public onlyRole(CURATOR_ADMIN) {
-        revokeRole(CURATOR, _oldCurator);
-    }
-
 
     /// @dev Create an NFT ("Hotdrop") of your musical internet findings that may be curated in the future.
     /// @param _ipfsURI The ipfs://Qm... URI of the metadata for this submission.
@@ -191,15 +134,17 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
             uint256 mintPrice = _hotdrop.COSIGN_COSTS(cosignNumber);
             require(phloteToken.balanceOf(msg.sender)>= mintPrice, "You do not have enough Phlote Tokens in your balance for this transaction");
             _hotdrop.cosign(msg.sender);
+            
 
             // send the reward to the artist
             require(phloteToken.transferFrom(msg.sender, address(this), mintPrice));
+ 
             uint256 artistReward = mintPrice - _hotdrop.COSIGN_REWARD();
             phloteToken.mint(hotdropSubmitter, artistReward);
 
             // send the remaining amount to treasury
             phloteToken.mint(treasury, mintPrice - artistReward);
-            
+
             // if this is the 5th cosign, enable sale
             if(_hotdrop.totalSupply(_hotdrop.artistCosignerNFT()) == 5){
                 _hotdrop.setSaleState(1);
@@ -220,7 +165,6 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
                 phloteToken.mint(cosigners[i], _hotdrop.COSIGN_REWARD());
             }
         }
-        
         emit Cosign(
             msg.sender,
             _hotdrop,
@@ -230,14 +174,14 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
 
     // admin withdraw {{{
     /// @dev The owner may withdraw all of the native funds.
-    function withdraw() external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function withdraw() external onlyOwner {
         require(address(this).balance > 0, "need funds to withdraw");
         payable(msg.sender).transfer(address(this).balance);
     }
 
     /// @dev The owner may withdraw some of the native funds.
     /// @param _amount The balance of native currency to withdraw.
-    function withdraw(uint _amount) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function withdraw(uint _amount) external onlyOwner {
         require(address(this).balance > 0, "need funds to withdraw");
         require(_amount <= address(this).balance, "don't have that much");
         payable(msg.sender).transfer(_amount);
@@ -246,7 +190,7 @@ contract Curator is Initializable, PausableUpgradeable, AccessControlEnumerableU
     /// @dev The owner may withdraw any ERC20 token.
     /// @param _token An ERC20 token of which we have a balance.
     /// @param _amount The balance of native currency to withdraw.
-    function withdraw(IERC20 _token, uint256 _amount) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function withdraw(IERC20 _token, uint256 _amount) public onlyOwner {
         uint256 tokenBalance = _token.balanceOf(address(this));
         require(tokenBalance > 0, "need balance to withdraw");
         require(_amount <= tokenBalance, "don't have that much");

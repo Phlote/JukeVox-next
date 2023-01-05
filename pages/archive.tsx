@@ -18,7 +18,7 @@ import {
   useSubmissionSearch,
   useTrackSearchQueries,
 } from "../hooks/useSubmissions";
-import { Submission } from "../types";
+import { GenericSubmission, ArtistSubmission, CuratorSubmission } from "../types";
 
 function Archive({ query }) {
   const [searchBarContent, setSearchBar] = useSearchTerm();
@@ -42,7 +42,7 @@ function Archive({ query }) {
   }, [query]);
 
   const updateQueryParams = React.useCallback(
-    async (router, searchTerm: string, filters: Partial<Submission>) => {
+    async (router, searchTerm: string, filters: Partial<GenericSubmission>) => {
       await router.push(
         {
           pathname: "/archive",
@@ -122,7 +122,7 @@ function Archive({ query }) {
   );
 }
 
-const ArchiveEntry: React.FC<{ submission: Submission }> = ({ submission }) => {
+const ArchiveEntry = ({ submission }: { submission: ArtistSubmission | CuratorSubmission }) => {
   const {
     submissionID,
     submissionTime,

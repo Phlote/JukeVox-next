@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { supabase } from "../../lib/supabase";
-import { Submission } from "../../types";
+import { ArtistSubmission, CuratorSubmission } from "../../types";
 import { UserProfile } from "./ProfileSettingsForm";
 
 function cleanUrl(url: string) {
@@ -21,7 +21,7 @@ export const urlIsDuplicate = async (mediaURI: string) => {
   return query.data.length > 0;
 };
 
-export const validateSubmission = async (values: Submission) => {
+export const validateSubmission = async (values: ArtistSubmission | CuratorSubmission) => {
   const errors: Record<string, string> = {};
   if (values.mediaType !== "File") {
     if (!values.mediaURI) {
@@ -33,7 +33,6 @@ export const validateSubmission = async (values: Submission) => {
       } catch (_) {
         errors.mediaURI = "Invalid URL";
       }
-      console.log(url);
       if (!!url && url?.protocol !== "http:" && url?.protocol !== "https:") {
         errors.mediaURI = "Only http or https";
       }

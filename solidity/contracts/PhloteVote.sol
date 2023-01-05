@@ -23,31 +23,21 @@ contract PhloteVote is ERC20, ERC20Burnable, Pausable, ERC20Permit {
     using Address for address payable;
 
     //currently not being used. Do we need to cap it?
-    uint256 public MAX_SUPPLY = 14 * 10 ** decimals();
     address public owner;
     address public admin;
-
-    event MaxSupplyChange(
-        uint256 newTotalSupply
-    );
 
     modifier onlyOwner() {
         require(msg.sender == admin || msg.sender == owner, "You do not have access to this function.");
         _;
     }
 
-    constructor(uint256 _amountToMint) ERC20("Phlote Vote", "PV1") ERC20Permit("Phlote Vote") {
+    constructor(uint256 _amountToMint) ERC20("Phlote Vote", "PHLOTE") ERC20Permit("Phlote Vote") {
         owner = msg.sender;
         _mint(msg.sender, _amountToMint);
     }
 
     function setAdmin(address _admin) public onlyOwner {
         admin = _admin;
-    }
-
-    function setMAXSUPPLY(uint256 _maxSupply) public onlyOwner {
-        MAX_SUPPLY = _maxSupply;
-        emit MaxSupplyChange(MAX_SUPPLY);
     }
 
     function pause() public onlyOwner {
@@ -59,15 +49,7 @@ contract PhloteVote is ERC20, ERC20Burnable, Pausable, ERC20Permit {
     }
 
     function mint(address to, uint256 amount) public onlyOwner {
-        require(this.totalSupply() != MAX_SUPPLY, "You have reached your maximum Supply for mint");
-        if(MAX_SUPPLY - this.totalSupply() < amount){
-            _mint(to, MAX_SUPPLY - this.totalSupply() );
-        }
-
-        else{
-            _mint(to, amount);
-
-        }
+        _mint(to, amount);
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 amount)
