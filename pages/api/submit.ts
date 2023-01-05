@@ -17,7 +17,6 @@ export default async function handler(
   console.log({ submission });
 
   try {
-    // TODO: Why is this not typed as a Submission?
     const submissionWithSubmitterInfo: ArtistSubmission | CuratorSubmission = {
       submitterWallet: wallet,
       mediaTitle: submission.mediaTitle,
@@ -71,15 +70,15 @@ export default async function handler(
 
     const submissionRes = submissionsInsert.data[0] as ArtistSubmission | CuratorSubmission;
 
-    await supabase.from("comments").insert([
-      {
-        threadId: submissionRes.submissionID,
-        slug: `submission-root-${cuid.slug()}`,
-        authorId: submissionRes.submitterWallet,
-        isApproved: true,
-      },
-    ]);
-
+    // await supabase.from("comments").insert([
+    //   {
+    //     threadId: submissionRes.submissionID,
+    //     slug: `submission-root-${cuid.slug()}`,
+    //     authorId: submissionRes.submitterWallet,
+    //     isApproved: true,
+    //   },
+    // ]);
+    //
     await indexSubmission(submissionRes);
 
     response.status(200).send(submissionWithSubmitterInfo);

@@ -97,6 +97,8 @@ export const SubmissionFlow: FC = (props) => {
 
       console.log('DB', result);
 
+      // TODO: Throw error when result throws error instead of moving forward and showing success page.
+
       setPage(1);
       await queryClient.invalidateQueries("submissions");
       await revalidate(account, result.submissionID);
