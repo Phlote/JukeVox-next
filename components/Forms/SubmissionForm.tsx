@@ -42,6 +42,7 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
 
       <span className="flex justify-between">
         <span>{mediaType.input.value === "File" ? "Artist" : "Curator"}</span>
+        {/*TODO: THIS SHOULD SEND isArtist instead of Link or File*/}
         <Toggle {...mediaType.input} fields={['Link', 'File']} setURI={mediaURI.input.onChange}
                 setFileSelected={setFileSelected} />
       </span>

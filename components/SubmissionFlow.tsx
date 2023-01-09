@@ -50,6 +50,7 @@ export const SubmissionFlow: FC = (props) => {
         throw "Web3 is not enabled";
       }
       const isFile = submission.mediaType === 'File';
+      submission.isArtist = isFile;
       if (isFile && fileSelected && submission.isArtist) {
         submission.mediaFormat = fileSelected.type;
         submission.mediaURI = await uploadFiles({

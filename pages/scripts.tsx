@@ -34,20 +34,31 @@ export const migrateSubmissions = async () => {
   const curatorSubs: PostgrestResponse<CuratorSubmission> = await currentDB.from('Curator_Submission_Table').select();
   const artistSubs: PostgrestResponse<ArtistSubmission> = await currentDB.from('Artist_Submission_Table').select();
 
-  const newUserProfiles = await currentDB.from('Users_Table').select();
+  const newUserProfiles = await currentDB.from('users_table_duplicate').select();
 
   // const oldUsersWithProfiles = await oldSupabase.from('users_table').select();
   // const oldProfiles = await oldSupabase.from('profiles').select();
   // const oldUsersWithoutProfiles = await oldSupabase.from('users').select();
   // const oldSubmissions = await oldSupabase.from('submissions').select();
 
-  console.log(curatorSubs);
-  console.log(artistSubs);
-  console.log(newUserProfiles);
+  // console.log(curatorSubs);
+  // console.log(artistSubs);
+  // console.log(newUserProfiles);
+  //
+  // let newUsersWithLowerCaseWallets = [...newUserProfiles.data];
+  // newUsersWithLowerCaseWallets.map((u)=>u.wallet = u.wallet.toLowerCase())
+  //
+  // console.log(newUsersWithLowerCaseWallets);
 
-  // let missingUsers = curatorSubs.data.filter(u=>{
-  //   return !(newUserProfiles.data.some(s => s.wallet === u.submitterWallet));
-  // })
+  // const duplicatedObjects = newUsersWithLowerCaseWallets.filter((obj, index) => {
+  //   // Get all objects after the current one
+  //   const rest = newUsersWithLowerCaseWallets.slice(index + 1);
+  //   // Check if any of them have the same value for property "a"
+  //   return rest.some((other) => other.wallet.toLowerCase() === obj.wallet.toLowerCase());
+  // });
+
+  // console.log(duplicatedObjects);
+
   //
   // let missingUserWallets = [...new Set(missingUsers.map(s => s.submitterWallet))];
   //
@@ -59,7 +70,7 @@ export const migrateSubmissions = async () => {
 
   // const { data, error } = await supabase.from("Artist_Submission_Table").insert(artistSubmissions);
   // const { data, error } = await supabase.from("Curator_Submission_Table").insert(curatorSubmissions);
-  // const { data, error } = await supabase.from("Users_Table").insert(missingUsersToAdd); // gotta migrate users first
+  // const { data, error } = await supabase.from("Users_Table").insert(newUsersWithLowerCaseWallets); // gotta migrate users first
   // const { data, error } = await supabase.from("Users_Table_duplicate")
   //   .upsert(missingUsers, {onConflict: "wallet"}).select();
   // console.log(data, error);
