@@ -10,6 +10,9 @@ import { CommentBubble } from "./Comments/CommentBubble";
 import { GenericSubmission } from "../types";
 import { supabase } from "../lib/supabase";
 import { MintingModal, useMintingModalOpen, useMintingModalSubmission } from "./Modals/MintingModal";
+import { useIsCurator } from "../hooks/useIsCurator";
+import { useMoralis } from "react-moralis";
+import ReactTooltip from "react-tooltip";
 
 const SubmissionCardDetails = styled.div`
   ${tw`p-4 bg-phlote-ff-modal`}
@@ -29,6 +32,25 @@ const SubmissionCard = ({ submission }: { submission: GenericSubmission }) => {
   const [submissionAtom, setSubmissionAtom] = useMintingModalSubmission();
   const videoEl = useRef(null);
   const [mediaFormat, setMediaFormat] = useState('');
+  const { isWeb3Enabled, account } = useMoralis();
+
+  const isCuratorData = useIsCurator();
+  const isCurator = isCuratorData.data?.isCurator;
+
+  const canCosign = account && isCurator && submission.submitterWallet?.toLowerCase() !== account.toLowerCase();
+
+  let cantMintMessage = '';
+  if (account) {
+    if (!isCurator) {
+      cantMintMessage = 'Need phlote tokens to mint.';
+    }
+    if (submissionAtom.submitterWallet?.toLowerCase() === account.toLowerCase()) {
+      cantMintMessage = "Can't mint own submission."
+    }
+  } else {
+    cantMintMessage = 'Connect your wallet to mint.';
+  }
+  // gotta define what info to show the user when they can't mint
 
   const mint = () =>{
     setSubmissionAtom(submission);
@@ -42,6 +64,8 @@ const SubmissionCard = ({ submission }: { submission: GenericSubmission }) => {
       .match({ submissionID: submission.submissionID });
     setMediaFormat(artistSubmission.data[0].mediaFormat);
   }
+
+  useEffect(() => ReactTooltip.rebuild() as () => (void), []);
 
   useEffect(() => {
     if (submission.isArtist) {
@@ -109,10 +133,11 @@ const SubmissionCard = ({ submission }: { submission: GenericSubmission }) => {
           </div>
           {/* TODO: add && submission.isArtist */}
           {submission.cosigns?.length === 5 && submission.hotdropAddress != "" ?
-            <div className="flex h-12 mt-1">
+            <div className="flex h-12 mt-1" data-tip={cantMintMessage}>
               <button
-                className="bg-black-900 border-solid border-white border-2 w-full text-white rounded-lg px-8 py-2 text-base font-medium hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-white-300"
+                className="disabled:opacity-50 bg-black-900 border-solid border-white border-2 w-full text-white rounded-lg px-8 py-2 text-base font-medium disabled:cursor-not-allowed enabled:hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-white-300"
                 id="open-btn"
+                disabled={!canCosign}
                 onClick={mint}>Mint
               </button>
             </div>
