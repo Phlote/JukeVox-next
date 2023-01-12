@@ -7,6 +7,7 @@ const Marketplace = () => {
   //const [items, setItems] = useState([])
 
   const allSubmissions = useSubmissions();
+  // add && isArtist = so we only get artist submissions through
   let fiveCosigned = allSubmissions.filter((item) => item.noOfCosigns == 5 && item.hotdropAddress != "");
   console.log(fiveCosigned);
   let saleItems = fiveCosigned.map(({ submissionID, artistName, mediaTitle, hotdropAddress }) => ({ submissionID, artistName, mediaTitle, hotdropAddress }));
