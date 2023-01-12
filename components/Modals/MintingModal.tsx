@@ -108,7 +108,7 @@ export const MintingModal = () => {
   }
 
   return (
-    <Modal open={showModal} onClose={closeModal} width="40rem" height="40rem">
+    <Modal open={showModal} onClose={closeModal} width="40rem" height="27rem">
       <div className="justify-center items-center flex fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="text-white relative min-w-fit	 my-6 mx-auto max-w-6xl p-80">
           {/*content*/}
@@ -117,7 +117,7 @@ export const MintingModal = () => {
             <div className="absolute inset-0 bg-gray-900 opacity-75"></div>
           </div>
 
-          <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-gray-800 ">
+          <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full">
             {/*header*/}
             <div className="flex justify-end p-5 border-b border-solid border-slate-200 rounded-t">
               <button
