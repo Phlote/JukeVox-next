@@ -15,12 +15,12 @@ export default async function handler(
   try {
     if (wallet) {
       console.log(`Revalidating: /profile/${wallet}`);
-      await res.unstable_revalidate(`/profile/${wallet}`);
+      await res.revalidate(`/profile/${wallet}`);
     } else console.log("wallet not provided or was falsy");
 
     if (submissionID) {
       console.log(`Revalidating: /submission/${submissionID}`);
-      await res.unstable_revalidate(`/submission/${submissionID}`);
+      await res.revalidate(`/submission/${submissionID}`);
     } else console.log("submissionID not provided or was falsy");
 
     return res.json({ revalidated: true });
