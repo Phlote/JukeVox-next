@@ -5,8 +5,10 @@ import { MobileSubmissionModal } from "./Modals/MobileSubmissionModal";
 import { NavBarDesktop, NavBarMobileWeb } from "./NavBar";
 import { SubmitSidenav } from "./SideNav";
 import Overlay from "./Overlay";
+import { MintingModal, useMintingModalOpen, useMintingModalSubmission } from "./Modals/MintingModal";
 
 export default function Layout({ children }) {
+
   return (
     <div className="absolute inset-0">
       <Overlay/>
@@ -18,6 +20,7 @@ export default function Layout({ children }) {
         <MobileSubmissionModal />
       </div>
       <ConnectWalletModal />
+      <MintingModal />
       <div className="hidden sm:block">
         <NavBarDesktop />
       </div>
