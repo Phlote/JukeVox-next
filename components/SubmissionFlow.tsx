@@ -50,6 +50,7 @@ export const SubmissionFlow: FC = (props) => {
         throw "Web3 is not enabled";
       }
       const isFile = submission.mediaType === 'File';
+      submission.isArtist = isFile;
       if (isFile && fileSelected && submission.isArtist) {
         submission.mediaFormat = fileSelected.type;
         submission.mediaURI = await uploadFiles({
@@ -96,6 +97,8 @@ export const SubmissionFlow: FC = (props) => {
           (await submit(submission, account, submission.mediaType)) as CuratorSubmission;
 
       console.log('DB', result);
+
+      // TODO: Throw error when result throws error instead of moving forward and showing success page.
 
       setPage(1);
       await queryClient.invalidateQueries("submissions");

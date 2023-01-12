@@ -17,26 +17,14 @@ export default async function handler(
   console.log({ submission });
 
   try {
-    // TODO: Why is this not typed as a Submission?
     const submissionWithSubmitterInfo: ArtistSubmission | CuratorSubmission = {
       submitterWallet: wallet,
       mediaTitle: submission.mediaTitle,
       mediaURI: submission.mediaURI,
       artistName: submission.artistName,
       hotdropAddress: submission.hotdropAddress,
-      submissionID: submission.submissionID,
       isArtist: submission.isArtist
     };
-
-    // const profileQuery = await supabase
-    //   .from("Users_Table")
-    //   .select()
-    //   .match({ wallet });
-    //
-    // if (profileQuery.data.length > 0) {
-    //   const { username } = profileQuery.data[0];
-    //   submissionWithSubmitterInfo.username = username;
-    // }
 
     const playlistsQuery = await supabase
       .from("Playlists_Table")
@@ -47,7 +35,7 @@ export default async function handler(
       submissionWithSubmitterInfo.playlistIDs = [playlistsQuery.data[0].playlistID];
     }
 
-    // TODO: CURATOR/ARTIST SEPARATION
+    console.log({ submissionWithSubmitterInfo });
 
     let submissionsInsert = await (async () => {
       if (submissionWithSubmitterInfo.isArtist) {
@@ -71,15 +59,15 @@ export default async function handler(
 
     const submissionRes = submissionsInsert.data[0] as ArtistSubmission | CuratorSubmission;
 
-    await supabase.from("comments").insert([
-      {
-        threadId: submissionRes.submissionID,
-        slug: `submission-root-${cuid.slug()}`,
-        authorId: submissionRes.submitterWallet,
-        isApproved: true,
-      },
-    ]);
-
+    // await supabase.from("comments").insert([
+    //   {
+    //     threadId: submissionRes.submissionID,
+    //     slug: `submission-root-${cuid.slug()}`,
+    //     authorId: submissionRes.submitterWallet,
+    //     isApproved: true,
+    //   },
+    // ]);
+    //
     await indexSubmission(submissionRes);
 
     response.status(200).send(submissionWithSubmitterInfo);
