@@ -49,7 +49,7 @@ export const NETWORKS = {
 export const PHLOTE_SIGNATURE_REQUEST_MESSAGE =
   "Sign this message to prove you have access to this wallet. This won't cost you any gas. \n\n";
 
-export const PHOTE_VOTE_TOKEN_ADDRESS =
+export const PHLOTE_VOTE_TOKEN_ADDRESS =
   "0xc973F97a608b4E282EB97C7E86901ab5EBf3A014";
 
 export const Web3_Socket_URL = `wss://polygon-mumbai.g.alchemy.com/v2/+ ${process.env.NEXT_PUBLIC_ALCHEMY_APIKEY}`
