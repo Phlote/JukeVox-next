@@ -131,8 +131,7 @@ const SubmissionCard = ({ submission }: { submission: GenericSubmission }) => {
             </div>
 
           </div>
-          {/* TODO: add && submission.isArtist */}
-          {submission.cosigns?.length === 5 && submission.hotdropAddress != "" ?
+          {submission.cosigns?.length === 5 && submission.hotdropAddress != "" && submission.isArtist ?
             <div className="flex h-12 mt-1" data-tip={cantMintMessage}>
               <button
                 className="disabled:opacity-50 bg-black-900 border-solid border-white border-2 w-full text-white rounded-lg px-8 py-2 text-base font-medium disabled:cursor-not-allowed enabled:hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-white-300"

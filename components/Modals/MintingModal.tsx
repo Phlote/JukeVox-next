@@ -6,6 +6,7 @@ import { AbiItem } from "web3-utils";
 import { atom, useAtom } from "jotai";
 import { Modal } from "../Modal";
 import { GenericSubmission } from "../../types";
+import { Web3_Socket_URL } from "../../utils/constants";
 
 // TODO: set loading state for mint button
 // TODO: use an env variable for web3 alchemy socket
@@ -30,7 +31,7 @@ export const MintingModal = () => {
   const { isWeb3Enabled, account } = useMoralis();
   const { fetch: runContractFunction, data, error, isLoading, isFetching, } = useWeb3ExecuteFunction();
 
-  const web3 = new Web3('wss://polygon-mumbai.g.alchemy.com/v2/Ffd05GrDEBTQR-htVV9V_hYCLV2HLj9U');
+  const web3 = new Web3(Web3_Socket_URL);
 
   useEffect(() => {
     async function fetchContractData() {
