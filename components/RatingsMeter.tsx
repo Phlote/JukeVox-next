@@ -13,7 +13,15 @@ import { ContractRes } from "../types";
 import { PhloteVoteABI, PhloteVoteAddress } from "../solidity/utils/PhloteVote";
 
 const phloteTokenCosts = [50, 60, 70, 80, 90];
+// =======================================================================
+import Web3 from "web3";
+import { AbiItem } from "web3-utils";
+import { Web3_Socket_URL } from "../utils/constants";
 
+const web3 = new Web3(Web3_Socket_URL);
+
+// const waitFor = delay => new Promise(resolve => setTimeout(resolve,delay));
+// =======================================================================
 export const RatingsMeter: React.FC<{
   // TODO: Use submission interface instead
   submissionID: string;
@@ -28,10 +36,26 @@ export const RatingsMeter: React.FC<{
   const { fetch: runContractFunction, data, error, isLoading, isFetching, } = useWeb3ExecuteFunction();
   const [contractRes, setContractRes] = useState<ContractRes>({});
   const [approvalRes, setApprovalRes] = useState<ContractRes>({});
+  // ==================================================================================
+  const [userApprovedPhloteAmount, setUserApprovedPhloteAmount] = useState(0)
 
+  // ==================================================================================
   const [cosigns, setCosigns] = useState<string[]>([]);
 
   useEffect(() => ReactTooltip.rebuild() as () => (void), []);
+
+  useEffect(() => {
+    async function fetchContractData() {
+      const data = await loadTokenApprovedBalace();
+    }
+    fetchContractData()
+  })
+
+  const loadTokenApprovedBalace = async () => {
+    const phloteContract = new web3.eth.Contract(PhloteVoteABI as unknown as AbiItem,PhloteVoteAddress );
+    const contractInfo = await phloteContract.methods.allowance(account,CuratorAddress).call()
+    setUserApprovedPhloteAmount(contractInfo)
+  }
 
   useEffect(() => {
     if (initialCosigns) {
@@ -59,6 +83,7 @@ export const RatingsMeter: React.FC<{
   } else {
     cantCosignMessage = 'Connect your wallet to cosign.';
   }
+  
 
   const onCosign = async (e) => {
     e.stopPropagation();
@@ -67,10 +92,9 @@ export const RatingsMeter: React.FC<{
       if (!isWeb3Enabled) {
         throw "Authentication failed";
       }
-
-      console.log('PHLOTE TOKEN AMMOUNT', phloteTokenCosts[cosigns.length]);
-
-      if (isArtist) {
+      console.log("we;'re inside: ", userApprovedPhloteAmount)
+      // We Only want approvals if this is an artist submission + user has not already approved this amount
+      if (isArtist && userApprovedPhloteAmount<phloteTokenCosts[cosigns.length]) {
         const optionsApproval = {
           abi: PhloteVoteABI,
           contractAddress: PhloteVoteAddress,
@@ -96,6 +120,7 @@ export const RatingsMeter: React.FC<{
         // @ts-ignore
         await approvalTransaction.wait();
       }
+      
 
       const optionsContract = {
         abi: CuratorABI,
@@ -124,7 +149,10 @@ export const RatingsMeter: React.FC<{
       }
     } catch (e) {
       console.error(e);
-      toast.error(e.message);
+      if(e.data){
+        toast.error(e.data.message);
+      }
+      else{toast.error(e.message);}
       setCosigns((current) => current.slice(0, current.length - 1));
     }
   };
