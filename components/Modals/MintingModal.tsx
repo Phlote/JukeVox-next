@@ -9,7 +9,6 @@ import { GenericSubmission } from "../../types";
 import { Web3_Socket_URL } from "../../utils/constants";
 
 // TODO: set loading state for mint button
-// TODO: use an env variable for web3 alchemy socket
 
 const mintingModalOpenAtom = atom<boolean>(false);
 export const useMintingModalOpen = () => useAtom(mintingModalOpenAtom);
@@ -40,7 +39,6 @@ export const MintingModal = () => {
     if (submissionAtom.hotdropAddress !== 'not set'){
 
       fetchContractData();
-      // hotdropContractListener();
     }
   }, [submissionAtom]);
 
@@ -49,9 +47,6 @@ export const MintingModal = () => {
     const contractInfo = await hotdropContract.methods.totalSupply(3).call()
     setTotalMints(contractInfo)
   }
-
-  // function hotdropContractListener(){
-  // }
 
   const closeModal = () => {
     setShowModal(false);

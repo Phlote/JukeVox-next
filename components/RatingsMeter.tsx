@@ -94,32 +94,40 @@ export const RatingsMeter: React.FC<{
       }
       console.log("we;'re inside: ", userApprovedPhloteAmount)
       // We Only want approvals if this is an artist submission + user has not already approved this amount
-      if (isArtist && userApprovedPhloteAmount<phloteTokenCosts[cosigns.length]) {
-        const optionsApproval = {
-          abi: PhloteVoteABI,
-          contractAddress: PhloteVoteAddress,
-          functionName: "approve",
-          params: {
-            spender: CuratorAddress,
-            amount: phloteTokenCosts[cosigns.length]
-          },
-        }
 
-        const approvalTransaction = await runContractFunction({
-          params: optionsApproval,
-          onError: (err) => {
-            setApprovalRes(err);
-            throw err;
-          },
-          onSuccess: (res) => {
-            console.log(res);
-            setApprovalRes(res);
-          },
-        });
+      // if(userApprovedPhloteAmount<phloteTokenCosts[cosigns.length]){
+      //   console.log("Yes..." + userApprovedPhloteAmount + "is LESS than" + phloteTokenCosts[cosigns.length])
+      // }
+      // else{
+      //   console.log(userApprovedPhloteAmount + "is MORE than or equal to " + phloteTokenCosts[cosigns.length])
+      // }
 
-        // @ts-ignore
-        await approvalTransaction.wait();
-      }
+      // if (isArtist && userApprovedPhloteAmount<phloteTokenCosts[cosigns.length]) {
+      //   const optionsApproval = {
+      //     abi: PhloteVoteABI,
+      //     contractAddress: PhloteVoteAddress,
+      //     functionName: "approve",
+      //     params: {
+      //       spender: CuratorAddress,
+      //       amount: phloteTokenCosts[cosigns.length]
+      //     },
+      //   }
+
+      //   const approvalTransaction = await runContractFunction({
+      //     params: optionsApproval,
+      //     onError: (err) => {
+      //       setApprovalRes(err);
+      //       throw err;
+      //     },
+      //     onSuccess: (res) => {
+      //       console.log(res);
+      //       setApprovalRes(res);
+      //     },
+      //   });
+
+      //   // @ts-ignore
+      //   await approvalTransaction.wait();
+      // }
       
 
       const optionsContract = {
