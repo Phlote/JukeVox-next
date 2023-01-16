@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { HotdropABI } from "../../solidity/utils/Hotdrop";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
+import { toast } from "react-toastify";
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 import { atom, useAtom } from "jotai";
@@ -8,7 +9,8 @@ import { Modal } from "../Modal";
 import { GenericSubmission } from "../../types";
 import { Web3_Socket_URL } from "../../utils/constants";
 
-// TODO: set loading state for mint button
+// TODO: set toast messages for onsuccess and error
+// TODO: add price to constants file currently on main (work on that was done after starting this branch)
 
 const mintingModalOpenAtom = atom<boolean>(false);
 export const useMintingModalOpen = () => useAtom(mintingModalOpenAtom);
@@ -30,6 +32,9 @@ export const MintingModal = () => {
   const { isWeb3Enabled, account } = useMoralis();
   const { fetch: runContractFunction, data, error, isLoading, isFetching, } = useWeb3ExecuteFunction();
 
+  // isLoading: user action required - (metamask popup open)
+  const [loading, setLoading] = useState<boolean | string>(false);
+
   const web3 = new Web3(Web3_Socket_URL);
 
   useEffect(() => {
@@ -41,6 +46,10 @@ export const MintingModal = () => {
       fetchContractData();
     }
   }, [submissionAtom]);
+
+  useEffect(() => {
+    if (isLoading) setLoading('User action required');
+  }, [isLoading]);
 
   const loadContractData = async () => {
     const hotdropContract = new web3.eth.Contract(HotdropABI as unknown as AbiItem, submissionAtom.hotdropAddress);
@@ -67,6 +76,8 @@ export const MintingModal = () => {
       throw "Authentication failed";
     }
 
+    setLoading("Loading Transaction");
+
     const submitTransaction = await runContractFunction({
       params: options,
       onError: (err) => {
@@ -82,25 +93,9 @@ export const MintingModal = () => {
 
     console.log('contract result', contractResult);
 
+    setLoading(false);
 
-  }
-  {/* <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-75 z-50 flex items-center justify-center">
-  <div className="w-1/2 bg-gray-800 rounded-lg shadow-lg p-6">
-    <div className="font-bold text-xl mb-2 text-white">{submissionAtom.artistName} - {submissionAtom.mediaTitle}</div>
 
-    <div className="flex mb-4">
-      <div className="w-1/3 text-gray-300 text-sm font-semibold mr-2">Submitter Wallet:</div>
-      <div className="w-2/3 text-gray-300 text-base">[submitter wallet]</div>
-    </div>
-    <div className="flex mb-4">
-      <div className="w-1/3 text-gray-300 text-sm font-semibold mr-2">Song Contract Address:</div>
-      <div className="w-2/3 text-gray-300 text-base">[song contract address]</div>
-    </div>
-    <div className="flex mb-4">
-
-    </div>
-    </div>
-    </div> */
   }
 
   return (
@@ -157,60 +152,14 @@ export const MintingModal = () => {
                   type="button"
                   onClick={mintNFT}
                 >
-                  Mint
+                  {isLoading? "Loading Transaction..." : "Mint"}
                 </button>
               )}
-              {/* <button
-                className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 opacity-50 cursor-not-allowed"
-                type="button"
-                // onClick={startAuction}
-              >
-                Auction (coming soon...)
-              </button> */}
             </div>
           </div>
         </div>
       </div>
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
     </Modal>
-    /* <>
-  <div className=" bottom-0 inset-x-0 px-4 pb-4 sm:inset-0 sm:flex sm:items-center sm:justify-center">
-
-    <div className="fixed inset-0 transition-opacity">
-      <div className="absolute inset-0 bg-gray-900 opacity-75"></div>
-    </div>
-
-    <div className="bg-gray-800 rounded-lg p-20 overflow-hidden shadow-xl transform transition-all">
-
-      <div className="absolute top-0 right-0 -mr-14 p-1">
-        <button type="button" className="text-gray-300 hover:text-white focus:text-white focus:outline-none">
-          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/>
-          </svg>
-        </button>
-      </div>
-
-
-     <div className="text-white text-2xl font-bold mb-4">{submissionAtom.artistName} - {submissionAtom.mediaTitle}</div>
-      <div className="flex mb-4">
-      <div className="w-1/3 text-gray-300 text-md font-semibold mr-2">Submitter Wallet:</div>
-      <div className="w-2/3 text-gray-300 text-base">{submissionAtom.submitterWallet}</div>
-    </div>
-    <div className="flex mb-4">
-      <div className="w-1/3 text-gray-300 text-sm font-semibold mr-2">Song Contract Address:</div>
-      <div className="w-2/3 text-gray-300 text-base">[song contract address]</div>
-    </div>
-    <div className="flex mb-4">
-    <span className="text-2xl font-bold">Units Sold So far: {totalMints}</span>
-    </div>
-
-      <div className="relative rounded-md shadow-sm mt-4">
-        <button className="px-4 py-3 font-bold text-white bg-gray-800 rounded-full hover:bg-gray-700 focus:outline-none focus:shadow-outline-gray active:bg-gray-800">
-          Mint
-        </button>
-      </div>
-    </div>
-  </div>
-  </> */
   );
 };

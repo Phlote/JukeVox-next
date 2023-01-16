@@ -12,7 +12,7 @@ import { CuratorABI, CuratorAddress } from "../solidity/utils/Curator";
 import { ContractRes } from "../types";
 import { PhloteVoteABI, PhloteVoteAddress } from "../solidity/utils/PhloteVote";
 
-const phloteTokenCosts = [50, 60, 70, 80, 90];
+const phloteTokenCosts = ["50000000000000000000", "60000000000000000000", "70000000000000000000", "80000000000000000000", "90000000000000000000"];
 // =======================================================================
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
@@ -20,7 +20,13 @@ import { Web3_Socket_URL } from "../utils/constants";
 
 const web3 = new Web3(Web3_Socket_URL);
 
-// const waitFor = delay => new Promise(resolve => setTimeout(resolve,delay));
+/* Work done:
+
+- new useEffect(), on load always grab current users Phlote allowance for the curator address and store in a state
+- logic of approval now checks if the user already has enough of an allowance, so it doesnt need to ask again if you already have enough
+- fixed e.data.message toast using that conditional to check if its a metamask or a 
+
+*/
 // =======================================================================
 export const RatingsMeter: React.FC<{
   // TODO: Use submission interface instead
@@ -95,39 +101,39 @@ export const RatingsMeter: React.FC<{
       console.log("we;'re inside: ", userApprovedPhloteAmount)
       // We Only want approvals if this is an artist submission + user has not already approved this amount
 
-      // if(userApprovedPhloteAmount<phloteTokenCosts[cosigns.length]){
-      //   console.log("Yes..." + userApprovedPhloteAmount + "is LESS than" + phloteTokenCosts[cosigns.length])
-      // }
-      // else{
-      //   console.log(userApprovedPhloteAmount + "is MORE than or equal to " + phloteTokenCosts[cosigns.length])
-      // }
+      if(userApprovedPhloteAmount<parseInt(phloteTokenCosts[cosigns.length])){
+        console.log("Yes..." + userApprovedPhloteAmount + "is LESS than" + phloteTokenCosts[cosigns.length])
+      }
+      else{
+        console.log(userApprovedPhloteAmount + "is MORE than or equal to " + phloteTokenCosts[cosigns.length])
+      }
 
-      // if (isArtist && userApprovedPhloteAmount<phloteTokenCosts[cosigns.length]) {
-      //   const optionsApproval = {
-      //     abi: PhloteVoteABI,
-      //     contractAddress: PhloteVoteAddress,
-      //     functionName: "approve",
-      //     params: {
-      //       spender: CuratorAddress,
-      //       amount: phloteTokenCosts[cosigns.length]
-      //     },
-      //   }
+      if (isArtist && userApprovedPhloteAmount<parseInt(phloteTokenCosts[cosigns.length])) {
+        const optionsApproval = {
+          abi: PhloteVoteABI,
+          contractAddress: PhloteVoteAddress,
+          functionName: "approve",
+          params: {
+            spender: CuratorAddress,
+            amount: phloteTokenCosts[cosigns.length]
+          },
+        }
 
-      //   const approvalTransaction = await runContractFunction({
-      //     params: optionsApproval,
-      //     onError: (err) => {
-      //       setApprovalRes(err);
-      //       throw err;
-      //     },
-      //     onSuccess: (res) => {
-      //       console.log(res);
-      //       setApprovalRes(res);
-      //     },
-      //   });
+        const approvalTransaction = await runContractFunction({
+          params: optionsApproval,
+          onError: (err) => {
+            setApprovalRes(err);
+            throw err;
+          },
+          onSuccess: (res) => {
+            console.log(res);
+            setApprovalRes(res);
+          },
+        });
 
-      //   // @ts-ignore
-      //   await approvalTransaction.wait();
-      // }
+        // @ts-ignore
+        await approvalTransaction.wait();
+      }
       
 
       const optionsContract = {
