@@ -1,6 +1,3 @@
-export const TEST_PHOTE_TOKEN_ADDRESS =
-  "0x31DA0475d29a452DA24Eb2ed0d41AD53E576b780";
-
 export enum SupportedChainId {
   MAINNET = 1,
   // ROPSTEN = 3,
@@ -48,3 +45,8 @@ export const NETWORKS = {
 
 export const PHLOTE_SIGNATURE_REQUEST_MESSAGE =
   "Sign this message to prove you have access to this wallet. This won't cost you any gas. \n\n";
+
+export const PHLOTE_VOTE_TOKEN_ADDRESS =
+  "0x50281Df3EADA2bC85E72A488CFbbC8e38fef8aC7";
+
+export const Web3_Socket_URL = `wss://polygon-mumbai.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_APIKEY}`

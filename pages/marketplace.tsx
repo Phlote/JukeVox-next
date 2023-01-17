@@ -1,20 +1,46 @@
 import React, { useEffect, useState } from "react";
-import { Footer } from "../components/Footer";
 import Layout from "../components/Layouts";
 import { useSubmissions } from "../hooks/useSubmissions";
+import Web3 from "web3";
+import { Web3_Socket_URL } from "../utils/constants";
+import { HotdropABI } from "../solidity/utils/Hotdrop";
+import { AbiItem } from "web3-utils";
+
+
 
 const Marketplace = () => {
-  //const [items, setItems] = useState([])
+    const web3 = new Web3(Web3_Socket_URL);
+    const allSubmissions = useSubmissions();
+    let expiredItems = [];
+    /*
+    Steps:
 
-  const allSubmissions = useSubmissions();
-  // add && isArtist = so we only get artist submissions through
-  let fiveCosigned = allSubmissions.filter((item) => item.noOfCosigns == 5 && item.hotdropAddress != "");
-  console.log(fiveCosigned);
-  let saleItems = fiveCosigned.map(({ submissionID, artistName, mediaTitle, hotdropAddress }) => ({ submissionID, artistName, mediaTitle, hotdropAddress }));
+    1- Get all submissiong with: 5 cosigns && (isArtist) & that have a hotdropAddress
+    2- Create a custom object with: submissionID, artistName, mediaTitle,hotdropAddress, numberOf Copies Sold
+    3- Display these numbers
+    4- Filter the display with the highest sales at the top of the list
+    */
+    //const [items, setItems] = useState([])
 
-  let expiredItems = [];
+    // TODO: add && isArtist = so we only get artist submissions through
+    let fiveCosigned = allSubmissions.filter((item) => item.noOfCosigns == 5 && item.hotdropAddress != "");
+    
+    let saleItems = fiveCosigned.map(({ submissionID, artistName, mediaTitle, hotdropAddress }) => ({ submissionID, artistName, mediaTitle, hotdropAddress, maxSupply: 20,copiesSold: 0, price: 0.01 }));
+    
+    ///update with the actual number of copies sold
+    saleItems.forEach(async (item) => {
+      item.copiesSold = await getCopies(item.hotdropAddress);
+    });
 
-  // setItems(formatedItems);
+
+    async function getCopies (hotdropAddress) {
+      const hotdropContract = new web3.eth.Contract(HotdropABI as unknown as AbiItem, hotdropAddress);
+      const numOfMints = await hotdropContract.methods.totalSupply(3).call()
+      return numOfMints
+    }
+
+  console.log(saleItems)
+
 
   return (
     <div className="font-roboto">
@@ -28,20 +54,21 @@ const Marketplace = () => {
                 </div>
               ) : (
             <div className="grid grid-cols-1 mt-10 md:grid-cols-2 lg:grid-cols-5 gap-4">
-              {saleItems.map((saleItems) => (
-                <div className="bg-white rounded-lg shadow-lg" key={saleItems.submissionID}>
+              {saleItems.map((saleItem) => (
+                <div className="bg-white rounded-lg shadow-lg" key={saleItem.submissionID}>
                   <img src={"/default_submission_image.jpeg"} alt="item" className="w-full h-80 object-cover" />
                   <div className="p-6">
                     <div className="text-center">
                       <h2 className="text-lg text-black font-medium">
-                        {saleItems.artistName} - {saleItems.mediaTitle}
+                        {saleItem.artistName} - {saleItem.mediaTitle}
                       </h2>
                     </div>
                     <div className="text-center mt-4">
-                      <p className="text-gray-600">Copies Sold: 0 {saleItems.copiesSold}</p>
-                      <p className="text-gray-600">Price: 0.01 Matic </p>
+                      <p className="text-gray-600">Copies Sold:{saleItem.copiesSold}</p>
+                      <p className="text-gray-600">Price: {saleItem.price} Matic </p>
                     </div>
                     <div className="text-center mt-4">
+                      {/* HERE we can have the mint modal pop up */}
                       <button className="bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-600">Mint</button>
                       <button className="bg-gray-200 text-gray-800 py-2 px-4 rounded-lg ml-2 hover:bg-gray-300">Download Files</button>
                     </div>
