@@ -98,17 +98,9 @@ export const RatingsMeter: React.FC<{
       if (!isWeb3Enabled) {
         throw "Authentication failed";
       }
-      console.log("we;'re inside: ", userApprovedPhloteAmount)
       // We Only want approvals if this is an artist submission + user has not already approved this amount
 
-      if(userApprovedPhloteAmount<parseInt(phloteTokenCosts[cosigns.length])){
-        console.log("Yes..." + userApprovedPhloteAmount + "is LESS than" + phloteTokenCosts[cosigns.length])
-      }
-      else{
-        console.log(userApprovedPhloteAmount + "is MORE than or equal to " + phloteTokenCosts[cosigns.length])
-      }
-
-      if (isArtist && userApprovedPhloteAmount<parseInt(phloteTokenCosts[cosigns.length])) {
+      if (isArtist && userApprovedPhloteAmount < parseInt(phloteTokenCosts[cosigns.length])) {
         const optionsApproval = {
           abi: PhloteVoteABI,
           contractAddress: PhloteVoteAddress,
