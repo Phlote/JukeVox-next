@@ -55,7 +55,7 @@ export const RatingsMeter: React.FC<{
       const data = await loadTokenApprovedBalace();
     }
     fetchContractData()
-  })
+  },[]);
 
   const loadTokenApprovedBalace = async () => {
     const phloteContract = new web3.eth.Contract(PhloteVoteABI as unknown as AbiItem,PhloteVoteAddress );
