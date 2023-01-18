@@ -5,12 +5,14 @@ import Web3 from "web3";
 import { Web3_Socket_URL } from "../utils/constants";
 import { HotdropABI } from "../solidity/utils/Hotdrop";
 import { AbiItem } from "web3-utils";
+import { MarketPlaceCard } from "../components/marketplaceCard";
+import Account from "../components/Account";
 
 
 
 const Marketplace = () => {
-    const web3 = new Web3(Web3_Socket_URL);
-    const allSubmissions = useSubmissions();
+  //TODO; use isArttist:true
+    const allCosignedSubmissions = useSubmissions({noOfCosigns: 5});
     let expiredItems = [];
     /*
     Steps:
@@ -23,23 +25,17 @@ const Marketplace = () => {
     //const [items, setItems] = useState([])
 
     // TODO: add && isArtist = so we only get artist submissions through
-    let fiveCosigned = allSubmissions.filter((item) => item.noOfCosigns == 5 && item.hotdropAddress != "");
-    
-    let saleItems = fiveCosigned.map(({ submissionID, artistName, mediaTitle, hotdropAddress }) => ({ submissionID, artistName, mediaTitle, hotdropAddress, maxSupply: 20,copiesSold: 0, price: 0.01 }));
-    
-    ///update with the actual number of copies sold
-    saleItems.forEach(async (item) => {
-      item.copiesSold = await getCopies(item.hotdropAddress);
-    });
 
+    useEffect(()=>{
+      
+    },[allCosignedSubmissions])
 
     async function getCopies (hotdropAddress) {
+      const web3 = new Web3(Web3_Socket_URL);
       const hotdropContract = new web3.eth.Contract(HotdropABI as unknown as AbiItem, hotdropAddress);
       const numOfMints = await hotdropContract.methods.totalSupply(3).call()
       return numOfMints
     }
-
-  console.log(saleItems)
 
 
   return (
@@ -48,32 +44,14 @@ const Marketplace = () => {
         <div className="w-9/12 sm:w-10/12 2xl:w-full flex flex-col pt-10 gap-4">
           <div className="container mx-auto p-4">
             <h2 className="text-6xl text-green-100 font-bold uppercase">Live Releases:</h2>
-            {saleItems.length == 0 ? (
+            {allCosignedSubmissions.length == 0 ? (
                 <div className="justify-center">
                   <h1 className="text-2xl justify-center font-bold uppercase mt-20">There are currently no live releases...</h1>
                 </div>
               ) : (
             <div className="grid grid-cols-1 mt-10 md:grid-cols-2 lg:grid-cols-5 gap-4">
-              {saleItems.map((saleItem) => (
-                <div className="bg-white rounded-lg shadow-lg" key={saleItem.submissionID}>
-                  <img src={"/default_submission_image.jpeg"} alt="item" className="w-full h-80 object-cover" />
-                  <div className="p-6">
-                    <div className="text-center">
-                      <h2 className="text-lg text-black font-medium">
-                        {saleItem.artistName} - {saleItem.mediaTitle}
-                      </h2>
-                    </div>
-                    <div className="text-center mt-4">
-                      <p className="text-gray-600">Copies Sold:{saleItem.copiesSold}</p>
-                      <p className="text-gray-600">Price: {saleItem.price} Matic </p>
-                    </div>
-                    <div className="text-center mt-4">
-                      {/* HERE we can have the mint modal pop up */}
-                      <button className="bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-600">Mint</button>
-                      <button className="bg-gray-200 text-gray-800 py-2 px-4 rounded-lg ml-2 hover:bg-gray-300">Download Files</button>
-                    </div>
-                  </div>
-                </div>
+              {allCosignedSubmissions.map((saleItem,index) => (
+                <MarketPlaceCard submission={saleItem} account={Account} key={index}/>
               ))}
             </div>
               )}
