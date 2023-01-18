@@ -10,9 +10,8 @@ import ReactTooltip from "react-tooltip";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import { CuratorABI, CuratorAddress } from "../solidity/utils/Curator";
 import { ContractRes } from "../types";
-import { PhloteVoteABI, PhloteVoteAddress } from "../solidity/utils/PhloteVote";
+import { phloteTokenCosts, PhloteVoteABI, PhloteVoteAddress } from "../solidity/utils/PhloteVote";
 
-const phloteTokenCosts = ["50000000000000000000", "60000000000000000000", "70000000000000000000", "80000000000000000000", "90000000000000000000"];
 // =======================================================================
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
@@ -24,7 +23,7 @@ const web3 = new Web3(Web3_Socket_URL);
 
 - new useEffect(), on load always grab current users Phlote allowance for the curator address and store in a state
 - logic of approval now checks if the user already has enough of an allowance, so it doesnt need to ask again if you already have enough
-- fixed e.data.message toast using that conditional to check if its a metamask or a 
+- fixed e.data.message toast using that conditional to check if its a metamask or a
 
 */
 // =======================================================================
@@ -57,7 +56,7 @@ export const RatingsMeter: React.FC<{
     fetchContractData()
   },[]);
 
-  // TODO: convert to moralis 
+  // TODO: convert to moralis
   const loadTokenApprovedBalace = async () => {
     const phloteContract = new web3.eth.Contract(PhloteVoteABI as unknown as AbiItem,PhloteVoteAddress );
     const contractInfo = await phloteContract.methods.allowance(account,CuratorAddress).call()
@@ -90,7 +89,7 @@ export const RatingsMeter: React.FC<{
   } else {
     cantCosignMessage = 'Connect your wallet to cosign.';
   }
-  
+
 
   const onCosign = async (e) => {
     e.stopPropagation();
@@ -127,7 +126,7 @@ export const RatingsMeter: React.FC<{
         // @ts-ignore
         await approvalTransaction.wait();
       }
-      
+
 
       const optionsContract = {
         abi: CuratorABI,
