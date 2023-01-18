@@ -57,6 +57,7 @@ export const RatingsMeter: React.FC<{
     fetchContractData()
   },[]);
 
+  // TODO: convert to moralis 
   const loadTokenApprovedBalace = async () => {
     const phloteContract = new web3.eth.Contract(PhloteVoteABI as unknown as AbiItem,PhloteVoteAddress );
     const contractInfo = await phloteContract.methods.allowance(account,CuratorAddress).call()

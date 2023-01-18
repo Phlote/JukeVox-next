@@ -134,7 +134,7 @@ export const MintingModal = () => {
                 <div className="w-2/3 text-gray-300 text-base">{submissionAtom.hotdropAddress}</div>
               </div>
               <div className="flex justify-end mt-6">
-                <span className="text-xl underline">Units Sold So far: {totalMints} / 25</span>
+                <span className="text-xl underline">Units Sold So far: {totalMints} / 20</span>
               </div>
 
             </div>
