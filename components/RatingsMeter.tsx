@@ -50,15 +50,16 @@ export const RatingsMeter: React.FC<{
   useEffect(() => ReactTooltip.rebuild() as () => (void), []);
 
   useEffect(() => {
-    async function fetchContractData() {
-      const data = await loadTokenApprovedBalace();
+    if(account != null){
+      loadTokenApprovedBalace();
+      console.log("approved amount in ratings Meter:", userApprovedPhloteAmount)
+
     }
-    fetchContractData()
   },[]);
 
   // TODO: convert to moralis
   const loadTokenApprovedBalace = async () => {
-    const phloteContract = new web3.eth.Contract(PhloteVoteABI as unknown as AbiItem,PhloteVoteAddress );
+    const phloteContract = new web3.eth.Contract(PhloteVoteABI  as unknown as AbiItem,PhloteVoteAddress );
     const contractInfo = await phloteContract.methods.allowance(account,CuratorAddress).call()
     setUserApprovedPhloteAmount(contractInfo)
   }
