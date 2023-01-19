@@ -7,10 +7,13 @@ import { HotdropABI } from "../solidity/utils/Hotdrop";
 import { AbiItem } from "web3-utils";
 import { MarketPlaceCard } from "../components/marketplaceCard";
 import Account from "../components/Account";
+import { useMoralis } from "react-moralis";
 
 
 
 const Marketplace = () => {
+  const { isWeb3Enabled, account } = useMoralis();
+
   //TODO; use isArttist:true
     const allCosignedSubmissions = useSubmissions({noOfCosigns: 5});
     let expiredItems = [];
@@ -22,7 +25,6 @@ const Marketplace = () => {
     3- Display these numbers
     4- Filter the display with the highest sales at the top of the list
     */
-    //const [items, setItems] = useState([])
 
     // TODO: add && isArtist = so we only get artist submissions through
 
@@ -36,7 +38,7 @@ const Marketplace = () => {
       const numOfMints = await hotdropContract.methods.totalSupply(3).call()
       return numOfMints
     }
-
+    
 
   return (
     <div className="font-roboto">
@@ -51,7 +53,7 @@ const Marketplace = () => {
               ) : (
             <div className="grid grid-cols-1 mt-10 md:grid-cols-2 lg:grid-cols-5 gap-4">
               {allCosignedSubmissions.map((saleItem,index) => (
-                <MarketPlaceCard submission={saleItem} account={Account} key={index}/>
+                <MarketPlaceCard submission={saleItem} account={account} key={index}/>
               ))}
             </div>
               )}
