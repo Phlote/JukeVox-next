@@ -4,8 +4,7 @@ import { ConnectWalletModal } from "./Modals/ConnectWalletModal";
 import { MobileSubmissionModal } from "./Modals/MobileSubmissionModal";
 import { NavBarDesktop, NavBarMobileWeb } from "./NavBar";
 import { SubmitSidenav } from "./SideNav";
-import Overlay from "./Overlay";
-import { MintingModal, useMintingModalOpen, useMintingModalSubmission } from "./Modals/MintingModal";
+import { MintingModal } from "./Modals/MintingModal";
 
 export default function Layout({ children }) {
 
@@ -38,12 +37,12 @@ export const BackgroundWithBlurs = () => {
 
   return (
     <div className="-z-50 fixed h-screen w-screen left-0 right-0">
-      { isFirefox ? <FFGradient/> :
+      {isFirefox ? <FFGradient /> :
         <>
-          <Blob1/>
-          <Ellipse1/>
-          <Ellipse2/>
-        </> }
+          <Blob1 />
+          <Ellipse1 />
+          <Ellipse2 />
+        </>}
     </div>
   );
 };

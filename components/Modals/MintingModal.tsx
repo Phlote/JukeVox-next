@@ -35,15 +35,9 @@ export const MintingModal = () => {
   // isLoading: user action required - (metamask popup open)
   const [loading, setLoading] = useState<boolean | string>(false);
 
-  const web3 = new Web3(Web3_Socket_URL);
-
   useEffect(() => {
-    async function fetchContractData() {
-      const data = await loadContractData();
-    }
-    if (submissionAtom.hotdropAddress !== 'not set'){
-
-      fetchContractData();
+    if (submissionAtom.hotdropAddress !== 'not set' && submissionAtom.noOfCosigns == 5 && submissionAtom.isArtist){
+      loadContractData();
     }
   }, [submissionAtom]);
 
@@ -52,6 +46,7 @@ export const MintingModal = () => {
   }, [isLoading]);
 
   const loadContractData = async () => {
+    const web3 = new Web3(Web3_Socket_URL);
     const hotdropContract = new web3.eth.Contract(HotdropABI as unknown as AbiItem, submissionAtom.hotdropAddress);
     const contractInfo = await hotdropContract.methods.totalSupply(3).call()
     setTotalMints(contractInfo)

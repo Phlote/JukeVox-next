@@ -11,13 +11,9 @@ import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import { CuratorABI, CuratorAddress } from "../solidity/utils/Curator";
 import { ContractRes } from "../types";
 import { phloteTokenCosts, PhloteVoteABI, PhloteVoteAddress } from "../solidity/utils/PhloteVote";
-
-// =======================================================================
 import Web3 from "web3";
-import { AbiItem } from "web3-utils";
 import { Web3_Socket_URL } from "../utils/constants";
-
-const web3 = new Web3(Web3_Socket_URL);
+import { AbiItem } from "web3-utils";
 
 /* Work done:
 
@@ -34,35 +30,16 @@ export const RatingsMeter: React.FC<{
   initialCosigns: string[];
   isArtist: boolean;
   hotdropAddress: string;
-}> = (props) => {
-  const { submissionID, submitterWallet, initialCosigns, isArtist, hotdropAddress } = props;
+}> = ({ submissionID, submitterWallet, initialCosigns, isArtist, hotdropAddress }) => {
 
   const { isWeb3Enabled, account } = useMoralis();
   const { fetch: runContractFunction, data, error, isLoading, isFetching, } = useWeb3ExecuteFunction();
   const [contractRes, setContractRes] = useState<ContractRes>({});
   const [approvalRes, setApprovalRes] = useState<ContractRes>({});
   // ==================================================================================
-  const [userApprovedPhloteAmount, setUserApprovedPhloteAmount] = useState(0)
-
-  // ==================================================================================
   const [cosigns, setCosigns] = useState<string[]>([]);
 
   useEffect(() => ReactTooltip.rebuild() as () => (void), []);
-
-  useEffect(() => {
-    if(account != null){
-      loadTokenApprovedBalace();
-      console.log("approved amount in ratings Meter:", userApprovedPhloteAmount)
-
-    }
-  },[]);
-
-  // TODO: convert to moralis
-  const loadTokenApprovedBalace = async () => {
-    const phloteContract = new web3.eth.Contract(PhloteVoteABI  as unknown as AbiItem,PhloteVoteAddress );
-    const contractInfo = await phloteContract.methods.allowance(account,CuratorAddress).call()
-    setUserApprovedPhloteAmount(contractInfo)
-  }
 
   useEffect(() => {
     if (initialCosigns) {
@@ -91,7 +68,6 @@ export const RatingsMeter: React.FC<{
     cantCosignMessage = 'Connect your wallet to cosign.';
   }
 
-
   const onCosign = async (e) => {
     e.stopPropagation();
     setCosigns([...cosigns, "pending"]);
@@ -101,7 +77,13 @@ export const RatingsMeter: React.FC<{
       }
       // We Only want approvals if this is an artist submission + user has not already approved this amount
 
-      if (isArtist && userApprovedPhloteAmount < parseInt(phloteTokenCosts[cosigns.length])) {
+      const web3 = new Web3(Web3_Socket_URL);
+      const phloteContract = new web3.eth.Contract(PhloteVoteABI as unknown as AbiItem, PhloteVoteAddress);
+      const contractInfo = await phloteContract.methods.allowance(account, CuratorAddress).call()
+      const phloteTokenApprovedAmount = parseInt(contractInfo);
+
+      console.log(phloteTokenApprovedAmount, parseInt(phloteTokenCosts[cosigns.length]));
+      if (isArtist && phloteTokenApprovedAmount < parseInt(phloteTokenCosts[cosigns.length])) {
         const optionsApproval = {
           abi: PhloteVoteABI,
           contractAddress: PhloteVoteAddress,
