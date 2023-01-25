@@ -68,7 +68,7 @@ export const RatingsMeter: React.FC<{
         throw "Authentication failed";
       }
 
-      console.log('PHLOTE TOKEN AMMOUNT', phloteTokenCosts[cosigns.length]);
+      console.info('PHLOTE TOKEN AMMOUNT', phloteTokenCosts[cosigns.length]);
 
       if (isArtist) {
         const optionsApproval = {
@@ -88,7 +88,7 @@ export const RatingsMeter: React.FC<{
             throw err;
           },
           onSuccess: (res) => {
-            console.log(res);
+            console.info(res);
             setApprovalRes(res);
           },
         });
@@ -113,7 +113,7 @@ export const RatingsMeter: React.FC<{
           throw err;
         },
         onSuccess: (res) => {
-          console.log(res);
+          console.info(res);
           setContractRes(res);
         },
       });

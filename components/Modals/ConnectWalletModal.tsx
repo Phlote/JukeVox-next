@@ -100,7 +100,7 @@ export const ConnectWalletButtons = ({ setOpen }) => {
         })
         .catch((error) => {
           toast.error(error);
-          console.log(error);
+          console.error(error);
         });
     }
   }

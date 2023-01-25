@@ -17,8 +17,6 @@ export default async function handler(
     if (!submissionsQuery.data || submissionsQuery.data.length === 0)
       throw "Invalid Submission ID";
 
-    console.log(submissionsQuery);
-
     const { submissionID: verifiedId, cosigns, submitterWallet, isArtist } = submissionsQuery
       .data[0] as ArtistSubmission | CuratorSubmission;
 

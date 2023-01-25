@@ -86,9 +86,9 @@ export const SubmissionFlow: FC = (props) => {
 
       submission.hotdropAddress = contractResult.events[0].address;
 
-      console.log('contract result', contractResult);
+      console.info('contract result', contractResult);
 
-      console.log(submission);
+      console.info(submission);
 
       const result =
         submission.isArtist ?
@@ -96,7 +96,7 @@ export const SubmissionFlow: FC = (props) => {
           :
           (await submit(submission, account, submission.mediaType)) as CuratorSubmission;
 
-      console.log('DB', result);
+      console.info('DB', result);
 
       // TODO: Throw error when result throws error instead of moving forward and showing success page.
 

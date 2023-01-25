@@ -16,7 +16,7 @@ export function nextApiRequest(
     if (!response.ok) throw `Error calling /api/${path}`;
     return response.json();
   }).catch(err=>{
-    console.log(err);
+    console.error(err);
   });
 }
 
