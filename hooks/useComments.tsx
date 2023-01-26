@@ -64,7 +64,7 @@ interface CommentsContextInterface {
   loadMore: () => void;
   mutateComments: any;
   mutateGlobalCount: any;
-  //mutateRootComment: any;
+  mutateRootComment: any;
   sortingBehavior: SortingBehavior;
   setSortingBehavior: (behavior: SortingBehavior) => void;
   setSize: (
@@ -91,7 +91,7 @@ const CommentsContext = createContext<CommentsContextInterface>({
   },
   mutateComments: null,
   mutateGlobalCount: null,
-  //mutateRootComment: null,
+  mutateRootComment: null,
   sortingBehavior: "pathVotesRecent",
   setSortingBehavior: () => {
     return;
@@ -117,27 +117,26 @@ export const CommentsContextProvider = (
     useState<SortingBehavior>("pathVotesRecent");
 
   // get root comment Id
-  // const getRootCommentId = useQuery(
-  //   ["comment-id-from-thread-id", threadId],
-  //   async () =>
-  //     supabase
-  //       .from("comments")
-  //       .select("*")
-  //       .eq("threadId", threadId)
-  //       .then(({ data, error }) => {
-  //         if (error) {
-  //           console.log(error);
-  //           throw error;
-  //         }
+  const getRootCommentId = useQuery(
+    ["comment-id-from-thread-id", threadId],
+    async () =>
+      supabase
+        .from("comments")
+        .select("*")
+        .eq("threadId", threadId)
+        .then(({ data, error }) => {
+          if (error) {
+            console.log(error);
+            throw error;
+          }
 
-  //         if (!data?.[0]) return null;
+          if (!data?.[0]) return null;
 
-  //         return data[0] as unknown as CommentType;
-  //       })
-  // );
+          return data[0] as unknown as CommentType;
+        })
+  );
 
-  //const commentId = getRootCommentId?.data?.id;
-  let commentId;
+  const commentId = getRootCommentId?.data?.id;
 
   const {
     data: count,
@@ -150,26 +149,26 @@ export const CommentsContextProvider = (
     revalidateOnMount: false,
   });
 
-  // const { data: rootComment, mutate: mutateRootComment } = useSWR(
-  //   ["comments", commentId, account],
-  //   async (_, commentId, _user) => {
-  //     if (!commentId) return null;
-  //     return supabase
-  //       .from("comments_thread_with_user_vote")
-  //       .select("*")
-  //       .eq("id", commentId)
-  //       .then(({ data, error }) => {
-  //         if (error) {
-  //           console.log(error);
-  //           throw error;
-  //         }
+  const { data: rootComment, mutate: mutateRootComment } = useSWR(
+    ["comments", commentId, account],
+    async (_, commentId, _user) => {
+      if (!commentId) return null;
+      return supabase
+        .from("comments_thread_with_user_vote")
+        .select("*")
+        .eq("id", commentId)
+        .then(({ data, error }) => {
+          if (error) {
+            console.log(error);
+            throw error;
+          }
 
-  //         if (!data?.[0]) return null;
+          if (!data?.[0]) return null;
 
-  //         return data[0] as unknown as CommentType;
-  //       });
-  //   }
-  // );
+          return data[0] as unknown as CommentType;
+        });
+    }
+  );
 
   const getKey = (
     pageIndex: number,
@@ -288,7 +287,7 @@ export const CommentsContextProvider = (
     loadMore,
     mutateComments,
     mutateGlobalCount,
-    // mutateRootComment,
+    mutateRootComment,
     sortingBehavior,
     setSortingBehavior,
     setSize,

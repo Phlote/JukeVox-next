@@ -16,11 +16,12 @@ dayjs.tz.setDefault(dayjs.tz.guess());
 
 interface Props {
   initialData?: CommentType | null;
+  submissionWallet: string;
 }
 
-const CommentSection = ({ initialData = null }: Props): JSX.Element => {
+const CommentSection = ({ initialData = null, submissionWallet }: Props): JSX.Element => {
   const { count } = useComments();
-  const canComment = useCanComment();
+  const canComment = useCanComment(submissionWallet);
   return (
     <>
       <div className="flex-none flex flex-row items-center justify-between py-3 sm:py-4 px-3 sm:px-6 order-first">
