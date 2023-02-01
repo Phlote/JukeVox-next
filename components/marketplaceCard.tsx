@@ -4,7 +4,7 @@ import { Web3_Socket_URL } from "../utils/constants";
 import { HotdropABI } from "../solidity/utils/Hotdrop";
 import { AbiItem } from "web3-utils";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
-import LoadingButton from "./mintLoadingButton";
+import MintButton from "./MintButton";
 
 const web3 = new Web3(Web3_Socket_URL);
 
@@ -16,15 +16,16 @@ const web3 = new Web3(Web3_Socket_URL);
 export const MarketPlaceCard = ({ submission: { submissionID, artistName, mediaTitle, hotdropAddress, mediaURI } }) => {
   const [saleItem, setSaleItem] = useState({ submissionID, artistName, mediaTitle, hotdropAddress, maxSupply: 20, price: 0.01, mediaURI });
   const [copiesSold, setCopiesSold] = useState(0);
-  const { isWeb3Enabled, account } = useMoralis();
+  const { account } = useMoralis();
 
   useEffect(() => {
-    getCopies();
-  }, []);
+    if (saleItem?.hotdropAddress.length > 0) getCopies();
+  }, [saleItem]);
 
   async function getCopies() {
     //Error: This contract object doesn't have address set yet, please set an address first. Is in here. If you replace
     // saleItem.hotdropaddress with hardcoded address it works.
+    console.log(saleItem);
     const hotdropContract = new web3.eth.Contract(HotdropABI as unknown as AbiItem, saleItem.hotdropAddress);
     const numOfMints = await hotdropContract.methods.totalSupply(3).call();
     setCopiesSold(numOfMints);
@@ -72,7 +73,7 @@ export const MarketPlaceCard = ({ submission: { submissionID, artistName, mediaT
         </div>
       </div>
       <div className="text-center mt-4 p-4 d-flex align-items-center">
-        <LoadingButton color="bg-indigo-500" text="Loading..." hotdropAddress={saleItem.hotdropAddress}
+        <MintButton color="bg-indigo-500" text="Loading..." hotdropAddress={saleItem.hotdropAddress}
                        hoverColor="bg-indigo-300" />
         <button className="bg-gray-200 text-gray-800 py-2 px-4 rounded-lg ml-2 hover:bg-gray-300"
                 onClick={handleDownload}>

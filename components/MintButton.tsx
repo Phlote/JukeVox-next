@@ -10,7 +10,7 @@ interface Props {
   onClick?: () => void;
 }
 
-const LoadingButton: React.FC<Props> = ({ hotdropAddress, color, text, hoverColor, onClick }) => {
+const MintButton: React.FC<Props> = ({ hotdropAddress, color, text, hoverColor, onClick }) => {
   const { fetch: runContractFunction, data, error, isLoading, isFetching } = useWeb3ExecuteFunction();
   const { isWeb3Enabled, account } = useMoralis();
   // isLoading: user action required - (metamask popup open)
@@ -84,4 +84,4 @@ const LoadingButton: React.FC<Props> = ({ hotdropAddress, color, text, hoverColo
   }
 };
 
-export default LoadingButton;
+export default MintButton;
