@@ -6,26 +6,16 @@ import { Web3_Socket_URL } from "../utils/constants";
 import { HotdropABI } from "../solidity/utils/Hotdrop";
 import { AbiItem } from "web3-utils";
 import { MarketPlaceCard } from "../components/marketplaceCard";
-import Account from "../components/Account";
-import { useMoralis } from "react-moralis";
 
 const Marketplace = () => {
   const allCosignedSubmissions = useSubmissions({ noOfCosigns: 5, isArtist: true });
   const expiredItems = []
-  console.log(allCosignedSubmissions)
 
   /*
   TODO:
   - Build expiredItems list
   - Filter the display with the highest sales at the top of the list
   */
-
-  async function getCopies(hotdropAddress) {
-    const web3 = new Web3(Web3_Socket_URL);
-    const hotdropContract = new web3.eth.Contract(HotdropABI as unknown as AbiItem, hotdropAddress);
-    const numOfMints = await hotdropContract.methods.totalSupply(3).call()
-    return numOfMints
-  }
 
   return (
     <div className="font-roboto">
@@ -40,9 +30,9 @@ const Marketplace = () => {
               </div>
             ) : (
               <div className="grid grid-cols-1 mt-10 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {allCosignedSubmissions.map((saleItem, index) => (
+                {allCosignedSubmissions.filter(s=>s.hotdropAddress.length > 0).map((saleItem, index) =>
                   <MarketPlaceCard submission={saleItem} key={index} />
-                ))}
+                )}
               </div>
             )}
             <h2 className="text-6xl text-red-600 font-bold uppercase mt-20">Expired Releases:</h2>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import { HotdropABI } from "../solidity/utils/Hotdrop";
+import { toast } from "react-toastify";
 
 interface Props {
   hotdropAddress: string;
@@ -40,16 +41,16 @@ const MintButton: React.FC<Props> = ({ hotdropAddress, color, text, hoverColor, 
       onError: (err) => {
         setLoading(false);
         console.log(err);
+        toast.error('Failed to mint! \n' + err.message)
       },
       onSuccess: (res) => {
         console.log(res);
+        toast.success('Minted!');
       },
     });
 
-    // @ts-ignore
     const contractResult = await submitTransaction;
-
-    console.log("contract result", contractResult);
+    console.log("mint contract result", contractResult);
 
     setLoading(false);
   };

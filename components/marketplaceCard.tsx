@@ -13,8 +13,8 @@ const web3 = new Web3(Web3_Socket_URL);
         - Download Files
         - Expired Sales
 */
-export const MarketPlaceCard = ({ submission: { submissionID, artistName, mediaTitle, hotdropAddress, mediaURI } }) => {
-  const [saleItem, setSaleItem] = useState({ submissionID, artistName, mediaTitle, hotdropAddress, maxSupply: 20, price: 0.01, mediaURI });
+export const MarketPlaceCard = ({ submission }) => {
+  const [saleItem, setSaleItem] = useState({ maxSupply: 20, price: 0.01, ...submission});
   const [copiesSold, setCopiesSold] = useState(0);
   const { account } = useMoralis();
 
