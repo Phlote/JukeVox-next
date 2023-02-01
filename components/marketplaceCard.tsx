@@ -1,24 +1,61 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react";
 import Web3 from "web3";
 import { Web3_Socket_URL } from "../utils/constants";
 import { HotdropABI } from "../solidity/utils/Hotdrop";
 import { AbiItem } from "web3-utils";
+import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
+import LoadingButton from "./mintLoadingButton";
 
-export const MarketPlaceCard = ({ submission: { submissionID, artistName, mediaTitle, hotdropAddress } }) => {
+const web3 = new Web3(Web3_Socket_URL);
 
-  const [saleItem, setSaleItem] = useState({ submissionID, artistName, mediaTitle, hotdropAddress, maxSupply: 20, price: 0.01 });
-  const [copiesSold, setCopiesSold] = useState(0)
+/* TODO:
+        - Fix buttons alignment
+        - Download Files 
+        - Expired Sales
+*/
+export const MarketPlaceCard = ({ submission: { submissionID, artistName, mediaTitle, hotdropAddress, mediaURI } }) => {
+  const [saleItem, setSaleItem] = useState({ submissionID, artistName, mediaTitle, hotdropAddress, maxSupply: 20, price: 0.01, mediaURI });
+  const [copiesSold, setCopiesSold] = useState(0);
+  const { isWeb3Enabled, account } = useMoralis();
+
+
   useEffect(() => {
-    getCopies(saleItem.hotdropAddress)
-  }, [])
-
-  async function getCopies(hotdropAddress) {
-    console.log("address from getCopies:", hotdropAddress)
-    const web3 = new Web3(Web3_Socket_URL);
-    const hotdropContract = new web3.eth.Contract(HotdropABI as unknown as AbiItem, hotdropAddress);
-    const numOfMints = await hotdropContract.methods.totalSupply(3).call()
-    setCopiesSold(numOfMints)
+    getCopies();
+  }, []);
+  async function getCopies() {
+    //Error: This contract object doesn't have address set yet, please set an address first. Is in here. If you replace
+    // saleItem.hotdropaddress with hardcoded address it works.
+    const hotdropContract = new web3.eth.Contract(HotdropABI as unknown as AbiItem, saleItem.hotdropAddress);
+    const numOfMints = await hotdropContract.methods.totalSupply(3).call();
+    setCopiesSold(numOfMints);
   }
+
+  const isAllowedToDownload = async () => {
+    const hotdropContract = new web3.eth.Contract(HotdropABI as unknown as AbiItem, saleItem.hotdropAddress);
+    const regularNFTResult = await hotdropContract.methods.balanceOf(account, 3).call();
+    const curatorNFTResult = await hotdropContract.methods.balanceOf(account, 1).call();
+    const artistNFTResult = await hotdropContract.methods.balanceOf(account, 0).call();
+    const total = Number(regularNFTResult) + Number(curatorNFTResult) + Number(artistNFTResult);
+
+    if (total > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const handleDownload = useCallback(async () => {
+    const result = await isAllowedToDownload();
+    if (result == true) {
+      const downloadLink = document.createElement("a");
+      downloadLink.href = saleItem.mediaURI;
+      downloadLink.download = `${saleItem.artistName} - ${saleItem.mediaTitle}.mp3`;
+      downloadLink.click();
+      console.log("you may download it");
+    } else {
+      console.log("sorry you cant download this");
+    }
+  }, []);
 
   return (
     <div className="bg-white rounded-lg shadow-lg" key={saleItem.submissionID}>
@@ -34,12 +71,20 @@ export const MarketPlaceCard = ({ submission: { submissionID, artistName, mediaT
           <p className="text-gray-600">Price: {saleItem.price} Matic </p>
         </div>
       </div>
-      <div className="text-center mt-4 p-4">
-        {/* HERE we can have the mint modal pop up */}
-        <button className="bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-600">Mint</button>
-        <button className="bg-gray-200 text-gray-800 py-2 px-4 rounded-lg ml-2 hover:bg-gray-300">Download Files
+      <div className="text-center mt-4 p-4 d-flex align-items-center">
+        <LoadingButton color="bg-indigo-500" text="Loading..." hotdropAddress={saleItem.hotdropAddress} hoverColor="bg-indigo-300" />
+        <button className="bg-gray-200 text-gray-800 py-2 px-4 rounded-lg ml-2 hover:bg-gray-300" onClick={handleDownload}>
+          Download Files
         </button>
+        {/* <button
+          className={`bg-gray-200 text-gray-800 py-2 px-4 rounded-lg ml-2 hover:bg-gray-300 ${!allowedToDownload ? "opacity-50 cursor-not-allowed" : ""}`}
+          onClick={handleDownload}
+          disabled={!allowedToDownload}
+        >
+          {allowedToDownload ? "Download Files" : "You cant download"}
+        </button> */}
+        {/* <a href="https://ipfs.io/ipfs/QmPGCQbetutKBNix9ZaQ1xoF4HaNaaNBvKK67h5b8uv91o" download="file">Download Files</a> */}
       </div>
     </div>
-  )
-}
+  );
+};

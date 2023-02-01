@@ -7,28 +7,23 @@ import { HotdropABI } from "../solidity/utils/Hotdrop";
 import { AbiItem } from "web3-utils";
 import { MarketPlaceCard } from "../components/marketplaceCard";
 import Account from "../components/Account";
+import { useMoralis } from "react-moralis";
 
 
 
 const Marketplace = () => {
-  //TODO; use isArttist:true
-    const allCosignedSubmissions = useSubmissions({noOfCosigns: 5});
-    let expiredItems = [];
+  const { isWeb3Enabled, account } = useMoralis();
+
+    const allCosignedSubmissions = useSubmissions({noOfCosigns: 5, isArtist: true});
+    const expiredItems = []
+    console.log(allCosignedSubmissions)
     /*
-    Steps:
-
-    1- Get all submissiong with: 5 cosigns && (isArtist) & that have a hotdropAddress
-    2- Create a custom object with: submissionID, artistName, mediaTitle,hotdropAddress, numberOf Copies Sold
-    3- Display these numbers
-    4- Filter the display with the highest sales at the top of the list
+    TODO:
+    - Build expiredItems list
+    - Filter the display with the highest sales at the top of the list
     */
-    //const [items, setItems] = useState([])
 
-    // TODO: add && isArtist = so we only get artist submissions through
 
-    useEffect(()=>{
-      
-    },[allCosignedSubmissions])
 
     async function getCopies (hotdropAddress) {
       const web3 = new Web3(Web3_Socket_URL);
@@ -36,8 +31,7 @@ const Marketplace = () => {
       const numOfMints = await hotdropContract.methods.totalSupply(3).call()
       return numOfMints
     }
-
-
+    
   return (
     <div className="font-roboto">
       <section className="flex items-center justify-center mt-14 sm:py-20 sm:mt-20 lg:mt-38">
@@ -49,9 +43,9 @@ const Marketplace = () => {
                   <h1 className="text-2xl justify-center font-bold uppercase mt-20">There are currently no live releases...</h1>
                 </div>
               ) : (
-            <div className="grid grid-cols-1 mt-10 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 mt-10 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {allCosignedSubmissions.map((saleItem,index) => (
-                <MarketPlaceCard submission={saleItem} account={Account} key={index}/>
+                <MarketPlaceCard submission={saleItem} key={index}/>
               ))}
             </div>
               )}
