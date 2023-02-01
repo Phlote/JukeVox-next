@@ -10,7 +10,7 @@ const web3 = new Web3(Web3_Socket_URL);
 
 /* TODO:
         - Fix buttons alignment
-        - Download Files 
+        - Download Files
         - Expired Sales
 */
 export const MarketPlaceCard = ({ submission: { submissionID, artistName, mediaTitle, hotdropAddress, mediaURI } }) => {
@@ -18,10 +18,10 @@ export const MarketPlaceCard = ({ submission: { submissionID, artistName, mediaT
   const [copiesSold, setCopiesSold] = useState(0);
   const { isWeb3Enabled, account } = useMoralis();
 
-
   useEffect(() => {
     getCopies();
   }, []);
+
   async function getCopies() {
     //Error: This contract object doesn't have address set yet, please set an address first. Is in here. If you replace
     // saleItem.hotdropaddress with hardcoded address it works.
@@ -72,8 +72,10 @@ export const MarketPlaceCard = ({ submission: { submissionID, artistName, mediaT
         </div>
       </div>
       <div className="text-center mt-4 p-4 d-flex align-items-center">
-        <LoadingButton color="bg-indigo-500" text="Loading..." hotdropAddress={saleItem.hotdropAddress} hoverColor="bg-indigo-300" />
-        <button className="bg-gray-200 text-gray-800 py-2 px-4 rounded-lg ml-2 hover:bg-gray-300" onClick={handleDownload}>
+        <LoadingButton color="bg-indigo-500" text="Loading..." hotdropAddress={saleItem.hotdropAddress}
+                       hoverColor="bg-indigo-300" />
+        <button className="bg-gray-200 text-gray-800 py-2 px-4 rounded-lg ml-2 hover:bg-gray-300"
+                onClick={handleDownload}>
           Download Files
         </button>
         {/* <button
