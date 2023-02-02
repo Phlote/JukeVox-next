@@ -5,6 +5,26 @@ import { HotdropABI } from "../solidity/utils/Hotdrop";
 import { AbiItem } from "web3-utils";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import MintButton from "./MintButton";
+import { nextApiRequest } from "../utils";
+
+const download = (url, name?) => {
+  if (!url) {
+    throw new Error("Resource URL not provided! You need to provide one");
+  }
+  fetch(url)
+    .then(response => response.blob())
+    .then(blob => {
+      const blobURL = URL.createObjectURL(blob);
+      let a = document.createElement("a");
+      a.href = blobURL;
+
+      if (name && name.length) a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    })
+    .catch(err=>console.log(err));
+};
 
 const web3 = new Web3(Web3_Socket_URL);
 
@@ -46,13 +66,11 @@ export const MarketPlaceCard = ({ submission }) => {
   };
 
   const handleDownload = useCallback(async () => {
+    console.log(saleItem.mediaURI, saleItem.mediaTitle);
+    let url = saleItem.mediaURI;
     const result = await isAllowedToDownload();
     if (result == true) {
-      const downloadLink = document.createElement("a");
-      downloadLink.href = saleItem.mediaURI;
-      downloadLink.download = `${saleItem.artistName} - ${saleItem.mediaTitle}.mp3`;
-      downloadLink.click();
-      console.log("you may download it");
+      download(saleItem.mediaURI, 'filetest.mp3');
     } else {
       console.log("sorry you cant download this");
     }
@@ -75,8 +93,7 @@ export const MarketPlaceCard = ({ submission }) => {
       <div className="text-center mt-4 p-4 d-flex align-items-center">
         <MintButton color="bg-indigo-500" text="Loading..." hotdropAddress={saleItem.hotdropAddress}
                        hoverColor="bg-indigo-300" />
-        <button className="bg-gray-200 text-gray-800 py-2 px-4 rounded-lg ml-2 hover:bg-gray-300"
-                onClick={handleDownload}>
+        <button className="bg-gray-200 text-gray-800 py-2 px-4 rounded-lg ml-2 hover:bg-gray-300" onClick={handleDownload}>
           Download Files
         </button>
         {/* <button
