@@ -75,19 +75,21 @@ const SubmissionCard = ({ submission }: { submission: GenericSubmission }) => {
 
   return (
     <div>
-      <div className="flex flex-col w-80 h-[480px]">
-        <div className="w-full h-60 relative">
+      <div className="flex flex-col w-80 h-[550px]">
+        <div className="w-full h-64 relative">
           {mediaFormat === "video/quicktime" ? (
             <video
               className="absolute bottom-0"
               src={submission.mediaURI}
               ref={videoEl}
+              
             />
           ) : (
             <Image
               src={"/default_submission_image.jpeg"}
               layout="fill"
               alt="submission image"
+              objectFit="cover"
             />
           )}
         </div>
@@ -134,7 +136,7 @@ const SubmissionCard = ({ submission }: { submission: GenericSubmission }) => {
           {submission.cosigns?.length === 5 && submission.hotdropAddress != "" && submission.isArtist ?
             <div className="flex h-12 mt-1" data-tip={cantMintMessage}>
               <button
-                className="disabled:opacity-50 bg-black-900 border-solid border-white border-2 w-full text-white rounded-lg px-8 py-2 text-base font-medium disabled:cursor-not-allowed enabled:hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-white-300"
+                className="disabled:opacity-50 bg-black-900 border-solid border-white border-2 w-full text-white rounded-lg px-8 text-base font-medium disabled:cursor-not-allowed enabled:hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-white-300"
                 id="open-btn"
                 disabled={!canCosign}
                 onClick={mint}>Mint
