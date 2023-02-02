@@ -53,6 +53,13 @@ export const NavBarDesktop = (props) => {
           <h1 className="text-6xl cursor-pointer">Phlote</h1>
         </Link>
         <div className="flex-grow" />
+        {/*<NavBarElementContainer>*/}
+        {/*  <Link href="/marketplace" passHref>*/}
+        {/*    <HollowButtonContainer className="flex justify-center items-center ">*/}
+        {/*      Market Place*/}
+        {/*    </HollowButtonContainer>*/}
+        {/*  </Link>*/}
+        {/*</NavBarElementContainer>*/}
         <NavBarElementContainer>
           <Link href="/archive" passHref>
             <HollowButtonContainer className="flex justify-center items-center ">
