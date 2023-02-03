@@ -57,7 +57,7 @@ const MintButton: React.FC<Props> = ({ hotdropAddress, color, text, hoverColor, 
 
   if (!loading) {
     return (
-      <button className="bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-600" onClick={mintNFT}>
+      <button className="w-full bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-600" onClick={mintNFT}>
         Mint
       </button>
 
@@ -65,7 +65,7 @@ const MintButton: React.FC<Props> = ({ hotdropAddress, color, text, hoverColor, 
   } else {
     return (
       <button
-        className={`${color} inline-flex h-10 items-center text-white py-2 px-4 rounded-lg ml-2 ${hoverColor ? `hover:${hoverColor}` : ``} ${
+        className={`${color} w-full inline-flex h-10 items-center text-white py-2 px-4 rounded-lg ml-2 ${hoverColor ? `hover:${hoverColor}` : ``} ${
           isLoading ? "loading-spinner" : ""
         } cursor-not-allowed`}
         onClick={onClick}
