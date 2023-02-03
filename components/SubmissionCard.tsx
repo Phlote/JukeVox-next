@@ -13,6 +13,8 @@ import { MintingModal, useMintingModalOpen, useMintingModalSubmission } from "./
 import { useIsCurator } from "../hooks/useIsCurator";
 import { useMoralis } from "react-moralis";
 import ReactTooltip from "react-tooltip";
+import MintButton from "./MintButton";
+import { InfoIcon } from "../icons/InfoIcon";
 
 const SubmissionCardDetails = styled.div`
   ${tw`p-4 bg-phlote-ff-modal`}
@@ -82,7 +84,7 @@ const SubmissionCard = ({ submission }: { submission: GenericSubmission }) => {
               className="absolute bottom-0"
               src={submission.mediaURI}
               ref={videoEl}
-              
+
             />
           ) : (
             <Image
@@ -135,12 +137,12 @@ const SubmissionCard = ({ submission }: { submission: GenericSubmission }) => {
           </div>
           {submission.cosigns?.length === 5 && submission.hotdropAddress != "" && submission.isArtist ?
             <div className="flex h-12 mt-1" data-tip={cantMintMessage}>
-              <button
-                className="disabled:opacity-50 bg-black-900 border-solid border-white border-2 w-full text-white rounded-lg px-8 text-base font-medium disabled:cursor-not-allowed enabled:hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-white-300"
-                id="open-btn"
-                disabled={!canCosign}
-                onClick={mint}>Mint
-              </button>
+              <MintButton color="bg-indigo-500" text="Loading..." hotdropAddress={submission.hotdropAddress}
+                          hoverColor="bg-indigo-300" />
+              <button className='ml-3 hover:opacity-50' onClick={mint}><InfoIcon/></button>
+              {/*<a className="flex justify-center items-center bg-gray-200 text-gray-800 py-2 px-4 rounded-lg ml-2 hover:bg-gray-300" target='_blank' href={submission.mediaURI}>*/}
+              {/*  <span>Download Files</span>*/}
+              {/*</a>*/}
             </div>
             :
             null

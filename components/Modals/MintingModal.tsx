@@ -96,14 +96,14 @@ export const MintingModal = () => {
   return (
     <Modal open={showModal} onClose={closeModal} width="40rem" height="27rem">
       <div className="justify-center items-center flex fixed inset-0 z-50 outline-none focus:outline-none">
-        <div className="text-white relative min-w-fit	 my-6 mx-auto max-w-6xl p-80">
+        <div className="text-white relative min-w-fit my-6 mx-auto max-w-6xl p-80">
           {/*content*/}
 
           <div className="fixed inset-0 transition-opacity">
-            <div className="absolute inset-0 bg-gray-900 opacity-75"></div>
+            <div className="absolute inset-0 opacity-75"></div>
           </div>
 
-          <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full">
+          <div className="border-0 rounded-lg relative flex flex-col w-full">
             {/*header*/}
             <div className="flex justify-end p-5 border-b border-solid border-slate-200 rounded-t">
               <button
@@ -132,24 +132,6 @@ export const MintingModal = () => {
                 <span className="text-xl underline">Units Sold So far: {totalMints} / 20</span>
               </div>
 
-            </div>
-            {/*footer*/}
-            <div className="flex items-center justify-between p-6 rounded-b">
-              {submissionAtom.hotdropAddress == "" ? (
-                <button
-                  className="w-full text-black px-6 py-3 bg-gray-300 rounded focus:outline-none cursor-not-allowed	"
-                  type="button">
-                  This contract does not exist
-                </button>
-              ) : (
-                <button
-                  className="bg-white w-full text-black active:bg-gray-400 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:bg-gray-400 outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                  type="button"
-                  onClick={mintNFT}
-                >
-                  {isLoading? "Loading Transaction..." : "Mint"}
-                </button>
-              )}
             </div>
           </div>
         </div>
