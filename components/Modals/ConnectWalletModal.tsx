@@ -81,7 +81,7 @@ export const ConnectWalletButtons = ({ setOpen }) => {
             router.push("/editprofile");
             supabase // TODO: Improve this, error catching, separate async function...
               .from("Users_Table")
-              .upsert({ wallet: account }, { onConflict: "wallet" })
+              .upsert({ wallet: account.toLowerCase() }, { onConflict: "wallet" })
               .then(r=>console.log(r));
            }// else if (!router.pathname.includes('archive'))
           //   router.push("/archive"); // This was redirecting the user every time there was a refresh, even when following an external link to the page

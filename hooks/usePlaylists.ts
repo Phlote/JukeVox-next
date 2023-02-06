@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 
-export const usePlaylists = (isWeb3Enabled) => {
+export const usePlaylists = () => {
   const [playlists, setPlaylists] = useState<Array<Object>>([]);
 
   // TODO: Run this query more efficiently, re-use the result from the supabase call

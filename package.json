@@ -65,7 +65,8 @@
     "supports-color": "^9.2.1",
     "swr": "^0.5.5",
     "twin.macro": "^2.8.2",
-    "utf-8-validate": "^5.0.9"
+    "utf-8-validate": "^5.0.9",
+    "web3": "^1.8.2"
   },
   "devDependencies": {
     "@babel/core": "^7.17.7",

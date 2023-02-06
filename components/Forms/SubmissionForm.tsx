@@ -34,7 +34,7 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
   const tags = useField("tags", form);
 
   const { account, isWeb3Enabled } = useMoralis();
-  const playlists = usePlaylists(isWeb3Enabled);
+  const playlists = usePlaylists();
 
   return (
     <div className="grid grid-cols-1 gap-3 md:my-8">
@@ -42,6 +42,7 @@ export const SubmissionForm = ({ metamaskLoading, onSubmit, fileSelected, setFil
 
       <span className="flex justify-between">
         <span>{mediaType.input.value === "File" ? "Artist" : "Curator"}</span>
+        {/*TODO: THIS SHOULD SEND isArtist instead of Link or File*/}
         <Toggle {...mediaType.input} fields={['Link', 'File']} setURI={mediaURI.input.onChange}
                 setFileSelected={setFileSelected} />
       </span>

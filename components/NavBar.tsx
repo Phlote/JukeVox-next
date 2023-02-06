@@ -56,6 +56,13 @@ export const NavBarDesktop = (props) => {
           </div>
         </Link>
         <div className="flex-grow" />
+        {/*<NavBarElementContainer>*/}
+        {/*  <Link href="/marketplace" passHref>*/}
+        {/*    <HollowButtonContainer className="flex justify-center items-center ">*/}
+        {/*      Market Place*/}
+        {/*    </HollowButtonContainer>*/}
+        {/*  </Link>*/}
+        {/*</NavBarElementContainer>*/}
         <NavBarElementContainer>
           <Link href="/archive" passHref>
             <HollowButtonContainer className="flex justify-center items-center ">

@@ -10,10 +10,19 @@ import ReactTooltip from "react-tooltip";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import { CuratorABI, CuratorAddress } from "../solidity/utils/Curator";
 import { ContractRes } from "../types";
-import { PhloteVoteABI, PhloteVoteAddress } from "../solidity/utils/PhloteVote";
+import { phloteTokenCosts, PhloteVoteABI, PhloteVoteAddress } from "../solidity/utils/PhloteVote";
+import Web3 from "web3";
+import { Web3_Socket_URL } from "../utils/constants";
+import { AbiItem } from "web3-utils";
 
-const phloteTokenCosts = [50, 60, 70, 80, 90];
+/* Work done:
 
+- new useEffect(), on load always grab current users Phlote allowance for the curator address and store in a state
+- logic of approval now checks if the user already has enough of an allowance, so it doesnt need to ask again if you already have enough
+- fixed e.data.message toast using that conditional to check if its a metamask or a
+
+*/
+// =======================================================================
 export const RatingsMeter: React.FC<{
   // TODO: Use submission interface instead
   submissionID: string;
@@ -21,14 +30,13 @@ export const RatingsMeter: React.FC<{
   initialCosigns: string[];
   isArtist: boolean;
   hotdropAddress: string;
-}> = (props) => {
-  const { submissionID, submitterWallet, initialCosigns, isArtist, hotdropAddress } = props;
+}> = ({ submissionID, submitterWallet, initialCosigns, isArtist, hotdropAddress }) => {
 
   const { isWeb3Enabled, account } = useMoralis();
   const { fetch: runContractFunction, data, error, isLoading, isFetching, } = useWeb3ExecuteFunction();
   const [contractRes, setContractRes] = useState<ContractRes>({});
   const [approvalRes, setApprovalRes] = useState<ContractRes>({});
-
+  // ==================================================================================
   const [cosigns, setCosigns] = useState<string[]>([]);
 
   useEffect(() => ReactTooltip.rebuild() as () => (void), []);
@@ -67,10 +75,15 @@ export const RatingsMeter: React.FC<{
       if (!isWeb3Enabled) {
         throw "Authentication failed";
       }
+      // We Only want approvals if this is an artist submission + user has not already approved this amount
 
-      console.log('PHLOTE TOKEN AMMOUNT', phloteTokenCosts[cosigns.length]);
+      const web3 = new Web3(Web3_Socket_URL);
+      const phloteContract = new web3.eth.Contract(PhloteVoteABI as unknown as AbiItem, PhloteVoteAddress);
+      const contractInfo = await phloteContract.methods.allowance(account, CuratorAddress).call()
+      const phloteTokenApprovedAmount = parseInt(contractInfo);
 
-      if (isArtist) {
+      console.log(phloteTokenApprovedAmount, parseInt(phloteTokenCosts[cosigns.length]));
+      if (isArtist && phloteTokenApprovedAmount < parseInt(phloteTokenCosts[cosigns.length])) {
         const optionsApproval = {
           abi: PhloteVoteABI,
           contractAddress: PhloteVoteAddress,
@@ -96,6 +109,7 @@ export const RatingsMeter: React.FC<{
         // @ts-ignore
         await approvalTransaction.wait();
       }
+
 
       const optionsContract = {
         abi: CuratorABI,
@@ -124,7 +138,10 @@ export const RatingsMeter: React.FC<{
       }
     } catch (e) {
       console.error(e);
-      toast.error(e.message);
+      if(e.data){
+        toast.error(e.data.message);
+      }
+      else{toast.error(e.message);}
       setCosigns((current) => current.slice(0, current.length - 1));
     }
   };

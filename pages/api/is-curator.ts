@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PhloteVoteAddress } from "../../solidity/utils/PhloteVote";
+import { PHLOTE_VOTE_TOKEN_ADDRESS } from "../../utils/constants";
 
 interface PolygonScanTokenBalanceResponse {
   status: string;
@@ -14,7 +14,7 @@ export default async function handler(
   const { wallet } = request.body;
 
   const resp = await fetch(
-    `https://api-testnet.polygonscan.com/api?module=account&action=tokenbalance&contractaddress=${PhloteVoteAddress}&address=${wallet}&tag=latest&apikey=${process.env.POLYGONSCAN_API_KEY}`
+    `https://api-testnet.polygonscan.com/api?module=account&action=tokenbalance&contractaddress=${PHLOTE_VOTE_TOKEN_ADDRESS}&address=${wallet}&tag=latest&apikey=${process.env.POLYGONSCAN_API_KEY}`
   );
 
   const result = (await resp.json()) as PolygonScanTokenBalanceResponse;

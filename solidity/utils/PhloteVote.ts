@@ -1,5 +1,8 @@
 export const PhloteVoteAddress = "0x50281Df3EADA2bC85E72A488CFbbC8e38fef8aC7"
 
+export const phloteTokenCosts = ["50000000000000000000", "60000000000000000000", "70000000000000000000", "80000000000000000000", "90000000000000000000"];
+
+
 export const PhloteVoteABI = [
   { inputs: [{ internalType: "uint256", name: "_amountToMint", type: "uint256" }], stateMutability: "nonpayable", type: "constructor" },
   {
