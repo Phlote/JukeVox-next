@@ -159,7 +159,7 @@ const SubmissionCard = ({ submission, key }: { submission: GenericSubmission, ke
               >
                 <TwitterIcon size={32} round />
               </TwitterShareButton>
-              {/*<CommentBubble />*/}
+              {/*<CommentBubble />*/} 
             </div>
             <div className="flex flex-10 justify-center items-center">
               {/* TODO: CURATOR/ARTIST SEPARATION */}
@@ -170,7 +170,6 @@ const SubmissionCard = ({ submission, key }: { submission: GenericSubmission, ke
           </div>
         </SubmissionCardDetails>
       </div>
-    </div>
   )
 }
 
