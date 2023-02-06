@@ -9,6 +9,7 @@ import TempHowItWorks from "../components/TempHowItWorks";
 import { useMoralis } from "react-moralis";
 import { supabase } from "../lib/supabase";
 import RecentlyCurated from "../components/RecentlyCurated";
+import Image from "next/image";
 
 const Hero = ({ account, setOpen, setConnectWalletOpen }) => {
   return (
@@ -18,7 +19,9 @@ const Hero = ({ account, setOpen, setConnectWalletOpen }) => {
         className="flex items-center">
         {/*Mobile*/}
         <div className="sm:hidden text-center mx-4 flex flex-col justify-center items-center">
-          <h1 className="text-6xl">Phlote</h1>
+          <div className='w-48 h-24 relative'>
+            <Image src='/newLogo.png' className="cursor-pointer object-contain" alt='' layout='fill'/>
+          </div>
           <div className="h-16"></div>
           <p>
             Phlote delivers the best new genre-bending music from around the world to our members as exclusive music NFTs.

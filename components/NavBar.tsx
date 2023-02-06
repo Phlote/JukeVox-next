@@ -10,6 +10,7 @@ import { SearchBar } from "./SearchBar";
 import { useSubmissionFlowOpen } from "./SubmissionFlow";
 import { useMoralis } from "react-moralis";
 import BETABlog from "../pages/BETABlog";
+import Image from "next/image";
 
 export const NavBarMobileWeb = () => {
   const [, setOpen] = useSubmissionFlowOpen();
@@ -48,9 +49,11 @@ export const NavBarDesktop = (props) => {
       <div className="py-2 flex justify-center items-center backdrop-blur-md">
         <p className="text-center cursor-pointer text-xl text-red-500 hover:text-blue-600"><Link href ={"BETABlog"} passHref><b>Announcement:<u>We&apos;re live in BETA! Read More about it here...</u></b></Link></p>
       </div>
-      <div className="relative flex flex-row gap-4" style={{ height: 70 }}>
-        <Link href="/" passHref>
-          <h1 className="text-6xl cursor-pointer">Phlote</h1>
+      <div className="relative flex flex-row gap-4 items-center" style={{ height: 70 }}>
+        <Link href="/" passHref >
+          <div className='w-48 h-24 relative'>
+            <Image src='/newLogo.png' className="cursor-pointer object-contain" alt='' layout='fill'/>
+          </div>
         </Link>
         <div className="flex-grow" />
         {/*<NavBarElementContainer>*/}

@@ -29,7 +29,7 @@ const SubmissionCardDetails = styled.div`
 `;
 
 
-const SubmissionCard = ({ submission }: { submission: GenericSubmission }) => {
+const SubmissionCard = ({ submission, key }: { submission: GenericSubmission, key?: number }) => {
   const [open, setOpen] = useMintingModalOpen();
   const [submissionAtom, setSubmissionAtom] = useMintingModalSubmission();
   const videoEl = useRef(null);
@@ -76,46 +76,44 @@ const SubmissionCard = ({ submission }: { submission: GenericSubmission }) => {
   })
 
   return (
-    <div>
-      <div className="flex flex-col w-80 h-[550px]">
-        <div className="w-full h-64 relative">
-          {mediaFormat === "video/quicktime" ? (
-            <video
-              className="absolute bottom-0"
-              src={submission.mediaURI}
-              ref={videoEl}
-
-            />
-          ) : (
-            <Image
-              src={"/default_submission_image.jpeg"}
-              layout="fill"
-              alt="submission image"
-              objectFit="cover"
-            />
-          )}
-        </div>
-        <SubmissionCardDetails>
-          <div className="flex h-12 items-center">
-            <div>
-              <a
-                href={submission.mediaURI}
-                className="text-3xl hover:opacity-50 break-words"
-              >
-                {submission.mediaTitle}
-              </a>
-            </div>
-            <div className="flex-grow" />
-            <div className="flex items-center">
-              {mediaFormat?.includes("video") && (
-                <PlayButtonVideo el={videoEl} />
-              )}
-              {mediaFormat?.includes("audio") && (
-                <PlayButtonAudio url={submission.mediaURI} />
-              )}
-            </div>
+    <div className="flex flex-col w-80 h-[480px]" key={key}>
+      <div className="w-full h-60 relative">
+        {mediaFormat === "video/quicktime" ? (
+          <video
+            className="absolute bottom-0"
+            src={submission.mediaURI}
+            ref={videoEl}
+          />
+        ) : (
+          <Image
+            src={"/default_submission_image.jpeg"}
+            layout="fill"
+            alt="submission image"
+            objectFit="cover"
+          />
+        )}
+      </div>
+      <SubmissionCardDetails>
+        <div className="flex h-12 items-center">
+          <div>
+            <a
+              href={submission.mediaURI}
+              className="text-3xl hover:opacity-50 break-words"
+            >
+              {submission.mediaTitle}
+            </a>
           </div>
-          <div className="h-8" />
+          <div className="flex-grow" />
+          <div className="flex items-center">
+            {mediaFormat?.includes("video") && (
+              <PlayButtonVideo el={videoEl} />
+            )}
+            {mediaFormat?.includes("audio") && (
+              <PlayButtonAudio url={submission.mediaURI} />
+            )}
+          </div>
+        </div>
+        <div className="h-8" />
 
           <div className="flex h-16">
             <div>
@@ -161,7 +159,7 @@ const SubmissionCard = ({ submission }: { submission: GenericSubmission }) => {
               >
                 <TwitterIcon size={32} round />
               </TwitterShareButton>
-              {/*<CommentBubble />*/}
+              {/*<CommentBubble />*/} 
             </div>
             <div className="flex flex-10 justify-center items-center">
               {/* TODO: CURATOR/ARTIST SEPARATION */}
@@ -172,7 +170,6 @@ const SubmissionCard = ({ submission }: { submission: GenericSubmission }) => {
           </div>
         </SubmissionCardDetails>
       </div>
-    </div>
   )
 }
 
