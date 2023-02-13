@@ -19,10 +19,12 @@ import {
 } from "../../utils/supabase";
 import { useProfile } from "../../components/Forms/ProfileSettingsForm";
 import { useMoralis } from "react-moralis";
+import React, {useState} from "react";
 
 export default function Profile(props) {
+  const [userCosigns,setUserCosigns] = useState(false)
   const router = useRouter();
-  const { submissions } = props;
+  const { cosignedSubmissions,submissions } = props;
   const uuid = router.query.uuid;
   const isCurator = useIsCurator();
   const { account } = useMoralis(); // Moralis account is lowercase !!!!
@@ -43,6 +45,11 @@ export default function Profile(props) {
         {profile?.data?.username ? (
             <>
               <div className="flex-grow"></div>
+              <label className="relative flex justify-between items-center group p-2 text-xl">
+                {userCosigns? "Your Cosigns" : "Your Submissions"}
+                <input type="checkbox" className="absolute left-1/2 -translate-x-1/2 w-full h-full peer appearance-none rounded-md" onClick={() => setUserCosigns(!userCosigns)} />
+                <span className="w-16 h-10 flex items-center flex-shrink-0 ml-4 p-1 bg-gray-300 rounded-full duration-300 ease-in-out peer-checked:bg-green-400 after:w-8 after:h-8 after:bg-white after:rounded-full after:shadow-md after:duration-300 peer-checked:after:translate-x-6 group-hover:after:translate-x-1"></span>
+              </label>
               <UserStatsBar profile={profile.data} />
             </>
           ) :
@@ -81,7 +88,7 @@ export default function Profile(props) {
         {submissions?.length > 0 && (
           <tbody>
             <tr className="h-4" />
-            {submissions?.map((submission) => {
+            {(userCosigns ? cosignedSubmissions.data : submissions)?.map((submission) => {
               const {
                 submissionID,
                 submitterWallet,
@@ -131,6 +138,7 @@ export default function Profile(props) {
               );
             })}
           </tbody>
+
         )}
       </table>
       {submissions?.length === 0 && (
@@ -156,9 +164,18 @@ Profile.getLayout = function getLayout(page) {
 // params will contain the wallet for each generated page.
 export async function getStaticProps({ params }) {
   let { uuid } = params;
+  const wallet = uuid; // or however you want to get the wallet from the uuid
+
+  const curators = await supabase.from('Curator_Submission_Table').select('*').contains("cosigns",[wallet])
+  const artists = await supabase.from('Artist_Submission_Table').select('*').contains("cosigns",[wallet])
+
+  const cosignedSubmissions = {
+    data: curators.data.concat(artists.data),
+  };
 
   return {
     props: {
+      cosignedSubmissions: cosignedSubmissions,
       submissions: await getSubmissionsWithFilter(null, { submitterWallet: uuid }),
       profile: await getProfileForWallet(uuid),
     }
