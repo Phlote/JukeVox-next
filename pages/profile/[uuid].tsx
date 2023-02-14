@@ -22,9 +22,9 @@ import { useMoralis } from "react-moralis";
 import React, {useState} from "react";
 
 export default function Profile(props) {
-  const [userCosigns,setUserCosigns] = useState(false)
+  const [userListToggle,setUserListToggle] = useState(false)
   const router = useRouter();
-  const { cosignedSubmissions,submissions } = props;
+  const { cosignedSubmissions, submissions } = props;
   const uuid = router.query.uuid;
   const isCurator = useIsCurator();
   const { account } = useMoralis(); // Moralis account is lowercase !!!!
@@ -39,6 +39,7 @@ export default function Profile(props) {
     return <div>Loading...</div>;
   }
 
+
   return (
     <div className="flex flex-col ">
       <div className="flex justify-center">
@@ -46,8 +47,8 @@ export default function Profile(props) {
             <>
               <div className="flex-grow"></div>
               <label className="relative flex justify-between items-center group p-2 text-xl">
-                {userCosigns? `Show Cosigns: ${cosignedSubmissions.data.length}` : `Show Submissions: ${submissions.length}`}
-                <input type="checkbox" className="absolute left-1/2 -translate-x-1/2 w-full h-full peer appearance-none rounded-md" onClick={() => setUserCosigns(!userCosigns)} />
+                {userListToggle? `Show Cosigns: ${cosignedSubmissions.data.length}` : `Show Submissions: ${submissions.length}`}
+                <input type="checkbox" className="absolute left-1/2 -translate-x-1/2 w-full h-full peer appearance-none rounded-md" onClick={() => setUserListToggle(!userListToggle)} />
                 <span className="w-16 h-10 flex items-center flex-shrink-0 ml-4 p-1 bg-gray-300 rounded-full duration-300 ease-in-out peer-checked:bg-green-400 after:w-8 after:h-8 after:bg-white after:rounded-full after:shadow-md after:duration-300 peer-checked:after:translate-x-6 group-hover:after:translate-x-1"></span>
               </label>
               <UserStatsBar profile={profile.data} />
@@ -84,11 +85,10 @@ export default function Profile(props) {
             <ArchiveTableHeader label="Co-Signs" />
           </tr>
         </thead>
-
-        {submissions?.length > 0 && (
+        {(submissions?.length > 0 || cosignedSubmissions.data?.length > 0) && (
           <tbody>
             <tr className="h-4" />
-            {(userCosigns ? cosignedSubmissions.data : submissions)?.map((submission) => {
+            {(userListToggle ? cosignedSubmissions.data : submissions)?.map((submission) => {
               const {
                 submissionID,
                 submitterWallet,
@@ -141,14 +141,23 @@ export default function Profile(props) {
 
         )}
       </table>
-      {submissions?.length === 0 && (
-        <div
-          className="w-full mt-4 flex-grow flex justify-center items-center"
-          style={{ color: "rgba(105, 105, 105, 1)" }}
-        >
-          <p className="text-lg italic">{"No Search Results"}</p>
-        </div>
-      )}
+      {userListToggle === false && submissions?.length === 0 && (
+  <div
+    className="w-full mt-4 flex-grow flex justify-center items-center"
+    style={{ color: "rgba(105, 105, 105, 1)" }}
+  >
+    <p className="text-lg italic">{"No Search Results"}</p>
+  </div>
+)}
+
+{userListToggle === true && cosignedSubmissions.data?.length === 0 && (
+  <div
+    className="w-full mt-4 flex-grow flex justify-center items-center"
+    style={{ color: "rgba(105, 105, 105, 1)" }}
+  >
+    <p className="text-lg italic">{"No Search Results"}</p>
+  </div>
+)}
     </div>
   );
 }
