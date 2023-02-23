@@ -63,7 +63,7 @@ export default function SubmissionPage(props: {
           </div>
         </div>
         <div className="max-w-prose mx-auto flex-grow">
-          <CommentSection />
+          <CommentSection submissionWallet={submission.submitterWallet}/>
         </div>
       </div>
     </CommentsContextProvider>
