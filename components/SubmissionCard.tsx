@@ -75,6 +75,7 @@ const SubmissionCard = ({ submission, key }: { submission: GenericSubmission, ke
       setMediaFormatFromSubId();
     }
   })
+  
 
   return (
     <div className="flex flex-col w-80 h-[480px]" key={key}>
@@ -143,7 +144,7 @@ const SubmissionCard = ({ submission, key }: { submission: GenericSubmission, ke
               {/*<a className="flex justify-center items-center bg-gray-200 text-gray-800 py-2 px-4 rounded-lg ml-2 hover:bg-gray-300" target='_blank' href={submission.mediaURI}>*/}
               {/*  <span>Download Files</span>*/}
               {/*</a>*/}
-              <DownloadButton text="Download" />
+              <DownloadButton id={submission.submissionID} hotdropAddress={submission.hotdropAddress} text="Download" />
             </div>
             :
             null
