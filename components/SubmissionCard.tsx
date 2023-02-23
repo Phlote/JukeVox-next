@@ -15,6 +15,7 @@ import { useMoralis } from "react-moralis";
 import ReactTooltip from "react-tooltip";
 import MintButton from "./MintButton";
 import { InfoIcon } from "../icons/InfoIcon";
+import DownloadButton from "./DownloadButton";
 
 const SubmissionCardDetails = styled.div`
   ${tw`p-4 bg-phlote-ff-modal`}
@@ -74,6 +75,7 @@ const SubmissionCard = ({ submission, key }: { submission: GenericSubmission, ke
       setMediaFormatFromSubId();
     }
   })
+  
 
   return (
     <div className="flex flex-col w-80 h-[480px]" key={key}>
@@ -136,11 +138,13 @@ const SubmissionCard = ({ submission, key }: { submission: GenericSubmission, ke
           {submission.cosigns?.length === 5 && submission.hotdropAddress != "" && submission.isArtist ?
             <div className="flex h-12 mt-1" data-tip={cantMintMessage}>
               <MintButton color="bg-indigo-500" text="Loading..." hotdropAddress={submission.hotdropAddress}
-                          hoverColor="bg-indigo-300" />
-              <button className='ml-3 hover:opacity-50' onClick={mint}><InfoIcon/></button>
+              hoverColor="bg-indigo-300" />
+            
+              <button className='ml-3 mr-3 hover:opacity-50' onClick={mint}><InfoIcon/></button>
               {/*<a className="flex justify-center items-center bg-gray-200 text-gray-800 py-2 px-4 rounded-lg ml-2 hover:bg-gray-300" target='_blank' href={submission.mediaURI}>*/}
               {/*  <span>Download Files</span>*/}
               {/*</a>*/}
+              <DownloadButton id={submission.submissionID} hotdropAddress={submission.hotdropAddress} text="Download" />
             </div>
             :
             null
